@@ -22,13 +22,14 @@
     </head>
 
     <body class="antialiased">
+        <x-layouts.header.layout />
 
         {{ $slot }}
 
         @livewire('notifications')
-        
+
         @filamentScripts
-        
+
     </body>
 
 </html>
