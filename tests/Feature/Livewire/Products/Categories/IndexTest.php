@@ -1,9 +1,9 @@
 <?php
 
-use App\Livewire\Product;
+use App\Livewire\Products\Categories\Index;
 use Livewire\Livewire;
 
 it('renders successfully', function () {
-    Livewire::test(Product::class)
+    Livewire::test(Index::class)
         ->assertStatus(200);
 });

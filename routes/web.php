@@ -9,9 +9,16 @@ Route::middleware(['throttle:global'])->get('/', function () {
     return view('index');
 });
 
-Route::middleware(['throttle:global'])->prefix('products')->group(function () {
+Route::middleware(['throttle:global'])->prefix('products')->as('products.')->group(function () {
 
-    Route::get('/', Products\Index::class)->name('products.index');
-    Route::get('/{product}', Products\Show::class)->name('products.show');
+    Route::get('/', Products\Index::class)->name('index');
+    Route::get('/{product:slug}', Products\Show::class)->name('show');
 
-})->rateLimited();
+});
+
+Route::middleware(['throttle:global'])->prefix('categories')->as('categories.')->group(function () {
+
+    Route::get('/', Products\Categories\Index::class)->name('index');
+    Route::get('/{category:slug}', Products\Categories\Show::class)->name('show');
+
+});

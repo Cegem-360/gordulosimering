@@ -19,7 +19,10 @@ final class AppServiceProvider extends ServiceProvider
         //
     }
 
-    protected function boot(): void
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
     {
         RateLimiter::for('global', function (Request $request) {
             return Limit::perMinute(50);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,5 +23,7 @@ final class DatabaseSeeder extends Seeder
             'email' => 'admin@admin.com',
             'email_verified_at' => now(),
         ]);
+
+        Product::factory(50)->create();
     }
 }
