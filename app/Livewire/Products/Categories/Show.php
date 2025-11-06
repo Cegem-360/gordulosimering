@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Products\Categories;
 
 use Livewire\Component;
 
-class Show extends Component
+final class Show extends Component
 {
     public function render()
     {
