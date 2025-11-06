@@ -1,0 +1,10 @@
+Csoportkód	Termékkód	Szolgáltatás	Terméknév	Katalógus szám	Típus	Méret	Súly	Minosítés	Minoség	Termékféleség	Ker. típus	Felh. típus	Deviza elsz.	Kedvezmény csoport	Akciós ?	Akció %	Árképzés	Listaár	Lista kedvezmény	Beszerzési dev. ár	Devizanem	Deviza szorzó	Beszerzési ár	Haszonkulcs	Nettó eladási ár	ÁFA osztály	Bruttó eladási ár	Mennyiségi egység	Másodlagos me.	Minimum készlet	Maximum készlet	Puffer készlet	Rendelési egység	KSH elotag	KSZ szám	Beszállító	Rövid megjegyzés	Hosszú megjegyzés	Vonalkód	EAN kód	Min. rendelheto	Ker. mennyiség	Raklap menny.
+	BEAZONOSÍTÁS ALATT	Nem	Késobb küldünk rá ajánlatot							szolgáltatás			Nem	x	Nem	0	S	0	0	0	HUF	1	0	0	0	AFA27	0	db	db	0	0	0	0	VTSZ					*BEAZONOSÍTÁS!ALATT*		0	0	0
+	BEHAJTÓ HEGY PH2 MÉLYSÉGHAT.	Nem	Mélységhatárolós behajtó hegy PH2			PH2				szerszám			Nem	x	Nem	0	S	275,6	0	275,6	HUF	1	275,6	35	425	AFA27	539,75	db	db	0	0	0	0	VTSZ					*BEHAJTÓ!HEGY!PH2!MÉLYSÉGHAT.*		0	0	0
+	E-13X1450_BARUM	Nem	ékszíj							ékszíj			Nem	x	Nem	0	S	331,8	0	331,8	HUF	1	331,8	60	530,88	AFA27	674,22	db	db	0	0	0	0	VTSZ	4010				*E-13X1450_BARUM*		0	0	0
+	E-17X1300LI_G	Nem	GATES ékszíj							ékszíj			Nem	x	Nem	0	S	1251,36	0	1251,36	HUF	1	1251,36	60	2002,18	AFA27	2542,77	db	db	0	0	0	0	VTSZ	4010				*E-17X1300LI_G*		0	0	0
+	E-22X5000LI_OPT	Nem	OPTIBELT ékszíj							ékszíj			Nem	x	Nem	0	S	6108,9	0	6108,9	HUF	1	6108,9	60	0	AFA27	0	db	db	0	0	0	0	VTSZ	4010				*E-22X5000LI_OPT*		0	0	0
+	E-22X5000_BARUM	Nem	ékszíj							ékszíj			Nem	x	Nem	0	S	2460,5	0	2460,5	HUF	1	2460,5	60	0	AFA27	0	db	db	0	0	0	0	VTSZ	4010				*E-22X5000_BARUM*		0	0	0
+	NEM FORGALMAZZUK	Nem	Ez a termék sajnos nem szerepel a kínálatunkban							szolgáltatás			Nem	x	Nem	0	F	0	0	0	HUF	1	0	0	0	AFA27	0	db	db	0	0	0	0	VTSZ					*NEM!FORGALMAZZUK*		0	0	0
+	WS 100135_IKO	Nem	tügörgôs nyomótárcsa							tugörgos csapágy			Nem	x	Nem	0	S	4359	0	4359	HUF	1	4359	22	5317,98	AFA27	6753,83	db	db	0	0	0	0	VTSZ	8482				*WS!100135_IKO*		0	0	0
+99	ADMINISZTRÁCIÓS DÍJ	Igen	Termékcsere díja							szolgáltatás	L		Nem	x	Nem	0	S	1000	0	1000	HUF	1	1000	0	1000	AFA27	1270	db	db	0	0	0	0	VTSZ					*ADMINISZTRÁCIÓS!DÍJ*		0	0	0

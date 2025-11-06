@@ -27,12 +27,12 @@ return RectorConfig::configure()
         SetList::TYPE_DECLARATION,
     ])
     ->withPaths([
-        __DIR__.'/app',
-        __DIR__.'/tests',
-        __DIR__.'/config',
-        __DIR__.'/database',
-        __DIR__.'/resources',
-        __DIR__.'/routes',
+        __DIR__ . '/app',
+        __DIR__ . '/tests',
+        __DIR__ . '/config',
+        __DIR__ . '/database',
+        __DIR__ . '/resources',
+        __DIR__ . '/routes',
     ])
     ->withImportNames()
     ->withParallel()
