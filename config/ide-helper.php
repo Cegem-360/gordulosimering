@@ -5,7 +5,6 @@ use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\PendingRequest;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Filename
@@ -128,8 +127,8 @@ return [
     'include_helpers' => false,
 
     'helper_files' => [
-        base_path().'/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
-        base_path().'/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php',
+        base_path() . '/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
+        base_path() . '/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php',
     ],
 
     /*
@@ -354,5 +353,4 @@ return [
     'post_migrate' => [
         // 'ide-helper:models --nowrite',
     ],
-
 ];

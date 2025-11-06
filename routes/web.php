@@ -10,15 +10,11 @@ Route::middleware(['throttle:global'])->get('/', function () {
 });
 
 Route::middleware(['throttle:global'])->prefix('products')->as('products.')->group(function () {
-
     Route::get('/', Products\Index::class)->name('index');
     Route::get('/{product:slug}', Products\Show::class)->name('show');
-
 });
 
 Route::middleware(['throttle:global'])->prefix('categories')->as('categories.')->group(function () {
-
     Route::get('/', Products\Categories\Index::class)->name('index');
     Route::get('/{category:slug}', Products\Categories\Show::class)->name('show');
-
 });

@@ -3,14 +3,77 @@
     "notPath": [
         "tests/TestCase.php"
     ],
+    "exclude": [
+        "bootstrap/cache",
+        "storage",
+        "vendor",
+        "node_modules"
+    ],
     "rules": {
+        "declare_strict_types": true,
+        "simplified_null_return": true,
+        "braces": {
+            "position_after_control_structures": "same",
+            "position_after_anonymous_constructs": "same"
+        },
+        "new_with_parentheses": {
+            "anonymous_class": true,
+            "named_class": true
+        },
+        "no_unused_imports": true,
+        "ordered_imports": {
+            "sort_algorithm": "alpha"
+        },
+        "single_quote": {
+            "strings_containing_single_quote_chars": true
+        },
+        "trailing_comma_in_multiline": {
+            "elements": [
+                "arguments",
+                "arrays",
+                "match",
+                "parameters"
+            ]
+        },
+        "no_extra_blank_lines": {
+            "tokens": [
+                "attribute",
+                "break",
+                "case",
+                "continue",
+                "curly_brace_block",
+                "default",
+                "extra",
+                "parenthesis_brace_block",
+                "return",
+                "square_brace_block",
+                "switch",
+                "throw",
+                "use",
+                "use_trait"
+            ]
+        },
         "array_push": true,
         "backtick_to_shell_exec": true,
         "date_time_immutable": true,
-        "declare_strict_types": true,
         "lowercase_keywords": true,
         "lowercase_static_reference": true,
         "final_class": true,
+        "array_syntax": {
+            "syntax": "short"
+        },
+        "concat_space": {
+            "spacing": "one"
+        },
+        "no_spaces_around_offset": {
+            "positions": [
+                "inside",
+                "outside"
+            ]
+        },
+        "ternary_operator_spaces": true,
+        "trim_array_spaces": true,
+        "method_chaining_indentation": true,
         "final_internal_class": {
             "annotation_exclude": [
                 "@final",
@@ -72,10 +135,6 @@
         },
         "mb_str_functions": true,
         "modernize_types_casting": true,
-        "new_with_parentheses": {
-            "anonymous_class": true,
-            "named_class": true
-        },
         "no_superfluous_elseif": true,
         "no_useless_else": true,
         "no_multiple_statements_per_line": true,
