@@ -21,4 +21,14 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Lock files
+*.lock
 composer.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
