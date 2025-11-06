@@ -17,6 +17,7 @@
         "nunomaduro/essentials": "@dev"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.16",
         "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "^1.23",
         "laravel/boost": "^1.6",
