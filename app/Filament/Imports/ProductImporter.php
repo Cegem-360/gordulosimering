@@ -27,8 +27,7 @@ final class ProductImporter extends Importer
                 ->guess(['Szolgáltatás']),
             ImportColumn::make('name')
                 ->guess(['Terméknév']),
-            ImportColumn::make('slug')
-                ->default(fn (array $data): string => Str::slug($data['name'])),
+            ImportColumn::make('slug'),
             ImportColumn::make('catalog_number')
                 ->guess(['Katalógus szám']),
             ImportColumn::make('type')
@@ -152,7 +151,7 @@ final class ProductImporter extends Importer
 
     public function resolveRecord(): Product
     {
-        if (! isset($this->data['slug']) || empty($this->data['slug'])) {
+        if (! isset($this->data['slug']) || empty($this->data['slug']) || $this->data['slug'] === null) {
             $this->data['slug'] = Str::slug($this->data['name']);
         }
 
