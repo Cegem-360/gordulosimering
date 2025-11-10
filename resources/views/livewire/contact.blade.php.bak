@@ -1,0 +1,232 @@
+<div>
+    <!-- Hero Section -->
+    <div class="bg-linear-to-r from-blue-900 to-blue-800 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">Kapcsolat</h1>
+                <p class="text-xl text-blue-100">Keressen minket bizalommal üzleteinkben vagy online!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-16">
+        <!-- Locations Grid -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <!-- X. kerület -->
+            <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
+                <div class="aspect-w-16 aspect-h-9">
+                    <img src="{{ Vite::asset('resources/images/stores/korosi.jpg') }}" alt="X. kerületi üzlet"
+                        class="rounded-t-lg object-cover w-full h-48">
+                </div>
+                <div class="p-5">
+                    <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">X. kerület</h3>
+                    <p class="text-gray-700 mb-3">Kőrösi Csoma S. út 18-20.</p>
+                    <p class="mb-4">
+                        <a href="tel:+3612611566" class="text-blue-600 hover:text-blue-700">+36 1 261 1566</a>
+                    </p>
+
+                    <!-- Map -->
+                    <div class="mb-4 rounded-lg overflow-hidden">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5392.23318490445!2d19.13358!3d47.487642!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741c34b26497ab7%3A0xffb20c96b30eaaed!2zQnVkYXBlc3QsIEvFkXLDtnNpIENzb21hIFPDoW5kb3Igw7p0IDE4LTIwLCAxMTAy!5e0!3m2!1shu!2shu!4v1762533190397!5m2!1shu!2shu"
+                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    <!-- Opening Hours -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 class="font-semibold mb-2">Nyitvatartás</h4>
+                        <div class="space-y-1 text-sm">
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Hétfő - Csütörtök:</span>
+                                <span>8:00 - 17:00</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Péntek:</span>
+                                <span>8:00 - 16:30</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Szombat - Vasárnap:</span>
+                                <span>Zárva</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- XIV. kerület -->
+            <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
+                <div class="aspect-w-16 aspect-h-9">
+                    <img src="{{ Vite::asset('resources/images/stores/nagy-lajos.jpg') }}" alt="XIV. kerületi üzlet"
+                        class="rounded-t-lg object-cover w-full h-48">
+                </div>
+                <div class="p-5">
+                    <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">XIV. kerület</h3>
+                    <p class="text-gray-700 mb-3">Nagy Lajos király útja 117.</p>
+                    <p class="mb-4">
+                        <a href="tel:+3613830951" class="text-blue-600 hover:text-blue-700">+36 1 383 0951</a>
+                    </p>
+
+                    <!-- Map -->
+                    <div class="mb-4 rounded-lg overflow-hidden">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5389.253476409828!2d19.117627!3d47.51666!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741db664176936f%3A0xf71c2a916486b511!2sBudapest%2C%20Nagy%20Lajos%20kir%C3%A1ly%20%C3%BAtja%20117%2C%201149%20Magyarorsz%C3%A1g!5e0!3m2!1shu!2sus!4v1762533265560!5m2!1shu!2sus"
+                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    <!-- Opening Hours -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 class="font-semibold mb-2">Nyitvatartás</h4>
+                        <div class="space-y-1 text-sm">
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Hétfő - Csütörtök:</span>
+                                <span>8:30 - 16:30</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Péntek:</span>
+                                <span>8:30 - 16:00</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Szombat - Vasárnap:</span>
+                                <span>Zárva</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- XVII. kerület -->
+            <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
+                <div class="aspect-w-16 aspect-h-9">
+                    <img src="{{ Vite::asset('resources/images/stores/pesti.jpg') }}" alt="XVII. kerületi üzlet"
+                        class="rounded-t-lg object-cover w-full h-48">
+                </div>
+                <div class="p-5">
+                    <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">XVII. kerület</h3>
+                    <p class="text-gray-700 mb-3">Pesti út 203.</p>
+                    <p class="mb-4">
+                        <a href="tel:+3612574450" class="text-blue-600 hover:text-blue-700">+36 1 257 4450</a>
+                    </p>
+
+                    <!-- Map -->
+                    <div class="mb-4 rounded-lg overflow-hidden">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5393.241442067174!2d19.261268!3d47.47782!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741c14e74c79e17%3A0x8e22d98841e473c2!2sBudapest%2C%20Pesti%20%C3%BAt%20203%2C%201173%20Magyarorsz%C3%A1g!5e0!3m2!1shu!2sus!4v1762533320289!5m2!1shu!2sus"
+                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    <!-- Opening Hours -->
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 class="font-semibold mb-2">Nyitvatartás</h4>
+                        <div class="space-y-1 text-sm">
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Hétfő - Csütörtök:</span>
+                                <span>8:00 - 17:00</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Péntek:</span>
+                                <span>8:00 - 16:30</span>
+                            </p>
+                            <p class="flex justify-between">
+                                <span class="text-gray-600">Szombat - Vasárnap:</span>
+                                <span>Zárva</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form Section -->
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <h2 class="text-2xl font-bold mb-6">Kapcsolatfelvétel</h2>
+
+                    @if (session()->has('message'))
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
+                            role="alert">
+                            <span class="block sm:inline">{{ session('message') }}</span>
+                        </div>
+                    @endif
+
+                    <form wire:submit.prevent="sendMessage" class="max-w-sm mx-auto">
+                        <!-- Name -->
+                        <div class="mb-5">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Név</label>
+                            <input type="text" id="name" wire:model="name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required>
+                            @error('name')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-5">
+                            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+                            <input type="email" id="email" wire:model="email"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required>
+                            @error('email')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Subject -->
+                        <div class="mb-5">
+                            <label for="subject" class="block mb-2 text-sm font-medium text-gray-900">Tárgy</label>
+                            <input type="text" id="subject" wire:model="subject"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required>
+                            @error('subject')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Message -->
+                        <div class="mb-5">
+                            <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Üzenet</label>
+                            <textarea id="message" wire:model="message" rows="4"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                                required></textarea>
+                            @error('message')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <button type="submit"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+                            Küldés
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Additional Contact Info -->
+                <div class="mt-12 text-center">
+                    <h3 class="text-xl font-bold mb-4">Egyéb elérhetőségek</h3>
+                    <div class="space-y-2">
+                        <p>
+                            <strong>Email:</strong>
+                            <a href="mailto:info@gordulo-simmering.hu" class="text-blue-600 hover:text-blue-700">
+                                info@gordulo-simmering.hu
+                            </a>
+                        </p>
+                        <p>
+                            <strong>Központi telefonszám:</strong>
+                            <a href="tel:+3612611566" class="text-blue-600 hover:text-blue-700">
+                                +36 1 261 1566
+                            </a>
+                        </p>
+                        <p>
+                            <strong>Sürgősségi ügyelet:</strong>
+                            <a href="tel:+36309440203" class="text-blue-600 hover:text-blue-700">
+                                +36 30 944 0203
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

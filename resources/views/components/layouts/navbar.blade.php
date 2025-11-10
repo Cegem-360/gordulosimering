@@ -15,7 +15,7 @@
                 <div class="hidden lg:flex lg:items-center lg:space-x-6">
                     <!-- Category Menu -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" @click.away="open = false"
+                        <button @mouseenter="open = true" @mouseleave="open = false"
                             class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-medium">
                             <span>Termékkategóriák</span>
                             <i class="fas fa-chevron-down text-sm transition-transform"
@@ -23,7 +23,8 @@
                         </button>
 
                         <!-- Category Dropdown -->
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                        <div x-show="open" @mouseenter="open = true" @mouseleave="open = false"
+                            x-transition:enter="transition ease-out duration-200"
                             x-transition:enter-start="opacity-0 translate-y-1"
                             x-transition:enter-end="opacity-100 translate-y-0"
                             x-transition:leave="transition ease-in duration-150"
@@ -91,7 +92,87 @@
                     <!-- Other Nav Items -->
                     <a href="#" class="text-gray-700 hover:text-blue-600">Márkák</a>
                     <a href="#" class="text-gray-700 hover:text-blue-600">Akciók</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600">Kapcsolat</a>
+
+                    <!-- Cégünkről Menu -->
+                    <div class="relative" x-data="{ open: false }">
+                        <button @mouseenter="open = true" @mouseleave="open = false"
+                            class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-medium">
+                            <span>Cégünkről</span>
+                            <i class="fas fa-chevron-down text-sm transition-transform"
+                                :class="{ 'rotate-180': open }"></i>
+                        </button>
+
+                        <!-- Cégünkről Dropdown -->
+                        <div x-show="open" @mouseenter="open = true" @mouseleave="open = false"
+                            x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute left-0 z-10 mt-2 w-64 bg-white border rounded-lg shadow-lg">
+                            <div class="py-2">
+                                <a href="{{ route('services') }}"
+                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                    Szolgáltatásaink
+                                </a>
+                                <a href="{{ route('team') }}"
+                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                    Munkatársaink
+                                </a>
+                                <a href="{{ route('company-data') }}"
+                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                    Cégadatok
+                                </a>
+
+                                <!-- Dokumentumok Submenu -->
+                                <div class="relative" x-data="{ submenuOpen: false }">
+                                    <button @mouseenter="submenuOpen = true" @mouseleave="submenuOpen = false"
+                                        class="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                        <span>Dokumentumok</span>
+                                        <i class="fas fa-chevron-right text-sm transition-transform"
+                                            :class="{ 'rotate-90': submenuOpen }"></i>
+                                    </button>
+
+                                    <!-- Dokumentumok Submenu Dropdown -->
+                                    <div x-show="submenuOpen" @mouseenter="submenuOpen = true"
+                                        @mouseleave="submenuOpen = false"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 translate-x-1"
+                                        x-transition:enter-end="opacity-100 translate-x-0"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 translate-x-0"
+                                        x-transition:leave-end="opacity-0 translate-x-1"
+                                        class="absolute left-full top-0 ml-1 w-64 bg-white border rounded-lg shadow-lg">
+                                        <div class="py-2">
+                                            <a href="{{ route('documents') }}"
+                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                                Hirdetmény
+                                            </a>
+                                            <a href="{{ route('terms-and-conditions') }}"
+                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                                Általános Szerződési Feltételek
+                                            </a>
+                                            <a href="{{ route('delivery-framework') }}"
+                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                                Szállítási keretszerződés
+                                            </a>
+                                            <a href="{{ route('quality-policy') }}"
+                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                                Minőségpolitika
+                                            </a>
+                                            <a href="{{ route('privacy-policy') }}"
+                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                                Adatkezelési tájékoztató
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('contact') }}" class="text-gray-700 hover:text-blue-600">Kapcsolat</a>
                 </div>
             </div>
 
@@ -137,7 +218,8 @@
             <div class="container mx-auto px-4 py-4">
                 <form @submit.prevent="$store.search.submit()" class="relative">
                     <div class="relative">
-                        <input type="text" placeholder="Keresés termékek között... (pl: 6205-2RS, SKF golyóscsapágy)"
+                        <input type="text"
+                            placeholder="Keresés termékek között... (pl: 6205-2RS, SKF golyóscsapágy)"
                             x-model="$store.search.query" @keydown.escape="$store.search.close()"
                             class="w-full pl-12 pr-4 py-3 text-lg rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -199,7 +281,49 @@
 
             <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Márkák</a>
             <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Akciók</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Kapcsolat</a>
+
+            <!-- Mobile Cégünkről Menu -->
+            <div x-data="{ open: false }">
+                <button @click="open = !open" class="flex items-center justify-between w-full py-2 text-gray-700">
+                    <span class="font-medium">Cégünkről</span>
+                    <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
+                </button>
+
+                <div x-show="open" class="mt-2 space-y-2 pl-4">
+                    <a href="{{ route('services') }}"
+                        class="block py-2 text-gray-600 hover:text-blue-600">Szolgáltatásaink</a>
+                    <a href="{{ route('team') }}"
+                        class="block py-2 text-gray-600 hover:text-blue-600">Munkatársaink</a>
+                    <a href="{{ route('company-data') }}"
+                        class="block py-2 text-gray-600 hover:text-blue-600">Cégadatok</a>
+
+                    <!-- Mobile Dokumentumok Submenu -->
+                    <div x-data="{ submenuOpen: false }">
+                        <button @click="submenuOpen = !submenuOpen"
+                            class="flex items-center justify-between w-full py-2 text-gray-600">
+                            <span>Dokumentumok</span>
+                            <i class="fas fa-chevron-down text-sm transition-transform"
+                                :class="{ 'rotate-180': submenuOpen }"></i>
+                        </button>
+
+                        <div x-show="submenuOpen" class="mt-2 space-y-2 pl-4">
+                            <a href="{{ route('documents') }}"
+                                class="block py-2 text-gray-500 hover:text-blue-600">Hirdetmény</a>
+                            <a href="{{ route('terms-and-conditions') }}"
+                                class="block py-2 text-gray-500 hover:text-blue-600">Általános Szerződési
+                                Feltételek</a>
+                            <a href="{{ route('delivery-framework') }}"
+                                class="block py-2 text-gray-500 hover:text-blue-600">Szállítási keretszerződés</a>
+                            <a href="{{ route('quality-policy') }}"
+                                class="block py-2 text-gray-500 hover:text-blue-600">Minőségpolitika</a>
+                            <a href="{{ route('privacy-policy') }}"
+                                class="block py-2 text-gray-500 hover:text-blue-600">Adatkezelési tájékoztató</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a href="{{ route('contact') }}" class="block py-2 text-gray-700 hover:text-blue-600">Kapcsolat</a>
         </div>
     </div>
 </div>
