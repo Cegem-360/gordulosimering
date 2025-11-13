@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-C01Jyott.css",
+    "file": "assets/app-B_Lzjpgf.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -92,17 +92,41 @@
     "file": "assets/subbanner-2-20240904-DnDVX8vl.webp",
     "src": "resources/images/subbanner-2-20240904.webp"
   },
+  "resources/images/team/balogh.jpg": {
+    "file": "assets/balogh-Cf3lSYSg.jpg",
+    "src": "resources/images/team/balogh.jpg"
+  },
+  "resources/images/team/bardfalvi.jpg": {
+    "file": "assets/bardfalvi-DGnhNSKs.jpg",
+    "src": "resources/images/team/bardfalvi.jpg"
+  },
+  "resources/images/team/forian.jpg": {
+    "file": "assets/forian-BeuSpc2k.jpg",
+    "src": "resources/images/team/forian.jpg"
+  },
+  "resources/images/team/gyorfi.jpg": {
+    "file": "assets/gyorfi-HFrkAZqk.jpg",
+    "src": "resources/images/team/gyorfi.jpg"
+  },
+  "resources/images/team/hatvani.jpg": {
+    "file": "assets/hatvani-BKGj2lkH.jpg",
+    "src": "resources/images/team/hatvani.jpg"
+  },
+  "resources/images/team/volgyi.jpg": {
+    "file": "assets/volgyi-DkjmmjNP.jpg",
+    "src": "resources/images/team/volgyi.jpg"
+  },
   "resources/images/webshop-banner.webp": {
     "file": "assets/webshop-banner-Ci6i28kD.webp",
     "src": "resources/images/webshop-banner.webp"
   },
   "resources/js/app.js": {
-    "file": "assets/app-B7-j6WNn.js",
+    "file": "assets/app-muyQaoFt.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-C01Jyott.css"
+      "assets/app-B_Lzjpgf.css"
     ]
   }
 }
