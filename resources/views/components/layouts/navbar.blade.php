@@ -6,7 +6,7 @@
             <div class="flex items-center space-x-8">
                 <!-- Logo -->
                 <!-- Logo -->
-                <a href="{{ route('products.index') }}" class="shrink-0">
+                <a href="/" class="shrink-0">
                     <img src="{{ Vite::asset('resources/images/GS-logo.webp') }}"
                         alt="Gördülő Simering Kft - SKF csapágyak és kapcsolódó termékek kereskedése" class="h-12">
                 </a>
