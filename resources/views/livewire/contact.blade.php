@@ -58,7 +58,7 @@
             <!-- XIV. kerület -->
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
                 <div class="aspect-w-16 aspect-h-9">
-                    <img src="{{ Vite::asset('resources/images/stores/nagy-lajos.jpg') }}" alt="XIV. kerületi üzlet"
+                    <img src="{{ Vite::asset('resources/images/stores/nagylajos.jpg') }}" alt="XIV. kerületi üzlet"
                         class="rounded-t-lg object-cover w-full h-48">
                 </div>
                 <div class="p-5">
@@ -100,7 +100,7 @@
             <!-- XVII. kerület -->
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
                 <div class="aspect-w-16 aspect-h-9">
-                    <img src="{{ Vite::asset('resources/images/stores/pesti.jpg') }}" alt="XVII. kerületi üzlet"
+                    <img src="{{ Vite::asset('resources/images/stores/ff1.jpg') }}" alt="XVII. kerületi üzlet"
                         class="rounded-t-lg object-cover w-full h-48">
                 </div>
                 <div class="p-5">

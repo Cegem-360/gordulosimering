@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-C01Jyott.css",
+    "file": "assets/app-BRmOGpsy.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -88,21 +88,57 @@
     "file": "assets/stainless-steel-thrust-ball-bearing-and-linear-bea-2025-01-29-04-41-07-utc-ByKze5vi.webp",
     "src": "resources/images/stainless-steel-thrust-ball-bearing-and-linear-bea-2025-01-29-04-41-07-utc.webp"
   },
+  "resources/images/stores/ff1.jpg": {
+    "file": "assets/ff1-C9CIeWMO.jpg",
+    "src": "resources/images/stores/ff1.jpg"
+  },
+  "resources/images/stores/korosi.jpg": {
+    "file": "assets/korosi-DtJlO_4T.jpg",
+    "src": "resources/images/stores/korosi.jpg"
+  },
+  "resources/images/stores/nagylajos.jpg": {
+    "file": "assets/nagylajos-OjBlDAH4.jpg",
+    "src": "resources/images/stores/nagylajos.jpg"
+  },
   "resources/images/subbanner-2-20240904.webp": {
     "file": "assets/subbanner-2-20240904-DnDVX8vl.webp",
     "src": "resources/images/subbanner-2-20240904.webp"
+  },
+  "resources/images/team/balogh.jpg": {
+    "file": "assets/balogh-Cf3lSYSg.jpg",
+    "src": "resources/images/team/balogh.jpg"
+  },
+  "resources/images/team/bardfalvi.jpg": {
+    "file": "assets/bardfalvi-DGnhNSKs.jpg",
+    "src": "resources/images/team/bardfalvi.jpg"
+  },
+  "resources/images/team/forian.jpg": {
+    "file": "assets/forian-BeuSpc2k.jpg",
+    "src": "resources/images/team/forian.jpg"
+  },
+  "resources/images/team/gyorfi.jpg": {
+    "file": "assets/gyorfi-HFrkAZqk.jpg",
+    "src": "resources/images/team/gyorfi.jpg"
+  },
+  "resources/images/team/hatvani.jpg": {
+    "file": "assets/hatvani-BKGj2lkH.jpg",
+    "src": "resources/images/team/hatvani.jpg"
+  },
+  "resources/images/team/volgyi.jpg": {
+    "file": "assets/volgyi-DkjmmjNP.jpg",
+    "src": "resources/images/team/volgyi.jpg"
   },
   "resources/images/webshop-banner.webp": {
     "file": "assets/webshop-banner-Ci6i28kD.webp",
     "src": "resources/images/webshop-banner.webp"
   },
   "resources/js/app.js": {
-    "file": "assets/app-B7-j6WNn.js",
+    "file": "assets/app-BH6I9nct.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-C01Jyott.css"
+      "assets/app-BRmOGpsy.css"
     ]
   }
 }

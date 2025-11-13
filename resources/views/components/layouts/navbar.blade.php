@@ -17,7 +17,7 @@
                     <div class="relative" x-data="{ open: false }">
                         <button @mouseenter="open = true" @mouseleave="open = false"
                             class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-medium">
-                            <span>Termékkategóriák</span>
+                            <span>{{ __('Termékkategóriák') }}</span>
                             <i class="fas fa-chevron-down text-sm transition-transform"
                                 :class="{ 'rotate-180': open }"></i>
                         </button>
@@ -34,12 +34,12 @@
                             <div class="p-4 grid grid-cols-1 gap-4">
                                 <!-- Main Categories -->
                                 <div>
-                                    <h3 class="font-bold text-gray-900 mb-2">Csapágytípusok</h3>
+                                    <h3 class="font-bold text-gray-900 mb-2">{{ __('Csapágytípusok') }}</h3>
                                     <ul class="space-y-2">
                                         <li>
                                             <a href="#"
                                                 class="text-gray-600 hover:text-blue-600 flex items-center justify-between group">
-                                                <span>Mélyhornyú golyóscsapágyak</span>
+                                                <span>{{ __('Mélyhornyú golyóscsapágyak') }}</span>
                                                 <i
                                                     class="fas fa-chevron-right text-gray-400 group-hover:text-blue-600"></i>
                                             </a>
@@ -47,7 +47,7 @@
                                         <li>
                                             <a href="#"
                                                 class="text-gray-600 hover:text-blue-600 flex items-center justify-between group">
-                                                <span>Tűgörgős csapágyak</span>
+                                                <span>{{ __('Tűgörgős csapágyak') }}</span>
                                                 <i
                                                     class="fas fa-chevron-right text-gray-400 group-hover:text-blue-600"></i>
                                             </a>
@@ -55,7 +55,7 @@
                                         <li>
                                             <a href="#"
                                                 class="text-gray-600 hover:text-blue-600 flex items-center justify-between group">
-                                                <span>Hengergörgős csapágyak</span>
+                                                <span>{{ __('Hengergörgős csapágyak') }}</span>
                                                 <i
                                                     class="fas fa-chevron-right text-gray-400 group-hover:text-blue-600"></i>
                                             </a>
@@ -65,23 +65,23 @@
 
                                 <!-- Popular Series -->
                                 <div>
-                                    <h3 class="font-bold text-gray-900 mb-2">Népszerű sorozatok</h3>
+                                    <h3 class="font-bold text-gray-900 mb-2">{{ __('Népszerű sorozatok') }}</h3>
                                     <div class="grid grid-cols-2 gap-2">
                                         <a href="#"
                                             class="text-sm bg-gray-50 hover:bg-gray-100 rounded p-2 text-gray-600 hover:text-blue-600">
-                                            62XX sorozat
+                                            {{ __('62XX sorozat') }}
                                         </a>
                                         <a href="#"
                                             class="text-sm bg-gray-50 hover:bg-gray-100 rounded p-2 text-gray-600 hover:text-blue-600">
-                                            63XX sorozat
+                                            {{ __('63XX sorozat') }}
                                         </a>
                                         <a href="#"
                                             class="text-sm bg-gray-50 hover:bg-gray-100 rounded p-2 text-gray-600 hover:text-blue-600">
-                                            60XX sorozat
+                                            {{ __('60XX sorozat') }}
                                         </a>
                                         <a href="#"
                                             class="text-sm bg-gray-50 hover:bg-gray-100 rounded p-2 text-gray-600 hover:text-blue-600">
-                                            NK sorozat
+                                            {{ __('NK sorozat') }}
                                         </a>
                                     </div>
                                 </div>
@@ -90,14 +90,14 @@
                     </div>
 
                     <!-- Other Nav Items -->
-                    <a href="#" class="text-gray-700 hover:text-blue-600">Márkák</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600">Akciók</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600">{{ __('Márkák') }}</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
 
                     <!-- Cégünkről Menu -->
                     <div class="relative" x-data="{ open: false }">
                         <button @mouseenter="open = true" @mouseleave="open = false"
                             class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-medium">
-                            <span>Cégünkről</span>
+                            <span>{{ __('Cégünkről') }}</span>
                             <i class="fas fa-chevron-down text-sm transition-transform"
                                 :class="{ 'rotate-180': open }"></i>
                         </button>
@@ -114,22 +114,22 @@
                             <div class="py-2">
                                 <a href="{{ route('services') }}"
                                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                    Szolgáltatásaink
+                                    {{ __('Szolgáltatásaink') }}
                                 </a>
                                 <a href="{{ route('team') }}"
                                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                    Munkatársaink
+                                    {{ __('Munkatársaink') }}
                                 </a>
                                 <a href="{{ route('company-data') }}"
                                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                    Cégadatok
+                                    {{ __('Cégadatok') }}
                                 </a>
 
                                 <!-- Dokumentumok Submenu -->
                                 <div class="relative" x-data="{ submenuOpen: false }">
                                     <button @mouseenter="submenuOpen = true" @mouseleave="submenuOpen = false"
                                         class="w-full flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                        <span>Dokumentumok</span>
+                                        <span>{{ __('Dokumentumok') }}</span>
                                         <i class="fas fa-chevron-right text-sm transition-transform"
                                             :class="{ 'rotate-90': submenuOpen }"></i>
                                     </button>
@@ -147,23 +147,23 @@
                                         <div class="py-2">
                                             <a href="{{ route('documents') }}"
                                                 class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                                Hirdetmény
+                                                {{ __('Hirdetmény') }}
                                             </a>
                                             <a href="{{ route('terms-and-conditions') }}"
                                                 class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                                Általános Szerződési Feltételek
+                                                {{ __('Általános Szerződési Feltételek') }}
                                             </a>
                                             <a href="{{ route('delivery-framework') }}"
                                                 class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                                Szállítási keretszerződés
+                                                {{ __('Szállítási keretszerződés') }}
                                             </a>
                                             <a href="{{ route('quality-policy') }}"
                                                 class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                                Minőségpolitika
+                                                {{ __('Minőségpolitika') }}
                                             </a>
                                             <a href="{{ route('privacy-policy') }}"
                                                 class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                                Adatkezelési tájékoztató
+                                                {{ __('Adatkezelési tájékoztató') }}
                                             </a>
                                         </div>
                                     </div>
@@ -172,7 +172,8 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('contact') }}" class="text-gray-700 hover:text-blue-600">Kapcsolat</a>
+                    <a href="{{ route('contact') }}"
+                        class="text-gray-700 hover:text-blue-600">{{ __('Kapcsolat') }}</a>
                 </div>
             </div>
 
@@ -181,7 +182,7 @@
                 <form action="/products" method="GET" class="w-full">
                     <div class="relative">
                         <input type="text" name="search"
-                            placeholder="Keresés termékek között... (pl: 6205-2RS, SKF golyóscsapágy)"
+                            placeholder="{{ __('Keresés termékek között... (pl: 6205-2RS, SKF golyóscsapágy)') }}"
                             class="w-full pl-12 pr-4 py-2 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
@@ -219,7 +220,7 @@
                 <form @submit.prevent="$store.search.submit()" class="relative">
                     <div class="relative">
                         <input type="text"
-                            placeholder="Keresés termékek között... (pl: 6205-2RS, SKF golyóscsapágy)"
+                            placeholder="{{ __('Keresés termékek között... (pl: 6205-2RS, SKF golyóscsapágy)') }}"
                             x-model="$store.search.query" @keydown.escape="$store.search.close()"
                             class="w-full pl-12 pr-4 py-3 text-lg rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -233,23 +234,23 @@
 
                     <!-- Quick Links -->
                     <div class="mt-4">
-                        <h4 class="text-sm font-medium text-gray-500 mb-2">Népszerű keresések:</h4>
+                        <h4 class="text-sm font-medium text-gray-500 mb-2">{{ __('Népszerű keresések:') }}</h4>
                         <div class="flex flex-wrap gap-2">
-                            <button type="button" @click="$store.search.setQuery('SKF golyóscsapágy')"
+                            <button type="button" @click="$store.search.setQuery('{{ __('SKF golyóscsapágy') }}')"
                                 class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-600 transition-colors">
-                                SKF golyóscsapágy
+                                {{ __('SKF golyóscsapágy') }}
                             </button>
-                            <button type="button" @click="$store.search.setQuery('6205 sorozat')"
+                            <button type="button" @click="$store.search.setQuery('{{ __('6205 sorozat') }}')"
                                 class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-600 transition-colors">
-                                6205 sorozat
+                                {{ __('6205 sorozat') }}
                             </button>
-                            <button type="button" @click="$store.search.setQuery('tűgörgős csapágy')"
+                            <button type="button" @click="$store.search.setQuery('{{ __('tűgörgős csapágy') }}')"
                                 class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-600 transition-colors">
-                                Tűgörgős csapágy
+                                {{ __('tűgörgős csapágy') }}
                             </button>
-                            <button type="button" @click="$store.search.setQuery('gumi porvédős')"
+                            <button type="button" @click="$store.search.setQuery('{{ __('Gumi porvédős') }}')"
                                 class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-600 transition-colors">
-                                Gumi porvédős
+                                {{ __('Gumi porvédős') }}
                             </button>
                         </div>
                     </div>
@@ -267,63 +268,65 @@
             <!-- Mobile Category Menu -->
             <div x-data="{ open: false }">
                 <button @click="open = !open" class="flex items-center justify-between w-full py-2 text-gray-700">
-                    <span class="font-medium">Termékkategóriák</span>
+                    <span class="font-medium">{{ __('Termékkategóriák') }}</span>
                     <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
                 </button>
 
                 <div x-show="open" class="mt-2 space-y-2 pl-4">
-                    <a href="#" class="block py-2 text-gray-600 hover:text-blue-600">Mélyhornyú
-                        golyóscsapágyak</a>
-                    <a href="#" class="block py-2 text-gray-600 hover:text-blue-600">Tűgörgős csapágyak</a>
-                    <a href="#" class="block py-2 text-gray-600 hover:text-blue-600">Hengergörgős csapágyak</a>
+                    <a href="#"
+                        class="block py-2 text-gray-600 hover:text-blue-600">{{ __('Mélyhornyú golyóscsapágyak') }}</a>
+                    <a href="#"
+                        class="block py-2 text-gray-600 hover:text-blue-600">{{ __('Tűgörgős csapágyak') }}</a>
+                    <a href="#"
+                        class="block py-2 text-gray-600 hover:text-blue-600">{{ __('Hengergörgős csapágyak') }}</a>
                 </div>
             </div>
 
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Márkák</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">Akciók</a>
+            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Márkák') }}</a>
+            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
 
             <!-- Mobile Cégünkről Menu -->
             <div x-data="{ open: false }">
                 <button @click="open = !open" class="flex items-center justify-between w-full py-2 text-gray-700">
-                    <span class="font-medium">Cégünkről</span>
+                    <span class="font-medium">{{ __('Cégünkről') }}</span>
                     <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
                 </button>
 
                 <div x-show="open" class="mt-2 space-y-2 pl-4">
                     <a href="{{ route('services') }}"
-                        class="block py-2 text-gray-600 hover:text-blue-600">Szolgáltatásaink</a>
+                        class="block py-2 text-gray-600 hover:text-blue-600">{{ __('Szolgáltatásaink') }}</a>
                     <a href="{{ route('team') }}"
-                        class="block py-2 text-gray-600 hover:text-blue-600">Munkatársaink</a>
+                        class="block py-2 text-gray-600 hover:text-blue-600">{{ __('Munkatársaink') }}</a>
                     <a href="{{ route('company-data') }}"
-                        class="block py-2 text-gray-600 hover:text-blue-600">Cégadatok</a>
+                        class="block py-2 text-gray-600 hover:text-blue-600">{{ __('Cégadatok') }}</a>
 
                     <!-- Mobile Dokumentumok Submenu -->
                     <div x-data="{ submenuOpen: false }">
                         <button @click="submenuOpen = !submenuOpen"
                             class="flex items-center justify-between w-full py-2 text-gray-600">
-                            <span>Dokumentumok</span>
+                            <span>{{ __('Dokumentumok') }}</span>
                             <i class="fas fa-chevron-down text-sm transition-transform"
                                 :class="{ 'rotate-180': submenuOpen }"></i>
                         </button>
 
                         <div x-show="submenuOpen" class="mt-2 space-y-2 pl-4">
                             <a href="{{ route('documents') }}"
-                                class="block py-2 text-gray-500 hover:text-blue-600">Hirdetmény</a>
+                                class="block py-2 text-gray-500 hover:text-blue-600">{{ __('Hirdetmény') }}</a>
                             <a href="{{ route('terms-and-conditions') }}"
-                                class="block py-2 text-gray-500 hover:text-blue-600">Általános Szerződési
-                                Feltételek</a>
+                                class="block py-2 text-gray-500 hover:text-blue-600">{{ __('Általános Szerződési Feltételek') }}</a>
                             <a href="{{ route('delivery-framework') }}"
-                                class="block py-2 text-gray-500 hover:text-blue-600">Szállítási keretszerződés</a>
+                                class="block py-2 text-gray-500 hover:text-blue-600">{{ __('Szállítási keretszerződés') }}</a>
                             <a href="{{ route('quality-policy') }}"
-                                class="block py-2 text-gray-500 hover:text-blue-600">Minőségpolitika</a>
+                                class="block py-2 text-gray-500 hover:text-blue-600">{{ __('Minőségpolitika') }}</a>
                             <a href="{{ route('privacy-policy') }}"
-                                class="block py-2 text-gray-500 hover:text-blue-600">Adatkezelési tájékoztató</a>
+                                class="block py-2 text-gray-500 hover:text-blue-600">{{ __('Adatkezelési tájékoztató') }}</a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <a href="{{ route('contact') }}" class="block py-2 text-gray-700 hover:text-blue-600">Kapcsolat</a>
+            <a href="{{ route('contact') }}"
+                class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Kapcsolat') }}</a>
         </div>
     </div>
 </div>
