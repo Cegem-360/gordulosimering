@@ -56,7 +56,7 @@ $product_demo = (object) [
                     <template x-for="index in images" :key="index">
                         <button @click="goTo(index)" :class="{ 'ring-2 ring-blue-500': activeImage === index }"
                             class="w-20 h-20 bg-white rounded-lg border hover:border-blue-500 transition-colors overflow-hidden cursor-pointer">
-                            <img :src="`{{ Vite::asset('resources/images/products/bearing-${index}.webp') }}`"
+                            <img :src="Vite::asset('resources/images/products/bearing-${index}.webp')"
                                 :alt="`SKF 6205-2RS mélyhornyú golyóscsapágy nézet ${index}`"
                                 class="w-full h-full object-contain">
                         </button>
@@ -75,7 +75,7 @@ $product_demo = (object) [
                                     x-transition:leave="transition ease-in duration-200"
                                     x-transition:leave-start="opacity-100 scale-100"
                                     x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0">
-                                    <img :src="`{{ Vite::asset('resources/images/products/bearing-${index}.webp') }}`"
+                                    <img :src="Vite::asset('resources/images/products/bearing-${index}.webp')"
                                         :alt="`Product view ${index}`" class="w-full h-full object-contain">
                                 </div>
                             </template>
@@ -255,11 +255,11 @@ $product_demo = (object) [
         </div>
 
         <!-- Product Database Information -->
-        @if($product)
-        <div class="bg-white rounded-lg border p-6">
-            <h2 class="text-xl font-bold mb-4">Termékinformációk (Adatbázisból)</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach ([
+        @if ($product)
+            <div class="bg-white rounded-lg border p-6">
+                <h2 class="text-xl font-bold mb-4">Termékinformációk (Adatbázisból)</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach ([
         'Csoport kód' => $product->group_code ?? null,
         'Termékkód' => $product->product_code ?? null,
         'Szolgáltatás' => $product->is_service ? 'Igen' : 'Nem',
@@ -304,40 +304,41 @@ $product_demo = (object) [
         'Kereskedelmi mennyiség' => $product->trade_quantity ?? null,
         'Raklap mennyiség' => $product->pallet_quantity ?? null,
     ] as $label => $value)
-                    @if ($value)
-                        <div class="border-b pb-2">
-                            <span class="text-gray-600 text-sm">{{ $label }}</span>
-                            <p class="font-medium">{{ $value }}</p>
-                        </div>
-                    @endif
-                @endforeach
-            </div>
-
-            @if ($product->description ?? false)
-                <div class="mt-6 pt-6 border-t">
-                    <h3 class="font-semibold mb-2">Leírás</h3>
-                    <p class="text-gray-700">{{ $product->description }}</p>
-                </div>
-            @endif
-
-            @if (($product->custom_fields ?? false) && count($product->custom_fields) > 0)
-                <div class="mt-6 pt-6 border-t">
-                    <h3 class="font-semibold mb-4">Egyedi mezők</h3>
-                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach ($product->custom_fields as $key => $value)
+                        @if ($value)
                             <div class="border-b pb-2">
-                                <span class="text-gray-600 text-sm">{{ $key }}</span>
-                                <p class="font-medium">{{ is_array($value) ? json_encode($value) : $value }}</p>
+                                <span class="text-gray-600 text-sm">{{ $label }}</span>
+                                <p class="font-medium">{{ $value }}</p>
                             </div>
-                        @endforeach
-                    </div>
+                        @endif
+                    @endforeach
                 </div>
-            @endif
-        </div>
+
+                @if ($product->description ?? false)
+                    <div class="mt-6 pt-6 border-t">
+                        <h3 class="font-semibold mb-2">Leírás</h3>
+                        <p class="text-gray-700">{{ $product->description }}</p>
+                    </div>
+                @endif
+
+                @if (($product->custom_fields ?? false) && count($product->custom_fields) > 0)
+                    <div class="mt-6 pt-6 border-t">
+                        <h3 class="font-semibold mb-4">Egyedi mezők</h3>
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach ($product->custom_fields as $key => $value)
+                                <div class="border-b pb-2">
+                                    <span class="text-gray-600 text-sm">{{ $key }}</span>
+                                    <p class="font-medium">{{ is_array($value) ? json_encode($value) : $value }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
         @else
-        <div class="bg-yellow-100 border border-yellow-400 rounded-lg p-6">
-            <p class="text-yellow-800">Nincs valós termék betöltve az adatbázisból. Kérjük, győződjön meg arról, hogy a route megfelelően van beállítva és van termék az adatbázisban.</p>
-        </div>
+            <div class="bg-yellow-100 border border-yellow-400 rounded-lg p-6">
+                <p class="text-yellow-800">Nincs valós termék betöltve az adatbázisból. Kérjük, győződjön meg arról,
+                    hogy a route megfelelően van beállítva és van termék az adatbázisban.</p>
+            </div>
         @endif
     </div>
 </div>
