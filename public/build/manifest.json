@@ -1,144 +1,144 @@
 {
-    "resources/css/app.css": {
-        "file": "assets/app-B_Lzjpgf.css",
-        "src": "resources/css/app.css",
-        "isEntry": true
-    },
-    "resources/images/24-7-service.webp": {
-        "file": "assets/24-7-service-D-JcLYjK.webp",
-        "src": "resources/images/24-7-service.webp"
-    },
-    "resources/images/GS-logo.webp": {
-        "file": "assets/GS-logo-D599hjYg.webp",
-        "src": "resources/images/GS-logo.webp"
-    },
-    "resources/images/MFbanner-HU-002-.png": {
-        "file": "assets/MFbanner-HU-002--Dz5uk-5k.png",
-        "src": "resources/images/MFbanner-HU-002-.png"
-    },
-    "resources/images/Quality1-1-.png": {
-        "file": "assets/Quality1-1--DLN2PzVy.png",
-        "src": "resources/images/Quality1-1-.png"
-    },
-    "resources/images/Small-banner-Fabory-app.png": {
-        "file": "assets/Small-banner-Fabory-app-kt5jFQyG.png",
-        "src": "resources/images/Small-banner-Fabory-app.png"
-    },
-    "resources/images/bearing.webp": {
-        "file": "assets/bearing-CPo2rBOz.webp",
-        "src": "resources/images/bearing.webp"
-    },
-    "resources/images/categories/cat-01.webp": {
-        "file": "assets/cat-01-BK-Tu4rl.webp",
-        "src": "resources/images/categories/cat-01.webp"
-    },
-    "resources/images/categories/cat-02.webp": {
-        "file": "assets/cat-02-DkUe9wm8.webp",
-        "src": "resources/images/categories/cat-02.webp"
-    },
-    "resources/images/categories/cat-03.webp": {
-        "file": "assets/cat-03-qbu1czwH.webp",
-        "src": "resources/images/categories/cat-03.webp"
-    },
-    "resources/images/categories/cat-04.webp": {
-        "file": "assets/cat-04-DiujgeMu.webp",
-        "src": "resources/images/categories/cat-04.webp"
-    },
-    "resources/images/categories/cat-05.webp": {
-        "file": "assets/cat-05-DUqNbpdx.webp",
-        "src": "resources/images/categories/cat-05.webp"
-    },
-    "resources/images/categories/cat-06.webp": {
-        "file": "assets/cat-06-BwRVM18r.webp",
-        "src": "resources/images/categories/cat-06.webp"
-    },
-    "resources/images/categories/cat-07.webp": {
-        "file": "assets/cat-07-BuO2tZA8.webp",
-        "src": "resources/images/categories/cat-07.webp"
-    },
-    "resources/images/disassembled-roller-bearing-2025-08-27-05-49-05-utc.webp": {
-        "file": "assets/disassembled-roller-bearing-2025-08-27-05-49-05-utc-2kz7cRa8.webp",
-        "src": "resources/images/disassembled-roller-bearing-2025-08-27-05-49-05-utc.webp"
-    },
-    "resources/images/hero-img.webp": {
-        "file": "assets/hero-img-DW-IenL8.webp",
-        "src": "resources/images/hero-img.webp"
-    },
-    "resources/images/products/bearing-1.webp": {
-        "file": "assets/bearing-CPo2rBOz.webp",
-        "src": "resources/images/bearing.webp"
-    },
-    "resources/images/products/bearing-2.webp": {
-        "file": "assets/bearing-2-BIIyBJqn.webp",
-        "src": "resources/images/products/bearing-2.webp"
-    },
-    "resources/images/products/bearing-3.webp": {
-        "file": "assets/bearing-3-CrU3-A1G.webp",
-        "src": "resources/images/products/bearing-3.webp"
-    },
-    "resources/images/products/bearing-4.webp": {
-        "file": "assets/bearing-4-s6oF1gF2.webp",
-        "src": "resources/images/products/bearing-4.webp"
-    },
-    "resources/images/skf-products.webp": {
-        "file": "assets/skf-products-BvXD7m-p.webp",
-        "src": "resources/images/skf-products.webp"
-    },
-    "resources/images/stainless-steel-thrust-ball-bearing-and-linear-bea-2025-01-29-04-41-07-utc.webp": {
-        "file": "assets/stainless-steel-thrust-ball-bearing-and-linear-bea-2025-01-29-04-41-07-utc-ByKze5vi.webp",
-        "src": "resources/images/stainless-steel-thrust-ball-bearing-and-linear-bea-2025-01-29-04-41-07-utc.webp"
-    },
-    "resources/images/stores/ff1.jpg": {
-        "file": "assets/ff1-C9CIeWMO.jpg",
-        "src": "resources/images/stores/ff1.jpg"
-    },
-    "resources/images/stores/korosi.jpg": {
-        "file": "assets/korosi-DtJlO_4T.jpg",
-        "src": "resources/images/stores/korosi.jpg"
-    },
-    "resources/images/stores/nagylajos.jpg": {
-        "file": "assets/nagylajos-OjBlDAH4.jpg",
-        "src": "resources/images/stores/nagylajos.jpg"
-    },
-    "resources/images/subbanner-2-20240904.webp": {
-        "file": "assets/subbanner-2-20240904-DnDVX8vl.webp",
-        "src": "resources/images/subbanner-2-20240904.webp"
-    },
-    "resources/images/team/balogh.jpg": {
-        "file": "assets/balogh-Cf3lSYSg.jpg",
-        "src": "resources/images/team/balogh.jpg"
-    },
-    "resources/images/team/bardfalvi.jpg": {
-        "file": "assets/bardfalvi-DGnhNSKs.jpg",
-        "src": "resources/images/team/bardfalvi.jpg"
-    },
-    "resources/images/team/forian.jpg": {
-        "file": "assets/forian-BeuSpc2k.jpg",
-        "src": "resources/images/team/forian.jpg"
-    },
-    "resources/images/team/gyorfi.jpg": {
-        "file": "assets/gyorfi-HFrkAZqk.jpg",
-        "src": "resources/images/team/gyorfi.jpg"
-    },
-    "resources/images/team/hatvani.jpg": {
-        "file": "assets/hatvani-BKGj2lkH.jpg",
-        "src": "resources/images/team/hatvani.jpg"
-    },
-    "resources/images/team/volgyi.jpg": {
-        "file": "assets/volgyi-DkjmmjNP.jpg",
-        "src": "resources/images/team/volgyi.jpg"
-    },
-    "resources/images/webshop-banner.webp": {
-        "file": "assets/webshop-banner-Ci6i28kD.webp",
-        "src": "resources/images/webshop-banner.webp"
-    },
-    "resources/js/app.js": {
-        "file": "assets/app-muyQaoFt.js",
-        "name": "app",
-        "src": "resources/js/app.js",
-        "isEntry": true,
-        "css": [
-            "assets/app-B_Lzjpgf.css"
-        ]
-    }
+  "resources/css/app.css": {
+    "file": "assets/app-PRfMqV2O.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/images/24-7-service.webp": {
+    "file": "assets/24-7-service-D-JcLYjK.webp",
+    "src": "resources/images/24-7-service.webp"
+  },
+  "resources/images/GS-logo.webp": {
+    "file": "assets/GS-logo-D599hjYg.webp",
+    "src": "resources/images/GS-logo.webp"
+  },
+  "resources/images/MFbanner-HU-002-.png": {
+    "file": "assets/MFbanner-HU-002--Dz5uk-5k.png",
+    "src": "resources/images/MFbanner-HU-002-.png"
+  },
+  "resources/images/Quality1-1-.png": {
+    "file": "assets/Quality1-1--DLN2PzVy.png",
+    "src": "resources/images/Quality1-1-.png"
+  },
+  "resources/images/Small-banner-Fabory-app.png": {
+    "file": "assets/Small-banner-Fabory-app-kt5jFQyG.png",
+    "src": "resources/images/Small-banner-Fabory-app.png"
+  },
+  "resources/images/bearing.webp": {
+    "file": "assets/bearing-CPo2rBOz.webp",
+    "src": "resources/images/bearing.webp"
+  },
+  "resources/images/categories/cat-01.webp": {
+    "file": "assets/cat-01-BK-Tu4rl.webp",
+    "src": "resources/images/categories/cat-01.webp"
+  },
+  "resources/images/categories/cat-02.webp": {
+    "file": "assets/cat-02-DkUe9wm8.webp",
+    "src": "resources/images/categories/cat-02.webp"
+  },
+  "resources/images/categories/cat-03.webp": {
+    "file": "assets/cat-03-qbu1czwH.webp",
+    "src": "resources/images/categories/cat-03.webp"
+  },
+  "resources/images/categories/cat-04.webp": {
+    "file": "assets/cat-04-DiujgeMu.webp",
+    "src": "resources/images/categories/cat-04.webp"
+  },
+  "resources/images/categories/cat-05.webp": {
+    "file": "assets/cat-05-DUqNbpdx.webp",
+    "src": "resources/images/categories/cat-05.webp"
+  },
+  "resources/images/categories/cat-06.webp": {
+    "file": "assets/cat-06-BwRVM18r.webp",
+    "src": "resources/images/categories/cat-06.webp"
+  },
+  "resources/images/categories/cat-07.webp": {
+    "file": "assets/cat-07-BuO2tZA8.webp",
+    "src": "resources/images/categories/cat-07.webp"
+  },
+  "resources/images/disassembled-roller-bearing-2025-08-27-05-49-05-utc.webp": {
+    "file": "assets/disassembled-roller-bearing-2025-08-27-05-49-05-utc-2kz7cRa8.webp",
+    "src": "resources/images/disassembled-roller-bearing-2025-08-27-05-49-05-utc.webp"
+  },
+  "resources/images/hero-img.webp": {
+    "file": "assets/hero-img-DW-IenL8.webp",
+    "src": "resources/images/hero-img.webp"
+  },
+  "resources/images/products/bearing-1.webp": {
+    "file": "assets/bearing-CPo2rBOz.webp",
+    "src": "resources/images/bearing.webp"
+  },
+  "resources/images/products/bearing-2.webp": {
+    "file": "assets/bearing-2-BIIyBJqn.webp",
+    "src": "resources/images/products/bearing-2.webp"
+  },
+  "resources/images/products/bearing-3.webp": {
+    "file": "assets/bearing-3-CrU3-A1G.webp",
+    "src": "resources/images/products/bearing-3.webp"
+  },
+  "resources/images/products/bearing-4.webp": {
+    "file": "assets/bearing-4-s6oF1gF2.webp",
+    "src": "resources/images/products/bearing-4.webp"
+  },
+  "resources/images/skf-products.webp": {
+    "file": "assets/skf-products-BvXD7m-p.webp",
+    "src": "resources/images/skf-products.webp"
+  },
+  "resources/images/stainless-steel-thrust-ball-bearing-and-linear-bea-2025-01-29-04-41-07-utc.webp": {
+    "file": "assets/stainless-steel-thrust-ball-bearing-and-linear-bea-2025-01-29-04-41-07-utc-ByKze5vi.webp",
+    "src": "resources/images/stainless-steel-thrust-ball-bearing-and-linear-bea-2025-01-29-04-41-07-utc.webp"
+  },
+  "resources/images/stores/ff1.jpg": {
+    "file": "assets/ff1-C9CIeWMO.jpg",
+    "src": "resources/images/stores/ff1.jpg"
+  },
+  "resources/images/stores/korosi.jpg": {
+    "file": "assets/korosi-DtJlO_4T.jpg",
+    "src": "resources/images/stores/korosi.jpg"
+  },
+  "resources/images/stores/nagylajos.jpg": {
+    "file": "assets/nagylajos-OjBlDAH4.jpg",
+    "src": "resources/images/stores/nagylajos.jpg"
+  },
+  "resources/images/subbanner-2-20240904.webp": {
+    "file": "assets/subbanner-2-20240904-DnDVX8vl.webp",
+    "src": "resources/images/subbanner-2-20240904.webp"
+  },
+  "resources/images/team/balogh.jpg": {
+    "file": "assets/balogh-Cf3lSYSg.jpg",
+    "src": "resources/images/team/balogh.jpg"
+  },
+  "resources/images/team/bardfalvi.jpg": {
+    "file": "assets/bardfalvi-DGnhNSKs.jpg",
+    "src": "resources/images/team/bardfalvi.jpg"
+  },
+  "resources/images/team/forian.jpg": {
+    "file": "assets/forian-BeuSpc2k.jpg",
+    "src": "resources/images/team/forian.jpg"
+  },
+  "resources/images/team/gyorfi.jpg": {
+    "file": "assets/gyorfi-HFrkAZqk.jpg",
+    "src": "resources/images/team/gyorfi.jpg"
+  },
+  "resources/images/team/hatvani.jpg": {
+    "file": "assets/hatvani-BKGj2lkH.jpg",
+    "src": "resources/images/team/hatvani.jpg"
+  },
+  "resources/images/team/volgyi.jpg": {
+    "file": "assets/volgyi-DkjmmjNP.jpg",
+    "src": "resources/images/team/volgyi.jpg"
+  },
+  "resources/images/webshop-banner.webp": {
+    "file": "assets/webshop-banner-Ci6i28kD.webp",
+    "src": "resources/images/webshop-banner.webp"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-2-cYrR4z.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app-PRfMqV2O.css"
+    ]
+  }
 }
