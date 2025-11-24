@@ -13,7 +13,7 @@
         @endif
     </div>
 
-    <a href="#" class="block mb-4 hover:underline text-blue-600 font-semibold grow">
+    <a href="{{ isset($product->slug) ? route('products.show', $product->slug) : '#' }}" class="block mb-4 hover:underline text-blue-600 font-semibold grow">
         {{ $product->item_name ?? 'Nincs termék név' }}
     </a>
 

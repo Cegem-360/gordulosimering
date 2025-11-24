@@ -1,5 +1,5 @@
 <?php
-$product = (object) [
+$product_demo = (object) [
     'item_number' => '6205-2RS',
     'name' => '6205-2RS mélyhornyú golyóscsapágy gumi porvédővel',
     'brand' => 'SKF',
@@ -31,7 +31,7 @@ $product = (object) [
                 <span class="text-gray-500">&gt;</span>
                 <a href="#" class="text-blue-600 hover:underline">Tömített golyóscsapágyak</a>
                 <span class="text-gray-500">&gt;</span>
-                <span class="text-gray-700">{{ $product->item_number }}</span>
+                <span class="text-gray-700">{{ $product_demo->item_number }}</span>
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@ $product = (object) [
     <div class="container mx-auto px-4 py-8">
         <!-- Product Title -->
         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
-            {{ $product->name ?? 'Hatlapú belső kulcsnyílású csavar DIN 912 Rozsdamentes acél A2' }}
+            {{ $product_demo->name ?? 'Hatlapú belső kulcsnyílású csavar DIN 912 Rozsdamentes acél A2' }}
         </h1>
 
         <div class="grid lg:grid-cols-2 gap-8 mb-8">
@@ -101,37 +101,37 @@ $product = (object) [
                     <div>
                         <div class="mb-4">
                             <span class="text-gray-600">Cikkszám</span>
-                            <p class="font-medium">{{ $product->item_number }}</p>
+                            <p class="font-medium">{{ $product_demo->item_number }}</p>
                         </div>
                         <div class="mb-4">
                             <span class="text-gray-600">Márka</span>
-                            <p class="font-medium">{{ $product->brand }}</p>
+                            <p class="font-medium">{{ $product_demo->brand }}</p>
                         </div>
                         <div class="mb-4">
                             <span class="text-gray-600">Típus</span>
-                            <p class="font-medium">{{ $product->type }}</p>
+                            <p class="font-medium">{{ $product_demo->type }}</p>
                         </div>
                         <div class="mb-4">
                             <span class="text-gray-600">Tömítés</span>
-                            <p class="font-medium">{{ $product->sealing }}</p>
+                            <p class="font-medium">{{ $product_demo->sealing }}</p>
                         </div>
                     </div>
                     <div>
                         <div class="mb-4">
                             <span class="text-gray-600">Anyag</span>
-                            <p class="font-medium">{{ $product->material }}</p>
+                            <p class="font-medium">{{ $product_demo->material }}</p>
                         </div>
                         <div class="mb-4">
                             <span class="text-gray-600">Anyagminőség</span>
-                            <p class="font-medium">{{ $product->material_grade }}</p>
+                            <p class="font-medium">{{ $product_demo->material_grade }}</p>
                         </div>
                         <div class="mb-4">
                             <span class="text-gray-600">Dinamikus terhelhetőség</span>
-                            <p class="font-medium">{{ $product->dynamic_load }}</p>
+                            <p class="font-medium">{{ $product_demo->dynamic_load }}</p>
                         </div>
                         <div class="mb-4">
                             <span class="text-gray-600">Statikus terhelhetőség</span>
-                            <p class="font-medium">{{ $product->static_load }}</p>
+                            <p class="font-medium">{{ $product_demo->static_load }}</p>
                         </div>
                     </div>
                 </div>
@@ -203,10 +203,10 @@ $product = (object) [
                     <div class="flex items-start justify-between mb-4">
                         <div>
                             <p class="text-xl font-bold">
-                                {{ number_format($product->net_retail_price, 0, ',', ' ') }} Ft</p>
+                                {{ number_format($product_demo->net_retail_price, 0, ',', ' ') }} Ft</p>
                             <p class="text-sm text-gray-600">Nettó listaár</p>
                         </div>
-                        @if ($product->in_stock)
+                        @if ($product_demo->in_stock)
                             <span
                                 class="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
                                 <i class="fa fa-cube"></i> Készleten
@@ -229,22 +229,22 @@ $product = (object) [
         </div>
 
         <!-- Specifications Section -->
-        <div id="specifications" class="bg-white rounded-lg border p-6">
+        <div id="specifications" class="bg-white rounded-lg border p-6 mb-8">
             <h2 class="text-xl font-bold mb-4">Részletes specifikációk</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ([
-        'Cikkszám' => $product->item_number,
-        'Márka' => $product->brand,
-        'Típus' => $product->type,
-        'Tömítés' => $product->sealing,
-        'Anyag' => $product->material,
-        'Anyagminőség' => $product->material_grade,
-        'Belső átmérő' => $product->bore_diameter,
-        'Külső átmérő' => $product->outer_diameter,
-        'Szélesség' => $product->width,
-        'Dinamikus terhelhetőség' => $product->dynamic_load,
-        'Statikus terhelhetőség' => $product->static_load,
-        'Maximális fordulatszám' => $product->max_speed,
+        'Cikkszám' => $product_demo->item_number,
+        'Márka' => $product_demo->brand,
+        'Típus' => $product_demo->type,
+        'Tömítés' => $product_demo->sealing,
+        'Anyag' => $product_demo->material,
+        'Anyagminőség' => $product_demo->material_grade,
+        'Belső átmérő' => $product_demo->bore_diameter,
+        'Külső átmérő' => $product_demo->outer_diameter,
+        'Szélesség' => $product_demo->width,
+        'Dinamikus terhelhetőség' => $product_demo->dynamic_load,
+        'Statikus terhelhetőség' => $product_demo->static_load,
+        'Maximális fordulatszám' => $product_demo->max_speed,
     ] as $label => $value)
                     <div class="border-b pb-2">
                         <span class="text-gray-600 text-sm">{{ $label }}</span>
@@ -253,5 +253,91 @@ $product = (object) [
                 @endforeach
             </div>
         </div>
+
+        <!-- Product Database Information -->
+        @if($product)
+        <div class="bg-white rounded-lg border p-6">
+            <h2 class="text-xl font-bold mb-4">Termékinformációk (Adatbázisból)</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach ([
+        'Csoport kód' => $product->group_code ?? null,
+        'Termékkód' => $product->product_code ?? null,
+        'Szolgáltatás' => $product->is_service ? 'Igen' : 'Nem',
+        'Név' => $product->name ?? null,
+        'Katalógus szám' => $product->catalog_number ?? null,
+        'Típus' => $product->type ?? null,
+        'Méret' => $product->size ?? null,
+        'Súly' => $product->weight ? $product->weight . ' kg' : null,
+        'Minősítés' => $product->rating ?? null,
+        'Minőség' => $product->quality ?? null,
+        'Termék változat' => $product->product_variety ?? null,
+        'Kereskedési típus' => $product->trade_type ?? null,
+        'Használati típus' => $product->usage_type ?? null,
+        'Deviza elszámolás' => $product->currency_settlement ?? null,
+        'Kedvezmény csoport' => $product->discount_group ?? null,
+        'Akciós' => $product->is_on_sale ? 'Igen' : 'Nem',
+        'Akció mértéke' => $product->sale_percentage ? $product->sale_percentage . '%' : null,
+        'Árazás' => $product->pricing ?? null,
+        'Listaár' => $product->list_price ? number_format($product->list_price, 0, ',', ' ') . ' Ft' : null,
+        'Lista kedvezmény' => $product->list_discount ? $product->list_discount . '%' : null,
+        'Beszerzési deviza ár' => $product->purchase_currency_price ? number_format($product->purchase_currency_price, 2, ',', ' ') : null,
+        'Deviza' => $product->currency ?? null,
+        'Deviza szorzó' => $product->currency_multiplier ?? null,
+        'Beszerzési ár' => $product->purchase_price ? number_format($product->purchase_price, 0, ',', ' ') . ' Ft' : null,
+        'Haszonkulcs' => $product->profit_margin ? $product->profit_margin . '%' : null,
+        'Nettó eladási ár' => $product->net_selling_price ? number_format($product->net_selling_price, 0, ',', ' ') . ' Ft' : null,
+        'ÁFA osztály' => $product->vat_class ?? null,
+        'Bruttó eladási ár' => $product->gross_selling_price ? number_format($product->gross_selling_price, 0, ',', ' ') . ' Ft' : null,
+        'Mennyiségi egység' => $product->quantity_unit ?? null,
+        'Másodlagos egység' => $product->secondary_unit ?? null,
+        'Minimum készlet' => $product->minimum_stock ?? null,
+        'Maximum készlet' => $product->maximum_stock ?? null,
+        'Puffer készlet' => $product->buffer_stock ?? null,
+        'Rendelési egység' => $product->order_unit ?? null,
+        'KSH előtag' => $product->ksh_prefix ?? null,
+        'KSH szám' => $product->ksh_number ?? null,
+        'Beszállító' => $product->supplier ?? null,
+        'Rövid megjegyzés' => $product->short_note ?? null,
+        'Vonalkód' => $product->barcode ?? null,
+        'EAN kód' => $product->ean_code ?? null,
+        'Minimum rendelési mennyiség' => $product->min_order_quantity ?? null,
+        'Kereskedelmi mennyiség' => $product->trade_quantity ?? null,
+        'Raklap mennyiség' => $product->pallet_quantity ?? null,
+    ] as $label => $value)
+                    @if ($value)
+                        <div class="border-b pb-2">
+                            <span class="text-gray-600 text-sm">{{ $label }}</span>
+                            <p class="font-medium">{{ $value }}</p>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+
+            @if ($product->description ?? false)
+                <div class="mt-6 pt-6 border-t">
+                    <h3 class="font-semibold mb-2">Leírás</h3>
+                    <p class="text-gray-700">{{ $product->description }}</p>
+                </div>
+            @endif
+
+            @if (($product->custom_fields ?? false) && count($product->custom_fields) > 0)
+                <div class="mt-6 pt-6 border-t">
+                    <h3 class="font-semibold mb-4">Egyedi mezők</h3>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach ($product->custom_fields as $key => $value)
+                            <div class="border-b pb-2">
+                                <span class="text-gray-600 text-sm">{{ $key }}</span>
+                                <p class="font-medium">{{ is_array($value) ? json_encode($value) : $value }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+        </div>
+        @else
+        <div class="bg-yellow-100 border border-yellow-400 rounded-lg p-6">
+            <p class="text-yellow-800">Nincs valós termék betöltve az adatbázisból. Kérjük, győződjön meg arról, hogy a route megfelelően van beállítva és van termék az adatbázisban.</p>
+        </div>
+        @endif
     </div>
 </div>
