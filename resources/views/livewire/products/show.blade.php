@@ -1,344 +1,592 @@
-<?php
-$product_demo = (object) [
-    'item_number' => '6205-2RS',
-    'name' => '6205-2RS mélyhornyú golyóscsapágy gumi porvédővel',
-    'brand' => 'SKF',
-    'type' => 'Mélyhornyú golyóscsapágy',
-    'sealing' => 'Mindkét oldalon gumi porvédő',
-    'material' => 'Krómacél',
-    'material_grade' => 'GCr15',
-    'bore_diameter' => '25 mm',
-    'outer_diameter' => '52 mm',
-    'width' => '15 mm',
-    'dynamic_load' => '14.8 kN',
-    'static_load' => '7.8 kN',
-    'max_speed' => '13000 rpm',
-    'net_retail_price' => 3250,
-    'in_stock' => true,
-];
-?>
-
 <div class="min-h-screen bg-gray-50">
-    <!-- Breadcrumbs -->
-    <div class="bg-white border-b">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex items-center space-x-2 text-sm">
-                <a href="{{ route('products.index') }}" class="text-blue-600 hover:underline">Kezdőlap</a>
-                <span class="text-gray-500">&gt;</span>
-                <a href="{{ route('categories.index') }}" class="text-blue-600 hover:underline">Csapágyak</a>
-                <span class="text-gray-500">&gt;</span>
-                <a href="#" class="text-blue-600 hover:underline">Mélyhornyú golyóscsapágyak</a>
-                <span class="text-gray-500">&gt;</span>
-                <a href="#" class="text-blue-600 hover:underline">Tömített golyóscsapágyak</a>
-                <span class="text-gray-500">&gt;</span>
-                <span class="text-gray-700">{{ $product_demo->item_number }}</span>
+    {{-- <x-dummy-prd-show /> --}}
+
+    <!-- Product Database Information -->
+    @if ($product)
+        <!-- Breadcrumbs -->
+        <div class="bg-white border-b">
+            <div class="container mx-auto px-4 py-3">
+                <div class="flex items-center space-x-2 text-sm">
+                    <a href="{{ route('products.index') }}" class="text-blue-600 hover:underline">Kezdőlap</a>
+                    <span class="text-gray-500">&gt;</span>
+                    <a href="{{ route('categories.index') }}" class="text-blue-600 hover:underline">Csapágyak</a>
+                    <span class="text-gray-500">&gt;</span>
+                    <span class="text-gray-700">{{ $product->name ?? $product->product_code }}</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="container mx-auto px-4 py-8">
-        <!-- Product Title -->
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
-            {{ $product_demo->name ?? 'Hatlapú belső kulcsnyílású csavar DIN 912 Rozsdamentes acél A2' }}
-        </h1>
+        <div class="container mx-auto px-4 py-8">
+            <!-- Product Title -->
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
+                {{ $product->name ?? 'Termék' }}
+            </h1>
 
-        <div class="grid lg:grid-cols-2 gap-8 mb-8">
-            <!-- Left Column: Images -->
-            <div x-data="{
-                activeImage: 1,
-                images: [1, 2, 3, 4],
-                prev() { this.activeImage = this.activeImage === 1 ? this.images.length : this.activeImage - 1 },
-                next() { this.activeImage = this.activeImage === this.images.length ? 1 : this.activeImage + 1 },
-                goTo(index) { this.activeImage = index }
-            }" class="flex gap-4">
-                <!-- Thumbnails -->
-                <div class="flex flex-col gap-3 py-2">
-                    <template x-for="index in images" :key="index">
-                        <button @click="goTo(index)" :class="{ 'ring-2 ring-blue-500': activeImage === index }"
-                            class="w-20 h-20 bg-white rounded-lg border hover:border-blue-500 transition-colors overflow-hidden cursor-pointer">
-                            <img :src="`{{ Vite::asset('resources/images/products/bearing-${index}.webp') }}`"
-                                :alt="`SKF 6205-2RS mélyhornyú golyóscsapágy nézet ${index}`"
-                                class="w-full h-full object-contain">
-                        </button>
-                    </template>
-                </div>
-
-                <!-- Main Image -->
-                <div class="flex-1">
-                    <div class="relative bg-white rounded-lg border p-4">
-                        <div class="aspect-square relative">
-                            <template x-for="index in images" :key="index">
-                                <div x-show="activeImage === index"
-                                    x-transition:enter="transition ease-out duration-300"
-                                    x-transition:enter-start="opacity-0 scale-95"
-                                    x-transition:enter-end="opacity-100 scale-100"
-                                    x-transition:leave="transition ease-in duration-200"
-                                    x-transition:leave-start="opacity-100 scale-100"
-                                    x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0">
-                                    <img :src="`{{ Vite::asset('resources/images/products/bearing-${index}.webp') }}`"
-                                        :alt="`Product view ${index}`" class="w-full h-full object-contain">
-                                </div>
-                            </template>
-                        </div>
-
-                        <!-- Navigation Buttons -->
-                        <button @click="prev"
-                            class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg text-gray-800 cursor-pointer">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button @click="next"
-                            class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg text-gray-800 cursor-pointer">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right Column: Product Info -->
-            <div class="space-y-6">
-                <!-- Product Specs -->
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Cikkszám</span>
-                            <p class="font-medium">{{ $product_demo->item_number }}</p>
-                        </div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Márka</span>
-                            <p class="font-medium">{{ $product_demo->brand }}</p>
-                        </div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Típus</span>
-                            <p class="font-medium">{{ $product_demo->type }}</p>
-                        </div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Tömítés</span>
-                            <p class="font-medium">{{ $product_demo->sealing }}</p>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Anyag</span>
-                            <p class="font-medium">{{ $product_demo->material }}</p>
-                        </div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Anyagminőség</span>
-                            <p class="font-medium">{{ $product_demo->material_grade }}</p>
-                        </div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Dinamikus terhelhetőség</span>
-                            <p class="font-medium">{{ $product_demo->dynamic_load }}</p>
-                        </div>
-                        <div class="mb-4">
-                            <span class="text-gray-600">Statikus terhelhetőség</span>
-                            <p class="font-medium">{{ $product_demo->static_load }}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Technical Drawing -->
-                {{-- <div class="border rounded-lg p-4 bg-white">
-                    <h3 class="font-semibold mb-3">Műszaki rajz</h3>
-                    <img src="{{ Vite::asset('resources/images/products/51050-drawing.webp') }}"
-                        alt="Technical drawing" class="w-full max-w-md mx-auto">
-                </div> --}}
-
-                <!-- View All Specs Link -->
-                <div class="text-center">
-                    <a href="#specifications" class="text-blue-600 hover:underline inline-flex items-center gap-2">
-                        Tekintse meg az összes specifikációt
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
-
-                <!-- Variants Selector -->
+            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+                <!-- Left Column: Images -->
+                @php
+                    $productImages = $product->images ?? [];
+                    $imageCount = count($productImages);
+                @endphp
                 <div x-data="{
-                    open: false,
-                    selectedVariant: '6205-2RS',
-                    variants: [
-                        { id: '6205-2RS', name: '6205-2RS - Mindkét oldalon gumi porvédő', price: 3250 },
-                        { id: '6205-2Z', name: '6205-2Z - Mindkét oldalon fém porvédő', price: 3450 },
-                        { id: '6205-N', name: '6205-N - Horonygyűrűs kivitel', price: 3150 },
-                        { id: '6205', name: '6205 - Nyitott kivitel', price: 2950 }
-                    ],
-                    select(variantId) {
-                        this.selectedVariant = variantId;
-                        this.open = false;
-                    }
-                }" class="relative">
-                    <button type="button" @click="open = !open"
-                        class="w-full border-2 border-gray-300 rounded-lg py-3 px-4 flex items-center justify-between hover:border-gray-400 transition-colors"
-                        :class="{ 'border-blue-500': open }">
-                        <div class="flex flex-col items-start">
-                            <span class="text-sm text-gray-500">Választott kivitel</span>
-                            <span class="font-medium" x-text="variants.find(v => v.id === selectedVariant).name"></span>
-                        </div>
-                        <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
-                    </button>
-
-                    <!-- Dropdown -->
-                    <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 translate-y-1"
-                        x-transition:enter-end="opacity-100 translate-y-0"
-                        x-transition:leave="transition ease-in duration-150"
-                        x-transition:leave-start="opacity-100 translate-y-0"
-                        x-transition:leave-end="opacity-0 translate-y-1" @click.away="open = false"
-                        class="absolute z-10 mt-2 w-full bg-white border rounded-lg shadow-lg">
-                        <div class="p-2 space-y-1">
-                            <template x-for="variant in variants" :key="variant.id">
-                                <button @click="select(variant.id)"
-                                    class="w-full px-3 py-2 text-left rounded hover:bg-gray-200 transition-colors flex items-center justify-between group"
-                                    :class="{ 'bg-blue-100': selectedVariant === variant.id }">
-                                    <span x-text="variant.name" class="font-medium"></span>
-                                    <span class="text-gray-500 group-hover:text-gray-700"
-                                        x-text="new Intl.NumberFormat('hu-HU').format(variant.price) + ' Ft'"></span>
+                    activeImage: 0,
+                    images: {{ json_encode($productImages) }},
+                    imageCount: {{ $imageCount }},
+                    prev() { this.activeImage = this.activeImage === 0 ? this.imageCount - 1 : this.activeImage - 1 },
+                    next() { this.activeImage = this.activeImage === this.imageCount - 1 ? 0 : this.activeImage + 1 },
+                    goTo(index) { this.activeImage = index }
+                }" class="flex gap-4">
+                    <!-- Thumbnails -->
+                    @if ($imageCount > 1)
+                        <div class="flex flex-col gap-3 py-2">
+                            @foreach ($productImages as $index => $image)
+                                <button @click="goTo({{ $index }})"
+                                    :class="{ 'ring-2 ring-blue-500': activeImage === {{ $index }} }"
+                                    class="w-20 h-20 bg-white rounded-lg border hover:border-blue-500 transition-colors overflow-hidden cursor-pointer">
+                                    <img src="{{ $image }}" alt="{{ $product->name }} nézet {{ $index + 1 }}"
+                                        class="w-full h-full object-contain">
                                 </button>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Add to Cart Section -->
-                <div class="bg-white rounded-lg border p-4">
-                    <div class="flex items-start justify-between mb-4">
-                        <div>
-                            <p class="text-xl font-bold">
-                                {{ number_format($product_demo->net_retail_price, 0, ',', ' ') }} Ft</p>
-                            <p class="text-sm text-gray-600">Nettó listaár</p>
-                        </div>
-                        @if ($product_demo->in_stock)
-                            <span
-                                class="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
-                                <i class="fa fa-cube"></i> Készleten
-                            </span>
-                        @endif
-                    </div>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <label for="quantity" class="text-sm font-medium">Mennyiség:</label>
-                            <input type="number" id="quantity" name="quantity" value="1" min="1"
-                                class="w-20 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        </div>
-                        <button type="button"
-                            class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2">
-                            <i class="fa fa-cart-plus"></i> Rendelés
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Specifications Section -->
-        <div id="specifications" class="bg-white rounded-lg border p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4">Részletes specifikációk</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach ([
-        'Cikkszám' => $product_demo->item_number,
-        'Márka' => $product_demo->brand,
-        'Típus' => $product_demo->type,
-        'Tömítés' => $product_demo->sealing,
-        'Anyag' => $product_demo->material,
-        'Anyagminőség' => $product_demo->material_grade,
-        'Belső átmérő' => $product_demo->bore_diameter,
-        'Külső átmérő' => $product_demo->outer_diameter,
-        'Szélesség' => $product_demo->width,
-        'Dinamikus terhelhetőség' => $product_demo->dynamic_load,
-        'Statikus terhelhetőség' => $product_demo->static_load,
-        'Maximális fordulatszám' => $product_demo->max_speed,
-    ] as $label => $value)
-                    <div class="border-b pb-2">
-                        <span class="text-gray-600 text-sm">{{ $label }}</span>
-                        <p class="font-medium">{{ $value }}</p>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-
-        <!-- Product Database Information -->
-        @if ($product)
-            <div class="bg-white rounded-lg border p-6">
-                <h2 class="text-xl font-bold mb-4">Termékinformációk (Adatbázisból)</h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach ([
-        'Csoport kód' => $product->group_code ?? null,
-        'Termékkód' => $product->product_code ?? null,
-        'Szolgáltatás' => $product->is_service ? 'Igen' : 'Nem',
-        'Név' => $product->name ?? null,
-        'Katalógus szám' => $product->catalog_number ?? null,
-        'Típus' => $product->type ?? null,
-        'Méret' => $product->size ?? null,
-        'Súly' => $product->weight ? $product->weight . ' kg' : null,
-        'Minősítés' => $product->rating ?? null,
-        'Minőség' => $product->quality ?? null,
-        'Termék változat' => $product->product_variety ?? null,
-        'Kereskedési típus' => $product->trade_type ?? null,
-        'Használati típus' => $product->usage_type ?? null,
-        'Deviza elszámolás' => $product->currency_settlement ?? null,
-        'Kedvezmény csoport' => $product->discount_group ?? null,
-        'Akciós' => $product->is_on_sale ? 'Igen' : 'Nem',
-        'Akció mértéke' => $product->sale_percentage ? $product->sale_percentage . '%' : null,
-        'Árazás' => $product->pricing ?? null,
-        'Listaár' => $product->list_price ? number_format($product->list_price, 0, ',', ' ') . ' Ft' : null,
-        'Lista kedvezmény' => $product->list_discount ? $product->list_discount . '%' : null,
-        'Beszerzési deviza ár' => $product->purchase_currency_price ? number_format($product->purchase_currency_price, 2, ',', ' ') : null,
-        'Deviza' => $product->currency ?? null,
-        'Deviza szorzó' => $product->currency_multiplier ?? null,
-        'Beszerzési ár' => $product->purchase_price ? number_format($product->purchase_price, 0, ',', ' ') . ' Ft' : null,
-        'Haszonkulcs' => $product->profit_margin ? $product->profit_margin . '%' : null,
-        'Nettó eladási ár' => $product->net_selling_price ? number_format($product->net_selling_price, 0, ',', ' ') . ' Ft' : null,
-        'ÁFA osztály' => $product->vat_class ?? null,
-        'Bruttó eladási ár' => $product->gross_selling_price ? number_format($product->gross_selling_price, 0, ',', ' ') . ' Ft' : null,
-        'Mennyiségi egység' => $product->quantity_unit ?? null,
-        'Másodlagos egység' => $product->secondary_unit ?? null,
-        'Minimum készlet' => $product->minimum_stock ?? null,
-        'Maximum készlet' => $product->maximum_stock ?? null,
-        'Puffer készlet' => $product->buffer_stock ?? null,
-        'Rendelési egység' => $product->order_unit ?? null,
-        'KSH előtag' => $product->ksh_prefix ?? null,
-        'KSH szám' => $product->ksh_number ?? null,
-        'Beszállító' => $product->supplier ?? null,
-        'Rövid megjegyzés' => $product->short_note ?? null,
-        'Vonalkód' => $product->barcode ?? null,
-        'EAN kód' => $product->ean_code ?? null,
-        'Minimum rendelési mennyiség' => $product->min_order_quantity ?? null,
-        'Kereskedelmi mennyiség' => $product->trade_quantity ?? null,
-        'Raklap mennyiség' => $product->pallet_quantity ?? null,
-    ] as $label => $value)
-                        @if ($value)
-                            <div class="border-b pb-2">
-                                <span class="text-gray-600 text-sm">{{ $label }}</span>
-                                <p class="font-medium">{{ $value }}</p>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
-
-                @if ($product->description ?? false)
-                    <div class="mt-6 pt-6 border-t">
-                        <h3 class="font-semibold mb-2">Leírás</h3>
-                        <p class="text-gray-700">{{ $product->description }}</p>
-                    </div>
-                @endif
-
-                @if (($product->custom_fields ?? false) && count($product->custom_fields) > 0)
-                    <div class="mt-6 pt-6 border-t">
-                        <h3 class="font-semibold mb-4">Egyedi mezők</h3>
-                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach ($product->custom_fields as $key => $value)
-                                <div class="border-b pb-2">
-                                    <span class="text-gray-600 text-sm">{{ $key }}</span>
-                                    <p class="font-medium">{{ is_array($value) ? json_encode($value) : $value }}</p>
-                                </div>
                             @endforeach
                         </div>
+                    @endif
+
+                    <!-- Main Image -->
+                    <div class="flex-1">
+                        <div class="relative bg-white rounded-lg border p-4">
+                            <div class="aspect-square relative">
+                                @if ($imageCount > 0)
+                                    @foreach ($productImages as $index => $image)
+                                        <div x-show="activeImage === {{ $index }}"
+                                            x-transition:enter="transition ease-out duration-300"
+                                            x-transition:enter-start="opacity-0 scale-95"
+                                            x-transition:enter-end="opacity-100 scale-100"
+                                            x-transition:leave="transition ease-in duration-200"
+                                            x-transition:leave-start="opacity-100 scale-100"
+                                            x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0">
+                                            <img src="{{ $image }}" alt="{{ $product->name }}"
+                                                class="w-full h-full object-contain">
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <img src="{{ Vite::asset('resources/images/bearing.webp') }}"
+                                        alt="{{ $product->name }}" class="w-full h-full object-contain">
+                                @endif
+                            </div>
+
+                            <!-- Navigation Buttons -->
+                            @if ($imageCount > 1)
+                                <button @click="prev"
+                                    class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg text-gray-800 cursor-pointer">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button @click="next"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg text-gray-800 cursor-pointer">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Product Info -->
+                <div class="space-y-6">
+                    <!-- Product Quick Info Card -->
+                    <div class="bg-white rounded-lg border p-5">
+                        <!-- Product Code Badge -->
+                        @if ($product->product_code)
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-mono">
+                                    {{ $product->product_code }}
+                                </span>
+                                @if ($product->supplier)
+                                    <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                                        {{ $product->supplier }}
+                                    </span>
+                                @endif
+                            </div>
+                        @endif
+
+                        <!-- Key Specs Grid -->
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                            @if ($product->catalog_number)
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-hashtag text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">Katalógus:</span>
+                                    <span class="text-gray-700 font-medium">{{ $product->catalog_number }}</span>
+                                </div>
+                            @endif
+                            @if ($product->product_variety)
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-folder text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">Kategória:</span>
+                                    <span class="text-gray-700 font-medium">{{ $product->product_variety }}</span>
+                                </div>
+                            @endif
+                            @if ($product->type)
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-cog text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">Típus:</span>
+                                    <span class="text-gray-700 font-medium">{{ $product->type }}</span>
+                                </div>
+                            @endif
+                            @if ($product->size)
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-ruler text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">Méret:</span>
+                                    <span class="text-gray-700 font-medium">{{ $product->size }}</span>
+                                </div>
+                            @endif
+                            @if ($product->quality)
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-star text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">Minőség:</span>
+                                    <span class="text-gray-700 font-medium">{{ $product->quality }}</span>
+                                </div>
+                            @endif
+                            @if ($product->weight)
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-weight-hanging text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">Súly:</span>
+                                    <span class="text-gray-700 font-medium">{{ $product->weight }} kg</span>
+                                </div>
+                            @endif
+                            @if ($product->quantity_unit)
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-boxes text-gray-400 w-4"></i>
+                                    <span class="text-gray-500">Egység:</span>
+                                    <span class="text-gray-700 font-medium">{{ $product->quantity_unit }}</span>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- View All Specs Link -->
+                        <div class="mt-4 pt-4 border-t">
+                            <a href="#specifications" class="text-blue-600 hover:underline inline-flex items-center gap-2 text-sm">
+                                <i class="fas fa-list-ul"></i>
+                                Összes specifikáció megtekintése
+                                <i class="fas fa-chevron-down text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Variants Selector -->
+                    {{-- TODO: Implement variants from database when product_variants table is available
+                    <div x-data="{
+                        open: false,
+                        selectedVariant: '{{ $product->product_code }}',
+                        variants: [],
+                        select(variantId) {
+                            this.selectedVariant = variantId;
+                            this.open = false;
+                        }
+                    }" class="relative">
+                        <button type="button" @click="open = !open"
+                            class="w-full border-2 border-gray-300 rounded-lg py-3 px-4 flex items-center justify-between hover:border-gray-400 transition-colors"
+                            :class="{ 'border-blue-500': open }">
+                            <div class="flex flex-col items-start">
+                                <span class="text-sm text-gray-500">Választott kivitel</span>
+                                <span class="font-medium" x-text="variants.find(v => v.id === selectedVariant)?.name || '{{ $product->name }}'"></span>
+                            </div>
+                            <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
+                        </button>
+
+                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1" @click.away="open = false"
+                            class="absolute z-10 mt-2 w-full bg-white border rounded-lg shadow-lg">
+                            <div class="p-2 space-y-1">
+                                <template x-for="variant in variants" :key="variant.id">
+                                    <button @click="select(variant.id)"
+                                        class="w-full px-3 py-2 text-left rounded hover:bg-gray-200 transition-colors flex items-center justify-between group"
+                                        :class="{ 'bg-blue-100': selectedVariant === variant.id }">
+                                        <span x-text="variant.name" class="font-medium"></span>
+                                        <span class="text-gray-500 group-hover:text-gray-700"
+                                            x-text="new Intl.NumberFormat('hu-HU').format(variant.price) + ' Ft'"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    --}}
+
+                    <!-- Add to Cart Section -->
+                    <div class="bg-white rounded-lg border-2 border-blue-100 p-5 shadow-sm">
+                        <!-- Stock Badge -->
+                        @if (($product->minimum_stock ?? 0) > 0)
+                            <div class="flex justify-end mb-2">
+                                <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                    <i class="fa fa-check-circle"></i> Készleten
+                                </span>
+                            </div>
+                        @else
+                            <div class="flex justify-end mb-2">
+                                <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                    <i class="fa fa-clock"></i> Rendelésre
+                                </span>
+                            </div>
+                        @endif
+
+                        <!-- Price Section -->
+                        <div class="mb-5">
+                            @if ($product->net_selling_price)
+                                <p class="text-3xl md:text-4xl font-bold text-blue-600">
+                                    {{ number_format($product->net_selling_price, 0, ',', ' ') }} <span class="text-2xl">Ft</span>
+                                </p>
+                                <p class="text-sm text-gray-500 mt-1">Nettó eladási ár</p>
+                                @if ($product->gross_selling_price)
+                                    <p class="text-sm text-gray-400 mt-1">
+                                        Bruttó: {{ number_format($product->gross_selling_price, 0, ',', ' ') }} Ft
+                                    </p>
+                                @endif
+                            @elseif ($product->gross_selling_price)
+                                <p class="text-3xl md:text-4xl font-bold text-blue-600">
+                                    {{ number_format($product->gross_selling_price, 0, ',', ' ') }} <span class="text-2xl">Ft</span>
+                                </p>
+                                <p class="text-sm text-gray-500 mt-1">Bruttó eladási ár</p>
+                            @else
+                                <p class="text-xl text-gray-500">Érdeklődjön az árról</p>
+                            @endif
+                        </div>
+
+                        <!-- Quantity Selector -->
+                        <div class="mb-4" x-data="{ quantity: {{ $product->min_order_quantity ?? 1 }}, min: {{ $product->min_order_quantity ?? 1 }} }">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Mennyiség</label>
+                            <div class="flex items-center gap-1">
+                                <button type="button"
+                                    @click="quantity = Math.max(min, quantity - 1)"
+                                    class="w-12 h-12 rounded-l-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
+                                    <i class="fas fa-minus text-sm"></i>
+                                </button>
+                                <input type="number"
+                                    x-model="quantity"
+                                    :min="min"
+                                    class="w-20 h-12 text-center text-lg font-semibold border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                <button type="button"
+                                    @click="quantity++"
+                                    class="w-12 h-12 rounded-r-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
+                                    <i class="fas fa-plus text-sm"></i>
+                                </button>
+                            </div>
+                            @if (($product->min_order_quantity ?? 1) > 1)
+                                <p class="text-xs text-gray-500 mt-2">
+                                    Min. rendelési mennyiség: {{ $product->min_order_quantity }}
+                                </p>
+                            @endif
+                        </div>
+
+                        <!-- Order Button -->
+                        <button type="button"
+                            class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 font-semibold text-lg transition-colors shadow-sm">
+                            <i class="fa fa-cart-plus"></i> Kosárba
+                        </button>
+
+                        <!-- Contact Option -->
+                        <div class="mt-3">
+                            <a href="#" class="text-sm text-gray-500 hover:text-blue-600 inline-flex items-center gap-1">
+                                <i class="fas fa-phone text-xs"></i>
+                                Kérdése van? Hívjon minket!
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Specifications Section -->
+            <div id="specifications" class="space-y-6">
+                <h2 class="text-2xl font-bold">Termékinformációk</h2>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Alapadatok -->
+                    <div class="bg-white rounded-lg border p-6">
+                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
+                            <i class="fas fa-box text-gray-500"></i>
+                            Alapadatok
+                        </h3>
+                        <dl class="space-y-3">
+                            @if ($product->product_code)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Termékkód</dt>
+                                    <dd class="font-medium text-right">{{ $product->product_code }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->name)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Megnevezés</dt>
+                                    <dd class="font-medium text-right max-w-[60%]">{{ $product->name }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->catalog_number)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Katalógus szám</dt>
+                                    <dd class="font-medium text-right">{{ $product->catalog_number }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->group_code)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Csoport kód</dt>
+                                    <dd class="font-medium text-right">{{ $product->group_code }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->product_variety)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Termék kategória</dt>
+                                    <dd class="font-medium text-right">{{ $product->product_variety }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->type)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Típus</dt>
+                                    <dd class="font-medium text-right">{{ $product->type }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->size)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Méret</dt>
+                                    <dd class="font-medium text-right">{{ $product->size }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->weight)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Súly</dt>
+                                    <dd class="font-medium text-right">{{ $product->weight }} kg</dd>
+                                </div>
+                            @endif
+                            <div class="flex justify-between">
+                                <dt class="text-gray-600">Szolgáltatás</dt>
+                                <dd class="font-medium text-right">
+                                    @if ($product->is_service)
+                                        <span class="text-green-600">Igen</span>
+                                    @else
+                                        <span class="text-gray-500">Nem</span>
+                                    @endif
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    <!-- Árazás -->
+                    <div class="bg-white rounded-lg border p-6">
+                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
+                            <i class="fas fa-tags text-gray-500"></i>
+                            Árazás
+                        </h3>
+                        <dl class="space-y-3">
+                            @if ($product->list_price && $product->list_price > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Listaár</dt>
+                                    <dd class="font-medium text-right">{{ number_format($product->list_price, 0, ',', ' ') }} Ft</dd>
+                                </div>
+                            @endif
+                            @if ($product->net_selling_price && $product->net_selling_price > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Nettó eladási ár</dt>
+                                    <dd class="font-bold text-right text-blue-600">{{ number_format($product->net_selling_price, 0, ',', ' ') }} Ft</dd>
+                                </div>
+                            @endif
+                            @if ($product->gross_selling_price && $product->gross_selling_price > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Bruttó eladási ár</dt>
+                                    <dd class="font-bold text-right">{{ number_format($product->gross_selling_price, 0, ',', ' ') }} Ft</dd>
+                                </div>
+                            @endif
+                            @if ($product->vat_class)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">ÁFA osztály</dt>
+                                    <dd class="font-medium text-right">{{ $product->vat_class }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->list_discount && $product->list_discount > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Lista kedvezmény</dt>
+                                    <dd class="font-medium text-right text-green-600">{{ $product->list_discount }}%</dd>
+                                </div>
+                            @endif
+                            @if ($product->discount_group)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Kedvezmény csoport</dt>
+                                    <dd class="font-medium text-right">{{ $product->discount_group }}</dd>
+                                </div>
+                            @endif
+                            <div class="flex justify-between">
+                                <dt class="text-gray-600">Akciós</dt>
+                                <dd class="font-medium text-right">
+                                    @if ($product->is_on_sale)
+                                        <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-sm">Igen - {{ $product->sale_percentage }}%</span>
+                                    @else
+                                        <span class="text-gray-500">Nem</span>
+                                    @endif
+                                </dd>
+                            </div>
+                            @if ($product->currency)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Deviza</dt>
+                                    <dd class="font-medium text-right">{{ $product->currency }}</dd>
+                                </div>
+                            @endif
+                        </dl>
+                    </div>
+
+                    <!-- Készlet és rendelés -->
+                    <div class="bg-white rounded-lg border p-6">
+                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
+                            <i class="fas fa-warehouse text-gray-500"></i>
+                            Készlet és rendelés
+                        </h3>
+                        <dl class="space-y-3">
+                            @if ($product->quantity_unit)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Mennyiségi egység</dt>
+                                    <dd class="font-medium text-right">{{ $product->quantity_unit }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->secondary_unit)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Másodlagos egység</dt>
+                                    <dd class="font-medium text-right">{{ $product->secondary_unit }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->minimum_stock !== null)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Minimum készlet</dt>
+                                    <dd class="font-medium text-right">{{ $product->minimum_stock }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->maximum_stock !== null && $product->maximum_stock > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Maximum készlet</dt>
+                                    <dd class="font-medium text-right">{{ $product->maximum_stock }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->buffer_stock !== null && $product->buffer_stock > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Puffer készlet</dt>
+                                    <dd class="font-medium text-right">{{ $product->buffer_stock }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->min_order_quantity !== null && $product->min_order_quantity > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Min. rendelési menny.</dt>
+                                    <dd class="font-medium text-right">{{ $product->min_order_quantity }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->order_unit !== null && $product->order_unit > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Rendelési egység</dt>
+                                    <dd class="font-medium text-right">{{ $product->order_unit }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->trade_quantity !== null && $product->trade_quantity > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Kereskedelmi menny.</dt>
+                                    <dd class="font-medium text-right">{{ $product->trade_quantity }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->pallet_quantity !== null && $product->pallet_quantity > 0)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Raklap mennyiség</dt>
+                                    <dd class="font-medium text-right">{{ $product->pallet_quantity }}</dd>
+                                </div>
+                            @endif
+                        </dl>
+                    </div>
+
+                    <!-- Azonosítók és kódok -->
+                    <div class="bg-white rounded-lg border p-6">
+                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
+                            <i class="fas fa-barcode text-gray-500"></i>
+                            Azonosítók és kódok
+                        </h3>
+                        <dl class="space-y-3">
+                            @if ($product->barcode)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Vonalkód</dt>
+                                    <dd class="font-medium text-right font-mono text-sm">{{ str_replace(['*', '!'], ['', ' '], $product->barcode) }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->ean_code)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">EAN kód</dt>
+                                    <dd class="font-medium text-right font-mono">{{ $product->ean_code }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->ksh_prefix || $product->ksh_number)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">KSH/VTSZ szám</dt>
+                                    <dd class="font-medium text-right">{{ $product->ksh_prefix }} {{ $product->ksh_number }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->supplier)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Beszállító</dt>
+                                    <dd class="font-medium text-right">{{ $product->supplier }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->quality)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Minőség</dt>
+                                    <dd class="font-medium text-right">{{ $product->quality }}</dd>
+                                </div>
+                            @endif
+                            @if ($product->rating)
+                                <div class="flex justify-between">
+                                    <dt class="text-gray-600">Minősítés</dt>
+                                    <dd class="font-medium text-right">{{ $product->rating }}</dd>
+                                </div>
+                            @endif
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- Leírás -->
+                @if ($product->description)
+                    <div class="bg-white rounded-lg border p-6">
+                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
+                            <i class="fas fa-align-left text-gray-600"></i>
+                            Leírás
+                        </h3>
+                        <p class="text-gray-700 leading-relaxed">{{ $product->description }}</p>
+                    </div>
+                @endif
+
+                <!-- Megjegyzés -->
+                @if ($product->short_note)
+                    <div class="bg-yellow-50 rounded-lg border border-yellow-200 p-6">
+                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b border-yellow-200 flex items-center gap-2">
+                            <i class="fas fa-sticky-note text-gray-500"></i>
+                            Megjegyzés
+                        </h3>
+                        <p class="text-gray-700">{{ $product->short_note }}</p>
+                    </div>
+                @endif
+
+                <!-- Egyedi mezők -->
+                @if (($product->custom_fields ?? false) && count($product->custom_fields) > 0)
+                    <div class="bg-white rounded-lg border p-6">
+                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
+                            <i class="fas fa-cog text-gray-600"></i>
+                            Egyedi mezők
+                        </h3>
+                        <dl class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @foreach ($product->custom_fields as $key => $value)
+                                <div class="bg-gray-50 rounded p-3">
+                                    <dt class="text-gray-600 text-sm">{{ $key }}</dt>
+                                    <dd class="font-medium mt-1">{{ is_array($value) ? json_encode($value) : $value }}</dd>
+                                </div>
+                            @endforeach
+                        </dl>
                     </div>
                 @endif
             </div>
-        @else
+        </div>
+    @else
+        <div class="container mx-auto px-4 py-8">
             <div class="bg-yellow-100 border border-yellow-400 rounded-lg p-6">
                 <p class="text-yellow-800">Nincs valós termék betöltve az adatbázisból. Kérjük, győződjön meg arról,
                     hogy a route megfelelően van beállítva és van termék az adatbázisban.</p>
             </div>
-        @endif
-    </div>
+        </div>
+    @endif
 </div>

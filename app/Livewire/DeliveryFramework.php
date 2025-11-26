@@ -10,6 +10,6 @@ final class DeliveryFramework extends Component
 {
     public function render(): mixed
     {
-        return view('livewire.delivery-framework');
+        return view('pages.delivery-framework');
     }
 }

@@ -10,6 +10,6 @@ final class PrivacyPolicy extends Component
 {
     public function render(): mixed
     {
-        return view('livewire.privacy-policy');
+        return view('pages.privacy-policy');
     }
 }

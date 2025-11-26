@@ -10,6 +10,6 @@ final class Team extends Component
 {
     public function render()
     {
-        return view('livewire.team');
+        return view('pages.team');
     }
 }

@@ -2,7 +2,7 @@
 
 <div
     class="group bg-white hover:bg-gray-100 hover:shadow-xl transition-all border border-gray-400 rounded-lg p-4 flex flex-col h-full">
-    <div class="relative mb-4">
+    <a href="{{ isset($product->slug) ? route('products.show', $product->slug) : '#' }}" class="relative mb-4">
         <img src="{{ $product->main_image ?? 'https://placehold.co/200' }}"
             alt="{{ $product->item_name ?? 'Nincs termék név' }}" class="w-full h-40 object-contain">
         @if ($product->in_stock ?? false)
@@ -11,9 +11,10 @@
                 <i class="fa fa-cube"></i> Készleten
             </span>
         @endif
-    </div>
+    </a>
 
-    <a href="{{ isset($product->slug) ? route('products.show', $product->slug) : '#' }}" class="block mb-4 hover:underline text-blue-600 font-semibold grow">
+    <a href="{{ isset($product->slug) ? route('products.show', $product->slug) : '#' }}"
+        class="block mb-4 hover:underline text-blue-600 font-semibold grow">
         {{ $product->item_name ?? 'Nincs termék név' }}
     </a>
 

@@ -10,6 +10,6 @@ final class CompanyData extends Component
 {
     public function render()
     {
-        return view('livewire.company-data');
+        return view('pages.company-data');
     }
 }

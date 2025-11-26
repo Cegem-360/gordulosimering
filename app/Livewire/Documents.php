@@ -10,6 +10,6 @@ final class Documents extends Component
 {
     public function render(): mixed
     {
-        return view('livewire.documents');
+        return view('pages.documents');
     }
 }

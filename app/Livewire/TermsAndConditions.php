@@ -10,6 +10,6 @@ final class TermsAndConditions extends Component
 {
     public function render(): mixed
     {
-        return view('livewire.terms-and-conditions');
+        return view('pages.terms-and-conditions');
     }
 }
