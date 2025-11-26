@@ -17,6 +17,6 @@ final class Index extends Component
 
         return view('livewire.products.categories.index', [
             'breadcrumbs' => $breadcrumbs,
-        ])->layout('components.layouts.app');
+        ]);
     }
 }
