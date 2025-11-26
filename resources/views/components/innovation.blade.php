@@ -3,7 +3,7 @@
         <div class="grid lg:grid-cols-2 gap-12 items-center">
             <!-- Left side: Image -->
             <div class="relative">
-                <div class="aspect-[3/2] rounded-lg overflow-hidden">
+                <div class="aspect-3/2 rounded-lg overflow-hidden">
                     <img src="{{ Vite::asset('resources/images/disassembled-roller-bearing-2025-08-27-05-49-05-utc.webp') }}"
                         alt="Innovation" class="w-full h-full object-cover">
                 </div>

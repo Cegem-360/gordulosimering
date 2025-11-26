@@ -36,13 +36,14 @@ Route::middleware(['throttle:global'])->prefix('termekkategoriak')->as('categori
     Route::get('/', Products\Categories\Index::class)->name('index');
     Route::get('/{category:slug}', Products\Categories\Show::class)->name('show');
 });
-
-Route::middleware(['throttle:global'])->get('/szolgaltatasaink', Services::class)->name('services');
-Route::middleware(['throttle:global'])->get('/munkatarsaink', Team::class)->name('team');
-Route::middleware(['throttle:global'])->get('/kapcsolat', Contact::class)->name('contact');
-Route::middleware(['throttle:global'])->get('/cegadatok', CompanyData::class)->name('company-data');
-Route::middleware(['throttle:global'])->get('/dokumentumok', Documents::class)->name('documents');
-Route::middleware(['throttle:global'])->get('/altalanos-szerzodesi-feltetelek', TermsAndConditions::class)->name('terms-and-conditions');
-Route::middleware(['throttle:global'])->get('/szallitasi-keretszerzodes', DeliveryFramework::class)->name('delivery-framework');
-Route::middleware(['throttle:global'])->get('/minosegpolitika', QualityPolicy::class)->name('quality-policy');
-Route::middleware(['throttle:global'])->get('/adatkezelesi-tajekoztato', PrivacyPolicy::class)->name('privacy-policy');
+Route::middleware(['throttle:global'])->group(function () {
+    Route::get('/szolgaltatasaink', Services::class)->name('services');
+    Route::get('/munkatarsaink', Team::class)->name('team');
+    Route::get('/kapcsolat', Contact::class)->name('contact');
+    Route::get('/cegadatok', CompanyData::class)->name('company-data');
+    Route::get('/dokumentumok', Documents::class)->name('documents');
+    Route::get('/altalanos-szerzodesi-feltetelek', TermsAndConditions::class)->name('terms-and-conditions');
+    Route::get('/szallitasi-keretszerzodes', DeliveryFramework::class)->name('delivery-framework');
+    Route::get('/minosegpolitika', QualityPolicy::class)->name('quality-policy');
+    Route::get('/adatkezelesi-tajekoztato', PrivacyPolicy::class)->name('privacy-policy');
+});

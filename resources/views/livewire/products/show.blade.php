@@ -56,7 +56,7 @@ $product_demo = (object) [
                     <template x-for="index in images" :key="index">
                         <button @click="goTo(index)" :class="{ 'ring-2 ring-blue-500': activeImage === index }"
                             class="w-20 h-20 bg-white rounded-lg border hover:border-blue-500 transition-colors overflow-hidden cursor-pointer">
-                            <img :src="Vite::asset('resources/images/products/bearing-${index}.webp')"
+                            <img :src="`{{ Vite::asset('resources/images/products/bearing-${index}.webp') }}`"
                                 :alt="`SKF 6205-2RS mélyhornyú golyóscsapágy nézet ${index}`"
                                 class="w-full h-full object-contain">
                         </button>
@@ -75,7 +75,7 @@ $product_demo = (object) [
                                     x-transition:leave="transition ease-in duration-200"
                                     x-transition:leave-start="opacity-100 scale-100"
                                     x-transition:leave-end="opacity-0 scale-95" class="absolute inset-0">
-                                    <img :src="Vite::asset('resources/images/products/bearing-${index}.webp')"
+                                    <img :src="`{{ Vite::asset('resources/images/products/bearing-${index}.webp') }}`"
                                         :alt="`Product view ${index}`" class="w-full h-full object-contain">
                                 </div>
                             </template>

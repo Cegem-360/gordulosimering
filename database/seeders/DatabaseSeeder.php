@@ -23,7 +23,9 @@ final class DatabaseSeeder extends Seeder
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
-
-        Product::factory(50)->create();
+        $this->call([
+            ProductSeeder::class,
+        ]);
+        // Product::factory(50)->create();
     }
 }
