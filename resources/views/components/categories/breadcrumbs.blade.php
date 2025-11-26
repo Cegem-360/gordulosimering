@@ -1,9 +1,9 @@
 @props(['items'])
 
-<nav class="bg-gray-100 py-3 px-4">
+<nav class="container mx-auto bg-gray-100 py-3 px-4">
     <ol class="flex items-center space-x-2 text-sm">
         <li>
-            <a href="{{ route('products.index') }}" class="text-blue-600 hover:underline">Kezdőlap</a>
+            <a href="/" class="text-blue-600 hover:underline">Kezdőlap</a>
         </li>
         <li class="flex items-center space-x-2">
             <span class="text-gray-500">&gt;</span>

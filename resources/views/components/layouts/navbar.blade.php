@@ -15,12 +15,12 @@
                 <div class="hidden lg:flex lg:items-center lg:space-x-6">
                     <!-- Category Menu -->
                     <div class="relative" x-data="{ open: false }">
-                        <button @mouseenter="open = true" @mouseleave="open = false"
+                        <a href="{{ route('categories.index') }}" @mouseenter="open = true" @mouseleave="open = false"
                             class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-medium">
                             <span>{{ __('Termékkategóriák') }}</span>
                             <i class="fas fa-chevron-down text-sm transition-transform"
                                 :class="{ 'rotate-180': open }"></i>
-                        </button>
+                        </a>
 
                         <!-- Category Dropdown -->
                         <div x-show="open" @mouseenter="open = true" @mouseleave="open = false"
@@ -194,7 +194,7 @@
             <!-- Right Side Menu -->
             <div class="flex items-center space-x-4">
                 <!-- Cart -->
-                <a href="#" class="text-gray-700 hover:text-blue-600 p-2 relative">
+                <a href="/kosar/" class="text-gray-700 hover:text-blue-600 p-2 relative">
                     <i class="fas fa-shopping-cart"></i>
                     <span
                         class="absolute top-0 right-0 -mt-1 -mr-1 bg-blue-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
@@ -267,10 +267,12 @@
         <div class="border-t px-4 py-4 space-y-4">
             <!-- Mobile Category Menu -->
             <div x-data="{ open: false }">
-                <button @click="open = !open" class="flex items-center justify-between w-full py-2 text-gray-700">
-                    <span class="font-medium">{{ __('Termékkategóriák') }}</span>
-                    <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
-                </button>
+                <div class="flex items-center justify-between w-full py-2 text-gray-700">
+                    <a href="{{ route('categories.index') }}" class="font-medium hover:text-blue-600">{{ __('Termékkategóriák') }}</a>
+                    <button @click="open = !open" class="p-2 -mr-2">
+                        <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
+                    </button>
+                </div>
 
                 <div x-show="open" class="mt-2 space-y-2 pl-4">
                     <a href="#"

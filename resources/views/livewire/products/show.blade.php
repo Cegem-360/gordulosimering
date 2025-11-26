@@ -6,10 +6,15 @@
         <!-- Breadcrumbs -->
         <div class="bg-white border-b">
             <div class="container mx-auto px-4 py-3">
-                <div class="flex items-center space-x-2 text-sm">
-                    <a href="{{ route('products.index') }}" class="text-blue-600 hover:underline">Kezdőlap</a>
+                <div class="flex items-center flex-wrap gap-2 text-sm">
+                    <a href="/" class="text-blue-600 hover:underline">Kezdőlap</a>
                     <span class="text-gray-500">&gt;</span>
-                    <a href="{{ route('categories.index') }}" class="text-blue-600 hover:underline">Csapágyak</a>
+                    <a href="{{ route('categories.index') }}" class="text-blue-600 hover:underline">Termékkategóriák</a>
+                    @if ($product->product_variety)
+                        <span class="text-gray-500">&gt;</span>
+                        <a href="{{ route('categories.index') }}"
+                            class="text-blue-600 hover:underline">{{ $product->product_variety }}</a>
+                    @endif
                     <span class="text-gray-500">&gt;</span>
                     <span class="text-gray-700">{{ $product->name ?? $product->product_code }}</span>
                 </div>
@@ -43,7 +48,8 @@
                                 <button @click="goTo({{ $index }})"
                                     :class="{ 'ring-2 ring-blue-500': activeImage === {{ $index }} }"
                                     class="w-20 h-20 bg-white rounded-lg border hover:border-blue-500 transition-colors overflow-hidden cursor-pointer">
-                                    <img src="{{ $image }}" alt="{{ $product->name }} nézet {{ $index + 1 }}"
+                                    <img src="{{ $image }}"
+                                        alt="{{ $product->name }} nézet {{ $index + 1 }}"
                                         class="w-full h-full object-contain">
                                 </button>
                             @endforeach
@@ -95,7 +101,7 @@
                         <!-- Product Code Badge -->
                         @if ($product->product_code)
                             <div class="flex items-center gap-2 mb-4">
-                                <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-mono">
+                                <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-mono">
                                     {{ $product->product_code }}
                                 </span>
                                 @if ($product->supplier)
@@ -161,7 +167,8 @@
 
                         <!-- View All Specs Link -->
                         <div class="mt-4 pt-4 border-t">
-                            <a href="#specifications" class="text-blue-600 hover:underline inline-flex items-center gap-2 text-sm">
+                            <a href="#specifications"
+                                class="text-blue-600 hover:underline inline-flex items-center gap-2 text-sm">
                                 <i class="fas fa-list-ul"></i>
                                 Összes specifikáció megtekintése
                                 <i class="fas fa-chevron-down text-xs"></i>
@@ -215,25 +222,26 @@
                     <!-- Add to Cart Section -->
                     <div class="bg-white rounded-lg border-2 border-blue-100 p-5 shadow-sm">
                         <!-- Stock Badge -->
-                        @if (($product->minimum_stock ?? 0) > 0)
-                            <div class="flex justify-end mb-2">
-                                <span class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                                    <i class="fa fa-check-circle"></i> Készleten
+                        <div class="flex justify-end mb-2">
+                            @if (($product->minimum_stock ?? 0) > 0)
+                                <span
+                                    class="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
+                                    <i class="fa fa-cube"></i> Készleten
                                 </span>
-                            </div>
-                        @else
-                            <div class="flex justify-end mb-2">
-                                <span class="bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                            @else
+                                <span
+                                    class="bg-orange-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
                                     <i class="fa fa-clock"></i> Rendelésre
                                 </span>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
 
                         <!-- Price Section -->
                         <div class="mb-5">
                             @if ($product->net_selling_price)
                                 <p class="text-3xl md:text-4xl font-bold text-blue-600">
-                                    {{ number_format($product->net_selling_price, 0, ',', ' ') }} <span class="text-2xl">Ft</span>
+                                    {{ number_format($product->net_selling_price, 0, ',', ' ') }} <span
+                                        class="text-2xl">Ft</span>
                                 </p>
                                 <p class="text-sm text-gray-500 mt-1">Nettó eladási ár</p>
                                 @if ($product->gross_selling_price)
@@ -243,7 +251,8 @@
                                 @endif
                             @elseif ($product->gross_selling_price)
                                 <p class="text-3xl md:text-4xl font-bold text-blue-600">
-                                    {{ number_format($product->gross_selling_price, 0, ',', ' ') }} <span class="text-2xl">Ft</span>
+                                    {{ number_format($product->gross_selling_price, 0, ',', ' ') }} <span
+                                        class="text-2xl">Ft</span>
                                 </p>
                                 <p class="text-sm text-gray-500 mt-1">Bruttó eladási ár</p>
                             @else
@@ -252,20 +261,16 @@
                         </div>
 
                         <!-- Quantity Selector -->
-                        <div class="mb-4" x-data="{ quantity: {{ $product->min_order_quantity ?? 1 }}, min: {{ $product->min_order_quantity ?? 1 }} }">
+                        <div class="mb-4" x-data="{ quantity: 1, min: {{ $product->min_order_quantity ?? 1 }} }">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Mennyiség</label>
                             <div class="flex items-center gap-1">
-                                <button type="button"
-                                    @click="quantity = Math.max(min, quantity - 1)"
+                                <button type="button" @click="quantity = Math.max(min, quantity - 1)"
                                     class="w-12 h-12 rounded-l-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
                                     <i class="fas fa-minus text-sm"></i>
                                 </button>
-                                <input type="number"
-                                    x-model="quantity"
-                                    :min="min"
+                                <input type="number" x-model="quantity" :min="min"
                                     class="w-20 h-12 text-center text-lg font-semibold border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                                <button type="button"
-                                    @click="quantity++"
+                                <button type="button" @click="quantity++"
                                     class="w-12 h-12 rounded-r-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
                                     <i class="fas fa-plus text-sm"></i>
                                 </button>
@@ -285,7 +290,8 @@
 
                         <!-- Contact Option -->
                         <div class="mt-3">
-                            <a href="#" class="text-sm text-gray-500 hover:text-blue-600 inline-flex items-center gap-1">
+                            <a href="#"
+                                class="text-md text-gray-500 hover:text-blue-600 inline-flex items-center gap-1">
                                 <i class="fas fa-phone text-xs"></i>
                                 Kérdése van? Hívjon minket!
                             </a>
@@ -377,19 +383,22 @@
                             @if ($product->list_price && $product->list_price > 0)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Listaár</dt>
-                                    <dd class="font-medium text-right">{{ number_format($product->list_price, 0, ',', ' ') }} Ft</dd>
+                                    <dd class="font-medium text-right">
+                                        {{ number_format($product->list_price, 0, ',', ' ') }} Ft</dd>
                                 </div>
                             @endif
                             @if ($product->net_selling_price && $product->net_selling_price > 0)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Nettó eladási ár</dt>
-                                    <dd class="font-bold text-right text-blue-600">{{ number_format($product->net_selling_price, 0, ',', ' ') }} Ft</dd>
+                                    <dd class="font-bold text-right text-blue-600">
+                                        {{ number_format($product->net_selling_price, 0, ',', ' ') }} Ft</dd>
                                 </div>
                             @endif
                             @if ($product->gross_selling_price && $product->gross_selling_price > 0)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Bruttó eladási ár</dt>
-                                    <dd class="font-bold text-right">{{ number_format($product->gross_selling_price, 0, ',', ' ') }} Ft</dd>
+                                    <dd class="font-bold text-right">
+                                        {{ number_format($product->gross_selling_price, 0, ',', ' ') }} Ft</dd>
                                 </div>
                             @endif
                             @if ($product->vat_class)
@@ -401,7 +410,8 @@
                             @if ($product->list_discount && $product->list_discount > 0)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Lista kedvezmény</dt>
-                                    <dd class="font-medium text-right text-green-600">{{ $product->list_discount }}%</dd>
+                                    <dd class="font-medium text-right text-green-600">{{ $product->list_discount }}%
+                                    </dd>
                                 </div>
                             @endif
                             @if ($product->discount_group)
@@ -414,7 +424,8 @@
                                 <dt class="text-gray-600">Akciós</dt>
                                 <dd class="font-medium text-right">
                                     @if ($product->is_on_sale)
-                                        <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-sm">Igen - {{ $product->sale_percentage }}%</span>
+                                        <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-sm">Igen -
+                                            {{ $product->sale_percentage }}%</span>
                                     @else
                                         <span class="text-gray-500">Nem</span>
                                     @endif
@@ -503,7 +514,8 @@
                             @if ($product->barcode)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Vonalkód</dt>
-                                    <dd class="font-medium text-right font-mono text-sm">{{ str_replace(['*', '!'], ['', ' '], $product->barcode) }}</dd>
+                                    <dd class="font-medium text-right font-mono text-sm">
+                                        {{ str_replace(['*', '!'], ['', ' '], $product->barcode) }}</dd>
                                 </div>
                             @endif
                             @if ($product->ean_code)
@@ -515,7 +527,8 @@
                             @if ($product->ksh_prefix || $product->ksh_number)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">KSH/VTSZ szám</dt>
-                                    <dd class="font-medium text-right">{{ $product->ksh_prefix }} {{ $product->ksh_number }}</dd>
+                                    <dd class="font-medium text-right">{{ $product->ksh_prefix }}
+                                        {{ $product->ksh_number }}</dd>
                                 </div>
                             @endif
                             @if ($product->supplier)
@@ -573,7 +586,8 @@
                             @foreach ($product->custom_fields as $key => $value)
                                 <div class="bg-gray-50 rounded p-3">
                                     <dt class="text-gray-600 text-sm">{{ $key }}</dt>
-                                    <dd class="font-medium mt-1">{{ is_array($value) ? json_encode($value) : $value }}</dd>
+                                    <dd class="font-medium mt-1">{{ is_array($value) ? json_encode($value) : $value }}
+                                    </dd>
                                 </div>
                             @endforeach
                         </dl>

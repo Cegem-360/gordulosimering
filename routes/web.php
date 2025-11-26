@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Livewire\Cart;
 use App\Livewire\CompanyData;
 use App\Livewire\Contact;
 use App\Livewire\DeliveryFramework;
@@ -37,6 +38,7 @@ Route::middleware(['throttle:global'])->prefix('termekkategoriak')->as('categori
     Route::get('/{category:slug}', Products\Categories\Show::class)->name('show');
 });
 Route::middleware(['throttle:global'])->group(function () {
+    Route::get('/kosar', Cart::class)->name('cart');
     Route::get('/szolgaltatasaink', Services::class)->name('services');
     Route::get('/munkatarsaink', Team::class)->name('team');
     Route::get('/kapcsolat', Contact::class)->name('contact');
