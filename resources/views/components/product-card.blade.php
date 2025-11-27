@@ -1,28 +1,39 @@
 @props(['product'])
 
+@php
+    $images = $product->images ?? [];
+    $mainImage = is_array($images) && count($images) > 0 ? $images[0] : null;
+    $inStock = ($product->minimum_stock ?? 0) > 0;
+@endphp
+
 <div
     class="group bg-white hover:bg-gray-100 hover:shadow-xl transition-all border border-gray-400 rounded-lg p-4 flex flex-col h-full">
     <a href="{{ isset($product->slug) ? route('products.show', $product->slug) : '#' }}" class="relative mb-4">
-        <img src="{{ $product->main_image ?? 'https://placehold.co/200' }}"
-            alt="{{ $product->item_name ?? 'Nincs termék név' }}" class="w-full h-40 object-contain">
-        @if ($product->in_stock ?? false)
+        <img src="{{ $mainImage ?? 'https://placehold.co/200?text=Nincs+kép' }}"
+            alt="{{ $product->name ?? 'Nincs termék név' }}" class="w-full h-40 object-contain">
+        @if ($inStock)
             <span
                 class="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
                 <i class="fa fa-cube"></i> Készleten
+            </span>
+        @else
+            <span
+                class="absolute top-2 right-2 bg-orange-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
+                <i class="fa fa-clock"></i> Rendelésre
             </span>
         @endif
     </a>
 
     <a href="{{ isset($product->slug) ? route('products.show', $product->slug) : '#' }}"
         class="block mb-4 hover:underline text-blue-600 font-semibold grow">
-        {{ $product->item_name ?? 'Nincs termék név' }}
+        {{ $product->name ?? 'Nincs termék név' }}
     </a>
 
-    <div class="text-sm font-medium mb-2">{{ $product->manufacturer->name ?? 'Nincs gyártó' }}</div>
+    <div class="text-sm font-medium mb-2 text-gray-600">{{ $product->supplier ?? $product->product_variety ?? '' }}</div>
     <div class="text-xl font-bold text-blue-600 mb-4">
-        {{ number_format($product->net_retail_price ?? 0, 0, ',', ' ') }} Ft
+        {{ number_format($product->net_selling_price ?? 0, 0, ',', ' ') }} Ft
     </div>
-    @if ($product->all_quantity > 0 && $product->min_order_quantity <= $product->all_quantity)
+    @if ($inStock)
         <button type="button"
             class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2">
             <i class="fa fa-cart-plus"></i> Rendelés
