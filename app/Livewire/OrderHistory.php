@@ -23,7 +23,7 @@ final class OrderHistory extends Component
         return Auth::user()
             ->orders()
             ->with(['orderItems.product', 'shippingMethod'])
-            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->paginate(10);
     }
 
