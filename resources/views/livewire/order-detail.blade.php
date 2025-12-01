@@ -1,3 +1,5 @@
+@use('Illuminate\Support\Number')
+
 <div>
     <div class="min-h-screen bg-gray-50">
         <!-- Breadcrumbs -->
@@ -120,12 +122,12 @@
                                                     <p class="text-sm font-medium text-gray-500">Törölt termék</p>
                                                 @endif
                                                 <p class="text-sm text-gray-500 mt-1">
-                                                    {{ $item->quantity }} db × {{ number_format($item->total, 0, ',', ' ') }} Ft
+                                                    {{ $item->quantity }} db × {{ Number::currency($item->total, in: 'HUF', locale: 'hu', precision: 0) }}
                                                 </p>
                                             </div>
                                             <div class="text-right shrink-0">
                                                 <p class="text-base font-bold text-gray-900">
-                                                    {{ number_format($item->quantity * $item->total, 0, ',', ' ') }} Ft
+                                                    {{ Number::currency($item->quantity * $item->total, in: 'HUF', locale: 'hu', precision: 0) }}
                                                 </p>
                                             </div>
                                         </div>
@@ -246,12 +248,12 @@
                                 <div class="space-y-3">
                                     <div class="flex justify-between text-sm">
                                         <span class="text-gray-600">Termékek:</span>
-                                        <span class="font-medium text-gray-900">{{ number_format($order->orderTotal(), 0, ',', ' ') }} Ft</span>
+                                        <span class="font-medium text-gray-900">{{ Number::currency($order->orderTotal(), in: 'HUF', locale: 'hu', precision: 0) }}</span>
                                     </div>
                                     <div class="flex justify-between text-sm">
                                         <span class="text-gray-600">Szállítás:</span>
                                         @if ($order->shipping_cost > 0)
-                                            <span class="font-medium text-gray-900">{{ number_format($order->shipping_cost, 0, ',', ' ') }} Ft</span>
+                                            <span class="font-medium text-gray-900">{{ Number::currency($order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}</span>
                                         @else
                                             <span class="font-medium text-green-600">Ingyenes</span>
                                         @endif
@@ -259,7 +261,7 @@
                                     <div class="pt-3 border-t border-gray-200">
                                         <div class="flex justify-between">
                                             <span class="font-semibold text-gray-900">Végösszeg:</span>
-                                            <span class="text-xl font-bold text-blue-600">{{ number_format($order->orderTotal() + $order->shipping_cost, 0, ',', ' ') }} Ft</span>
+                                            <span class="text-xl font-bold text-blue-600">{{ Number::currency($order->orderTotal() + $order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -316,7 +318,7 @@
                                         <p class="font-medium text-gray-900 text-sm">{{ $order->shippingMethod?->name ?? 'Ismeretlen' }}</p>
                                         <p class="text-xs text-gray-500 mt-0.5">
                                             @if ($order->shipping_cost > 0)
-                                                {{ number_format($order->shipping_cost, 0, ',', ' ') }} Ft
+                                                {{ Number::currency($order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}
                                             @else
                                                 <span class="text-green-600">Ingyenes szállítás</span>
                                             @endif

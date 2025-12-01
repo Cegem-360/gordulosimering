@@ -1,3 +1,5 @@
+@use('Illuminate\Support\Number')
+
 <div>
     <div class="min-h-screen bg-gray-50">
         <!-- Breadcrumbs -->
@@ -61,8 +63,8 @@
                                     <i class="fas fa-wallet text-purple-600"></i>
                                 </div>
                                 <div>
-                                    <p class="text-2xl font-bold text-gray-900">{{ number_format($this->totalSpent, 0, ',', ' ') }}</p>
-                                    <p class="text-xs text-gray-500">Ft összesen</p>
+                                    <p class="text-2xl font-bold text-gray-900">{{ Number::currency($this->totalSpent, in: 'HUF', locale: 'hu', precision: 0) }}</p>
+                                    <p class="text-xs text-gray-500">összesen</p>
                                 </div>
                             </div>
                         </div>
@@ -104,7 +106,7 @@
                                             <div class="text-right">
                                                 <p class="text-sm text-gray-500">Végösszeg</p>
                                                 <p class="text-xl font-bold text-gray-900">
-                                                    {{ number_format($order->orderTotal() + $order->shipping_cost, 0, ',', ' ') }} Ft
+                                                    {{ Number::currency($order->orderTotal() + $order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}
                                                 </p>
                                             </div>
                                             <a href="{{ route('orders.show', $order) }}"
@@ -176,12 +178,12 @@
                                                         <p class="text-sm font-medium text-gray-500">Törölt termék</p>
                                                     @endif
                                                     <p class="text-sm text-gray-500 mt-0.5">
-                                                        {{ $item->quantity }} db × {{ number_format($item->total, 0, ',', ' ') }} Ft
+                                                        {{ $item->quantity }} db × {{ Number::currency($item->total, in: 'HUF', locale: 'hu', precision: 0) }}
                                                     </p>
                                                 </div>
                                                 <div class="text-right shrink-0">
                                                     <p class="text-sm font-semibold text-gray-900">
-                                                        {{ number_format($item->quantity * $item->total, 0, ',', ' ') }} Ft
+                                                        {{ Number::currency($item->quantity * $item->total, in: 'HUF', locale: 'hu', precision: 0) }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -205,7 +207,7 @@
                                                 <i class="fas fa-truck text-gray-400"></i>
                                                 <span>{{ $order->shippingMethod?->name ?? 'Ismeretlen' }}</span>
                                                 @if ($order->shipping_cost > 0)
-                                                    <span class="text-gray-400">({{ number_format($order->shipping_cost, 0, ',', ' ') }} Ft)</span>
+                                                    <span class="text-gray-400">({{ Number::currency($order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }})</span>
                                                 @else
                                                     <span class="text-green-600 font-medium">Ingyenes</span>
                                                 @endif
@@ -220,10 +222,10 @@
                                         <div class="flex items-center gap-3">
                                             <div class="text-right">
                                                 <div class="text-xs text-gray-500">
-                                                    <span>Termékek: {{ number_format($order->orderTotal(), 0, ',', ' ') }} Ft</span>
+                                                    <span>Termékek: {{ Number::currency($order->orderTotal(), in: 'HUF', locale: 'hu', precision: 0) }}</span>
                                                     @if ($order->shipping_cost > 0)
                                                         <span class="mx-1">+</span>
-                                                        <span>Szállítás: {{ number_format($order->shipping_cost, 0, ',', ' ') }} Ft</span>
+                                                        <span>Szállítás: {{ Number::currency($order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}</span>
                                                     @endif
                                                 </div>
                                             </div>
