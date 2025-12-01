@@ -4,43 +4,37 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Models\Product;
+use App\Services\CartService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 final class Cart extends Component
 {
-    public array $cartItems = [];
+    public Collection $cartItems;
 
-    public function mount(): void
+    public function mount(CartService $cartService): void
     {
-        $this->cartItems = Session::get('cart', []);
+        $this->cartItems = $cartService->getCartItems();
     }
 
-    public function removeItem(int $index): void
+    public function removeItem(int $productId, CartService $cartService): void
     {
-        if (isset($this->cartItems[$index])) {
-            unset($this->cartItems[$index]);
-            $this->cartItems = array_values($this->cartItems);
-        }
+        $cartService->removeItem($productId);
+        $this->cartItems = $cartService->getCartItems();
     }
 
-    #[On('removeCartItem')]
-    public function updateCartItems(): void
+    #[On('cartUpdated')]
+    public function refreshCart(CartService $cartService): void
     {
-        $this->cartItems = Session::get('cart', []);
+        $this->cartItems = $cartService->getCartItems();
     }
 
     public function getSubtotalProperty(): float
     {
-        $productIds = array_column($this->cartItems, 'product_id');
-        $products = Product::whereIn('id', $productIds)->get();
-        $product = collect($this->cartItems)->keyBy('product_id');
-
-        return $products->sum(fn ($item) => $item->purchase_currency_price * $product[$item->id]['quantity']);
+        return $this->cartItems->sum(fn ($item) => $item->product->net_selling_price * $item->quantity);
     }
 
     public function getVatAmountProperty(): float
@@ -55,10 +49,9 @@ final class Cart extends Component
 
     public function getItemCountProperty(): int
     {
-        return collect($this->cartItems)->sum('quantity');
+        return $this->cartItems->sum('quantity');
     }
 
-    #[On('removeCartItem')]
     public function render(): Factory|View
     {
         return view('livewire.cart');

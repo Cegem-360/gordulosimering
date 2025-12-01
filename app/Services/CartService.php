@@ -6,8 +6,8 @@ namespace App\Services;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 final class CartService
 {
@@ -15,18 +15,11 @@ final class CartService
 
     public function __construct()
     {
-        $userId = Auth::id();
-        if (Auth::check()) {
-            $this->cart = Cart::firstOrCreate(['user_id' => $userId]);
-        } else {
-            $sessionId = Session::getId();
-            $this->cart = Cart::firstOrCreate(['session_id' => $sessionId]);
-        }
+        $this->cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
     }
 
     public function addItem($productId, $quantity): void
     {
-
         $cartItem = $this->cart->cartItems()->where('product_id', $productId)->first();
 
         if ($cartItem) {
@@ -44,7 +37,7 @@ final class CartService
         $cartItem = $this->cart->items()->where('product_id', $productId)->first();
 
         if ($cartItem) {
-            if ($quantity <= $cartItem->product->all_quantity) {
+            if ($quantity <= $cartItem->product->maximum_stock) {
                 $cartItem->quantity = $quantity;
             }
 
@@ -62,7 +55,7 @@ final class CartService
         $this->cart->cartItems()->delete();
     }
 
-    public function getCartItems()
+    public function getCartItems(): Collection
     {
         return $this->cart->cartItems;
     }
@@ -72,10 +65,10 @@ final class CartService
         return $this->cart;
     }
 
-    public function getTotal()
+    public function getTotal(): int|float
     {
         return $this->cart->cartItems->sum(function ($item): int|float {
-            return $item->product->net_retail_price * $item->quantity;
+            return $item->product->net_selling_price * $item->quantity;
         });
     }
 

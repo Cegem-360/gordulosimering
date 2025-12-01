@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,11 @@ final class Product extends Model
     public function isInStock(): bool
     {
         return $this->minimum_stock > 0;
+    }
+
+    protected function image(): Attribute
+    {
+        return Attribute::get(fn () => $this->images[0] ?? null);
     }
 
     protected function casts(): array

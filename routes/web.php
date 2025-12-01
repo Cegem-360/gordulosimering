@@ -38,9 +38,7 @@ Route::middleware(['throttle:global'])->prefix('termekkategoriak')->as('categori
     Route::get('/{category:slug}', Products\Categories\Show::class)->name('show');
 });
 Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function () {
-    Route::middleware(['EnsureCartNotEmpty'])->group(function () {
-        Route::get('/kosar', Cart::class)->name('cart');
-    });
+    Route::get('/kosar', Cart::class)->name('cart');
     Route::get('/szolgaltatasaink', Services::class)->name('services');
     Route::get('/munkatarsaink', Team::class)->name('team');
     Route::get('/kapcsolat', Contact::class)->name('contact');

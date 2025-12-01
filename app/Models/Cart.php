@@ -59,7 +59,7 @@ final class Cart extends Model
     {
         $total = 0;
         foreach ($this->items as $cartItem) {
-            $total += $cartItem->quantity * $cartItem->product->net_retail_price;
+            $total += $cartItem->quantity * $cartItem->product->net_selling_price;
         }
 
         return $total;

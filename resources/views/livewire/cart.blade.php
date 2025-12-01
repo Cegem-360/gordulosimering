@@ -27,7 +27,7 @@
                 <!-- Cart Items -->
                 <div class="lg:col-span-2 space-y-4">
                     @foreach ($cartItems as $item)
-                        <livewire:cart-item :product="$item['product_id']" :quantity="$item['quantity']" :key="'cart-item-' . $item['product_id']" />
+                        <livewire:cart-item :product-id="$item->product_id" :quantity="$item->quantity" :key="'cart-item-' . $item->product_id" />
                     @endforeach
 
                     <!-- Continue Shopping -->

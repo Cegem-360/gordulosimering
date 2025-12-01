@@ -4,44 +4,42 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Models\Cart;
 use App\Models\Product;
-use Illuminate\Support\Facades\Session;
+use App\Services\CartService;
 use Livewire\Component;
 
 final class CartItem extends Component
 {
-    public $product;
+    public Product $product;
 
     public int $quantity;
 
-    public function decreaseQuantity(): void
+    public function mount(int $productId, int $quantity): void
+    {
+        $this->product = Product::findOrFail($productId);
+        $this->quantity = $quantity;
+    }
+
+    public function decreaseQuantity(CartService $cartService): void
     {
         if ($this->quantity > $this->product->min_order_quantity) {
             $this->quantity--;
+            $cartService->updateItem($this->product->id, $this->quantity);
         }
     }
 
-    public function increaseQuantity(): void
+    public function increaseQuantity(CartService $cartService): void
     {
-        $this->quantity++;
+        if ($this->quantity < $this->product->maximum_stock) {
+            $this->quantity++;
+            $cartService->updateItem($this->product->id, $this->quantity);
+        }
     }
 
-    public function removeProduct(): void
+    public function removeProduct(CartService $cartService): void
     {
-        $sessionCart = Session::get('cart', []);
-        $cart = Cart::whereSessionId(Session::getId())->first();
-        $cartItem = $cart->items()->get();
-        $cartItem->delete();
-        $sessionCart = array_filter($sessionCart, fn ($item) => $item['product_id'] !== $this->product->id);
-        Session::put('cart', $sessionCart);
-        $this->dispatch('removeCartItem');
-    }
-
-    public function mount(int $product, int $quantity)
-    {
-        $this->product = Product::findOrFail($product);
-        $this->quantity = $quantity;
+        $cartService->removeItem($this->product->id);
+        $this->dispatch('cartUpdated');
     }
 
     public function render()

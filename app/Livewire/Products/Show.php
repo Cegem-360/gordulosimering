@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Livewire\Products;
 
 use App\Models\Product;
+use App\Services\CartService;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -19,22 +19,11 @@ final class Show extends Component
 
     public int $quantity;
 
-    public function addToCart(): void
+    public function addToCart(CartService $cartService): void
     {
-        $cart = Session::get('cart', []);
+        $cartService->addItem($this->product->id, $this->quantity);
 
-        $existingIndex = collect($cart)->search(fn ($item) => $item['product_id'] === $this->product->id);
-
-        if ($existingIndex !== false) {
-            $cart[$existingIndex]['quantity'] += $this->quantity;
-        } else {
-            $cart['product_id'] = [
-                'product_id' => $this->product->id,
-                'quantity' => $this->quantity,
-            ];
-        }
-
-        Session::put('cart', $cart);
+        $this->dispatch('cartUpdated');
 
         Notification::make()
             ->title('A termék sikeresen hozzáadva a kosárhoz.')
