@@ -8,6 +8,7 @@ use App\Livewire\CompanyData;
 use App\Livewire\Contact;
 use App\Livewire\DeliveryFramework;
 use App\Livewire\Documents;
+use App\Livewire\OrderDetail;
 use App\Livewire\OrderHistory;
 use App\Livewire\PrivacyPolicy;
 use App\Livewire\Products;
@@ -57,6 +58,7 @@ Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/rendeleseim', OrderHistory::class)->name('orders.history');
+    Route::get('/rendeleseim/{order}', OrderDetail::class)->name('orders.show');
 });
 
 require __DIR__ . '/auth.php';

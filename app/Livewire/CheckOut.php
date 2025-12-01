@@ -204,6 +204,19 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
         $record = Order::create($data);
 
+        // Save cart items as order items
+        foreach ($this->cartItems as $cartItem) {
+            $record->orderItems()->create([
+                'product_id' => $cartItem->product_id,
+                'quantity' => $cartItem->quantity,
+                'total' => $cartItem->product->net_selling_price,
+                'subtotal' => $cartItem->product->net_selling_price * $cartItem->quantity,
+                'subtotal_tax' => 0,
+                'total_tax' => 0,
+                'tax_class' => '',
+            ]);
+        }
+
         $this->form->model($record)->saveRelationships();
 
         $cartService->clearCart();
