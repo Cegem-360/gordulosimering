@@ -22,17 +22,23 @@ final class CartItem extends Component
 
     public function decreaseQuantity(CartService $cartService): void
     {
-        if ($this->quantity > $this->product->min_order_quantity) {
+        $minQuantity = $this->product->min_order_quantity ?: 1;
+
+        if ($this->quantity > $minQuantity) {
             $this->quantity--;
             $cartService->updateItem($this->product->id, $this->quantity);
+            $this->dispatch('cartUpdated');
         }
     }
 
     public function increaseQuantity(CartService $cartService): void
     {
-        if ($this->quantity < $this->product->maximum_stock) {
+        $maxQuantity = $this->product->maximum_stock ?: 9999;
+
+        if ($this->quantity < $maxQuantity) {
             $this->quantity++;
             $cartService->updateItem($this->product->id, $this->quantity);
+            $this->dispatch('cartUpdated');
         }
     }
 

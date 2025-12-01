@@ -34,14 +34,15 @@ final class CartService
 
     public function updateItem($productId, $quantity): void
     {
-        $cartItem = $this->cart->items()->where('product_id', $productId)->first();
+        $cartItem = $this->cart->cartItems()->where('product_id', $productId)->first();
 
         if ($cartItem) {
-            if ($quantity <= $cartItem->product->maximum_stock) {
-                $cartItem->quantity = $quantity;
-            }
+            $maxStock = $cartItem->product->maximum_stock ?: 9999;
 
-            $cartItem->save();
+            if ($quantity <= $maxStock) {
+                $cartItem->quantity = $quantity;
+                $cartItem->save();
+            }
         }
     }
 
@@ -57,7 +58,7 @@ final class CartService
 
     public function getCartItems(): Collection
     {
-        return $this->cart->cartItems;
+        return $this->cart->cartItems()->with('product')->get();
     }
 
     public function getCart(): Cart

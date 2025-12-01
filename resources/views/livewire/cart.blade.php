@@ -69,11 +69,11 @@
                         </dl>
 
                         <!-- Checkout Button -->
-                        <button type="button"
+                        <a href="{{ route('checkout') }}"
                             class="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 font-semibold text-lg transition-colors shadow-sm">
                             <i class="fas fa-lock"></i>
                             Tovább a pénztárhoz
-                        </button>
+                        </a>
 
                         <!-- Payment Methods -->
                         {{-- <div class="mt-6 pt-4 border-t">

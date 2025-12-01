@@ -3,16 +3,19 @@
 declare(strict_types=1);
 
 use App\Livewire\Cart;
+use App\Livewire\CheckOut;
 use App\Livewire\CompanyData;
 use App\Livewire\Contact;
 use App\Livewire\DeliveryFramework;
 use App\Livewire\Documents;
+use App\Livewire\OrderHistory;
 use App\Livewire\PrivacyPolicy;
 use App\Livewire\Products;
 use App\Livewire\QualityPolicy;
 use App\Livewire\Services;
 use App\Livewire\Team;
 use App\Livewire\TermsAndConditions;
+use App\Livewire\ThankYou;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:global'])->get('/', function () {
@@ -38,7 +41,9 @@ Route::middleware(['throttle:global'])->prefix('termekkategoriak')->as('categori
     Route::get('/{category:slug}', Products\Categories\Show::class)->name('show');
 });
 Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function () {
+    Route::middleware(['EnsureCartNotEmpty'])->get('/checkout', CheckOut::class)->name('checkout');
     Route::get('/kosar', Cart::class)->name('cart');
+    Route::get('/koszonjuk', ThankYou::class)->name('thank-you');
     Route::get('/szolgaltatasaink', Services::class)->name('services');
     Route::get('/munkatarsaink', Team::class)->name('team');
     Route::get('/kapcsolat', Contact::class)->name('contact');
@@ -49,3 +54,9 @@ Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function () {
     Route::get('/minosegpolitika', QualityPolicy::class)->name('quality-policy');
     Route::get('/adatkezelesi-tajekoztato', PrivacyPolicy::class)->name('privacy-policy');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('/rendeleseim', OrderHistory::class)->name('orders.history');
+});
+
+require __DIR__ . '/auth.php';

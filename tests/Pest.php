@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -12,23 +15,11 @@ declare(strict_types=1);
 | need to change it using the "pest()" function to bind a different classes or traits.
 |
 */
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Sleep;
-use Illuminate\Support\Str;
-use Tests\TestCase;
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
-    ->beforeEach(function (): void {
-        Str::createRandomStringsNormally();
-        Str::createUuidsNormally();
-        Http::preventStrayRequests();
-        Sleep::fake();
+    ->in('Feature');
 
-        $this->freezeTime();
-    })
-    ->in('Feature', 'Unit');
 /*
 |--------------------------------------------------------------------------
 | Expectations
@@ -54,3 +45,8 @@ expect()->extend('toBeOne', function () {
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
+
+function something()
+{
+    // ..
+}

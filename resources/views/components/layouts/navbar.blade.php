@@ -179,28 +179,56 @@
 
             <!-- Search Bar -->
             <div class="hidden lg:flex flex-1 max-w-2xl mx-8">
-                <form action="/products" method="GET" class="w-full">
-                    <div class="relative">
-                        <input type="text" name="search"
-                            placeholder="{{ __('Keresés termékek között... (pl: 6205-2RS, SKF golyóscsapágy)') }}"
-                            class="w-full pl-12 pr-4 py-2 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fas fa-search text-gray-400"></i>
-                        </div>
-                    </div>
-                </form>
+                <livewire:live-search />
             </div>
 
             <!-- Right Side Menu -->
             <div class="flex items-center space-x-4">
+                <!-- Auth Links -->
+                @auth
+                    <div class="relative hidden lg:block" x-data="{ open: false }">
+                        <button @click="open = !open" @click.outside="open = false"
+                            class="flex items-center space-x-2 text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span class="text-sm font-medium">{{ Auth::user()->name }}</span>
+                            <i class="fas fa-chevron-down text-xs transition-transform"
+                                :class="{ 'rotate-180': open }"></i>
+                        </button>
+
+                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                            x-transition:enter-start="opacity-0 translate-y-1"
+                            x-transition:enter-end="opacity-100 translate-y-0"
+                            x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100 translate-y-0"
+                            x-transition:leave-end="opacity-0 translate-y-1"
+                            class="absolute right-0 z-50 mt-2 w-48 bg-white border rounded-lg shadow-lg">
+                            <div class="py-2">
+                                <a href="{{ route('orders.history') }}"
+                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                    <i class="fas fa-shopping-bag mr-2"></i>
+                                    {{ __('Rendeléseim') }}
+                                </a>
+                                <hr class="my-2">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>
+                                        {{ __('Kijelentkezés') }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('login') }}" class="hidden lg:flex items-center text-gray-700 hover:text-blue-600">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        <span class="text-sm font-medium">{{ __('Bejelentkezés') }}</span>
+                    </a>
+                @endauth
+
                 <!-- Cart -->
-                <a href="/kosar/" class="text-gray-700 hover:text-blue-600 p-2 relative">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span
-                        class="absolute top-0 right-0 -mt-1 -mr-1 bg-blue-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                        0
-                    </span>
-                </a>
+                <livewire:cart-icon />
 
                 <!-- Mobile Menu Button -->
                 <button @click="mobileMenuOpen = !mobileMenuOpen"
@@ -210,53 +238,6 @@
             </div>
         </nav>
 
-        <!-- Search Overlay -->
-        <div x-data x-show="$store.search.isOpen" x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
-            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
-            x-transition:leave-end="opacity-0 -translate-y-4"
-            class="absolute inset-x-0 top-full bg-white border-b shadow-lg z-50">
-            <div class="container mx-auto px-4 py-4">
-                <form @submit.prevent="$store.search.submit()" class="relative">
-                    <div class="relative">
-                        <input type="text"
-                            placeholder="{{ __('Keresés termékek között... (pl: 6205-2RS, SKF golyóscsapágy)') }}"
-                            x-model="$store.search.query" @keydown.escape="$store.search.close()"
-                            class="w-full pl-12 pr-4 py-3 text-lg rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fas fa-search text-gray-400 text-lg"></i>
-                        </div>
-                        <button type="button" @click="$store.search.close()"
-                            class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-
-                    <!-- Quick Links -->
-                    <div class="mt-4">
-                        <h4 class="text-sm font-medium text-gray-500 mb-2">{{ __('Népszerű keresések:') }}</h4>
-                        <div class="flex flex-wrap gap-2">
-                            <button type="button" @click="$store.search.setQuery('{{ __('SKF golyóscsapágy') }}')"
-                                class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-600 transition-colors">
-                                {{ __('SKF golyóscsapágy') }}
-                            </button>
-                            <button type="button" @click="$store.search.setQuery('{{ __('6205 sorozat') }}')"
-                                class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-600 transition-colors">
-                                {{ __('6205 sorozat') }}
-                            </button>
-                            <button type="button" @click="$store.search.setQuery('{{ __('tűgörgős csapágy') }}')"
-                                class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-600 transition-colors">
-                                {{ __('tűgörgős csapágy') }}
-                            </button>
-                            <button type="button" @click="$store.search.setQuery('{{ __('Gumi porvédős') }}')"
-                                class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-600 transition-colors">
-                                {{ __('Gumi porvédős') }}
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 
     <!-- Mobile Menu -->
@@ -329,36 +310,40 @@
 
             <a href="{{ route('contact') }}"
                 class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Kapcsolat') }}</a>
+
+            <!-- Mobile Auth Links -->
+            <div class="border-t pt-4 mt-4">
+                @auth
+                    <div class="flex items-center py-2 text-gray-700">
+                        <i class="fas fa-user-circle text-xl mr-2"></i>
+                        <span class="font-medium">{{ Auth::user()->name }}</span>
+                    </div>
+                    <a href="{{ route('orders.history') }}"
+                        class="block py-2 text-gray-600 hover:text-blue-600 pl-7">
+                        <i class="fas fa-shopping-bag mr-2"></i>
+                        {{ __('Rendeléseim') }}
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                            class="w-full text-left py-2 text-gray-600 hover:text-blue-600 pl-7">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            {{ __('Kijelentkezés') }}
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}"
+                        class="block py-2 text-gray-700 hover:text-blue-600">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        {{ __('Bejelentkezés') }}
+                    </a>
+                    <a href="{{ route('register') }}"
+                        class="block py-2 text-gray-700 hover:text-blue-600">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        {{ __('Regisztráció') }}
+                    </a>
+                @endauth
+            </div>
         </div>
     </div>
 </div>
-
-<!-- Alpine.js Store for Search -->
-<script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.store('search', {
-            isOpen: false,
-            query: '',
-            toggle() {
-                this.isOpen = !this.isOpen;
-                if (this.isOpen) {
-                    this.$nextTick(() => {
-                        document.querySelector('input[type="text"]').focus();
-                    });
-                }
-            },
-            close() {
-                this.isOpen = false;
-            },
-            setQuery(query) {
-                this.query = query;
-                document.querySelector('input[type="text"]').focus();
-            },
-            submit() {
-                if (this.query.trim()) {
-                    window.location.href = `/products?search=${encodeURIComponent(this.query.trim())}`;
-                }
-            }
-        });
-    });
-</script>
