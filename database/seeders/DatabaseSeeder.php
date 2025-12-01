@@ -25,6 +25,7 @@ final class DatabaseSeeder extends Seeder
         ]);
         $this->call([
             ProductSeeder::class,
+            ShippingMethodSeeder::class,
         ]);
         // Product::factory(50)->create();
     }

@@ -13,7 +13,21 @@ use App\Models\User;
 use Livewire\Livewire;
 
 it('renders successfully', function () {
-    Livewire::test(CheckOut::class)
+    $user = User::factory()->create();
+    $cart = Cart::factory()->create([
+        'user_id' => $user->id,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
         ->assertStatus(200);
 });
 
@@ -103,4 +117,195 @@ it('clears the cart after successful order', function () {
         ->call('create');
 
     expect(CartItem::where('cart_id', $cart->id)->count())->toBe(0);
+});
+
+it('pre-fills form with saved user billing data', function () {
+    $user = User::factory()->create([
+        'billing_name' => 'Saved Name',
+        'billing_company_name' => 'Saved Company',
+        'billing_vat_number' => '12345678-1-12',
+        'billing_postcode' => '1111',
+        'billing_city' => 'Saved City',
+        'billing_address_1' => 'Saved Address 1',
+        'billing_country' => 'Magyarország',
+        'phone' => '+36201234567',
+    ]);
+
+    $cart = Cart::factory()->create([
+        'user_id' => $user->id,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->assertSet('data.billing_name', 'Saved Name')
+        ->assertSet('data.billing_company_name', 'Saved Company')
+        ->assertSet('data.billing_vat_number', '12345678-1-12')
+        ->assertSet('data.billing_postcode', '1111')
+        ->assertSet('data.billing_city', 'Saved City')
+        ->assertSet('data.billing_address_1', 'Saved Address 1')
+        ->assertSet('data.billing_phone', '+36201234567');
+});
+
+it('saves billing and shipping data to user after successful order when checkbox is checked', function () {
+    $user = User::factory()->create();
+    $cart = Cart::factory()->create([
+        'user_id' => $user->id,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    $shippingMethod = ShippingMethod::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->set('data.billing_name', 'New Billing Name')
+        ->set('data.billing_email', 'test@example.com')
+        ->set('data.billing_phone', '+36309876543')
+        ->set('data.billing_company_name', 'New Company')
+        ->set('data.billing_vat_number', '87654321-2-21')
+        ->set('data.billing_postcode', '2222')
+        ->set('data.billing_city', 'New City')
+        ->set('data.billing_address_1', 'New Address 1')
+        ->set('data.billing_country', 'Magyarország')
+        ->set('selectedShippingMethod', $shippingMethod->id)
+        ->set('selectedPaymentMethod', 'bacs')
+        ->set('acceptTerms', true)
+        ->set('saveDataForFuture', true)
+        ->call('create');
+
+    $user->refresh();
+
+    expect($user->billing_name)->toBe('New Billing Name');
+    expect($user->phone)->toBe('+36309876543');
+    expect($user->billing_company_name)->toBe('New Company');
+    expect($user->billing_vat_number)->toBe('87654321-2-21');
+    expect($user->billing_postcode)->toBe('2222');
+    expect($user->billing_city)->toBe('New City');
+    expect($user->billing_address_1)->toBe('New Address 1');
+});
+
+it('does not save billing data to user when checkbox is unchecked', function () {
+    $user = User::factory()->create();
+    $cart = Cart::factory()->create([
+        'user_id' => $user->id,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    $shippingMethod = ShippingMethod::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->set('data.billing_name', 'New Billing Name')
+        ->set('data.billing_email', 'test@example.com')
+        ->set('data.billing_phone', '+36309876543')
+        ->set('data.billing_postcode', '2222')
+        ->set('data.billing_city', 'New City')
+        ->set('data.billing_address_1', 'New Address 1')
+        ->set('data.billing_country', 'Magyarország')
+        ->set('selectedShippingMethod', $shippingMethod->id)
+        ->set('selectedPaymentMethod', 'bacs')
+        ->set('acceptTerms', true)
+        ->set('saveDataForFuture', false)
+        ->call('create');
+
+    $user->refresh();
+
+    expect($user->billing_name)->toBeNull();
+    expect($user->phone)->toBeNull();
+});
+
+it('allows guest checkout without login', function () {
+    $cart = Cart::factory()->create([
+        'user_id' => null,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    $shippingMethod = ShippingMethod::factory()->create();
+
+    Livewire::test(CheckOut::class)
+        ->set('data.billing_name', 'Guest User')
+        ->set('data.billing_email', 'guest@example.com')
+        ->set('data.billing_phone', '+36301234567')
+        ->set('data.billing_postcode', '1234')
+        ->set('data.billing_city', 'Budapest')
+        ->set('data.billing_address_1', 'Test Street 1')
+        ->set('data.billing_country', 'Magyarország')
+        ->set('selectedShippingMethod', $shippingMethod->id)
+        ->set('selectedPaymentMethod', 'bacs')
+        ->set('acceptTerms', true)
+        ->call('create');
+
+    $order = Order::whereNull('user_id')->first();
+    expect($order)->not->toBeNull();
+    expect($order->billing_name)->toBe('Guest User');
+    expect($order->billing_email)->toBe('guest@example.com');
+});
+
+it('creates account for guest when registration checkbox is checked', function () {
+    $cart = Cart::factory()->create([
+        'user_id' => null,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    $shippingMethod = ShippingMethod::factory()->create();
+
+    Livewire::test(CheckOut::class)
+        ->set('data.billing_name', 'New User')
+        ->set('data.billing_email', 'newuser@example.com')
+        ->set('data.billing_phone', '+36301234567')
+        ->set('data.billing_postcode', '1234')
+        ->set('data.billing_city', 'Budapest')
+        ->set('data.billing_address_1', 'Test Street 1')
+        ->set('data.billing_country', 'Magyarország')
+        ->set('selectedShippingMethod', $shippingMethod->id)
+        ->set('selectedPaymentMethod', 'bacs')
+        ->set('acceptTerms', true)
+        ->set('createAccount', true)
+        ->call('create');
+
+    // Check user was created
+    $newUser = User::where('email', 'newuser@example.com')->first();
+    expect($newUser)->not->toBeNull();
+    expect($newUser->name)->toBe('New User');
+    expect($newUser->billing_name)->toBe('New User');
+
+    // Check order is linked to new user
+    $order = Order::where('user_id', $newUser->id)->first();
+    expect($order)->not->toBeNull();
+    expect($order->billing_email)->toBe('newuser@example.com');
 });

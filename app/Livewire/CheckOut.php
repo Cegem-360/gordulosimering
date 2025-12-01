@@ -7,6 +7,7 @@ namespace App\Livewire;
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\ShippingMethod;
+use App\Models\User;
 use App\Services\CartService;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -19,6 +20,8 @@ use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 final class CheckOut extends Component implements HasActions, HasSchemas
@@ -38,10 +41,48 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
     public bool $shipToDifferentAddress = false;
 
+    public bool $saveDataForFuture = false;
+
+    public bool $createAccount = false;
+
     public function mount(CartService $cartService): void
     {
         $this->cartItems = $cartService->getCartItems();
-        $this->form->fill();
+
+        // Pre-fill form with saved user data (if logged in)
+        $user = Auth::user();
+        if ($user) {
+            $this->form->fill([
+                'billing_name' => $user->billing_name ?? $user->name,
+                'billing_email' => $user->email,
+                'billing_phone' => $user->phone ?? '',
+                'billing_company_name' => $user->billing_company_name ?? '',
+                'billing_vat_number' => $user->billing_vat_number ?? '',
+                'billing_company_office' => $user->billing_company_office ?? '',
+                'billing_postcode' => $user->billing_postcode ?? '',
+                'billing_city' => $user->billing_city ?? '',
+                'billing_address_1' => $user->billing_address_1 ?? '',
+                'billing_address_2' => $user->billing_address_2 ?? '',
+                'billing_country' => $user->billing_country ?? 'Magyarország',
+                'billing_state' => $user->billing_state ?? '',
+            ]);
+
+            // Pre-fill shipping data if exists
+            if ($user->shipping_name) {
+                $this->data['shipping_name'] = $user->shipping_name;
+                $this->data['shipping_postcode'] = $user->shipping_postcode ?? '';
+                $this->data['shipping_city'] = $user->shipping_city ?? '';
+                $this->data['shipping_address_1'] = $user->shipping_address_1 ?? '';
+                $this->data['shipping_address_2'] = $user->shipping_address_2 ?? '';
+                $this->data['shipping_country'] = $user->shipping_country ?? 'Magyarország';
+                $this->data['shipping_state'] = $user->shipping_state ?? '';
+            }
+        } else {
+            // Guest checkout - set defaults
+            $this->form->fill([
+                'billing_country' => 'Magyarország',
+            ]);
+        }
 
         $firstShipping = ShippingMethod::first();
         if ($firstShipping) {
@@ -162,19 +203,53 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
     public function create(CartService $cartService): void
     {
-        $this->validate([
+        $validationRules = [
             'selectedShippingMethod' => 'required|exists:shipping_methods,id',
             'selectedPaymentMethod' => 'required|in:bacs,cod',
             'acceptTerms' => 'accepted',
-        ], [
+        ];
+
+        $validationMessages = [
             'selectedShippingMethod.required' => 'Kérjük, válasszon szállítási módot.',
             'selectedPaymentMethod.required' => 'Kérjük, válasszon fizetési módot.',
             'acceptTerms.accepted' => 'El kell fogadnia az Általános Szerződési Feltételeket.',
-        ]);
+        ];
+
+        $this->validate($validationRules, $validationMessages);
 
         $data = $this->form->getState();
 
-        $data['user_id'] = Auth::id();
+        $userId = Auth::id();
+
+        // Create new user if guest selected registration
+        if ($this->createAccount && ! Auth::check()) {
+            $newUser = User::create([
+                'name' => $data['billing_name'],
+                'email' => $data['billing_email'],
+                'password' => Str::random(32), // Random password - user will set via reset link
+                'phone' => $data['billing_phone'] ?? null,
+                'billing_name' => $data['billing_name'],
+                'billing_company_name' => $data['billing_company_name'] ?? null,
+                'billing_vat_number' => $data['billing_vat_number'] ?? null,
+                'billing_company_office' => $data['billing_company_office'] ?? null,
+                'billing_postcode' => $data['billing_postcode'] ?? null,
+                'billing_city' => $data['billing_city'] ?? null,
+                'billing_address_1' => $data['billing_address_1'] ?? null,
+                'billing_address_2' => $data['billing_address_2'] ?? null,
+                'billing_country' => $data['billing_country'] ?? 'Magyarország',
+                'billing_state' => $data['billing_state'] ?? null,
+            ]);
+
+            $userId = $newUser->id;
+
+            // Send password reset link to user
+            Password::sendResetLink(['email' => $newUser->email]);
+
+            // Log in the new user
+            Auth::login($newUser);
+        }
+
+        $data['user_id'] = $userId;
         $data['shipping_method_id'] = $this->selectedShippingMethod;
         $data['payment_method'] = $this->selectedPaymentMethod;
         $data['order_status'] = OrderStatus::PENDING->value;
@@ -218,6 +293,31 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         }
 
         $this->form->model($record)->saveRelationships();
+
+        // Save billing/shipping data to user for future orders (only if logged in and checkbox is checked)
+        if ($this->saveDataForFuture && Auth::check()) {
+            $user = Auth::user();
+            $user->update([
+                'phone' => $data['billing_phone'] ?? $user->phone,
+                'billing_name' => $data['billing_name'] ?? $user->billing_name,
+                'billing_company_name' => $data['billing_company_name'] ?? $user->billing_company_name,
+                'billing_vat_number' => $data['billing_vat_number'] ?? $user->billing_vat_number,
+                'billing_company_office' => $data['billing_company_office'] ?? $user->billing_company_office,
+                'billing_postcode' => $data['billing_postcode'] ?? $user->billing_postcode,
+                'billing_city' => $data['billing_city'] ?? $user->billing_city,
+                'billing_address_1' => $data['billing_address_1'] ?? $user->billing_address_1,
+                'billing_address_2' => $data['billing_address_2'] ?? $user->billing_address_2,
+                'billing_country' => $data['billing_country'] ?? $user->billing_country,
+                'billing_state' => $data['billing_state'] ?? $user->billing_state,
+                'shipping_name' => $data['shipping_name'] ?? $user->shipping_name,
+                'shipping_postcode' => $data['shipping_postcode'] ?? $user->shipping_postcode,
+                'shipping_city' => $data['shipping_city'] ?? $user->shipping_city,
+                'shipping_address_1' => $data['shipping_address_1'] ?? $user->shipping_address_1,
+                'shipping_address_2' => $data['shipping_address_2'] ?? $user->shipping_address_2,
+                'shipping_country' => $data['shipping_country'] ?? $user->shipping_country,
+                'shipping_state' => $data['shipping_state'] ?? $user->shipping_state,
+            ]);
+        }
 
         $cartService->clearCart();
 

@@ -203,6 +203,11 @@
                             x-transition:leave-end="opacity-0 translate-y-1"
                             class="absolute right-0 z-50 mt-2 w-48 bg-white border rounded-lg shadow-lg">
                             <div class="py-2">
+                                <a href="{{ route('profile') }}"
+                                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
+                                    <i class="fas fa-user mr-2"></i>
+                                    {{ __('Profilom') }}
+                                </a>
                                 <a href="{{ route('orders.history') }}"
                                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
                                     <i class="fas fa-shopping-bag mr-2"></i>
@@ -318,6 +323,11 @@
                         <i class="fas fa-user-circle text-xl mr-2"></i>
                         <span class="font-medium">{{ Auth::user()->name }}</span>
                     </div>
+                    <a href="{{ route('profile') }}"
+                        class="block py-2 text-gray-600 hover:text-blue-600 pl-7">
+                        <i class="fas fa-user mr-2"></i>
+                        {{ __('Profilom') }}
+                    </a>
                     <a href="{{ route('orders.history') }}"
                         class="block py-2 text-gray-600 hover:text-blue-600 pl-7">
                         <i class="fas fa-shopping-bag mr-2"></i>

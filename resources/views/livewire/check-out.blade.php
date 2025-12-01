@@ -236,6 +236,35 @@
                         @enderror
                     </div>
 
+                    <!-- Registration for guests / Save data for logged in users -->
+                    @guest
+                        <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input type="checkbox" wire:model.live="createAccount"
+                                    class="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">
+                                    Szeretnék fiókot létrehozni
+                                </span>
+                            </label>
+
+                            @if ($createAccount)
+                                <p class="mt-3 text-xs text-gray-500">
+                                    A rendelés leadása után emailben küldünk egy linket, ahol beállíthatod a jelszavadat.
+                                </p>
+                            @endif
+                        </div>
+                    @else
+                        <div class="bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input type="checkbox" wire:model.live="saveDataForFuture"
+                                    class="mt-0.5 h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                <span class="text-sm text-gray-700">
+                                    Adatok mentése a jövőbeli rendelésekhez
+                                </span>
+                            </label>
+                        </div>
+                    @endguest
+
                     <!-- Submit Button -->
                     <button type="submit"
                         class="w-full bg-gray-800 text-white py-4 rounded-lg hover:bg-gray-900 font-bold text-lg uppercase tracking-wide transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"

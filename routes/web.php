@@ -12,6 +12,7 @@ use App\Livewire\OrderDetail;
 use App\Livewire\OrderHistory;
 use App\Livewire\PrivacyPolicy;
 use App\Livewire\Products;
+use App\Livewire\Profile;
 use App\Livewire\QualityPolicy;
 use App\Livewire\Services;
 use App\Livewire\Team;
@@ -57,6 +58,7 @@ Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/profilom', Profile::class)->name('profile');
     Route::get('/rendeleseim', OrderHistory::class)->name('orders.history');
     Route::get('/rendeleseim/{order}', OrderDetail::class)->name('orders.show');
 });
