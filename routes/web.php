@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:global'])->get('/', function () {
     return view('index');
-});
+})->name('index');
 
 Route::middleware(['throttle:global'])->prefix('products')->as('products.')->group(function () {
     Route::get('/', Products\Index::class)->name('index');
@@ -37,8 +37,10 @@ Route::middleware(['throttle:global'])->prefix('termekkategoriak')->as('categori
     Route::get('/', Products\Categories\Index::class)->name('index');
     Route::get('/{category:slug}', Products\Categories\Show::class)->name('show');
 });
-Route::middleware(['throttle:global'])->group(function () {
-    Route::get('/kosar', Cart::class)->name('cart');
+Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function () {
+    Route::middleware(['EnsureCartNotEmpty'])->group(function () {
+        Route::get('/kosar', Cart::class)->name('cart');
+    });
     Route::get('/szolgaltatasaink', Services::class)->name('services');
     Route::get('/munkatarsaink', Team::class)->name('team');
     Route::get('/kapcsolat', Contact::class)->name('contact');

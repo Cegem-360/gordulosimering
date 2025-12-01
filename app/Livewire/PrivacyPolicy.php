@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 final class PrivacyPolicy extends Component
 {
-    public function render(): mixed
+    public function render(): Factory|View
     {
-        return view('pages.privacy-policy');
+        return view('livewire.pages.privacy-policy');
     }
 }

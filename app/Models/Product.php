@@ -14,6 +14,11 @@ final class Product extends Model
 
     protected $guarded = [];
 
+    public function isInStock(): bool
+    {
+        return $this->minimum_stock > 0;
+    }
+
     protected function casts(): array
     {
         return [

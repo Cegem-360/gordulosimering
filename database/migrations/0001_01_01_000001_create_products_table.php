@@ -21,7 +21,7 @@ return new class() extends Migration
             $table->string('product_code')->nullable();
             $table->boolean('is_service')->nullable();
             $table->string('name')->nullable();
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->index();
             $table->string('catalog_number')->nullable();
             $table->string('type', 100)->nullable();
             $table->string('size', 100)->nullable();

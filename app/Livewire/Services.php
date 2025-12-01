@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 final class Services extends Component
 {
-    public function render()
+    public function render(): Factory|View
     {
-        return view('pages.services')->title('Szolgáltatásaink - Gördülő Simering Kft.');
+        return view('livewire.pages.services');
     }
 }

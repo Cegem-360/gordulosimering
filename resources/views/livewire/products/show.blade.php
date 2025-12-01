@@ -1,5 +1,4 @@
 <div class="min-h-screen bg-gray-50">
-    {{-- <x-dummy-prd-show /> --}}
 
     <!-- Product Database Information -->
     @if ($product)
@@ -7,7 +6,7 @@
         <div class="bg-white border-b">
             <div class="container mx-auto px-4 py-3">
                 <div class="flex items-center flex-wrap gap-2 text-sm">
-                    <a href="/" class="text-blue-600 hover:underline">Kezdőlap</a>
+                    <a href="{{ route('index') }}" class="text-blue-600 hover:underline">Kezdőlap</a>
                     <span class="text-gray-500">&gt;</span>
                     <a href="{{ route('categories.index') }}" class="text-blue-600 hover:underline">Termékkategóriák</a>
                     @if ($product->product_variety)
@@ -176,49 +175,6 @@
                         </div>
                     </div>
 
-                    <!-- Variants Selector -->
-                    {{-- TODO: Implement variants from database when product_variants table is available
-                    <div x-data="{
-                        open: false,
-                        selectedVariant: '{{ $product->product_code }}',
-                        variants: [],
-                        select(variantId) {
-                            this.selectedVariant = variantId;
-                            this.open = false;
-                        }
-                    }" class="relative">
-                        <button type="button" @click="open = !open"
-                            class="w-full border-2 border-gray-300 rounded-lg py-3 px-4 flex items-center justify-between hover:border-gray-400 transition-colors"
-                            :class="{ 'border-blue-500': open }">
-                            <div class="flex flex-col items-start">
-                                <span class="text-sm text-gray-500">Választott kivitel</span>
-                                <span class="font-medium" x-text="variants.find(v => v.id === selectedVariant)?.name || '{{ $product->name }}'"></span>
-                            </div>
-                            <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
-                        </button>
-
-                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 translate-y-1"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            x-transition:leave="transition ease-in duration-150"
-                            x-transition:leave-start="opacity-100 translate-y-0"
-                            x-transition:leave-end="opacity-0 translate-y-1" @click.away="open = false"
-                            class="absolute z-10 mt-2 w-full bg-white border rounded-lg shadow-lg">
-                            <div class="p-2 space-y-1">
-                                <template x-for="variant in variants" :key="variant.id">
-                                    <button @click="select(variant.id)"
-                                        class="w-full px-3 py-2 text-left rounded hover:bg-gray-200 transition-colors flex items-center justify-between group"
-                                        :class="{ 'bg-blue-100': selectedVariant === variant.id }">
-                                        <span x-text="variant.name" class="font-medium"></span>
-                                        <span class="text-gray-500 group-hover:text-gray-700"
-                                            x-text="new Intl.NumberFormat('hu-HU').format(variant.price) + ' Ft'"></span>
-                                    </button>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                    --}}
-
                     <!-- Add to Cart Section -->
                     <div class="bg-white rounded-lg border-2 border-blue-100 p-5 shadow-sm">
                         <!-- Stock Badge -->
@@ -240,19 +196,17 @@
                         <div class="mb-5">
                             @if ($product->net_selling_price)
                                 <p class="text-3xl md:text-4xl font-bold text-blue-600">
-                                    {{ number_format($product->net_selling_price, 0, ',', ' ') }} <span
-                                        class="text-2xl">Ft</span>
+                                    {{ Number::currency($product->net_selling_price, 'HUF', 'hu', 0) }}
                                 </p>
                                 <p class="text-sm text-gray-500 mt-1">Nettó eladási ár</p>
                                 @if ($product->gross_selling_price)
                                     <p class="text-sm text-gray-400 mt-1">
-                                        Bruttó: {{ number_format($product->gross_selling_price, 0, ',', ' ') }} Ft
+                                        Bruttó: {{ Number::currency($product->gross_selling_price, 'HUF', 'hu', 0) }}
                                     </p>
                                 @endif
                             @elseif ($product->gross_selling_price)
                                 <p class="text-3xl md:text-4xl font-bold text-blue-600">
-                                    {{ number_format($product->gross_selling_price, 0, ',', ' ') }} <span
-                                        class="text-2xl">Ft</span>
+                                    {{ Number::currency($product->gross_selling_price, 'HUF', 'hu', 0) }}
                                 </p>
                                 <p class="text-sm text-gray-500 mt-1">Bruttó eladási ár</p>
                             @else
@@ -261,16 +215,17 @@
                         </div>
 
                         <!-- Quantity Selector -->
-                        <div class="mb-4" x-data="{ quantity: 1, min: {{ $product->min_order_quantity ?? 1 }} }">
+                        <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Mennyiség</label>
                             <div class="flex items-center gap-1">
-                                <button type="button" @click="quantity = Math.max(min, quantity - 1)"
+                                <button type="button" wire:click="decrement"
                                     class="w-12 h-12 rounded-l-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
                                     <i class="fas fa-minus text-sm"></i>
                                 </button>
-                                <input type="number" x-model="quantity" :min="min"
+                                <input type="number" wire:model.live="quantity" name="quantity"
+                                    min="{{ $product->min_order_quantity ?? 1 }}" max="9999" step="1"
                                     class="w-20 h-12 text-center text-lg font-semibold border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                                <button type="button" @click="quantity++"
+                                <button type="button" wire:click="increment"
                                     class="w-12 h-12 rounded-r-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
                                     <i class="fas fa-plus text-sm"></i>
                                 </button>
@@ -283,7 +238,7 @@
                         </div>
 
                         <!-- Order Button -->
-                        <button type="button"
+                        <button type="button" wire:click="addToCart"
                             class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 font-semibold text-lg transition-colors shadow-sm">
                             <i class="fa fa-cart-plus"></i> Kosárba
                         </button>
@@ -384,21 +339,22 @@
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Listaár</dt>
                                     <dd class="font-medium text-right">
-                                        {{ number_format($product->list_price, 0, ',', ' ') }} Ft</dd>
+
+                                        {{ Number::currency($product->list_price, 'HUF', 'hu', 0) }}</dd>
                                 </div>
                             @endif
                             @if ($product->net_selling_price && $product->net_selling_price > 0)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Nettó eladási ár</dt>
                                     <dd class="font-bold text-right text-blue-600">
-                                        {{ number_format($product->net_selling_price, 0, ',', ' ') }} Ft</dd>
+                                        {{ Number::currency($product->net_selling_price, 'HUF', 'hu', 0) }}</dd>
                                 </div>
                             @endif
                             @if ($product->gross_selling_price && $product->gross_selling_price > 0)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Bruttó eladási ár</dt>
                                     <dd class="font-bold text-right">
-                                        {{ number_format($product->gross_selling_price, 0, ',', ' ') }} Ft</dd>
+                                        {{ Number::currency($product->gross_selling_price, 'HUF', 'hu', 0) }}</dd>
                                 </div>
                             @endif
                             @if ($product->vat_class)

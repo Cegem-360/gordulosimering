@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 final class Contact extends Component
@@ -31,8 +33,8 @@ final class Contact extends Component
         session()->flash('message', 'Köszönjük megkeresését! Hamarosan válaszolunk.');
     }
 
-    public function render()
+    public function render(): Factory|View
     {
-        return view('pages.contact');
+        return view('livewire.pages.contact');
     }
 }

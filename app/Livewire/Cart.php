@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Models\Product;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 final class Cart extends Component
@@ -13,36 +17,7 @@ final class Cart extends Component
 
     public function mount(): void
     {
-        // Load first 3 products from database as demo cart items
-        $products = Product::query()
-            ->whereNotNull('net_selling_price')
-            ->where('net_selling_price', '>', 0)
-            ->take(3)
-            ->get();
-
-        foreach ($products as $product) {
-            $this->cartItems[] = [
-                'id' => $product->id,
-                'slug' => $product->slug,
-                'name' => $product->name ?? $product->product_code,
-                'product_code' => $product->product_code,
-                'image' => $product->images[0] ?? null,
-                'net_price' => $product->net_selling_price,
-                'gross_price' => $product->gross_selling_price,
-                'quantity' => rand(1, 5),
-                'min_order_quantity' => $product->min_order_quantity ?? 1,
-                'quantity_unit' => $product->quantity_unit ?? 'db',
-                'in_stock' => ($product->minimum_stock ?? 0) > 0,
-            ];
-        }
-    }
-
-    public function updateQuantity(int $index, int $quantity): void
-    {
-        if (isset($this->cartItems[$index])) {
-            $minQty = $this->cartItems[$index]['min_order_quantity'];
-            $this->cartItems[$index]['quantity'] = max($minQty, $quantity);
-        }
+        $this->cartItems = Session::get('cart', []);
     }
 
     public function removeItem(int $index): void
@@ -53,9 +28,19 @@ final class Cart extends Component
         }
     }
 
+    #[On('removeCartItem')]
+    public function updateCartItems(): void
+    {
+        $this->cartItems = Session::get('cart', []);
+    }
+
     public function getSubtotalProperty(): float
     {
-        return collect($this->cartItems)->sum(fn ($item) => $item['net_price'] * $item['quantity']);
+        $productIds = array_column($this->cartItems, 'product_id');
+        $products = Product::whereIn('id', $productIds)->get();
+        $product = collect($this->cartItems)->keyBy('product_id');
+
+        return $products->sum(fn ($item) => $item->purchase_currency_price * $product[$item->id]['quantity']);
     }
 
     public function getVatAmountProperty(): float
@@ -73,8 +58,9 @@ final class Cart extends Component
         return collect($this->cartItems)->sum('quantity');
     }
 
-    public function render()
+    #[On('removeCartItem')]
+    public function render(): Factory|View
     {
-        return view('livewire.cart')->title('Kosár - Gördülő Simering Kft.');
+        return view('livewire.cart');
     }
 }

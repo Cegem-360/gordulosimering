@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 final class Documents extends Component
 {
-    public function render(): mixed
+    public function render(): Factory|View
     {
-        return view('pages.documents');
+        return view('livewire.pages.documents');
     }
 }
