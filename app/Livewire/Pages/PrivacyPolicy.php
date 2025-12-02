@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\Pages;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-final class TermsAndConditions extends Component
+final class PrivacyPolicy extends Component
 {
     public function render(): Factory|View
     {
-        return view('livewire.pages.terms-and-conditions');
+        return view('livewire.pages.privacy-policy');
     }
 }

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire;
+namespace App\Livewire\Pages;
 
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-final class Documents extends Component
+final class Team extends Component
 {
     public function render(): Factory|View
     {
-        return view('livewire.pages.documents');
+        return view('livewire.pages.team');
     }
 }

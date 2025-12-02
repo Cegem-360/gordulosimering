@@ -15,7 +15,7 @@
                 </button>
             </form>
             <p class="text-sm text-gray-400 mt-2">
-                Bármikor leiratkozhat. <a href="/adatkezelesi-tajekoztato"
+                Bármikor leiratkozhat. <a href="{{ route('privacy-policy') }}"
                     class="text-blue-400 hover:underline">Adatvédelmi szabályzatunkban</a> megtudhatja, hogyan kezeljük
                 adatait.
             </p>

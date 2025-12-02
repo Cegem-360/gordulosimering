@@ -144,65 +144,17 @@
         <div class="max-w-2xl mx-auto">
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm p-5">
                 <h2 class="text-center text-2xl font-bold text-gray-900 mb-6">Kapcsolatfelvétel</h2>
-
-                @if (session()->has('message'))
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6"
-                        role="alert">
-                        <span class="block sm:inline">{{ session('message') }}</span>
-                    </div>
-                @endif
-
-                <form wire:submit.prevent="sendMessage" class="max-w-sm mx-auto">
-                    <!-- Name -->
-                    <div class="mb-5">
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Név</label>
-                        <input type="text" id="name" wire:model="name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            required>
-                        @error('name')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Email -->
-                    <div class="mb-5">
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                        <input type="email" id="email" wire:model="email"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            required>
-                        @error('email')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Subject -->
-                    <div class="mb-5">
-                        <label for="subject" class="block mb-2 text-sm font-medium text-gray-900">Tárgy</label>
-                        <input type="text" id="subject" wire:model="subject"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            required>
-                        @error('subject')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Message -->
-                    <div class="mb-5">
-                        <label for="message" class="block mb-2 text-sm font-medium text-gray-900">Üzenet</label>
-                        <textarea id="message" wire:model="message" rows="4"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            required></textarea>
-                        @error('message')
-                            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                <form wire:submit="sendMessage" class="max-w-sm mx-auto">
+                    {{ $this->form }}
 
                     <button type="submit"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
+                        class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">
                         Küldés
                     </button>
                 </form>
             </div>
+
+            <x-filament-actions::modals />
 
             <!-- Additional Contact Info -->
             <div class="mt-12 text-center">
