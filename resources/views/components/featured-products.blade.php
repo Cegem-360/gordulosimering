@@ -34,7 +34,7 @@
         @if ($realProducts->count() > 0)
             <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
                 @foreach ($realProducts as $product)
-                    <x-product-card :product="$product" />
+                    <livewire:product-card :product="$product" :wire:key="'product-'.$product->id" />
                 @endforeach
             </div>
         @else

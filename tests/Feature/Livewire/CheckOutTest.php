@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 use App\Enums\OrderStatus;
 use App\Livewire\CheckOut;
+use App\Mail\NewOrderNotificationMail;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ShippingMethod;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
 it('renders successfully', function () {
@@ -308,4 +311,116 @@ it('creates account for guest when registration checkbox is checked', function (
     $order = Order::where('user_id', $newUser->id)->first();
     expect($order)->not->toBeNull();
     expect($order->billing_email)->toBe('newuser@example.com');
+});
+
+it('sends order confirmation email to customer after successful order', function () {
+    Mail::fake();
+
+    $user = User::factory()->create();
+    $cart = Cart::factory()->create([
+        'user_id' => $user->id,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    $shippingMethod = ShippingMethod::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->set('data.billing_name', 'Test User')
+        ->set('data.billing_email', 'customer@example.com')
+        ->set('data.billing_phone', '+36301234567')
+        ->set('data.billing_postcode', '1234')
+        ->set('data.billing_city', 'Budapest')
+        ->set('data.billing_address_1', 'Test Street 1')
+        ->set('data.billing_country', 'Magyarország')
+        ->set('selectedShippingMethod', $shippingMethod->id)
+        ->set('selectedPaymentMethod', 'bacs')
+        ->set('acceptTerms', true)
+        ->call('create');
+
+    Mail::assertQueued(OrderConfirmationMail::class, function ($mail) {
+        return $mail->hasTo('customer@example.com');
+    });
+});
+
+it('sends new order notification email to admin when admin email is configured', function () {
+    Mail::fake();
+    config(['shop.admin_email' => 'admin@shop.com']);
+
+    $user = User::factory()->create();
+    $cart = Cart::factory()->create([
+        'user_id' => $user->id,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    $shippingMethod = ShippingMethod::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->set('data.billing_name', 'Test User')
+        ->set('data.billing_email', 'customer@example.com')
+        ->set('data.billing_phone', '+36301234567')
+        ->set('data.billing_postcode', '1234')
+        ->set('data.billing_city', 'Budapest')
+        ->set('data.billing_address_1', 'Test Street 1')
+        ->set('data.billing_country', 'Magyarország')
+        ->set('selectedShippingMethod', $shippingMethod->id)
+        ->set('selectedPaymentMethod', 'bacs')
+        ->set('acceptTerms', true)
+        ->call('create');
+
+    Mail::assertQueued(NewOrderNotificationMail::class, function ($mail) {
+        return $mail->hasTo('admin@shop.com');
+    });
+});
+
+it('does not send admin notification when admin email is default placeholder', function () {
+    Mail::fake();
+    config(['shop.admin_email' => 'admin@example.com']);
+
+    $user = User::factory()->create();
+    $cart = Cart::factory()->create([
+        'user_id' => $user->id,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    $shippingMethod = ShippingMethod::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->set('data.billing_name', 'Test User')
+        ->set('data.billing_email', 'customer@example.com')
+        ->set('data.billing_phone', '+36301234567')
+        ->set('data.billing_postcode', '1234')
+        ->set('data.billing_city', 'Budapest')
+        ->set('data.billing_address_1', 'Test Street 1')
+        ->set('data.billing_country', 'Magyarország')
+        ->set('selectedShippingMethod', $shippingMethod->id)
+        ->set('selectedPaymentMethod', 'bacs')
+        ->set('acceptTerms', true)
+        ->call('create');
+
+    Mail::assertQueued(OrderConfirmationMail::class);
+    Mail::assertNotQueued(NewOrderNotificationMail::class);
 });

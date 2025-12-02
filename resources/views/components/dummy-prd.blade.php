@@ -113,7 +113,7 @@
 
         <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
             @foreach ($dummyProducts as $product)
-                <x-product-card :product="$product" />
+                <livewire:product-card :product="$product" :wire:key="'product-'.$loop->index" />
             @endforeach
         </div>
     </div>

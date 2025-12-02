@@ -1,14 +1,12 @@
-@props(['product'])
+<div class="group bg-white hover:bg-gray-100 hover:shadow-xl transition-all border border-gray-400 rounded-lg p-4 flex flex-col h-full">
+    @php
+        $images = $product->images ?? [];
+        $mainImage = is_array($images) && count($images) > 0 ? $images[0] : null;
+        $inStock = ($product->minimum_stock ?? 0) > 0;
+    @endphp
 
-@php
-    $images = $product->images ?? [];
-    $mainImage = is_array($images) && count($images) > 0 ? $images[0] : null;
-    $inStock = ($product->minimum_stock ?? 0) > 0;
-@endphp
-
-<div
-    class="group bg-white hover:bg-gray-100 hover:shadow-xl transition-all border border-gray-400 rounded-lg p-4 flex flex-col h-full">
-    <a href="{{ isset($product->slug) ? route('products.show', $product->slug) : '#' }}" class="relative mb-4">
+    <a href="{{ isset($product->slug) ? route('products.show', ['product' => $product->slug]) : '#' }}"
+        class="relative mb-4">
         <img src="{{ $mainImage ?? 'https://placehold.co/200?text=Nincs+kép' }}"
             alt="{{ $product->name ?? 'Nincs termék név' }}" class="w-full h-40 object-contain">
         @if ($inStock)
@@ -24,19 +22,23 @@
         @endif
     </a>
 
-    <a href="{{ isset($product->slug) ? route('products.show', $product->slug) : '#' }}"
+    <a href="{{ isset($product->slug) ? route('products.show', ['product' => $product->slug]) : '#' }}"
         class="block mb-4 hover:underline text-blue-600 font-semibold grow">
         {{ $product->name ?? 'Nincs termék név' }}
     </a>
 
-    <div class="text-sm font-medium mb-2 text-gray-600">{{ $product->supplier ?? $product->product_variety ?? '' }}</div>
+    <div class="text-sm font-medium mb-2 text-gray-600">{{ $product->supplier ?? ($product->product_variety ?? '') }}
+    </div>
     <div class="text-xl font-bold text-blue-600 mb-4">
-        {{ number_format($product->net_selling_price ?? 0, 0, ',', ' ') }} Ft
+        {{ Number::currency($product->net_selling_price ?? 0, 'HUF', 'hu', 0) }}
     </div>
     @if ($inStock)
-        <button type="button"
+        <button type="button" wire:click="addToCart"
             class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2">
-            <i class="fa fa-cart-plus"></i> Rendelés
+            <i class="fa fa-cart-plus" wire:loading.remove wire:target="addToCart"></i>
+            <i class="fa fa-spinner fa-spin" wire:loading wire:target="addToCart"></i>
+            <span wire:loading.remove wire:target="addToCart">Rendelés</span>
+            <span wire:loading wire:target="addToCart">Hozzáadás...</span>
         </button>
     @else
         <button type="button"

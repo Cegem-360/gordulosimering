@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Enums\OrderStatus;
+use App\Mail\NewOrderNotificationMail;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
 use App\Models\ShippingMethod;
 use App\Models\User;
@@ -20,6 +22,7 @@ use Filament\Schemas\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -320,6 +323,15 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         }
 
         $cartService->clearCart();
+
+        // Send order confirmation email to customer
+        Mail::to($record->billing_email)->send(new OrderConfirmationMail($record));
+
+        // Send new order notification to admin
+        $adminEmail = config('shop.admin_email');
+        if ($adminEmail && $adminEmail !== 'admin@example.com') {
+            Mail::to($adminEmail)->send(new NewOrderNotificationMail($record));
+        }
 
         session(['last_order_id' => $record->id]);
         Notification::make()

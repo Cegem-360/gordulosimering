@@ -33,17 +33,16 @@
                         @php
                             $hasActiveFilters = collect($selectedFilters)->flatten()->isNotEmpty();
                         @endphp
-                        @if($hasActiveFilters)
+                        @if ($hasActiveFilters)
                             <div class="flex flex-wrap gap-2">
-                                @foreach($selectedFilters as $key => $values)
-                                    @foreach($values as $value)
-                                        <span class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                                @foreach ($selectedFilters as $key => $values)
+                                    @foreach ($values as $value)
+                                        <span
+                                            class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                                             {{ $value }}
-                                            <button
-                                                type="button"
+                                            <button type="button"
                                                 wire:click="$set('selectedFilters.{{ $key }}', {{ json_encode(array_values(array_diff($values, [$value]))) }})"
-                                                class="hover:text-blue-600"
-                                            >
+                                                class="hover:text-blue-600">
                                                 <i class="fas fa-times text-xs"></i>
                                             </button>
                                         </span>
@@ -54,10 +53,10 @@
                     </div>
 
                     <!-- Products Grid -->
-                    @if($products->count() > 0)
+                    @if ($products->count() > 0)
                         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            @foreach($products as $product)
-                                <x-product-card :product="$product" />
+                            @foreach ($products as $product)
+                                <livewire:product-card :product="$product" :wire:key="'product-'.$product->id" />
                             @endforeach
                         </div>
 
@@ -70,11 +69,8 @@
                             <i class="fas fa-search text-gray-300 text-5xl mb-4"></i>
                             <h3 class="text-lg font-medium text-gray-900 mb-2">Nincs találat</h3>
                             <p class="text-gray-600 mb-4">A megadott szűrőkkel nem található termék.</p>
-                            <button
-                                type="button"
-                                wire:click="clearFilters"
-                                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                            >
+                            <button type="button" wire:click="clearFilters"
+                                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                                 <i class="fas fa-times mr-2"></i>
                                 Szűrők törlése
                             </button>
