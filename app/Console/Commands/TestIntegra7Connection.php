@@ -20,14 +20,23 @@ final class TestIntegra7Connection extends Command
         $this->newLine();
 
         $config = config('database.connections.integra7');
+
+        if ($config === null) {
+            $this->error('The "integra7" database connection is not configured.');
+            $this->newLine();
+            $this->warn('Try running: php artisan config:clear');
+
+            return Command::FAILURE;
+        }
+
         $this->table(
             ['Setting', 'Value'],
             [
-                ['Host', $config['host']],
-                ['Port', $config['port']],
-                ['Database', $config['database']],
-                ['Username', $config['username']],
-                ['Password', $config['password'] ? '(set)' : '(not set)'],
+                ['Host', $config['host'] ?? '(not set)'],
+                ['Port', $config['port'] ?? '(not set)'],
+                ['Database', $config['database'] ?? '(not set)'],
+                ['Username', $config['username'] ?? '(not set)'],
+                ['Password', ($config['password'] ?? '') ? '(set)' : '(not set)'],
             ],
         );
 
