@@ -118,11 +118,11 @@ return [
 
         'integra7' => [
             'driver' => 'mysql',
-            'host' => env('INTEGRA7_DB_HOST', '185.111.89.210'),
-            'port' => env('INTEGRA7_DB_PORT', '3306'),
-            'database' => env('INTEGRA7_DB_DATABASE', 'integra7_simmeringws'),
-            'username' => env('INTEGRA7_DB_USERNAME', 'integra7_simmeringread'),
-            'password' => env('INTEGRA7_DB_PASSWORD', ''),
+            'host' => env('DB_HOST', '185.111.89.210'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'integra7_simmeringws'),
+            'username' => env('DB_USERNAME', 'integra7_simmeringread'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',

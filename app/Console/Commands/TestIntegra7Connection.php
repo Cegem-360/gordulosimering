@@ -27,7 +27,7 @@ final class TestIntegra7Connection extends Command
                 ['Port', $config['port']],
                 ['Database', $config['database']],
                 ['Username', $config['username']],
-                ['Password', $config['password'] ? '********' : '(not set)'],
+                ['Password', $config['password'] ? '(set)' : '(not set)'],
             ],
         );
 
