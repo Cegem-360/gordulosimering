@@ -3,12 +3,13 @@
     @php
         $images = $product->images ?? [];
         $mainImage = is_array($images) && count($images) > 0 ? $images[0] : null;
+        $defaultImage = Vite::asset('resources/images/bearing.webp');
         $inStock = ($product->minimum_stock ?? 0) > 0;
     @endphp
 
     <a href="{{ isset($product->slug) ? route('products.show', ['product' => $product->slug]) : '#' }}"
         class="relative mb-4">
-        <img src="{{ $mainImage ?? 'https://placehold.co/200?text=Nincs+kép' }}"
+        <img src="{{ $mainImage ?? $defaultImage }}"
             alt="{{ $product->name ?? 'Nincs termék név' }}" class="w-full h-40 object-contain">
         @if ($inStock)
             <span
