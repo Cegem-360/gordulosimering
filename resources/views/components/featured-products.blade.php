@@ -1,7 +1,5 @@
 @use('App\Models\Product')
 
-{{-- <x-dummy-prd /> --}}
-
 <!-- Real Products from Database -->
 <section class="py-8 bg-gray-50">
     <div class="container mx-auto px-4">
@@ -11,29 +9,15 @@
         </div>
 
         @php
-            $realProducts = Product::query()
+            $products = Product::query()
                 ->latest()
-                ->take(10)
-                ->get()
-                ->map(function ($product) {
-                    // Transform database product to match the expected structure
-                    return (object) [
-                        'id' => $product->id,
-                        'slug' => $product->slug,
-                        'item_name' => $product->name ?? 'Nincs név',
-                        'manufacturer' => (object) ['name' => $product->supplier ?? 'Nincs beszállító'],
-                        'net_retail_price' => $product->net_selling_price ?? 0,
-                        'main_image' => $product->images[0] ?? Vite::asset('resources/images/bearing.webp'),
-                        'all_quantity' => $product->minimum_stock ?? 0,
-                        'min_order_quantity' => $product->min_order_quantity ?? 1,
-                        'in_stock' => ($product->minimum_stock ?? 0) > 0,
-                    ];
-                });
+                ->limit(10)
+                ->get();
         @endphp
 
-        @if ($realProducts->count() > 0)
+        @if ($products->count() > 0)
             <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
-                @foreach ($realProducts as $product)
+                @foreach ($products as $product)
                     <livewire:product-card :product="$product" :wire:key="'product-'.$product->id" />
                 @endforeach
             </div>
