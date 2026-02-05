@@ -114,13 +114,9 @@
                                 <td class="py-4 px-4 text-gray-700" colspan="2">1149 Budapest, Nagy Lajos Kir. útja
                                     117.</td>
                             </tr>
-                            <tr class="border-b border-gray-200">
+                            <tr>
                                 <td class="py-4 px-4 font-medium text-gray-900">KSH azonosító</td>
                                 <td class="py-4 px-4 text-gray-700" colspan="2">11766319-5246-113-01</td>
-                            </tr>
-                            <tr>
-                                <td class="py-4 px-4 font-medium text-gray-900">Könyvvizsgáló</td>
-                                <td class="py-4 px-4 text-gray-700" colspan="2">Bánhegyi Péterné</td>
                             </tr>
                         </tbody>
                     </table>

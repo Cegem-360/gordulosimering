@@ -21,7 +21,8 @@
                 </h1>
 
                 <p class="text-lg lg:text-xl mb-8 text-gray-200">
-                    {{ __('1993 óta az ipar és a lakosság szolgálatában. Eredeti SKF termékek, azonnali készletről.') }}
+                    {{ __('1993 óta az ipar és a lakosság szolgálatában.') }}<br>
+                    {{ __('Több, mint 50.000 termék azonnal, raktárról.') }}
                 </p>
 
                 <div class="space-y-4">

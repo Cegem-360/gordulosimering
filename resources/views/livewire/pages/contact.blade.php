@@ -21,7 +21,7 @@
                 </div>
                 <div class="p-5">
                     <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">X. kerület</h3>
-                    <p class="text-gray-700 mb-3">Kőrösi Csoma S. út 18-20.</p>
+                    <p class="text-gray-700 mb-3">1102 Budapest, Kőrösi Csoma S. út 18-20.</p>
                     <p class="mb-4">
                         <a href="tel:+3612611566" class="text-blue-600 hover:text-blue-700">+36 1 261 1566</a>
                     </p>
@@ -44,11 +44,11 @@
                             </p>
                             <p class="flex justify-between">
                                 <span class="text-gray-600">Péntek:</span>
-                                <span>8:00 - 16:30</span>
+                                <span>8:00 - 16:00</span>
                             </p>
                             <p class="flex justify-between">
-                                <span class="text-gray-600">Szombat - Vasárnap:</span>
-                                <span>Zárva</span>
+                                <span class="text-gray-600">Szombat:</span>
+                                <span>8:30 - 12:30</span>
                             </p>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="p-5">
                     <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">XIV. kerület</h3>
-                    <p class="text-gray-700 mb-3">Nagy Lajos király útja 117.</p>
+                    <p class="text-gray-700 mb-3">1148 Budapest, Nagy Lajos király útja 117.</p>
                     <p class="mb-4">
                         <a href="tel:+3613830951" class="text-blue-600 hover:text-blue-700">+36 1 383 0951</a>
                     </p>
@@ -89,7 +89,7 @@
                                 <span>8:30 - 16:00</span>
                             </p>
                             <p class="flex justify-between">
-                                <span class="text-gray-600">Szombat - Vasárnap:</span>
+                                <span class="text-gray-600">Szombat:</span>
                                 <span>Zárva</span>
                             </p>
                         </div>
@@ -105,7 +105,7 @@
                 </div>
                 <div class="p-5">
                     <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">XVII. kerület</h3>
-                    <p class="text-gray-700 mb-3">Pesti út 203.</p>
+                    <p class="text-gray-700 mb-3">1173 Budapest, Pesti út 203.</p>
                     <p class="mb-4">
                         <a href="tel:+3612574450" class="text-blue-600 hover:text-blue-700">+36 1 257 4450</a>
                     </p>
@@ -123,16 +123,12 @@
                         <h4 class="font-semibold mb-2">Nyitvatartás</h4>
                         <div class="space-y-1 text-sm">
                             <p class="flex justify-between">
-                                <span class="text-gray-600">Hétfő - Csütörtök:</span>
+                                <span class="text-gray-600">Hétfő - Péntek:</span>
                                 <span>8:00 - 17:00</span>
                             </p>
                             <p class="flex justify-between">
-                                <span class="text-gray-600">Péntek:</span>
-                                <span>8:00 - 16:30</span>
-                            </p>
-                            <p class="flex justify-between">
-                                <span class="text-gray-600">Szombat - Vasárnap:</span>
-                                <span>Zárva</span>
+                                <span class="text-gray-600">Szombat:</span>
+                                <span>9:00 - 13:00</span>
                             </p>
                         </div>
                     </div>

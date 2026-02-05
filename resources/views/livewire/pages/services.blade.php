@@ -4,7 +4,7 @@
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto text-center">
                 <h1 class="text-4xl md:text-5xl font-bold mb-6">Szolgáltatásaink</h1>
-                <p class="text-xl text-blue-100">Az SKF hivatalos partnereként teljes körű megoldásokat kínálunk
+                <p class="text-xl text-blue-100">Az SKF Szerződött Partnereként teljes körű megoldásokat kínálunk
                     ügyfeleinknek a csapágyak és kapcsolódó termékek területén.</p>
             </div>
         </div>
@@ -19,7 +19,7 @@
                     <span
                         class="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">24/7
                         Ügyelet</span>
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Csapágy éjjel-nappal</h2>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Üzletnyitás éjjel-nappal</h2>
                     <p class="text-gray-600 mb-6">Munkaidőn kívül, ünnepnapokon is igénybe vehető sürgősségi
                         szolgáltatás a termeléskiesés minimalizálásáért.</p>
                     <div class="flex items-center gap-4">
@@ -91,16 +91,14 @@
                 </div>
             </div>
 
-            <!-- Training -->
+            <!-- SKF Quality Guarantee -->
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
                 <div class="p-5">
                     <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                        <i class="fas fa-graduation-cap text-blue-600 text-2xl"></i>
+                        <i class="fas fa-certificate text-blue-600 text-2xl"></i>
                     </div>
-                    <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">Oktatás és terméktámogatás</h3>
-                    <p class="text-gray-700">Rendszeres oktatások szervezése, mintadarabok bemutatása és
-                        alkalmazástechnikai
-                        támogatás.</p>
+                    <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">SKF minőséggarancia</h3>
+                    <p class="text-gray-700">Nálunk ha SKF minőségért fizet, akkor SKF minőséget kap.</p>
                 </div>
             </div>
 
@@ -128,7 +126,7 @@
                 <!-- X. kerület -->
                 <div class="bg-white rounded-lg p-6">
                     <h3 class="font-semibold text-lg mb-2">X. kerület</h3>
-                    <p class="text-gray-600 mb-2">Kőrösi Csoma S. út 18-20.</p>
+                    <p class="text-gray-600 mb-2">1102 Budapest, Kőrösi Csoma S. út 18-20.</p>
                     <a href="tel:+3612611566" class="text-blue-600 hover:text-blue-700 font-medium">+36 1 261
                         1566</a>
                 </div>
@@ -136,7 +134,7 @@
                 <!-- XIV. kerület -->
                 <div class="bg-white rounded-lg p-6">
                     <h3 class="font-semibold text-lg mb-2">XIV. kerület</h3>
-                    <p class="text-gray-600 mb-2">Nagy Lajos kir. útja 117.</p>
+                    <p class="text-gray-600 mb-2">1148 Budapest, Nagy Lajos kir. útja 117.</p>
                     <a href="tel:+3613830951" class="text-blue-600 hover:text-blue-700 font-medium">+36 1 383
                         0951</a>
                 </div>
@@ -144,7 +142,7 @@
                 <!-- XVII. kerület -->
                 <div class="bg-white rounded-lg p-6">
                     <h3 class="font-semibold text-lg mb-2">XVII. kerület</h3>
-                    <p class="text-gray-600 mb-2">Pesti út 203.</p>
+                    <p class="text-gray-600 mb-2">1173 Budapest, Pesti út 203.</p>
                     <a href="tel:+3612574450" class="text-blue-600 hover:text-blue-700 font-medium">+36 1 257
                         4450</a>
                 </div>

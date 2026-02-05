@@ -72,17 +72,17 @@
                 <ul class="space-y-4 text-sm">
                     <li>
                         <p class="font-medium text-blue-400">X. kerület</p>
-                        <p>Kőrösi Csoma S. út 18-20.</p>
+                        <p>1102 Budapest, Kőrösi Csoma S. út 18-20.</p>
                         <a href="tel:+3612611566" class="hover:text-blue-400">Tel: +36 1 261 1566</a>
                     </li>
                     <li>
                         <p class="font-medium text-blue-400">XIV. kerület</p>
-                        <p>Nagy Lajos kir. útja 117.</p>
+                        <p>1148 Budapest, Nagy Lajos kir. útja 117.</p>
                         <a href="tel:+3613830951" class="hover:text-blue-400">Tel: +36 1 383 0951</a>
                     </li>
                     <li>
                         <p class="font-medium text-blue-400">XVII. kerület</p>
-                        <p>Pesti út 203.</p>
+                        <p>1173 Budapest, Pesti út 203.</p>
                         <a href="tel:+3612574450" class="hover:text-blue-400">Tel: +36 1 257 4450</a>
                     </li>
                 </ul>

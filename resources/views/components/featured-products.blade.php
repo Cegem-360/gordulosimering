@@ -4,8 +4,7 @@
 <section class="py-8 bg-gray-50">
     <div class="container mx-auto px-4">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Legújabb termékeink</h2>
-            <p class="text-gray-600">Valós termékadatok a products táblából</p>
+            <h2 class="text-2xl font-bold">Legkeresettebb termékeink</h2>
         </div>
 
         @php

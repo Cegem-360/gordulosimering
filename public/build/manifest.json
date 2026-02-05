@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-B8TqxGOQ.css",
+    "file": "assets/app-CILmRHa9.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -27,6 +27,74 @@
   "resources/images/bearing.webp": {
     "file": "assets/bearing-CPo2rBOz.webp",
     "src": "resources/images/bearing.webp"
+  },
+  "resources/images/brands/bahco.svg": {
+    "file": "assets/bahco-BFXMoPot.svg",
+    "src": "resources/images/brands/bahco.svg"
+  },
+  "resources/images/brands/beta-logo.png": {
+    "file": "assets/beta-logo-B5qfWAVw.png",
+    "src": "resources/images/brands/beta-logo.png"
+  },
+  "resources/images/brands/duracell.svg": {
+    "file": "assets/duracell-48A56jZz.svg",
+    "src": "resources/images/brands/duracell.svg"
+  },
+  "resources/images/brands/energizer.png": {
+    "file": "assets/energizer-DXRPX6sQ.png",
+    "src": "resources/images/brands/energizer.png"
+  },
+  "resources/images/brands/fabory.svg": {
+    "file": "assets/fabory-ChPUxzQ6.svg",
+    "src": "resources/images/brands/fabory.svg"
+  },
+  "resources/images/brands/fag.svg": {
+    "file": "assets/fag-C26NxrWE.svg",
+    "src": "resources/images/brands/fag.svg"
+  },
+  "resources/images/brands/ina.svg": {
+    "file": "assets/ina-CjvP7T6s.svg",
+    "src": "resources/images/brands/ina.svg"
+  },
+  "resources/images/brands/ks-tools.svg": {
+    "file": "assets/ks-tools-C-j6JRmk.svg",
+    "src": "resources/images/brands/ks-tools.svg"
+  },
+  "resources/images/brands/loctite.png": {
+    "file": "assets/loctite-B51VmzSz.png",
+    "src": "resources/images/brands/loctite.png"
+  },
+  "resources/images/brands/nicro-logo.png": {
+    "file": "assets/nicro-logo-ajcKyGQV.png",
+    "src": "resources/images/brands/nicro-logo.png"
+  },
+  "resources/images/brands/norma.svg": {
+    "file": "assets/norma-CkuC_9lN.svg",
+    "src": "resources/images/brands/norma.svg"
+  },
+  "resources/images/brands/oks.png": {
+    "file": "assets/oks-4aPAqFPT.png",
+    "src": "resources/images/brands/oks.png"
+  },
+  "resources/images/brands/seeger.svg": {
+    "file": "assets/seeger-B3jflHI3.svg",
+    "src": "resources/images/brands/seeger.svg"
+  },
+  "resources/images/brands/skf.svg": {
+    "file": "assets/skf-p-1j0v1C.svg",
+    "src": "resources/images/brands/skf.svg"
+  },
+  "resources/images/brands/tente.png": {
+    "file": "assets/tente-CAfkV0YT.png",
+    "src": "resources/images/brands/tente.png"
+  },
+  "resources/images/brands/timken.png": {
+    "file": "assets/timken-DKa634pi.png",
+    "src": "resources/images/brands/timken.png"
+  },
+  "resources/images/brands/zkl.svg": {
+    "file": "assets/zkl-Bur1vet4.svg",
+    "src": "resources/images/brands/zkl.svg"
   },
   "resources/images/categories/cat-01.webp": {
     "file": "assets/cat-01-BK-Tu4rl.webp",
@@ -133,12 +201,12 @@
     "src": "resources/images/webshop-banner.webp"
   },
   "resources/js/app.js": {
-    "file": "assets/app-DGASVK56.js",
+    "file": "assets/app-C86eHkue.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-B8TqxGOQ.css"
+      "assets/app-CILmRHa9.css"
     ]
   }
 }

@@ -9,6 +9,9 @@
             <x-feature-cards faboryAppUrl="#" faboryLogicUrl="#" innovationUrl="#" />
         </div>
     </div>
+    <!-- Brand Logos Section -->
+    <x-brand-logos />
+
     <!-- Featured Products Section -->
     <x-featured-products />
 
