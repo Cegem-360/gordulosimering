@@ -6,32 +6,41 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Services\CategoryImporter;
 
-it('links products to leaf categories by substring, both directions', function () {
+it('links each product to its single longest-matching leaf', function () {
     $parent = Category::create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
-    $leaf = Category::create([
+    $generic = Category::create([
+        'name' => 'golyóscsapágy',
+        'slug' => 'golyoscsapagy',
+        'category_id' => $parent->id,
+    ]);
+    $specific = Category::create([
         'name' => 'egysorú mélyhornyú golyóscsapágy',
         'slug' => 'egysoru-melyhornyu',
         'category_id' => $parent->id,
     ]);
-    $exactLeaf = Category::create([
-        'name' => 'DURACELL 9V-os elem',
-        'slug' => 'duracell-9v',
-        'category_id' => $parent->id,
-    ]);
 
-    // A: terméknév TARTALMAZZA a levél nevét
+    // A terméknév mindkét levél nevét tartalmazza; a leghosszabb (legspecifikusabb) nyer.
     $match = Product::factory()->create(['name' => 'FAG egysorú mélyhornyú golyóscsapágy 6203']);
-    // Nem illeszkedő
     $noMatch = Product::factory()->create(['name' => 'OKS kenőzsír 200ml']);
-    // B: a levél neve TARTALMAZZA a terméknevet (rövidebb terméknév)
-    $reverse = Product::factory()->create(['name' => 'DURACELL 9V-os elem']);
 
     $linked = (new CategoryImporter())->linkProducts();
 
-    expect($leaf->products()->pluck('products.id')->all())->toBe([$match->id])
-        ->and($exactLeaf->products()->pluck('products.id')->all())->toBe([$reverse->id])
-        ->and($noMatch->categories ?? collect())->toHaveCount(0)
-        ->and($linked)->toBeGreaterThan(0);
+    expect($specific->products()->pluck('products.id')->all())->toBe([$match->id])
+        ->and($generic->products()->count())->toBe(0)
+        ->and($match->categories()->count())->toBe(1)
+        ->and($noMatch->categories()->count())->toBe(0)
+        ->and($linked)->toBe(1);
+});
+
+it('matches case- and accent-insensitively', function () {
+    $parent = Category::create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    $leaf = Category::create(['name' => 'golyóscsapágy', 'slug' => 'golyoscsapagy', 'category_id' => $parent->id]);
+
+    $product = Product::factory()->create(['name' => 'FAG GOLYOSCSAPAGY 6203']);
+
+    (new CategoryImporter())->linkProducts();
+
+    expect($leaf->products()->pluck('products.id')->all())->toBe([$product->id]);
 });
 
 it('does not link products to non-leaf (parent) categories', function () {

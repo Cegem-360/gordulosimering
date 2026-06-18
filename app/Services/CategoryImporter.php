@@ -32,38 +32,48 @@ final class CategoryImporter
      */
     private array $usedSlugs = [];
 
+    /**
+     * Minden terméket a hozzá legjobban (leghosszabb, legspecifikusabb névvel)
+     * illeszkedő EGY levélkategóriához köt. A párosítás normalizált (kisbetű +
+     * ékezet nélküli) substringre épül, determinisztikusan PHP-ben — nem a DB
+     * kollációjára bízva, ami ékezet-érzéketlenül túl-illesztene.
+     */
     public function linkProducts(): int
     {
+        $leaves = $this->candidateLeaves();
+        if ($leaves === []) {
+            return 0;
+        }
+
         $links = 0;
-        $brandLeafIds = $this->brandLeafIds();
 
-        Category::query()
-            ->whereDoesntHave('children')
+        Product::query()
             ->whereNotNull('name')
-            ->whereNotIn('id', $brandLeafIds)
-            ->chunkById(200, function ($leaves) use (&$links): void {
-                foreach ($leaves as $leaf) {
-                    $name = (string) $leaf->name;
-                    if (mb_strlen($name) < self::MIN_LEAF_NAME_LENGTH) {
+            ->select(['id', 'name'])
+            ->chunkById(1000, function ($products) use ($leaves, &$links): void {
+                /** @var array<int, array<int, int>> $byCategory */
+                $byCategory = [];
+
+                foreach ($products as $product) {
+                    $normalized = $this->normalize((string) $product->name);
+                    if ($normalized === '') {
                         continue;
                     }
 
-                    $escaped = addcslashes($name, '%_\\');
-
-                    $productIds = Product::query()
-                        ->where(function ($query) use ($escaped, $name): void {
-                            $query->where('name', 'like', '%' . $escaped . '%')
-                                ->orWhereRaw('? like \'%\' || name || \'%\'', [$name]);
-                        })
-                        ->whereNotNull('name')
-                        ->pluck('id')
-                        ->all();
-
-                    if ($productIds === []) {
-                        continue;
+                    foreach ($leaves as $leaf) {
+                        if (str_contains($normalized, $leaf['norm'])) {
+                            $byCategory[$leaf['id']][] = $product->id;
+                            break;
+                        }
                     }
+                }
 
-                    $changes = $leaf->products()->syncWithoutDetaching($productIds);
+                foreach ($byCategory as $categoryId => $productIds) {
+                    $changes = Category::query()
+                        ->whereKey($categoryId)
+                        ->first()
+                        ->products()
+                        ->syncWithoutDetaching($productIds);
                     $links += count($changes['attached']);
                 }
             });
@@ -120,6 +130,41 @@ final class CategoryImporter
         fclose($handle);
 
         return $count;
+    }
+
+    /**
+     * A linkelhető levélkategóriák normalizált neveik szerint, hosszúság szerint
+     * csökkenően rendezve (így a leghosszabb – legspecifikusabb – illeszkedés nyer).
+     * A márka-ág és a túl rövid nevek kimaradnak.
+     *
+     * @return array<int, array{id: int, norm: string}>
+     */
+    private function candidateLeaves(): array
+    {
+        $brandLeafIds = $this->brandLeafIds();
+
+        $leaves = Category::query()
+            ->whereDoesntHave('children')
+            ->whereNotNull('name')
+            ->whereNotIn('id', $brandLeafIds)
+            ->get(['id', 'name'])
+            ->filter(fn (Category $leaf): bool => mb_strlen((string) $leaf->name) >= self::MIN_LEAF_NAME_LENGTH)
+            ->map(fn (Category $leaf): array => [
+                'id' => $leaf->id,
+                'norm' => $this->normalize((string) $leaf->name),
+                'len' => mb_strlen((string) $leaf->name),
+            ])
+            ->filter(fn (array $leaf): bool => $leaf['norm'] !== '')
+            ->sortByDesc('len')
+            ->values()
+            ->all();
+
+        return array_map(fn (array $leaf): array => ['id' => $leaf['id'], 'norm' => $leaf['norm']], $leaves);
+    }
+
+    private function normalize(string $value): string
+    {
+        return Str::lower(Str::ascii($value));
     }
 
     /**
