@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-final class TestIntegra7Connection extends Command
+final class TestIntegra7ConnectionCommand extends Command
 {
     protected $signature = 'integra7:test';
 

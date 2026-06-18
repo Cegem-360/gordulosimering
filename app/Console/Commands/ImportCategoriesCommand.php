@@ -7,7 +7,7 @@ namespace App\Console\Commands;
 use App\Services\CategoryImporter;
 use Illuminate\Console\Command;
 
-final class ImportCategories extends Command
+final class ImportCategoriesCommand extends Command
 {
     protected $signature = 'app:import-categories {--link : Termékek hozzákötése a kategórialevelekhez}';
 
