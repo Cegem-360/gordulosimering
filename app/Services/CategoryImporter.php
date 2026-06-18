@@ -14,6 +14,18 @@ final class CategoryImporter
     private const COLUMN_COUNT = 5;
 
     /**
+     * A márkalistát tartalmazó főkategória neve. Ennek leveleit (puszta
+     * márkanevek, pl. "SKF") kihagyjuk a termék-linkelésből, mert substringként
+     * a terméknevek tömegére illenek és szétkenik a besorolást.
+     */
+    private const BRAND_ROOT_NAME = 'FORGALMAZOTT MÁRKÁINK';
+
+    /**
+     * Ennél rövidebb levélnevet nem linkelünk (túl generikus, túl-illeszt).
+     */
+    private const MIN_LEAF_NAME_LENGTH = 4;
+
+    /**
      * Globálisan használt slug-ok, hogy ütközéskor egyedi utótagot adjunk.
      *
      * @var array<string, bool>
@@ -23,14 +35,16 @@ final class CategoryImporter
     public function linkProducts(): int
     {
         $links = 0;
+        $brandLeafIds = $this->brandLeafIds();
 
         Category::query()
             ->whereDoesntHave('children')
             ->whereNotNull('name')
+            ->whereNotIn('id', $brandLeafIds)
             ->chunkById(200, function ($leaves) use (&$links): void {
                 foreach ($leaves as $leaf) {
                     $name = (string) $leaf->name;
-                    if ($name === '') {
+                    if (mb_strlen($name) < self::MIN_LEAF_NAME_LENGTH) {
                         continue;
                     }
 
@@ -106,6 +120,27 @@ final class CategoryImporter
         fclose($handle);
 
         return $count;
+    }
+
+    /**
+     * A márka-főkategória közvetlen gyermekeinek (a márka-leveleknek) az id-jai.
+     * A márka-ág sekély (gyökér → márkanevek levélként), ezért a közvetlen
+     * gyermekek lefedik a teljes ágat.
+     *
+     * @return array<int, int>
+     */
+    private function brandLeafIds(): array
+    {
+        $brandRoot = Category::query()
+            ->whereNull('category_id')
+            ->where('name', self::BRAND_ROOT_NAME)
+            ->first();
+
+        if ($brandRoot === null) {
+            return [];
+        }
+
+        return $brandRoot->children()->pluck('id')->all();
     }
 
     /**

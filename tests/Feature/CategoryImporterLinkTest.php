@@ -44,6 +44,28 @@ it('does not link products to non-leaf (parent) categories', function () {
     expect($parent->products()->count())->toBe(0);
 });
 
+it('does not link products to brand leaves under FORGALMAZOTT MÁRKÁINK', function () {
+    $brandRoot = Category::create(['name' => 'FORGALMAZOTT MÁRKÁINK', 'slug' => 'forgalmazott-markaink']);
+    $skf = Category::create(['name' => 'SKF', 'slug' => 'skf-brand', 'category_id' => $brandRoot->id]);
+
+    Product::factory()->create(['name' => 'SKF egysorú mélyhornyú golyóscsapágy 6203']);
+
+    (new CategoryImporter())->linkProducts();
+
+    expect($skf->products()->count())->toBe(0);
+});
+
+it('skips leaves with names shorter than the minimum length', function () {
+    $parent = Category::create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    $short = Category::create(['name' => 'EZO', 'slug' => 'ezo-leaf', 'category_id' => $parent->id]);
+
+    Product::factory()->create(['name' => 'EZO egysorú mélyhornyú golyóscsapágy']);
+
+    (new CategoryImporter())->linkProducts();
+
+    expect($short->products()->count())->toBe(0);
+});
+
 it('link step is idempotent', function () {
     $leaf = Category::create(['name' => 'egyedi termék', 'slug' => 'egyedi-termek']);
     Product::factory()->create(['name' => 'egyedi termék']);
