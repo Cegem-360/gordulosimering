@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -18,6 +19,43 @@ final class CategoryImporter
      * @var array<string, bool>
      */
     private array $usedSlugs = [];
+
+    public function linkProducts(): int
+    {
+        $links = 0;
+
+        Category::query()
+            ->whereDoesntHave('children')
+            ->whereNotNull('name')
+            ->chunkById(200, function ($leaves) use (&$links): void {
+                foreach ($leaves as $leaf) {
+                    $name = (string) $leaf->name;
+                    if ($name === '') {
+                        continue;
+                    }
+
+                    $escaped = addcslashes($name, '%_\\');
+
+                    $productIds = Product::query()
+                        ->where(function ($query) use ($escaped, $name): void {
+                            $query->where('name', 'like', '%' . $escaped . '%')
+                                ->orWhereRaw('? like \'%\' || name || \'%\'', [$name]);
+                        })
+                        ->whereNotNull('name')
+                        ->pluck('id')
+                        ->all();
+
+                    if ($productIds === []) {
+                        continue;
+                    }
+
+                    $changes = $leaf->products()->syncWithoutDetaching($productIds);
+                    $links += count($changes['attached']);
+                }
+            });
+
+        return $links;
+    }
 
     public function importTree(string $path): int
     {
