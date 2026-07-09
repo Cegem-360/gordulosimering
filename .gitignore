@@ -31,3 +31,5 @@ composer.lock
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+_ide_helper_models.php
+_ide_helper.php
