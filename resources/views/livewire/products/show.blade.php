@@ -335,14 +335,6 @@
                             Árazás
                         </h3>
                         <dl class="space-y-3">
-                            @if ($product->list_price && $product->list_price > 0)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Listaár</dt>
-                                    <dd class="font-medium text-right">
-
-                                        {{ Number::currency($product->list_price, 'HUF', 'hu', 0) }}</dd>
-                                </div>
-                            @endif
                             @if ($product->net_selling_price && $product->net_selling_price > 0)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Nettó eladási ár</dt>
@@ -363,13 +355,6 @@
                                     <dd class="font-medium text-right">{{ $product->vat_class }}</dd>
                                 </div>
                             @endif
-                            @if ($product->list_discount && $product->list_discount > 0)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Lista kedvezmény</dt>
-                                    <dd class="font-medium text-right text-green-600">{{ $product->list_discount }}%
-                                    </dd>
-                                </div>
-                            @endif
                             @if ($product->discount_group)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Kedvezmény csoport</dt>
@@ -387,12 +372,6 @@
                                     @endif
                                 </dd>
                             </div>
-                            @if ($product->currency)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Deviza</dt>
-                                    <dd class="font-medium text-right">{{ $product->currency }}</dd>
-                                </div>
-                            @endif
                         </dl>
                     </div>
 

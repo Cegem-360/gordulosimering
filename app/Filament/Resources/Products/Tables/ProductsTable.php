@@ -26,6 +26,10 @@ final class ProductsTable
                     ->searchable(),
                 IconColumn::make('is_service')
                     ->boolean(),
+                IconColumn::make('is_web_visible')
+                    ->boolean(),
+                IconColumn::make('is_inactive')
+                    ->boolean(),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('slug')
@@ -60,26 +64,6 @@ final class ProductsTable
                     ->sortable(),
                 TextColumn::make('pricing')
                     ->searchable(),
-                TextColumn::make('list_price')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('list_discount')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('purchase_currency_price')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('currency')
-                    ->searchable(),
-                TextColumn::make('currency_multiplier')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('purchase_price')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('profit_margin')
-                    ->numeric()
-                    ->sortable(),
                 TextColumn::make('net_selling_price')
                     ->numeric()
                     ->sortable(),

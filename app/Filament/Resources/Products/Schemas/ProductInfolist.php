@@ -21,6 +21,12 @@ final class ProductInfolist
                 IconEntry::make('is_service')
                     ->boolean()
                     ->placeholder('-'),
+                IconEntry::make('is_web_visible')
+                    ->boolean()
+                    ->placeholder('-'),
+                IconEntry::make('is_inactive')
+                    ->boolean()
+                    ->placeholder('-'),
                 TextEntry::make('name')
                     ->placeholder('-'),
                 TextEntry::make('slug'),
@@ -54,26 +60,6 @@ final class ProductInfolist
                     ->numeric()
                     ->placeholder('-'),
                 TextEntry::make('pricing')
-                    ->placeholder('-'),
-                TextEntry::make('list_price')
-                    ->numeric()
-                    ->placeholder('-'),
-                TextEntry::make('list_discount')
-                    ->numeric()
-                    ->placeholder('-'),
-                TextEntry::make('purchase_currency_price')
-                    ->numeric()
-                    ->placeholder('-'),
-                TextEntry::make('currency')
-                    ->placeholder('-'),
-                TextEntry::make('currency_multiplier')
-                    ->numeric()
-                    ->placeholder('-'),
-                TextEntry::make('purchase_price')
-                    ->numeric()
-                    ->placeholder('-'),
-                TextEntry::make('profit_margin')
-                    ->numeric()
                     ->placeholder('-'),
                 TextEntry::make('net_selling_price')
                     ->numeric()

@@ -18,6 +18,8 @@ final class ProductForm
                 TextInput::make('group_code'),
                 TextInput::make('product_code'),
                 Toggle::make('is_service'),
+                Toggle::make('is_web_visible'),
+                Toggle::make('is_inactive'),
                 TextInput::make('name'),
                 TextInput::make('slug')
                     ->required(),
@@ -37,19 +39,6 @@ final class ProductForm
                 TextInput::make('sale_percentage')
                     ->numeric(),
                 TextInput::make('pricing'),
-                TextInput::make('list_price')
-                    ->numeric(),
-                TextInput::make('list_discount')
-                    ->numeric(),
-                TextInput::make('purchase_currency_price')
-                    ->numeric(),
-                TextInput::make('currency'),
-                TextInput::make('currency_multiplier')
-                    ->numeric(),
-                TextInput::make('purchase_price')
-                    ->numeric(),
-                TextInput::make('profit_margin')
-                    ->numeric(),
                 TextInput::make('net_selling_price')
                     ->numeric(),
                 TextInput::make('vat_class'),

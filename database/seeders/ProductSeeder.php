@@ -17,49 +17,44 @@ final class ProductSeeder extends Seeder
      */
     private const array COLUMN_MAP = [
         0 => 'group_code',
-        1 => 'product_code',
-        2 => 'is_service',
-        3 => 'name',
-        4 => 'catalog_number',
-        5 => 'type',
-        6 => 'size',
-        7 => 'weight',
-        8 => 'rating',
-        9 => 'quality',
-        10 => 'product_variety',
-        11 => 'trade_type',
-        12 => 'usage_type',
-        13 => 'currency_settlement',
-        14 => 'discount_group',
-        15 => 'is_on_sale',
-        16 => 'sale_percentage',
-        17 => 'pricing',
-        18 => 'list_price',
-        19 => 'list_discount',
-        20 => 'purchase_currency_price',
-        21 => 'currency',
-        22 => 'currency_multiplier',
-        23 => 'purchase_price',
-        24 => 'profit_margin',
-        25 => 'net_selling_price',
-        26 => 'vat_class',
-        27 => 'gross_selling_price',
-        28 => 'quantity_unit',
-        29 => 'secondary_unit',
-        30 => 'minimum_stock',
-        31 => 'maximum_stock',
-        32 => 'buffer_stock',
-        33 => 'order_unit',
-        34 => 'ksh_prefix',
-        35 => 'ksh_number',
-        36 => 'supplier',
-        37 => 'short_note',
-        38 => 'description',
-        39 => 'barcode',
-        40 => 'ean_code',
-        41 => 'min_order_quantity',
-        42 => 'trade_quantity',
-        43 => 'pallet_quantity',
+        1 => 'is_web_visible',
+        2 => 'product_code',
+        3 => 'is_service',
+        4 => 'name',
+        5 => 'catalog_number',
+        6 => 'type',
+        7 => 'size',
+        8 => 'weight',
+        9 => 'rating',
+        10 => 'quality',
+        11 => 'product_variety',
+        12 => 'trade_type',
+        13 => 'usage_type',
+        14 => 'currency_settlement',
+        15 => 'discount_group',
+        16 => 'is_on_sale',
+        17 => 'sale_percentage',
+        18 => 'pricing',
+        19 => 'net_selling_price',
+        20 => 'vat_class',
+        21 => 'gross_selling_price',
+        22 => 'quantity_unit',
+        23 => 'secondary_unit',
+        24 => 'minimum_stock',
+        25 => 'maximum_stock',
+        26 => 'buffer_stock',
+        27 => 'order_unit',
+        28 => 'ksh_prefix',
+        29 => 'ksh_number',
+        30 => 'supplier',
+        31 => 'short_note',
+        32 => 'description',
+        33 => 'barcode',
+        34 => 'ean_code',
+        35 => 'min_order_quantity',
+        36 => 'trade_quantity',
+        37 => 'pallet_quantity',
+        39 => 'is_inactive',
     ];
 
     /**
@@ -67,7 +62,7 @@ final class ProductSeeder extends Seeder
      *
      * @var array<int, string>
      */
-    private const array BOOLEAN_FIELDS = ['is_service', 'is_on_sale'];
+    private const array BOOLEAN_FIELDS = ['is_service', 'is_web_visible', 'is_inactive', 'is_on_sale'];
 
     /**
      * Fields that should be parsed as decimals.
@@ -77,12 +72,6 @@ final class ProductSeeder extends Seeder
     private const array DECIMAL_FIELDS = [
         'weight',
         'sale_percentage',
-        'list_price',
-        'list_discount',
-        'purchase_currency_price',
-        'currency_multiplier',
-        'purchase_price',
-        'profit_margin',
         'net_selling_price',
         'gross_selling_price',
     ];
@@ -103,11 +92,16 @@ final class ProductSeeder extends Seeder
     ];
 
     /**
+     * Overrides the default TSV path (used by tests to point at a fixture).
+     */
+    public static ?string $dataFile = null;
+
+    /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $filePath = database_path('data/termekek.tsv');
+        $filePath = self::$dataFile ?? database_path('data/termekek.tsv');
 
         if (! file_exists($filePath)) {
             $this->command->error('TSV file not found: ' . $filePath);

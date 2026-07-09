@@ -26,6 +26,12 @@ final class ProductImporter extends Importer
             ImportColumn::make('is_service')
                 ->boolean()
                 ->guess(['Szolgáltatás']),
+            ImportColumn::make('is_web_visible')
+                ->boolean()
+                ->guess(['WEBÁRUHÁZBAN SZEREPELJEN']),
+            ImportColumn::make('is_inactive')
+                ->boolean()
+                ->guess(['Inaktív']),
             ImportColumn::make('name')
                 ->guess(['Terméknév']),
             ImportColumn::make('slug'),
@@ -60,26 +66,6 @@ final class ProductImporter extends Importer
                 ->guess(['Akció %']),
             ImportColumn::make('pricing')
                 ->guess(['Árképzés']),
-            ImportColumn::make('list_price')
-                ->numeric()
-                ->guess(['Listaár']),
-            ImportColumn::make('list_discount')
-                ->numeric()
-                ->guess(['Lista kedvezmény']),
-            ImportColumn::make('purchase_currency_price')
-                ->numeric()
-                ->guess(['Beszerzési dev. ár']),
-            ImportColumn::make('currency')
-                ->guess(['Devizanem']),
-            ImportColumn::make('currency_multiplier')
-                ->numeric()
-                ->guess(['Deviza szorzó']),
-            ImportColumn::make('purchase_price')
-                ->numeric()
-                ->guess(['Beszerzési ár']),
-            ImportColumn::make('profit_margin')
-                ->numeric()
-                ->guess(['Haszonkulcs']),
             ImportColumn::make('net_selling_price')
                 ->numeric()
                 ->guess(['Nettó eladási ár']),
