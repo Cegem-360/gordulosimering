@@ -21,7 +21,7 @@ final class EnsureCartNotEmpty
      */
     public function handle(Request $request, Closure $next)
     {
-        $cartService = app(CartService::class);
+        $cartService = resolve(CartService::class);
         $cart = $cartService->getCart();
 
         if ($cart->isEmpty()) {
@@ -30,7 +30,7 @@ final class EnsureCartNotEmpty
                 ->warning()
                 ->send();
 
-            return redirect()->route('cart');
+            return to_route('cart');
         }
 
         return $next($request);

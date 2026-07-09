@@ -9,29 +9,30 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
-        "filament/filament": "^4.0",
-        "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1",
-        "livewire/livewire": "^3.6",
+        "php": "^8.3",
+        "filament/filament": "^5.0",
+        "laravel/framework": "^13.0",
+        "laravel/tinker": "^3.0",
+        "livewire/livewire": "^4.0",
         "nunomaduro/essentials": "@dev"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.16",
-        "barryvdh/laravel-ide-helper": "^3.6",
+        "barryvdh/laravel-debugbar": "^4.4",
+        "barryvdh/laravel-ide-helper": "^3.7",
         "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "^1.23",
-        "laravel/boost": "^1.6",
-        "laravel/breeze": "^2.3",
+        "laravel/boost": "^2.4",
+        "laravel/breeze": "^2.4",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.22",
         "laravel/sail": "^1.41",
+        "madbox-99/rector-filament": "^1.0",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
-        "pestphp/pest": "^3.8",
-        "pestphp/pest-plugin-faker": "^3.0",
-        "pestphp/pest-plugin-laravel": "^3.2",
-        "pestphp/pest-plugin-livewire": "^3.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-faker": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "pestphp/pest-plugin-livewire": "^4.0",
         "rector/rector": "*"
     },
     "autoload": {
@@ -74,11 +75,15 @@
         "rector": [
             "@php vendor/bin/rector process --ansi"
         ],
-        "pint": [
+        "pint-test": [
             "@php vendor/bin/pint --test"
         ],
-        "pint-fix": [
+        "pint": [
             "@php vendor/bin/pint"
+        ],
+        "fix": [
+            "@pint",
+            "@rector"
         ]
     },
     "extra": {

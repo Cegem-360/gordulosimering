@@ -19,9 +19,7 @@ final class OrderDetail extends Component
     public function mount(Order $order): void
     {
         // Ensure the order belongs to the authenticated user
-        if ($order->user_id !== Auth::id()) {
-            abort(403);
-        }
+        abort_if($order->user_id !== Auth::id(), 403);
 
         $this->order = $order->load(['orderItems.product', 'shippingMethod']);
     }

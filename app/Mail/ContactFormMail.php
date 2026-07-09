@@ -15,7 +15,8 @@ use Illuminate\Queue\SerializesModels;
 
 final class ContactFormMail extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct(
         public string $senderName,
@@ -28,7 +29,7 @@ final class ContactFormMail extends Mailable implements ShouldQueue
     {
         return new Envelope(
             replyTo: [new Address($this->senderEmail, $this->senderName)],
-            subject: "Kapcsolatfelvétel: {$this->formSubject}",
+            subject: 'Kapcsolatfelvétel: ' . $this->formSubject,
         );
     }
 

@@ -15,7 +15,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
-it('renders successfully', function () {
+it('renders successfully', function (): void {
     $user = User::factory()->create();
     $cart = Cart::factory()->create([
         'user_id' => $user->id,
@@ -34,7 +34,7 @@ it('renders successfully', function () {
         ->assertStatus(200);
 });
 
-it('saves cart items as order items when order is created', function () {
+it('saves cart items as order items when order is created', function (): void {
     $user = User::factory()->create();
     $cart = Cart::factory()->create([
         'user_id' => $user->id,
@@ -71,7 +71,7 @@ it('saves cart items as order items when order is created', function () {
         ->set('acceptTerms', true)
         ->call('create');
 
-    $order = Order::where('user_id', $user->id)->first();
+    $order = Order::query()->where('user_id', $user->id)->first();
     expect($order)->not->toBeNull();
     expect($order->order_status)->toBe(OrderStatus::PENDING);
 
@@ -89,7 +89,7 @@ it('saves cart items as order items when order is created', function () {
     expect($secondOrderItem->total)->toBe($products[1]->net_selling_price);
 });
 
-it('clears the cart after successful order', function () {
+it('clears the cart after successful order', function (): void {
     $user = User::factory()->create();
     $cart = Cart::factory()->create([
         'user_id' => $user->id,
@@ -119,10 +119,10 @@ it('clears the cart after successful order', function () {
         ->set('acceptTerms', true)
         ->call('create');
 
-    expect(CartItem::where('cart_id', $cart->id)->count())->toBe(0);
+    expect(CartItem::query()->where('cart_id', $cart->id)->count())->toBe(0);
 });
 
-it('pre-fills form with saved user billing data', function () {
+it('pre-fills form with saved user billing data', function (): void {
     $user = User::factory()->create([
         'billing_name' => 'Saved Name',
         'billing_company_name' => 'Saved Company',
@@ -157,7 +157,7 @@ it('pre-fills form with saved user billing data', function () {
         ->assertSet('data.billing_phone', '+36201234567');
 });
 
-it('saves billing and shipping data to user after successful order when checkbox is checked', function () {
+it('saves billing and shipping data to user after successful order when checkbox is checked', function (): void {
     $user = User::factory()->create();
     $cart = Cart::factory()->create([
         'user_id' => $user->id,
@@ -201,7 +201,7 @@ it('saves billing and shipping data to user after successful order when checkbox
     expect($user->billing_address_1)->toBe('New Address 1');
 });
 
-it('does not save billing data to user when checkbox is unchecked', function () {
+it('does not save billing data to user when checkbox is unchecked', function (): void {
     $user = User::factory()->create();
     $cart = Cart::factory()->create([
         'user_id' => $user->id,
@@ -238,7 +238,7 @@ it('does not save billing data to user when checkbox is unchecked', function () 
     expect($user->phone)->toBeNull();
 });
 
-it('allows guest checkout without login', function () {
+it('allows guest checkout without login', function (): void {
     $cart = Cart::factory()->create([
         'user_id' => null,
         'session_id' => session()->getId(),
@@ -266,13 +266,13 @@ it('allows guest checkout without login', function () {
         ->set('acceptTerms', true)
         ->call('create');
 
-    $order = Order::whereNull('user_id')->first();
+    $order = Order::query()->whereNull('user_id')->first();
     expect($order)->not->toBeNull();
     expect($order->billing_name)->toBe('Guest User');
     expect($order->billing_email)->toBe('guest@example.com');
 });
 
-it('creates account for guest when registration checkbox is checked', function () {
+it('creates account for guest when registration checkbox is checked', function (): void {
     $cart = Cart::factory()->create([
         'user_id' => null,
         'session_id' => session()->getId(),
@@ -302,18 +302,18 @@ it('creates account for guest when registration checkbox is checked', function (
         ->call('create');
 
     // Check user was created
-    $newUser = User::where('email', 'newuser@example.com')->first();
+    $newUser = User::query()->where('email', 'newuser@example.com')->first();
     expect($newUser)->not->toBeNull();
     expect($newUser->name)->toBe('New User');
     expect($newUser->billing_name)->toBe('New User');
 
     // Check order is linked to new user
-    $order = Order::where('user_id', $newUser->id)->first();
+    $order = Order::query()->where('user_id', $newUser->id)->first();
     expect($order)->not->toBeNull();
     expect($order->billing_email)->toBe('newuser@example.com');
 });
 
-it('sends order confirmation email to customer after successful order', function () {
+it('sends order confirmation email to customer after successful order', function (): void {
     Mail::fake();
 
     $user = User::factory()->create();
@@ -345,12 +345,10 @@ it('sends order confirmation email to customer after successful order', function
         ->set('acceptTerms', true)
         ->call('create');
 
-    Mail::assertQueued(OrderConfirmationMail::class, function ($mail) {
-        return $mail->hasTo('customer@example.com');
-    });
+    Mail::assertQueued(OrderConfirmationMail::class, fn ($mail) => $mail->hasTo('customer@example.com'));
 });
 
-it('sends new order notification email to admin when admin email is configured', function () {
+it('sends new order notification email to admin when admin email is configured', function (): void {
     Mail::fake();
     config(['shop.admin_email' => 'admin@shop.com']);
 
@@ -383,12 +381,10 @@ it('sends new order notification email to admin when admin email is configured',
         ->set('acceptTerms', true)
         ->call('create');
 
-    Mail::assertQueued(NewOrderNotificationMail::class, function ($mail) {
-        return $mail->hasTo('admin@shop.com');
-    });
+    Mail::assertQueued(NewOrderNotificationMail::class, fn ($mail) => $mail->hasTo('admin@shop.com'));
 });
 
-it('does not send admin notification when admin email is default placeholder', function () {
+it('does not send admin notification when admin email is default placeholder', function (): void {
     Mail::fake();
     config(['shop.admin_email' => 'admin@example.com']);
 

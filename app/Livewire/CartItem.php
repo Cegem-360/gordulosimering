@@ -6,6 +6,8 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Services\CartService;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
 final class CartItem extends Component
@@ -16,7 +18,7 @@ final class CartItem extends Component
 
     public function mount(int $productId, int $quantity): void
     {
-        $this->product = Product::findOrFail($productId);
+        $this->product = Product::query()->findOrFail($productId);
         $this->quantity = $quantity;
     }
 
@@ -48,7 +50,7 @@ final class CartItem extends Component
         $this->dispatch('cartUpdated');
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         return view('livewire.cart-item');
     }

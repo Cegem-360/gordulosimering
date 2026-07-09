@@ -5,12 +5,12 @@ declare(strict_types=1);
 use App\Livewire\CartIcon;
 use Livewire\Livewire;
 
-it('renders successfully', function () {
+it('renders successfully', function (): void {
     Livewire::test(CartIcon::class)
         ->assertStatus(200);
 });
 
-it('shows zero when cart is empty', function () {
+it('shows zero when cart is empty', function (): void {
     Livewire::test(CartIcon::class)
         ->assertSet('itemCount', 0)
         ->assertSet('total', 0);

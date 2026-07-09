@@ -9,8 +9,8 @@ use App\Models\ShippingMethod;
 use App\Models\User;
 use Livewire\Livewire;
 
-it('redirects to login when not authenticated', function () {
-    $shippingMethod = ShippingMethod::create([
+it('redirects to login when not authenticated', function (): void {
+    $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
         'title' => 'Test Shipping Title',
         'slug' => 'test-shipping-detail-1',
@@ -19,7 +19,7 @@ it('redirects to login when not authenticated', function () {
     ]);
 
     $user = User::factory()->create();
-    $order = Order::create([
+    $order = Order::query()->create([
         'user_id' => $user->id,
         'shipping_method_id' => $shippingMethod->id,
         'payment_method' => 'bacs',
@@ -47,9 +47,9 @@ it('redirects to login when not authenticated', function () {
         ->assertRedirect(route('login'));
 });
 
-it('renders successfully when authenticated and order belongs to user', function () {
+it('renders successfully when authenticated and order belongs to user', function (): void {
     $user = User::factory()->create();
-    $shippingMethod = ShippingMethod::create([
+    $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
         'title' => 'Test Shipping Title',
         'slug' => 'test-shipping-detail-2',
@@ -57,7 +57,7 @@ it('renders successfully when authenticated and order belongs to user', function
         'cost' => 1000,
     ]);
 
-    $order = Order::create([
+    $order = Order::query()->create([
         'user_id' => $user->id,
         'shipping_method_id' => $shippingMethod->id,
         'payment_method' => 'bacs',
@@ -88,10 +88,10 @@ it('renders successfully when authenticated and order belongs to user', function
         ->assertSee('Rendelés #' . $order->id);
 });
 
-it('returns 403 when accessing another users order', function () {
+it('returns 403 when accessing another users order', function (): void {
     $user1 = User::factory()->create();
     $user2 = User::factory()->create();
-    $shippingMethod = ShippingMethod::create([
+    $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
         'title' => 'Test Shipping Title',
         'slug' => 'test-shipping-detail-3',
@@ -99,7 +99,7 @@ it('returns 403 when accessing another users order', function () {
         'cost' => 1000,
     ]);
 
-    $order = Order::create([
+    $order = Order::query()->create([
         'user_id' => $user1->id,
         'shipping_method_id' => $shippingMethod->id,
         'payment_method' => 'bacs',
@@ -129,9 +129,9 @@ it('returns 403 when accessing another users order', function () {
         ->assertForbidden();
 });
 
-it('displays order details correctly', function () {
+it('displays order details correctly', function (): void {
     $user = User::factory()->create();
-    $shippingMethod = ShippingMethod::create([
+    $shippingMethod = ShippingMethod::query()->create([
         'name' => 'GLS Futárszolgálat',
         'title' => 'GLS',
         'slug' => 'test-shipping-detail-4',
@@ -139,7 +139,7 @@ it('displays order details correctly', function () {
         'cost' => 1500,
     ]);
 
-    $order = Order::create([
+    $order = Order::query()->create([
         'user_id' => $user->id,
         'shipping_method_id' => $shippingMethod->id,
         'payment_method' => 'bacs',

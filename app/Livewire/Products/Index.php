@@ -86,7 +86,7 @@ final class Index extends Component
 
         // Apply search filter
         if (mb_strlen($this->search) >= 2) {
-            $query->where(function ($q) {
+            $query->where(function ($q): void {
                 $q->where('product_code', 'LIKE', $this->search . '%')
                     ->orWhere('product_code', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('name', 'LIKE', '%' . $this->search . '%');
@@ -110,12 +110,13 @@ final class Index extends Component
 
         // Apply stock filter
         if (! empty($this->selectedFilters['stock'])) {
-            $query->where(function ($q) {
+            $query->where(function ($q): void {
                 if (in_array('in_stock', $this->selectedFilters['stock'])) {
                     $q->orWhere('minimum_stock', '>', 0);
                 }
+
                 if (in_array('out_of_stock', $this->selectedFilters['stock'])) {
-                    $q->orWhere(function ($subQ) {
+                    $q->orWhere(function ($subQ): void {
                         $subQ->whereNull('minimum_stock')
                             ->orWhere('minimum_stock', '<=', 0);
                     });
@@ -151,7 +152,7 @@ final class Index extends Component
 
         // Apply search filter to filter options too
         if (mb_strlen($this->search) >= 2) {
-            $query->where(function ($q) {
+            $query->where(function ($q): void {
                 $q->where('product_code', 'LIKE', $this->search . '%')
                     ->orWhere('product_code', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('name', 'LIKE', '%' . $this->search . '%');
@@ -163,12 +164,12 @@ final class Index extends Component
             ->orderByDesc('count')
             ->limit($limit)
             ->get()
-            ->map(fn ($item) => [
+            ->map(fn ($item): array => [
                 'name' => $item->{$column},
                 'value' => $item->{$column},
                 'count' => $item->count,
             ])
-            ->toArray();
+            ->all();
     }
 
     private function getInStockCount(): int
@@ -176,7 +177,7 @@ final class Index extends Component
         $query = Product::query()->where('minimum_stock', '>', 0);
 
         if (mb_strlen($this->search) >= 2) {
-            $query->where(function ($q) {
+            $query->where(function ($q): void {
                 $q->where('product_code', 'LIKE', $this->search . '%')
                     ->orWhere('product_code', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('name', 'LIKE', '%' . $this->search . '%');
@@ -188,13 +189,13 @@ final class Index extends Component
 
     private function getOutOfStockCount(): int
     {
-        $query = Product::query()->where(function ($query) {
+        $query = Product::query()->where(function ($query): void {
             $query->whereNull('minimum_stock')
                 ->orWhere('minimum_stock', '<=', 0);
         });
 
         if (mb_strlen($this->search) >= 2) {
-            $query->where(function ($q) {
+            $query->where(function ($q): void {
                 $q->where('product_code', 'LIKE', $this->search . '%')
                     ->orWhere('product_code', 'LIKE', '%' . $this->search . '%')
                     ->orWhere('name', 'LIKE', '%' . $this->search . '%');

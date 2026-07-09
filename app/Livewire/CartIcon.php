@@ -35,6 +35,6 @@ final class CartIcon extends Component
     {
         $cartItems = $cartService->getCartItems();
         $this->itemCount = $cartItems->sum('quantity');
-        $this->total = $cartItems->sum(fn ($item) => $item->product->net_selling_price * $item->quantity);
+        $this->total = $cartItems->sum(fn ($item): int|float => $item->product->net_selling_price * $item->quantity);
     }
 }

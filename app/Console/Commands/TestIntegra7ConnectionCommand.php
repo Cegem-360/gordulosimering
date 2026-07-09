@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Exception;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
+#[Description('Test connection to Integra7 remote database and list available tables')]
+#[Signature('integra7:test')]
 final class TestIntegra7ConnectionCommand extends Command
 {
-    protected $signature = 'integra7:test';
-
-    protected $description = 'Test connection to Integra7 remote database and list available tables';
-
     public function handle(): int
     {
         $this->info('Testing Integra7 database connection...');
@@ -49,7 +49,7 @@ final class TestIntegra7ConnectionCommand extends Command
 
             // Get MySQL version
             $version = DB::connection('integra7')->selectOne('SELECT VERSION() as version');
-            $this->info("MySQL Version: {$version->version}");
+            $this->info('MySQL Version: ' . $version->version);
             $this->newLine();
 
             // List all tables
@@ -65,20 +65,21 @@ final class TestIntegra7ConnectionCommand extends Command
 
                     // Get row count for each table
                     $count = DB::connection('integra7')
-                        ->selectOne("SELECT COUNT(*) as count FROM `{$tableName}`");
+                        ->selectOne(sprintf('SELECT COUNT(*) as count FROM `%s`', $tableName));
 
                     $tableData[] = [$tableName, number_format($count->count)];
                 }
+
                 $this->table(['Table Name', 'Row Count'], $tableData);
             }
 
             return Command::SUCCESS;
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->error('✗ Connection failed!');
             $this->newLine();
-            $this->error('Error: ' . $e->getMessage());
+            $this->error('Error: ' . $exception->getMessage());
 
-            if (str_contains($e->getMessage(), 'Connection refused')) {
+            if (str_contains($exception->getMessage(), 'Connection refused')) {
                 $this->newLine();
                 $this->warn('Possible causes:');
                 $this->line('  - The IP address might be incorrect');
@@ -86,7 +87,7 @@ final class TestIntegra7ConnectionCommand extends Command
                 $this->line('  - Your server IP is not whitelisted');
             }
 
-            if (str_contains($e->getMessage(), 'Access denied')) {
+            if (str_contains($exception->getMessage(), 'Access denied')) {
                 $this->newLine();
                 $this->warn('Possible causes:');
                 $this->line('  - Incorrect username or password');

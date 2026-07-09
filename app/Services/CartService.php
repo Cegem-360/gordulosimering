@@ -9,13 +9,13 @@ use App\Models\CartItem;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
-final class CartService
+final readonly class CartService
 {
     private Cart $cart;
 
     public function __construct()
     {
-        $this->cart = Cart::firstOrCreate(['user_id' => Auth::id()]);
+        $this->cart = Cart::query()->firstOrCreate(['user_id' => Auth::id()]);
     }
 
     public function addItem($productId, $quantity): void
@@ -68,9 +68,7 @@ final class CartService
 
     public function getTotal(): int|float
     {
-        return $this->cart->cartItems->sum(function ($item): int|float {
-            return $item->product->net_selling_price * $item->quantity;
-        });
+        return $this->cart->cartItems->sum(fn ($item): int|float => $item->product->net_selling_price * $item->quantity);
     }
 
     public function getItem(int $productId): ?CartItem

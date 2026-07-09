@@ -34,7 +34,7 @@ final class Cart extends Component
 
     public function getSubtotalProperty(): float
     {
-        return $this->cartItems->sum(fn ($item) => $item->product->net_selling_price * $item->quantity);
+        return $this->cartItems->sum(fn ($item): int|float => $item->product->net_selling_price * $item->quantity);
     }
 
     public function getVatAmountProperty(): float

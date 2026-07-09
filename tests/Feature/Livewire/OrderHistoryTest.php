@@ -9,12 +9,12 @@ use App\Models\ShippingMethod;
 use App\Models\User;
 use Livewire\Livewire;
 
-it('redirects to login when not authenticated', function () {
+it('redirects to login when not authenticated', function (): void {
     $this->get(route('orders.history'))
         ->assertRedirect(route('login'));
 });
 
-it('renders successfully when authenticated', function () {
+it('renders successfully when authenticated', function (): void {
     $user = User::factory()->create();
 
     $this->actingAs($user);
@@ -23,7 +23,7 @@ it('renders successfully when authenticated', function () {
         ->assertStatus(200);
 });
 
-it('displays message when user has no orders', function () {
+it('displays message when user has no orders', function (): void {
     $user = User::factory()->create();
 
     $this->actingAs($user);
@@ -32,9 +32,9 @@ it('displays message when user has no orders', function () {
         ->assertSee('Még nincs rendelésed');
 });
 
-it('displays user orders', function () {
+it('displays user orders', function (): void {
     $user = User::factory()->create();
-    $shippingMethod = ShippingMethod::create([
+    $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
         'title' => 'Test Shipping Title',
         'slug' => 'test-shipping-1',
@@ -42,7 +42,7 @@ it('displays user orders', function () {
         'cost' => 1000,
     ]);
 
-    $order = Order::create([
+    $order = Order::query()->create([
         'user_id' => $user->id,
         'shipping_method_id' => $shippingMethod->id,
         'payment_method' => 'bacs',
@@ -73,10 +73,10 @@ it('displays user orders', function () {
         ->assertSee('Függőben');
 });
 
-it('does not display other users orders', function () {
+it('does not display other users orders', function (): void {
     $user1 = User::factory()->create();
     $user2 = User::factory()->create();
-    $shippingMethod = ShippingMethod::create([
+    $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
         'title' => 'Test Shipping Title',
         'slug' => 'test-shipping-2',
@@ -84,7 +84,7 @@ it('does not display other users orders', function () {
         'cost' => 1000,
     ]);
 
-    $order = Order::create([
+    $order = Order::query()->create([
         'user_id' => $user1->id,
         'shipping_method_id' => $shippingMethod->id,
         'payment_method' => 'bacs',
@@ -115,9 +115,9 @@ it('does not display other users orders', function () {
         ->assertSee('Még nincs rendelésed');
 });
 
-it('shows correct status labels', function () {
+it('shows correct status labels', function (): void {
     $user = User::factory()->create();
-    $shippingMethod = ShippingMethod::create([
+    $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
         'title' => 'Test Shipping Title',
         'slug' => 'test-shipping-3',
@@ -125,7 +125,7 @@ it('shows correct status labels', function () {
         'cost' => 1000,
     ]);
 
-    Order::create([
+    Order::query()->create([
         'user_id' => $user->id,
         'shipping_method_id' => $shippingMethod->id,
         'payment_method' => 'bacs',

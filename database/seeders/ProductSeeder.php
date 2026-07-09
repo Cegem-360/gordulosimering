@@ -15,7 +15,7 @@ final class ProductSeeder extends Seeder
      *
      * @var array<int, string>
      */
-    private const COLUMN_MAP = [
+    private const array COLUMN_MAP = [
         0 => 'group_code',
         1 => 'product_code',
         2 => 'is_service',
@@ -67,14 +67,14 @@ final class ProductSeeder extends Seeder
      *
      * @var array<int, string>
      */
-    private const BOOLEAN_FIELDS = ['is_service', 'is_on_sale'];
+    private const array BOOLEAN_FIELDS = ['is_service', 'is_on_sale'];
 
     /**
      * Fields that should be parsed as decimals.
      *
      * @var array<int, string>
      */
-    private const DECIMAL_FIELDS = [
+    private const array DECIMAL_FIELDS = [
         'weight',
         'sale_percentage',
         'list_price',
@@ -92,7 +92,7 @@ final class ProductSeeder extends Seeder
      *
      * @var array<int, string>
      */
-    private const INTEGER_FIELDS = [
+    private const array INTEGER_FIELDS = [
         'minimum_stock',
         'maximum_stock',
         'buffer_stock',
@@ -110,14 +110,14 @@ final class ProductSeeder extends Seeder
         $filePath = database_path('data/termekek.tsv');
 
         if (! file_exists($filePath)) {
-            $this->command->error("TSV file not found: {$filePath}");
+            $this->command->error('TSV file not found: ' . $filePath);
 
             return;
         }
 
         $handle = fopen($filePath, 'r');
         if ($handle === false) {
-            $this->command->error("Could not open TSV file: {$filePath}");
+            $this->command->error('Could not open TSV file: ' . $filePath);
 
             return;
         }
@@ -138,16 +138,16 @@ final class ProductSeeder extends Seeder
             // Generate unique slug using product_code (which is unique)
             $data['slug'] = $this->generateUniqueSlug($data, $slugCounts);
 
-            Product::create($data);
+            Product::query()->create($data);
             $count++;
 
             if ($count % 1000 === 0) {
-                $this->command->info("Imported {$count} products...");
+                $this->command->info(sprintf('Imported %d products...', $count));
             }
         }
 
         fclose($handle);
-        $this->command->info("Successfully imported {$count} products.");
+        $this->command->info(sprintf('Successfully imported %d products.', $count));
     }
 
     /**
@@ -171,9 +171,9 @@ final class ProductSeeder extends Seeder
             }
 
             $data[$field] = match (true) {
-                in_array($field, self::BOOLEAN_FIELDS) => $this->parseBoolean($value),
-                in_array($field, self::DECIMAL_FIELDS) => $this->parseDecimal($value),
-                in_array($field, self::INTEGER_FIELDS) => $this->parseInteger($value),
+                in_array($field, self::BOOLEAN_FIELDS, true) => $this->parseBoolean($value),
+                in_array($field, self::DECIMAL_FIELDS, true) => $this->parseDecimal($value),
+                in_array($field, self::INTEGER_FIELDS, true) => $this->parseInteger($value),
                 default => $value,
             };
         }

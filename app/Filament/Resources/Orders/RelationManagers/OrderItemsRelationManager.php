@@ -16,6 +16,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Override;
 
 final class OrderItemsRelationManager extends RelationManager
 {
@@ -23,6 +24,7 @@ final class OrderItemsRelationManager extends RelationManager
 
     protected static ?string $title = 'Rendelés tételei';
 
+    #[Override]
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -35,9 +37,9 @@ final class OrderItemsRelationManager extends RelationManager
                     ->preload()
                     ->required()
                     ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set) {
+                    ->afterStateUpdated(function ($state, callable $set): void {
                         if ($state) {
-                            $product = Product::find($state);
+                            $product = Product::query()->find($state);
                             if ($product) {
                                 $set('subtotal', $product->net_selling_price);
                                 $set('total', $product->net_selling_price);
@@ -76,6 +78,7 @@ final class OrderItemsRelationManager extends RelationManager
             ]);
     }
 
+    #[Override]
     public function table(Table $table): Table
     {
         return $table

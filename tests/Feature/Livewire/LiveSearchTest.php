@@ -6,18 +6,18 @@ use App\Livewire\LiveSearch;
 use App\Models\Product;
 use Livewire\Livewire;
 
-it('renders successfully', function () {
+it('renders successfully', function (): void {
     Livewire::test(LiveSearch::class)
         ->assertStatus(200);
 });
 
-it('does not search with less than 2 characters', function () {
+it('does not search with less than 2 characters', function (): void {
     Livewire::test(LiveSearch::class)
         ->set('query', 'a')
         ->assertSet('showResults', false);
 });
 
-it('shows results when query has 2 or more characters', function () {
+it('shows results when query has 2 or more characters', function (): void {
     Product::factory()->create([
         'name' => 'Test Product',
         'product_code' => 'TEST123',
@@ -28,7 +28,7 @@ it('shows results when query has 2 or more characters', function () {
         ->assertSet('showResults', true);
 });
 
-it('finds products by product code', function () {
+it('finds products by product code', function (): void {
     $product = Product::factory()->create([
         'name' => 'Some Product',
         'product_code' => 'ABC123',
@@ -41,7 +41,7 @@ it('finds products by product code', function () {
     expect($component->get('results')->first()->product_code)->toBe('ABC123');
 });
 
-it('finds products by name', function () {
+it('finds products by name', function (): void {
     $product = Product::factory()->create([
         'name' => 'Golyóscsapágy 6205',
         'product_code' => 'XYZ999',

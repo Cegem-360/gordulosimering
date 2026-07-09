@@ -11,19 +11,19 @@ use RuntimeException;
 
 final class CategoryImporter
 {
-    private const COLUMN_COUNT = 5;
+    private const int COLUMN_COUNT = 5;
 
     /**
      * A márkalistát tartalmazó főkategória neve. Ennek leveleit (puszta
      * márkanevek, pl. "SKF") kihagyjuk a termék-linkelésből, mert substringként
      * a terméknevek tömegére illenek és szétkenik a besorolást.
      */
-    private const BRAND_ROOT_NAME = 'FORGALMAZOTT MÁRKÁINK';
+    private const string BRAND_ROOT_NAME = 'FORGALMAZOTT MÁRKÁINK';
 
     /**
      * Ennél rövidebb levélnevet nem linkelünk (túl generikus, túl-illeszt).
      */
-    private const MIN_LEAF_NAME_LENGTH = 4;
+    private const int MIN_LEAF_NAME_LENGTH = 4;
 
     /**
      * Globálisan használt slug-ok, hogy ütközéskor egyedi utótagot adjunk.
@@ -84,11 +84,9 @@ final class CategoryImporter
     public function importTree(string $path): int
     {
         $handle = fopen($path, 'r');
-        if ($handle === false) {
-            throw new RuntimeException("Could not open TSV file: {$path}");
-        }
+        throw_if($handle === false, RuntimeException::class, 'Could not open TSV file: ' . $path);
 
-        $this->usedSlugs = Category::pluck('slug')->flip()->map(fn (): bool => true)->all();
+        $this->usedSlugs = Category::query()->pluck('slug')->flip()->map(fn (): bool => true)->all();
 
         /** @var array<int, array{model: Category, names: array<int, string>}|null> $path_nodes */
         $path_nodes = array_fill(0, self::COLUMN_COUNT, null);
@@ -222,7 +220,7 @@ final class CategoryImporter
      */
     private function upsertCategory(string $name, ?int $parentId, array $names): Category
     {
-        $existing = Category::where('name', $name)
+        $existing = Category::query()->where('name', $name)
             ->where('category_id', $parentId)
             ->first();
 
@@ -230,7 +228,7 @@ final class CategoryImporter
             return $existing;
         }
 
-        return Category::create([
+        return Category::query()->create([
             'name' => $name,
             'category_id' => $parentId,
             'slug' => $this->uniqueSlug($names),
@@ -249,6 +247,7 @@ final class CategoryImporter
             $n++;
             $slug = $base . '-' . $n;
         }
+
         $this->usedSlugs[$slug] = true;
 
         return $slug;

@@ -7,18 +7,18 @@ use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
 
-it('renders contact page successfully', function () {
+it('renders contact page successfully', function (): void {
     Livewire::test(Contact::class)
         ->assertStatus(200);
 });
 
-it('validates required fields', function () {
+it('validates required fields', function (): void {
     Livewire::test(Contact::class)
         ->call('sendMessage')
         ->assertHasErrors(['data.name', 'data.email', 'data.subject', 'data.message']);
 });
 
-it('validates email format', function () {
+it('validates email format', function (): void {
     Livewire::test(Contact::class)
         ->set('data.name', 'Test User')
         ->set('data.email', 'invalid-email')
@@ -28,7 +28,7 @@ it('validates email format', function () {
         ->assertHasErrors(['data.email']);
 });
 
-it('validates minimum length requirements', function () {
+it('validates minimum length requirements', function (): void {
     Livewire::test(Contact::class)
         ->set('data.name', 'Ab')
         ->set('data.email', 'test@example.com')
@@ -38,7 +38,7 @@ it('validates minimum length requirements', function () {
         ->assertHasErrors(['data.name', 'data.subject', 'data.message']);
 });
 
-it('sends contact form email when admin email is configured', function () {
+it('sends contact form email when admin email is configured', function (): void {
     Mail::fake();
 
     config(['shop.admin_email' => 'admin@test.com']);
@@ -51,16 +51,14 @@ it('sends contact form email when admin email is configured', function () {
         ->call('sendMessage')
         ->assertHasNoErrors();
 
-    Mail::assertQueued(ContactFormMail::class, function (ContactFormMail $mail) {
-        return $mail->hasTo('admin@test.com')
-            && $mail->senderName === 'Test User'
-            && $mail->senderEmail === 'sender@example.com'
-            && $mail->formSubject === 'Test Subject'
-            && $mail->messageContent === 'This is a test message content.';
-    });
+    Mail::assertQueued(ContactFormMail::class, fn (ContactFormMail $mail): bool => $mail->hasTo('admin@test.com')
+        && $mail->senderName === 'Test User'
+        && $mail->senderEmail === 'sender@example.com'
+        && $mail->formSubject === 'Test Subject'
+        && $mail->messageContent === 'This is a test message content.');
 });
 
-it('does not send email when admin email is default placeholder', function () {
+it('does not send email when admin email is default placeholder', function (): void {
     Mail::fake();
 
     config(['shop.admin_email' => 'admin@example.com']);
@@ -76,7 +74,7 @@ it('does not send email when admin email is default placeholder', function () {
     Mail::assertNotQueued(ContactFormMail::class);
 });
 
-it('resets form after successful submission', function () {
+it('resets form after successful submission', function (): void {
     Mail::fake();
 
     config(['shop.admin_email' => 'admin@test.com']);

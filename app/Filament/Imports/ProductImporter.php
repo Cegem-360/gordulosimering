@@ -10,6 +10,7 @@ use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
+use Override;
 
 final class ProductImporter extends Importer
 {
@@ -142,20 +143,21 @@ final class ProductImporter extends Importer
     {
         $body = 'Your product import has completed and ' . Number::format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
 
-        if ($failedRowsCount = $import->getFailedRowsCount()) {
+        if (($failedRowsCount = $import->getFailedRowsCount()) !== 0) {
             $body .= ' ' . Number::format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to import.';
         }
 
         return $body;
     }
 
+    #[Override]
     public function resolveRecord(): Product
     {
         if (! isset($this->data['slug']) || empty($this->data['slug']) || $this->data['slug'] === null) {
             $this->data['slug'] = Str::slug($this->data['name']);
         }
 
-        return Product::firstOrNew([
+        return Product::query()->firstOrNew([
             'slug' => $this->data['slug'],
         ]);
     }

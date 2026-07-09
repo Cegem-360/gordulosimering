@@ -87,7 +87,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             ]);
         }
 
-        $firstShipping = ShippingMethod::first();
+        $firstShipping = ShippingMethod::query()->first();
         if ($firstShipping) {
             $this->selectedShippingMethod = $firstShipping->id;
         }
@@ -104,7 +104,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             return null;
         }
 
-        return ShippingMethod::find($this->selectedShippingMethod);
+        return ShippingMethod::query()->find($this->selectedShippingMethod);
     }
 
     public function getShippingCostProperty(): float
@@ -170,7 +170,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
     public function getSubtotalProperty(): float
     {
-        return $this->cartItems->sum(fn ($item) => $item->product->net_selling_price * $item->quantity);
+        return $this->cartItems->sum(fn ($item): int|float => $item->product->net_selling_price * $item->quantity);
     }
 
     public function getVatAmountProperty(): float
@@ -226,7 +226,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
         // Create new user if guest selected registration
         if ($this->createAccount && ! Auth::check()) {
-            $newUser = User::create([
+            $newUser = User::query()->create([
                 'name' => $data['billing_name'],
                 'email' => $data['billing_email'],
                 'password' => Str::random(32), // Random password - user will set via reset link
@@ -280,7 +280,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             $data['shipping_state'] = $data['billing_state'] ?? '';
         }
 
-        $record = Order::create($data);
+        $record = Order::query()->create($data);
 
         // Save cart items as order items
         foreach ($this->cartItems as $cartItem) {

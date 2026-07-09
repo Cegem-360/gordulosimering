@@ -23,13 +23,14 @@ final class EnsureCartExists
         $cart = null;
         $userId = Auth::id();
         if (Auth::check()) {
-            $cart = Cart::firstOrCreate(['user_id' => $userId]);
+            $cart = Cart::query()->firstOrCreate(['user_id' => $userId]);
             Session::put('cart', $cart);
 
             return $next($request);
         }
+
         $sessionId = Session::id();
-        $cart = Cart::firstOrCreate(['session_id' => $sessionId]);
+        $cart = Cart::query()->firstOrCreate(['session_id' => $sessionId]);
 
         Session::put('cart', $cart);
 

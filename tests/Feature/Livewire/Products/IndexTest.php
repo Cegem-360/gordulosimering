@@ -6,12 +6,12 @@ use App\Livewire\Products\Index;
 use App\Models\Product;
 use Livewire\Livewire;
 
-it('renders successfully', function () {
+it('renders successfully', function (): void {
     Livewire::test(Index::class)
         ->assertStatus(200);
 });
 
-it('does not filter products with search less than 2 characters', function () {
+it('does not filter products with search less than 2 characters', function (): void {
     Product::factory()->create(['name' => 'Test Product']);
     Product::factory()->create(['name' => 'Another Product']);
 
@@ -21,7 +21,7 @@ it('does not filter products with search less than 2 characters', function () {
     expect($component->get('products')->total())->toBe(2);
 });
 
-it('filters products by product code', function () {
+it('filters products by product code', function (): void {
     Product::factory()->create([
         'name' => 'Ball Bearing',
         'product_code' => 'SKF6205',
@@ -38,7 +38,7 @@ it('filters products by product code', function () {
     expect($component->get('products')->first()->product_code)->toBe('SKF6205');
 });
 
-it('filters products by name', function () {
+it('filters products by name', function (): void {
     Product::factory()->create([
         'name' => 'Golyóscsapágy 6205',
         'product_code' => 'ABC123',
@@ -55,7 +55,7 @@ it('filters products by name', function () {
     expect($component->get('products')->first()->name)->toBe('Golyóscsapágy 6205');
 });
 
-it('orders search results by relevance with prefix matches first', function () {
+it('orders search results by relevance with prefix matches first', function (): void {
     Product::factory()->create([
         'name' => 'Product contains SKF in name',
         'product_code' => 'OTHER001',
@@ -72,7 +72,7 @@ it('orders search results by relevance with prefix matches first', function () {
     expect($products->first()->product_code)->toBe('SKF6205');
 });
 
-it('clears search when clearFilters is called', function () {
+it('clears search when clearFilters is called', function (): void {
     Product::factory()->create(['name' => 'Test Product']);
 
     $component = Livewire::test(Index::class)
@@ -81,7 +81,7 @@ it('clears search when clearFilters is called', function () {
         ->assertSet('search', '');
 });
 
-it('resets pagination when search changes', function () {
+it('resets pagination when search changes', function (): void {
     Product::factory()->count(30)->create(['name' => 'Test Product']);
 
     Livewire::withQueryParams(['page' => 2])
@@ -90,7 +90,7 @@ it('resets pagination when search changes', function () {
         ->assertNotDispatched('gotoPage');
 });
 
-it('accepts search from URL query parameter', function () {
+it('accepts search from URL query parameter', function (): void {
     Product::factory()->create([
         'name' => 'SKF Bearing',
         'product_code' => 'SKF6205',

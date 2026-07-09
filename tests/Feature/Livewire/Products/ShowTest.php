@@ -6,7 +6,7 @@ use App\Livewire\Products\Show;
 use App\Models\Product;
 use Livewire\Livewire;
 
-it('renders successfully', function () {
+it('renders successfully', function (): void {
     $product = Product::factory()->create();
 
     Livewire::test(Show::class, ['product' => $product])

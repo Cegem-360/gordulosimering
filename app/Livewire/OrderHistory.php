@@ -52,7 +52,7 @@ final class OrderHistory extends Component
             ->orders()
             ->where('order_status', OrderStatus::COMPLETED)
             ->get()
-            ->sum(fn ($order) => $order->orderTotal() + $order->shipping_cost);
+            ->sum(fn ($order): float|int|array => $order->orderTotal() + $order->shipping_cost);
     }
 
     public function getStatusLabel(OrderStatus $status): string

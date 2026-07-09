@@ -7,11 +7,13 @@ namespace App\Filament\Resources\ShippingMethods\Pages;
 use App\Filament\Resources\ShippingMethods\ShippingMethodResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
+use Override;
 
 final class EditShippingMethod extends EditRecord
 {
     protected static string $resource = ShippingMethodResource::class;
 
+    #[Override]
     protected function getHeaderActions(): array
     {
         return [

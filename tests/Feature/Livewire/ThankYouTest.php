@@ -7,14 +7,14 @@ use App\Models\Order;
 use App\Models\ShippingMethod;
 use Livewire\Livewire;
 
-it('renders successfully without order', function () {
+it('renders successfully without order', function (): void {
     Livewire::test(ThankYou::class)
         ->assertStatus(200)
         ->assertSee('Nincs megjeleníthető rendelés');
 });
 
-it('renders order when session has order id', function () {
-    $shippingMethod = ShippingMethod::create([
+it('renders order when session has order id', function (): void {
+    $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
         'title' => 'Test Shipping Title',
         'slug' => 'test-shipping',
@@ -22,7 +22,7 @@ it('renders order when session has order id', function () {
         'cost' => 1500,
     ]);
 
-    $order = Order::create([
+    $order = Order::query()->create([
         'user_id' => null,
         'shipping_method_id' => $shippingMethod->id,
         'payment_method' => 'bacs',

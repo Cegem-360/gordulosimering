@@ -8,7 +8,7 @@ use App\Models\Product;
 use App\Models\User;
 use Livewire\Livewire;
 
-it('renders product card successfully', function () {
+it('renders product card successfully', function (): void {
     $product = Product::factory()->create([
         'name' => 'Test Product',
         'net_selling_price' => 1000,
@@ -21,7 +21,7 @@ it('renders product card successfully', function () {
         ->assertSee('Készleten');
 });
 
-it('shows out of stock badge when product has no stock', function () {
+it('shows out of stock badge when product has no stock', function (): void {
     $product = Product::factory()->create([
         'name' => 'Out of Stock Product',
         'minimum_stock' => 0,
@@ -32,7 +32,7 @@ it('shows out of stock badge when product has no stock', function () {
         ->assertSee('Rendelésre');
 });
 
-it('can add product to cart when in stock', function () {
+it('can add product to cart when in stock', function (): void {
     $user = User::factory()->create();
     $product = Product::factory()->create([
         'minimum_stock' => 5,
@@ -44,13 +44,13 @@ it('can add product to cart when in stock', function () {
         ->call('addToCart')
         ->assertDispatched('cartUpdated');
 
-    $cart = Cart::where('user_id', $user->id)->first();
+    $cart = Cart::query()->where('user_id', $user->id)->first();
     expect($cart)->not->toBeNull();
     expect($cart->items)->toHaveCount(1);
     expect($cart->items->first()->product_id)->toBe($product->id);
 });
 
-it('adds minimum order quantity to cart', function () {
+it('adds minimum order quantity to cart', function (): void {
     $user = User::factory()->create();
     $product = Product::factory()->create([
         'minimum_stock' => 5,
@@ -62,6 +62,6 @@ it('adds minimum order quantity to cart', function () {
         ->call('addToCart')
         ->assertDispatched('cartUpdated');
 
-    $cart = Cart::where('user_id', $user->id)->first();
+    $cart = Cart::query()->where('user_id', $user->id)->first();
     expect($cart->items->first()->quantity)->toBe(5);
 });

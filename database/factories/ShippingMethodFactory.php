@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\ShippingMethod;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ShippingMethod>
+ * @extends Factory<ShippingMethod>
  */
 final class ShippingMethodFactory extends Factory
 {

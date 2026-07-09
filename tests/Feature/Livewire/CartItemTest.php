@@ -6,7 +6,7 @@ use App\Livewire\CartItem;
 use App\Models\Product;
 use Livewire\Livewire;
 
-it('renders successfully', function () {
+it('renders successfully', function (): void {
     $product = Product::factory()->create();
 
     Livewire::test(CartItem::class, ['productId' => $product->id, 'quantity' => 1])

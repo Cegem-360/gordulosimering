@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Livewire\Products\Categories;
 
 use App\Models\Product;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -90,12 +92,13 @@ final class Index extends Component
 
         // Apply stock filter
         if (! empty($this->selectedFilters['stock'])) {
-            $query->where(function ($q) {
+            $query->where(function ($q): void {
                 if (in_array('in_stock', $this->selectedFilters['stock'])) {
                     $q->orWhere('minimum_stock', '>', 0);
                 }
+
                 if (in_array('out_of_stock', $this->selectedFilters['stock'])) {
-                    $q->orWhere(function ($subQ) {
+                    $q->orWhere(function ($subQ): void {
                         $subQ->whereNull('minimum_stock')
                             ->orWhere('minimum_stock', '<=', 0);
                     });
@@ -106,7 +109,7 @@ final class Index extends Component
         return $query->paginate(24);
     }
 
-    public function render()
+    public function render(): Factory|View
     {
         return view('livewire.products.categories.index', [
             'filters' => $this->filters,
@@ -127,12 +130,12 @@ final class Index extends Component
             ->orderByDesc('count')
             ->limit($limit)
             ->get()
-            ->map(fn ($item) => [
+            ->map(fn ($item): array => [
                 'name' => $item->{$column},
                 'value' => $item->{$column},
                 'count' => $item->count,
             ])
-            ->toArray();
+            ->all();
     }
 
     private function getInStockCount(): int
@@ -145,7 +148,7 @@ final class Index extends Component
     private function getOutOfStockCount(): int
     {
         return Product::query()
-            ->where(function ($query) {
+            ->where(function ($query): void {
                 $query->whereNull('minimum_stock')
                     ->orWhere('minimum_stock', '<=', 0);
             })

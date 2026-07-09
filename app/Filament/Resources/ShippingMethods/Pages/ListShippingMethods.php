@@ -7,11 +7,13 @@ namespace App\Filament\Resources\ShippingMethods\Pages;
 use App\Filament\Resources\ShippingMethods\ShippingMethodResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Override;
 
 final class ListShippingMethods extends ListRecords
 {
     protected static string $resource = ShippingMethodResource::class;
 
+    #[Override]
     protected function getHeaderActions(): array
     {
         return [

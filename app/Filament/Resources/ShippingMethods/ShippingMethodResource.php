@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Override;
 
 final class ShippingMethodResource extends Resource
 {
@@ -24,16 +25,19 @@ final class ShippingMethodResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    #[Override]
     public static function form(Schema $schema): Schema
     {
         return ShippingMethodForm::configure($schema);
     }
 
+    #[Override]
     public static function table(Table $table): Table
     {
         return ShippingMethodsTable::configure($table);
     }
 
+    #[Override]
     public static function getRelations(): array
     {
         return [
@@ -41,6 +45,7 @@ final class ShippingMethodResource extends Resource
         ];
     }
 
+    #[Override]
     public static function getPages(): array
     {
         return [

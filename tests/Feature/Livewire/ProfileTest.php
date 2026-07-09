@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 
-it('renders successfully for authenticated users', function () {
+it('renders successfully for authenticated users', function (): void {
     $user = User::factory()->create();
 
     Livewire::actingAs($user)
@@ -15,12 +15,12 @@ it('renders successfully for authenticated users', function () {
         ->assertStatus(200);
 });
 
-it('redirects unauthenticated users to login', function () {
+it('redirects unauthenticated users to login', function (): void {
     $this->get(route('profile'))
         ->assertRedirect(route('login'));
 });
 
-it('pre-fills form with user data', function () {
+it('pre-fills form with user data', function (): void {
     $user = User::factory()->create([
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -37,7 +37,7 @@ it('pre-fills form with user data', function () {
         ->assertSet('data.billing_city', 'Budapest');
 });
 
-it('updates user profile data', function () {
+it('updates user profile data', function (): void {
     $user = User::factory()->create([
         'name' => 'Original Name',
         'phone' => null,
@@ -61,7 +61,7 @@ it('updates user profile data', function () {
     expect($user->billing_postcode)->toBe('4000');
 });
 
-it('updates shipping address data', function () {
+it('updates shipping address data', function (): void {
     $user = User::factory()->create();
 
     Livewire::actingAs($user)
@@ -80,7 +80,7 @@ it('updates shipping address data', function () {
     expect($user->shipping_address_1)->toBe('Kossuth utca 10.');
 });
 
-it('changes password with valid current password', function () {
+it('changes password with valid current password', function (): void {
     $user = User::factory()->create([
         'password' => Hash::make('oldpassword'),
     ]);
@@ -97,7 +97,7 @@ it('changes password with valid current password', function () {
     expect(Hash::check('newpassword123', $user->password))->toBeTrue();
 });
 
-it('fails to change password with invalid current password', function () {
+it('fails to change password with invalid current password', function (): void {
     $user = User::factory()->create([
         'password' => Hash::make('correctpassword'),
     ]);
@@ -111,7 +111,7 @@ it('fails to change password with invalid current password', function () {
         ->assertHasErrors(['current_password']);
 });
 
-it('fails to change password when confirmation does not match', function () {
+it('fails to change password when confirmation does not match', function (): void {
     $user = User::factory()->create([
         'password' => Hash::make('currentpassword'),
     ]);
@@ -125,7 +125,7 @@ it('fails to change password when confirmation does not match', function () {
         ->assertHasErrors(['new_password']);
 });
 
-it('clears password fields after successful password change', function () {
+it('clears password fields after successful password change', function (): void {
     $user = User::factory()->create([
         'password' => Hash::make('oldpassword'),
     ]);

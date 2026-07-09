@@ -14,7 +14,7 @@ final class ShippingMethodSeeder extends Seeder
      */
     public function run(): void
     {
-        ShippingMethod::create([
+        ShippingMethod::query()->create([
             'name' => 'gls',
             'title' => 'GLS futárszolgálat',
             'slug' => 'gls-futarszolgalat',
@@ -22,7 +22,7 @@ final class ShippingMethodSeeder extends Seeder
             'cost' => 1490,
         ]);
 
-        ShippingMethod::create([
+        ShippingMethod::query()->create([
             'name' => 'foxpost',
             'title' => 'Foxpost csomagautomata',
             'slug' => 'foxpost-csomagautomata',

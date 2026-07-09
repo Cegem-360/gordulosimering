@@ -21,13 +21,13 @@ use App\Livewire\Products\Show as ProductsShow;
 use App\Livewire\Profile;
 use App\Livewire\QualityPolicy;
 use App\Livewire\ThankYou;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['throttle:global'])->get('/', function () {
-    return view('index');
-})->name('index');
+Route::middleware(['throttle:global'])->get('/', fn (): Factory|View => view('index'))->name('index');
 
-Route::middleware(['throttle:global'])->prefix('products')->as('products.')->group(function () {
+Route::middleware(['throttle:global'])->prefix('products')->as('products.')->group(function (): void {
     Route::get('/', ProductsIndex::class)->name('index');
     Route::get('/{product:slug}', ProductsShow::class)->name('show');
 
@@ -37,12 +37,12 @@ Route::middleware(['throttle:global'])->prefix('products')->as('products.')->gro
     }
 });
 
-Route::middleware(['throttle:global'])->prefix('termekkategoriak')->as('categories.')->group(function () {
+Route::middleware(['throttle:global'])->prefix('termekkategoriak')->as('categories.')->group(function (): void {
     Route::get('/', CategoriesIndex::class)->name('index');
     Route::get('/{category:slug}', CategoriesShow::class)->name('show');
 });
 
-Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function () {
+Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function (): void {
     Route::middleware(['EnsureCartNotEmpty'])->get('/checkout', CheckOut::class)->name('checkout');
     Route::get('/kosar', Cart::class)->name('cart');
     Route::get('/koszonjuk', ThankYou::class)->name('thank-you');
@@ -57,7 +57,7 @@ Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function () {
     Route::get('/adatkezelesi-tajekoztato', PrivacyPolicy::class)->name('privacy-policy');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function (): void {
     Route::get('/profilom', Profile::class)->name('profile');
     Route::get('/rendeleseim', OrderHistory::class)->name('orders.history');
     Route::get('/rendeleseim/{order}', OrderDetail::class)->name('orders.show');
