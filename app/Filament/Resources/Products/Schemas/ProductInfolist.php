@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Products\Schemas;
 
 use Filament\Infolists\Components\IconEntry;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -29,6 +30,12 @@ final class ProductInfolist
                     ->placeholder('-'),
                 TextEntry::make('name')
                     ->placeholder('-'),
+                TextEntry::make('categories.name')
+                    ->label('Kategóriák')
+                    ->badge()
+                    ->separator(',')
+                    ->placeholder('-')
+                    ->columnSpanFull(),
                 TextEntry::make('slug'),
                 TextEntry::make('catalog_number')
                     ->placeholder('-'),
@@ -112,7 +119,12 @@ final class ProductInfolist
                 TextEntry::make('custom_fields')
                     ->placeholder('-')
                     ->columnSpanFull(),
-                TextEntry::make('images')
+                ImageEntry::make('images')
+                    ->label('Képek')
+                    ->placeholder('-')
+                    ->columnSpanFull(),
+                TextEntry::make('documents')
+                    ->label('Dokumentumok')
                     ->placeholder('-')
                     ->columnSpanFull(),
                 TextEntry::make('created_at')

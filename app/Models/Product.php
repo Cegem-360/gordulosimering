@@ -54,6 +54,7 @@ final class Product extends Model
             'pallet_quantity' => 'integer',
             'custom_fields' => 'array',
             'images' => 'json',
+            'documents' => 'json',
         ];
     }
 }
