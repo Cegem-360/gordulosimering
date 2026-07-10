@@ -15,10 +15,13 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use MadBox99\FilamentTranslatableModelLabels\Concerns\TranslatesFilamentModelLabels;
 use Override;
 
 final class ShippingMethodResource extends Resource
 {
+    use TranslatesFilamentModelLabels;
+
     protected static ?string $model = ShippingMethod::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;

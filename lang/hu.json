@@ -46,5 +46,15 @@
     "X. kerület": "X. kerület",
     "XIV. kerület": "XIV. kerület",
     "XVII. kerület": "XVII. kerület",
-    "Your cart is empty. Please add products to continue!": "A kosara üres. Kérjük, adjon hozzá termékeket a folytatáshoz!"
+    "Your cart is empty. Please add products to continue!": "A kosara üres. Kérjük, adjon hozzá termékeket a folytatáshoz!",
+    "product": "Termék",
+    "products": "Termékek",
+    "category": "Kategória",
+    "categories": "Kategóriák",
+    "order": "Rendelés",
+    "orders": "Rendelések",
+    "user": "Felhasználó",
+    "users": "Felhasználók",
+    "shipping method": "Szállítási mód",
+    "shipping methods": "Szállítási módok"
 }

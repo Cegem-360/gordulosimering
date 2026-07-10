@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Categories;
 
 use App\Filament\Resources\Categories\Pages\CreateCategory;
@@ -15,9 +17,12 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use MadBox99\FilamentTranslatableModelLabels\Concerns\TranslatesFilamentModelLabels;
 
-class CategoryResource extends Resource
+final class CategoryResource extends Resource
 {
+    use TranslatesFilamentModelLabels;
+
     protected static ?string $model = Category::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
