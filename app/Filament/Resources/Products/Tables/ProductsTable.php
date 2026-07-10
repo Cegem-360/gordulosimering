@@ -1,20 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Filament\Resources\Products\Tables;
 
-use App\Filament\Imports\ProductImporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-final class ProductsTable
+class ProductsTable
 {
     public static function configure(Table $table): Table
     {
@@ -65,12 +61,12 @@ final class ProductsTable
                 TextColumn::make('pricing')
                     ->searchable(),
                 TextColumn::make('net_selling_price')
-                    ->numeric()
+                    ->money()
                     ->sortable(),
                 TextColumn::make('vat_class')
                     ->searchable(),
                 TextColumn::make('gross_selling_price')
-                    ->numeric()
+                    ->money()
                     ->sortable(),
                 TextColumn::make('quantity_unit')
                     ->searchable(),
@@ -129,11 +125,6 @@ final class ProductsTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ])
-            ->headerActions([
-                ImportAction::make('products_import')
-                    ->label('Import Products')
-                    ->importer(ProductImporter::class),
             ]);
     }
 }

@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Filament\Resources\Products\Schemas;
 
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
-final class ProductForm
+class ProductForm
 {
     public static function configure(Schema $schema): Schema
     {
@@ -40,10 +38,12 @@ final class ProductForm
                     ->numeric(),
                 TextInput::make('pricing'),
                 TextInput::make('net_selling_price')
-                    ->numeric(),
+                    ->numeric()
+                    ->prefix('$'),
                 TextInput::make('vat_class'),
                 TextInput::make('gross_selling_price')
-                    ->numeric(),
+                    ->numeric()
+                    ->prefix('$'),
                 TextInput::make('quantity_unit'),
                 TextInput::make('secondary_unit'),
                 TextInput::make('minimum_stock')

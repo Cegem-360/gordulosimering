@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use Filament\Tables\Columns\Column;
+use Filament\Tables\Table;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -27,5 +29,8 @@ final class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         RateLimiter::for('global', fn (Request $request) => Limit::perMinute(50));
+
+        Table::configureUsing(fn (Table $table): Table => $table->reorderableColumns());
+        Column::configureUsing(fn (Column $column): Column => $column->toggleable());
     }
 }

@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Filament\Resources\Products\Schemas;
 
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
-final class ProductInfolist
+class ProductInfolist
 {
     public static function configure(Schema $schema): Schema
     {
@@ -62,12 +60,12 @@ final class ProductInfolist
                 TextEntry::make('pricing')
                     ->placeholder('-'),
                 TextEntry::make('net_selling_price')
-                    ->numeric()
+                    ->money()
                     ->placeholder('-'),
                 TextEntry::make('vat_class')
                     ->placeholder('-'),
                 TextEntry::make('gross_selling_price')
-                    ->numeric()
+                    ->money()
                     ->placeholder('-'),
                 TextEntry::make('quantity_unit')
                     ->placeholder('-'),
