@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Storage;
 use Override;
 
 final class Product extends Model
@@ -28,9 +29,38 @@ final class Product extends Model
         return $this->minimum_stock > 0;
     }
 
+    /**
+     * The primary image path: the dedicated featured image, or the first
+     * gallery image as a fallback.
+     */
     protected function image(): Attribute
     {
-        return Attribute::get(fn () => $this->images[0] ?? null);
+        return Attribute::get(fn (): ?string => $this->featured_image ?? ($this->images[0] ?? null));
+    }
+
+    /**
+     * Public URL of the primary image, resolving disk-relative upload paths.
+     */
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::get(fn (): ?string => $this->resolveImageUrl($this->image));
+    }
+
+    /**
+     * All gallery image URLs, with the featured image first.
+     *
+     * @return Attribute<array<int, string>, never>
+     */
+    protected function galleryUrls(): Attribute
+    {
+        return Attribute::get(function (): array {
+            $paths = array_values(array_filter([
+                $this->featured_image,
+                ...($this->images ?? []),
+            ]));
+
+            return array_values(array_filter(array_map(fn (string $path): ?string => $this->resolveImageUrl($path), $paths)));
+        });
     }
 
     #[Override]
@@ -56,5 +86,18 @@ final class Product extends Model
             'images' => 'json',
             'documents' => 'json',
         ];
+    }
+
+    private function resolveImageUrl(?string $path): ?string
+    {
+        if (blank($path)) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        return Storage::disk('public')->url($path);
     }
 }

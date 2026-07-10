@@ -119,8 +119,14 @@ final class ProductInfolist
                 TextEntry::make('custom_fields')
                     ->placeholder('-')
                     ->columnSpanFull(),
+                ImageEntry::make('featured_image')
+                    ->label('Kiemelt kép')
+                    ->disk('public')
+                    ->placeholder('-')
+                    ->columnSpanFull(),
                 ImageEntry::make('images')
-                    ->label('Képek')
+                    ->label('További képek')
+                    ->disk('public')
                     ->placeholder('-')
                     ->columnSpanFull(),
                 TextEntry::make('documents')

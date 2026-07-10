@@ -61,16 +61,25 @@ final class ProductForm
 
                 Section::make('Média')
                     ->schema([
+                        FileUpload::make('featured_image')
+                            ->label('Kiemelt kép')
+                            ->image()
+                            ->disk('public')
+                            ->directory('products/featured')
+                            ->imageEditor()
+                            ->columnSpanFull(),
                         FileUpload::make('images')
-                            ->label('Képek')
+                            ->label('További képek')
                             ->image()
                             ->multiple()
                             ->reorderable()
+                            ->disk('public')
                             ->directory('products/images')
                             ->columnSpanFull(),
                         FileUpload::make('documents')
                             ->label('Dokumentumok')
                             ->multiple()
+                            ->disk('public')
                             ->directory('products/documents')
                             ->downloadable()
                             ->columnSpanFull(),

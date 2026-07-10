@@ -29,7 +29,7 @@
             <div class="grid lg:grid-cols-2 gap-8 mb-8">
                 <!-- Left Column: Images -->
                 @php
-                    $productImages = $product->images ?? [];
+                    $productImages = $product->gallery_urls;
                     $imageCount = count($productImages);
                 @endphp
                 <div x-data="{

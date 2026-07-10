@@ -1,8 +1,7 @@
 <div
     class="group bg-white hover:bg-gray-100 hover:shadow-xl transition-all border border-gray-400 rounded-lg p-4 flex flex-col h-full">
     @php
-        $images = $product->images ?? [];
-        $mainImage = is_array($images) && count($images) > 0 ? $images[0] : null;
+        $mainImage = $product->image_url;
         $defaultImage = Vite::asset('resources/images/bearing.webp');
         $inStock = ($product->minimum_stock ?? 0) > 0;
     @endphp

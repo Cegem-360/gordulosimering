@@ -40,3 +40,19 @@ it('persists product image, document and category assignments', function (): voi
         ->and($product->fresh()->documents)->toBe(['products/documents/datasheet.pdf'])
         ->and($product->categories()->pluck('name')->all())->toBe(['Csapágyak']);
 });
+
+it('resolves the featured image as the primary image and gallery', function (): void {
+    $product = Product::factory()->create([
+        'featured_image' => 'products/featured/main.jpg',
+        'images' => ['products/images/extra.jpg'],
+    ]);
+
+    expect($product->image)->toBe('products/featured/main.jpg')
+        ->and($product->image_url)->toContain('/storage/products/featured/main.jpg')
+        ->and($product->gallery_urls)->toHaveCount(2)
+        ->and($product->gallery_urls[0])->toContain('products/featured/main.jpg');
+
+    $external = Product::factory()->create(['featured_image' => null, 'images' => ['https://cdn.test/x.jpg']]);
+
+    expect($external->image_url)->toBe('https://cdn.test/x.jpg');
+});
