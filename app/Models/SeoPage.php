@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Database\Factories\SeoPageFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\Table;
@@ -19,8 +18,8 @@ use Override;
 #[Table(name: 'seo_pages')]
 final class SeoPage extends Model
 {
-    /** @use HasFactory<SeoPageFactory> */
-    use HasFactory, HasSeo;
+    use HasFactory;
+    use HasSeo;
 
     #[Override]
     protected static function booted(): void

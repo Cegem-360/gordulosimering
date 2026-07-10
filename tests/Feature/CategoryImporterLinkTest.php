@@ -60,6 +60,7 @@ it('links products to the parent category of their matching product line', funct
 
     $importer = new CategoryImporter();
     $importer->importTree($path);
+
     $linked = $importer->linkProducts();
 
     $golyosCat = Category::query()->where('name', 'GOLYÓS CSAPÁGY')->first();
@@ -95,6 +96,7 @@ it('does not link products via brand names under FORGALMAZOTT MÁRKÁINK', funct
 
     $importer = new CategoryImporter();
     $importer->importTree($path);
+
     $linked = $importer->linkProducts();
 
     expect($linked)->toBe(0);

@@ -80,18 +80,21 @@ final class ProductImageImporter
 
         $map = [];
         while (($row = fgetcsv($handle, 0, "\t")) !== false) {
-            $code = mb_trim((string) ($row[0] ?? ''));
+            $code = mb_trim($row[0] ?? '');
             if ($code === '') {
                 continue;
             }
 
             $images = array_values(array_filter([
-                mb_trim((string) ($row[2] ?? '')),
-                mb_trim((string) ($row[3] ?? '')),
-                mb_trim((string) ($row[4] ?? '')),
+                mb_trim($row[2] ?? ''),
+                mb_trim($row[3] ?? ''),
+                mb_trim($row[4] ?? ''),
             ], fn (string $url): bool => $url !== ''));
+            if ($images === []) {
+                continue;
+            }
 
-            if ($images === [] || isset($map[$code])) {
+            if (isset($map[$code])) {
                 continue;
             }
 

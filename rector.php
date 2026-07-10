@@ -25,6 +25,7 @@ return RectorConfig::configure()
         LaravelSetList::LARAVEL_IF_HELPERS,
         LaravelSetList::LARAVEL_LEGACY_FACTORIES_TO_CLASSES,
         FilamentSetList::FILAMENT_CODE_QUALITY,
+        FilamentSetList::FILAMENT_TESTS,
         LaravelSetList::LARAVEL_130,
         SetList::DEAD_CODE,
         SetList::CODE_QUALITY,

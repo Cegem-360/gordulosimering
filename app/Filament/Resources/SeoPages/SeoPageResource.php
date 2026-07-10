@@ -104,7 +104,7 @@ final class SeoPageResource extends Resource
                             ->helperText('Opcionális, érvényes JSON. Automatikus structured data mellé.')
                             ->rules(['nullable', 'json'])
                             ->formatStateUsing(fn ($state): ?string => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : $state)
-                            ->dehydrateStateUsing(fn (?string $state) => filled($state) ? json_decode($state, true) : null),
+                            ->dehydrateStateUsing(fn (?string $state): mixed => filled($state) ? json_decode($state, true) : null),
                     ]),
             ]);
     }

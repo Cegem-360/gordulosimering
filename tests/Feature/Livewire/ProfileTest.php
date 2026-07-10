@@ -6,6 +6,7 @@ use App\Livewire\Profile;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
+use Tests\TestCase;
 
 it('renders successfully for authenticated users', function (): void {
     $user = User::factory()->create();
@@ -16,6 +17,7 @@ it('renders successfully for authenticated users', function (): void {
 });
 
 it('redirects unauthenticated users to login', function (): void {
+    /** @var TestCase $this */
     $this->get(route('profile'))
         ->assertRedirect(route('login'));
 });

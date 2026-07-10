@@ -6,6 +6,7 @@ use App\Livewire\Products\Categories\Show;
 use App\Models\Category;
 use App\Models\Product;
 use Livewire\Livewire;
+use Tests\TestCase;
 
 it('renders subcategories and aggregates products from the whole subtree', function (): void {
     $root = Category::query()->create(['name' => 'Csapágyak', 'slug' => 'csapagyak']);
@@ -34,6 +35,7 @@ it('shows an empty state for a leaf category without products', function (): voi
 });
 
 it('resolves the full page route with the slug binding', function (): void {
+    /** @var TestCase $this */
     $category = Category::query()->create(['name' => 'Tömítések', 'slug' => 'tomitesek']);
 
     $this->get(route('categories.show', $category))

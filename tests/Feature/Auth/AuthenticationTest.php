@@ -3,14 +3,17 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Tests\TestCase;
 
 test('login screen can be rendered', function (): void {
+    /** @var TestCase $this */
     $response = $this->get('/login');
 
     $response->assertStatus(200);
 });
 
 test('users can authenticate using the login screen', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     $response = $this
@@ -26,6 +29,7 @@ test('users can authenticate using the login screen', function (): void {
 });
 
 test('users can not authenticate with invalid password', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     $response = $this
@@ -41,6 +45,7 @@ test('users can not authenticate with invalid password', function (): void {
 });
 
 test('users can logout', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     $response = $this

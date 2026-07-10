@@ -8,8 +8,10 @@ use App\Models\Order;
 use App\Models\ShippingMethod;
 use App\Models\User;
 use Livewire\Livewire;
+use Tests\TestCase;
 
 it('redirects to login when not authenticated', function (): void {
+    /** @var TestCase $this */
     $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
         'title' => 'Test Shipping Title',
@@ -48,6 +50,7 @@ it('redirects to login when not authenticated', function (): void {
 });
 
 it('renders successfully when authenticated and order belongs to user', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
     $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
@@ -89,6 +92,7 @@ it('renders successfully when authenticated and order belongs to user', function
 });
 
 it('returns 403 when accessing another users order', function (): void {
+    /** @var TestCase $this */
     $user1 = User::factory()->create();
     $user2 = User::factory()->create();
     $shippingMethod = ShippingMethod::query()->create([
@@ -130,6 +134,7 @@ it('returns 403 when accessing another users order', function (): void {
 });
 
 it('displays order details correctly', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
     $shippingMethod = ShippingMethod::query()->create([
         'name' => 'GLS Futárszolgálat',

@@ -8,13 +8,16 @@ use App\Models\Order;
 use App\Models\ShippingMethod;
 use App\Models\User;
 use Livewire\Livewire;
+use Tests\TestCase;
 
 it('redirects to login when not authenticated', function (): void {
+    /** @var TestCase $this */
     $this->get(route('orders.history'))
         ->assertRedirect(route('login'));
 });
 
 it('renders successfully when authenticated', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     $this->actingAs($user);
@@ -24,6 +27,7 @@ it('renders successfully when authenticated', function (): void {
 });
 
 it('displays message when user has no orders', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     $this->actingAs($user);
@@ -33,6 +37,7 @@ it('displays message when user has no orders', function (): void {
 });
 
 it('displays user orders', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
     $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',
@@ -74,6 +79,7 @@ it('displays user orders', function (): void {
 });
 
 it('does not display other users orders', function (): void {
+    /** @var TestCase $this */
     $user1 = User::factory()->create();
     $user2 = User::factory()->create();
     $shippingMethod = ShippingMethod::query()->create([
@@ -116,6 +122,7 @@ it('does not display other users orders', function (): void {
 });
 
 it('shows correct status labels', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
     $shippingMethod = ShippingMethod::query()->create([
         'name' => 'Test Shipping',

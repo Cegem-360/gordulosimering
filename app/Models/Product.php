@@ -59,7 +59,7 @@ final class Product extends Model
                 ...($this->images ?? []),
             ]));
 
-            return array_values(array_filter(array_map(fn (string $path): ?string => $this->resolveImageUrl($path), $paths)));
+            return array_values(array_filter(array_map($this->resolveImageUrl(...), $paths)));
         });
     }
 

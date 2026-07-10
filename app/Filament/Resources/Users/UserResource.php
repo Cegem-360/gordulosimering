@@ -18,6 +18,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use MadBox99\FilamentTranslatableModelLabels\Concerns\TranslatesFilamentModelLabels;
+use Override;
 
 final class UserResource extends Resource
 {
@@ -29,21 +30,25 @@ final class UserResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    #[Override]
     public static function form(Schema $schema): Schema
     {
         return UserForm::configure($schema);
     }
 
+    #[Override]
     public static function infolist(Schema $schema): Schema
     {
         return UserInfolist::configure($schema);
     }
 
+    #[Override]
     public static function table(Table $table): Table
     {
         return UsersTable::configure($table);
     }
 
+    #[Override]
     public static function getRelations(): array
     {
         return [
@@ -51,6 +56,7 @@ final class UserResource extends Resource
         ];
     }
 
+    #[Override]
     public static function getPages(): array
     {
         return [

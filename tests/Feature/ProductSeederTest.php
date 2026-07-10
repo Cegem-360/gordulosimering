@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Product;
 use Database\Seeders\ProductSeeder;
+use Tests\TestCase;
 
 /**
  * Builds a fixture TSV in the new 40-column webshop export layout.
@@ -46,10 +47,12 @@ afterEach(function (): void {
     if (ProductSeeder::$dataFile !== null && file_exists(ProductSeeder::$dataFile)) {
         unlink(ProductSeeder::$dataFile);
     }
+
     ProductSeeder::$dataFile = null;
 });
 
 it('maps the new 40-column layout onto product fields', function (): void {
+    /** @var TestCase $this */
     ProductSeeder::$dataFile = writeProductFixture([
         productRow([
             0 => 'FT',
@@ -83,6 +86,7 @@ it('maps the new 40-column layout onto product fields', function (): void {
 });
 
 it('parses the webshop and inactive flags (IGEN/NEM/empty)', function (): void {
+    /** @var TestCase $this */
     ProductSeeder::$dataFile = writeProductFixture([
         productRow([1 => 'IGEN', 2 => 'A', 4 => 'A', 39 => 'Nem']),
         productRow([1 => 'NEM', 2 => 'B', 4 => 'B', 39 => 'Igen']),
@@ -104,6 +108,7 @@ it('parses the webshop and inactive flags (IGEN/NEM/empty)', function (): void {
 });
 
 it('skips rows without a name', function (): void {
+    /** @var TestCase $this */
     ProductSeeder::$dataFile = writeProductFixture([
         productRow([2 => 'HAS-NAME', 4 => 'Van neve']),
         productRow([2 => 'NO-NAME', 4 => '']),

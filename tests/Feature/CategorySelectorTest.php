@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use App\Models\Category;
+use Tests\TestCase;
 
 it('lists the root categories and nested subcategories on the homepage', function (): void {
+    /** @var TestCase $this */
     $root = Category::query()->create(['name' => 'Csapágyak', 'slug' => 'csapagyak']);
     Category::query()->create(['name' => 'Tömítések', 'slug' => 'tomitesek']);
     $child = Category::query()->create(['name' => 'Golyóscsapágyak', 'slug' => 'golyoscsapagyak', 'category_id' => $root->id]);
@@ -24,6 +26,7 @@ it('lists the root categories and nested subcategories on the homepage', functio
 });
 
 it('shows a fallback when there are no categories', function (): void {
+    /** @var TestCase $this */
     $response = $this->get('/');
 
     $response->assertOk()->assertSee('Nincsenek kategóriák.');
