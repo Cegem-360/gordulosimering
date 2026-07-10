@@ -14,16 +14,18 @@ final class CategoryImporter
     private const int COLUMN_COUNT = 5;
 
     /**
-     * A márkalistát tartalmazó főkategória neve. Ennek leveleit (puszta
+     * A márkalistát tartalmazó főkategória neve. Ennek gyermekeit (puszta
      * márkanevek, pl. "SKF") kihagyjuk a termék-linkelésből, mert substringként
      * a terméknevek tömegére illenek és szétkenik a besorolást.
      */
     private const string BRAND_ROOT_NAME = 'FORGALMAZOTT MÁRKÁINK';
 
     /**
-     * Ennél rövidebb levélnevet nem linkelünk (túl generikus, túl-illeszt).
+     * Ennél rövidebb termék-sor nevet nem linkelünk (túl generikus, túl-illeszt).
      */
-    private const int MIN_LEAF_NAME_LENGTH = 4;
+    private const int MIN_LINE_NAME_LENGTH = 4;
+
+    private const string PATH_SEPARATOR = "\x1f";
 
     /**
      * Globálisan használt slug-ok, hogy ütközéskor egyedi utótagot adjunk.
@@ -33,24 +35,46 @@ final class CategoryImporter
     private array $usedSlugs = [];
 
     /**
+     * A file leveleiből (a legmélyebb, gyermek nélküli cellák = márka termék-sorok)
+     * gyűjtött illesztési szabályok. Az importTree tölti fel, a linkProducts használja.
+     * Hossz szerint csökkenően rendezve, hogy a legspecifikusabb illeszkedés nyerjen.
+     *
+     * @var array<int, array{norm: string, len: int, category_id: int}>
+     */
+    private array $productLines = [];
+
+    /**
+     * A kategóriafát KIZÁRÓLAG a belső csomópontokból építi fel (amelyeknek van
+     * gyermekük). A soronkénti legmélyebb cella (levél) nem kategória, hanem egy
+     * márka termék-sor, amely alapján a valós termékek a szülő kategóriához
+     * kötődnek – lásd linkProducts().
+     */
+    public function importTree(string $path): int
+    {
+        $rows = $this->readRows($path);
+        [$nodes, $hasChildren] = $this->buildNodes($rows);
+
+        return $this->persist($nodes, $hasChildren);
+    }
+
+    /**
      * Minden terméket a hozzá legjobban (leghosszabb, legspecifikusabb névvel)
-     * illeszkedő EGY levélkategóriához köt. A párosítás normalizált (kisbetű +
-     * ékezet nélküli) substringre épül, determinisztikusan PHP-ben — nem a DB
-     * kollációjára bízva, ami ékezet-érzéketlenül túl-illesztene.
+     * illeszkedő EGY termék-sor szülő-kategóriájához köt. A párosítás normalizált
+     * (kisbetű + ékezet nélküli) substringre épül, determinisztikusan PHP-ben.
      */
     public function linkProducts(): int
     {
-        $leaves = $this->candidateLeaves();
-        if ($leaves === []) {
+        if ($this->productLines === []) {
             return 0;
         }
 
+        $lines = $this->productLines;
         $links = 0;
 
         Product::query()
             ->whereNotNull('name')
             ->select(['id', 'name'])
-            ->chunkById(1000, function ($products) use ($leaves, &$links): void {
+            ->chunkById(1000, function ($products) use ($lines, &$links): void {
                 /** @var array<int, array<int, int>> $byCategory */
                 $byCategory = [];
 
@@ -60,9 +84,10 @@ final class CategoryImporter
                         continue;
                     }
 
-                    foreach ($leaves as $leaf) {
-                        if (str_contains($normalized, $leaf['norm'])) {
-                            $byCategory[$leaf['id']][] = $product->id;
+                    foreach ($lines as $line) {
+                        if (str_contains($normalized, $line['norm'])) {
+                            $byCategory[$line['category_id']][] = $product->id;
+
                             break;
                         }
                     }
@@ -81,109 +106,144 @@ final class CategoryImporter
         return $links;
     }
 
-    public function importTree(string $path): int
+    /**
+     * @return array<int, array<int, string>>
+     */
+    private function readRows(string $path): array
     {
         $handle = fopen($path, 'r');
         throw_if($handle === false, RuntimeException::class, 'Could not open TSV file: ' . $path);
 
-        $this->usedSlugs = Category::query()->pluck('slug')->flip()->map(fn (): bool => true)->all();
-
-        /** @var array<int, array{model: Category, names: array<int, string>}|null> $path_nodes */
-        $path_nodes = array_fill(0, self::COLUMN_COUNT, null);
-        $count = 0;
-
+        $rows = [];
         while (($line = fgets($handle)) !== false) {
             $cells = $this->parseLine($line);
-
-            if ($this->isBlank($cells)) {
-                continue;
-            }
-
-            for ($i = 0; $i < self::COLUMN_COUNT; $i++) {
-                if ($cells[$i] === '') {
-                    continue;
-                }
-
-                $parentNames = [];
-                $parentModel = null;
-                for ($j = $i - 1; $j >= 0; $j--) {
-                    if ($path_nodes[$j] !== null) {
-                        $parentModel = $path_nodes[$j]['model'];
-                        $parentNames = $path_nodes[$j]['names'];
-                        break;
-                    }
-                }
-
-                $names = [...$parentNames, $cells[$i]];
-                $category = $this->upsertCategory($cells[$i], $parentModel?->id, $names);
-                $count++;
-
-                $path_nodes[$i] = ['model' => $category, 'names' => $names];
-                for ($k = $i + 1; $k < self::COLUMN_COUNT; $k++) {
-                    $path_nodes[$k] = null;
-                }
+            if (! $this->isBlank($cells)) {
+                $rows[] = $cells;
             }
         }
 
         fclose($handle);
 
+        return $rows;
+    }
+
+    /**
+     * A file-t fa-csomópontokká alakítja: minden cellához kiszámolja a teljes
+     * elérési útját és a szülőjét, és jelöli, mely csomópontoknak van gyermekük.
+     *
+     * @param  array<int, array<int, string>>  $rows
+     * @return array{0: array<string, array{name: string, names: array<int, string>, parentKey: ?string, order: int}>, 1: array<string, bool>}
+     */
+    private function buildNodes(array $rows): array
+    {
+        /** @var array<int, array<int, string>|null> $pathNames */
+        $pathNames = array_fill(0, self::COLUMN_COUNT, null);
+        $nodes = [];
+        $hasChildren = [];
+        $order = 0;
+
+        foreach ($rows as $cells) {
+            for ($i = 0; $i < self::COLUMN_COUNT; $i++) {
+                if ($cells[$i] === '') {
+                    continue;
+                }
+
+                $parentNames = null;
+                for ($j = $i - 1; $j >= 0; $j--) {
+                    if ($pathNames[$j] !== null) {
+                        $parentNames = $pathNames[$j];
+
+                        break;
+                    }
+                }
+
+                $names = $parentNames === null ? [$cells[$i]] : [...$parentNames, $cells[$i]];
+                $key = implode(self::PATH_SEPARATOR, $names);
+                $parentKey = $parentNames === null ? null : implode(self::PATH_SEPARATOR, $parentNames);
+
+                if (! isset($nodes[$key])) {
+                    $nodes[$key] = ['name' => $cells[$i], 'names' => $names, 'parentKey' => $parentKey, 'order' => $order++];
+                }
+
+                if ($parentKey !== null) {
+                    $hasChildren[$parentKey] = true;
+                }
+
+                $pathNames[$i] = $names;
+                for ($k = $i + 1; $k < self::COLUMN_COUNT; $k++) {
+                    $pathNames[$k] = null;
+                }
+            }
+        }
+
+        return [$nodes, $hasChildren];
+    }
+
+    /**
+     * Létrehozza a belső csomópontokat kategóriaként (szülők előbb), a leveleket
+     * pedig termék-sorként gyűjti a linkeléshez.
+     *
+     * @param  array<string, array{name: string, names: array<int, string>, parentKey: ?string, order: int}>  $nodes
+     * @param  array<string, bool>  $hasChildren
+     */
+    private function persist(array $nodes, array $hasChildren): int
+    {
+        $this->usedSlugs = Category::query()->pluck('slug')->flip()->map(fn (): bool => true)->all();
+        $this->productLines = [];
+
+        uasort($nodes, fn (array $a, array $b): int => count($a['names']) <=> count($b['names']) ?: $a['order'] <=> $b['order']);
+
+        /** @var array<string, int> $idByKey */
+        $idByKey = [];
+        $count = 0;
+
+        foreach ($nodes as $key => $node) {
+            $parentId = $node['parentKey'] !== null ? ($idByKey[$node['parentKey']] ?? null) : null;
+
+            if ($hasChildren[$key] ?? false) {
+                $category = $this->upsertCategory($node['name'], $parentId, $node['names']);
+                $idByKey[$key] = $category->id;
+                $count++;
+
+                continue;
+            }
+
+            $this->collectProductLine($node, $parentId);
+        }
+
+        usort($this->productLines, fn (array $a, array $b): int => $b['len'] <=> $a['len']);
+
         return $count;
     }
 
     /**
-     * A linkelhető levélkategóriák normalizált neveik szerint, hosszúság szerint
-     * csökkenően rendezve (így a leghosszabb – legspecifikusabb – illeszkedés nyer).
-     * A márka-ág és a túl rövid nevek kimaradnak.
-     *
-     * @return array<int, array{id: int, norm: string}>
+     * @param  array{name: string, names: array<int, string>, parentKey: ?string, order: int}  $node
      */
-    private function candidateLeaves(): array
+    private function collectProductLine(array $node, ?int $parentId): void
     {
-        $brandLeafIds = $this->brandLeafIds();
+        if ($parentId === null) {
+            return;
+        }
 
-        $leaves = Category::query()
-            ->whereDoesntHave('children')
-            ->whereNotNull('name')
-            ->whereNotIn('id', $brandLeafIds)
-            ->get(['id', 'name'])
-            ->filter(fn (Category $leaf): bool => mb_strlen((string) $leaf->name) >= self::MIN_LEAF_NAME_LENGTH)
-            ->map(fn (Category $leaf): array => [
-                'id' => $leaf->id,
-                'norm' => $this->normalize((string) $leaf->name),
-                'len' => mb_strlen((string) $leaf->name),
-            ])
-            ->filter(fn (array $leaf): bool => $leaf['norm'] !== '')
-            ->sortByDesc('len')
-            ->values()
-            ->all();
+        if ($node['parentKey'] === self::BRAND_ROOT_NAME) {
+            return;
+        }
 
-        return array_map(fn (array $leaf): array => ['id' => $leaf['id'], 'norm' => $leaf['norm']], $leaves);
+        if (mb_strlen($node['name']) < self::MIN_LINE_NAME_LENGTH) {
+            return;
+        }
+
+        $norm = $this->normalize($node['name']);
+        if ($norm === '') {
+            return;
+        }
+
+        $this->productLines[] = ['norm' => $norm, 'len' => mb_strlen($node['name']), 'category_id' => $parentId];
     }
 
     private function normalize(string $value): string
     {
         return Str::lower(Str::ascii($value));
-    }
-
-    /**
-     * A márka-főkategória közvetlen gyermekeinek (a márka-leveleknek) az id-jai.
-     * A márka-ág sekély (gyökér → márkanevek levélként), ezért a közvetlen
-     * gyermekek lefedik a teljes ágat.
-     *
-     * @return array<int, int>
-     */
-    private function brandLeafIds(): array
-    {
-        $brandRoot = Category::query()
-            ->whereNull('category_id')
-            ->where('name', self::BRAND_ROOT_NAME)
-            ->first();
-
-        if ($brandRoot === null) {
-            return [];
-        }
-
-        return $brandRoot->children()->pluck('id')->all();
     }
 
     /**

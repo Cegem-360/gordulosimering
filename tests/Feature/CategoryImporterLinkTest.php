@@ -6,84 +6,135 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Services\CategoryImporter;
 
-it('links each product to its single longest-matching leaf', function (): void {
-    $parent = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
-    $generic = Category::query()->create([
-        'name' => 'golyóscsapágy',
-        'slug' => 'golyoscsapagy',
-        'category_id' => $parent->id,
-    ]);
-    $specific = Category::query()->create([
-        'name' => 'egysorú mélyhornyú golyóscsapágy',
-        'slug' => 'egysoru-melyhornyu',
-        'category_id' => $parent->id,
+/**
+ * Writes a 5-column category fixture (rows of cells) to a temp TSV.
+ *
+ * @param  array<int, array<int, string>>  $rows
+ */
+function writeCategoryFixture(array $rows): string
+{
+    $lines = [];
+    foreach ($rows as $row) {
+        $cells = array_pad($row, 5, '');
+        $lines[] = mb_rtrim(implode("\t", $cells), "\t");
+    }
+
+    $path = tempnam(sys_get_temp_dir(), 'kat_') . '.tsv';
+    file_put_contents($path, implode("\n", $lines) . "\n");
+
+    return $path;
+}
+
+afterEach(function (): void {
+    foreach (glob(sys_get_temp_dir() . '/kat_*.tsv') ?: [] as $file) {
+        @unlink($file);
+    }
+});
+
+it('builds the tree from internal nodes only, leaves are not categories', function (): void {
+    $path = writeCategoryFixture([
+        ['CSAPÁGYAK', 'GOLYÓS CSAPÁGY', 'FAG egysorú mélyhornyú golyóscsapágy'],
+        ['', '', 'SKF egysorú mélyhornyú golyóscsapágy'],
+        ['CSAPÁGYAK', 'TŰGÖRGŐS CSAPÁGY', 'INA tűgörgős csapágy'],
     ]);
 
-    // A terméknév mindkét levél nevét tartalmazza; a leghosszabb (legspecifikusabb) nyer.
-    $match = Product::factory()->create(['name' => 'FAG egysorú mélyhornyú golyóscsapágy 6203']);
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+
+    // Only internal nodes become categories: CSAPÁGYAK, GOLYÓS CSAPÁGY, TŰGÖRGŐS CSAPÁGY
+    expect(Category::query()->count())->toBe(3)
+        ->and(Category::query()->whereNull('category_id')->pluck('name')->all())->toBe(['CSAPÁGYAK'])
+        ->and(Category::query()->where('name', 'FAG egysorú mélyhornyú golyóscsapágy')->exists())->toBeFalse()
+        ->and(Category::query()->where('name', 'GOLYÓS CSAPÁGY')->exists())->toBeTrue();
+});
+
+it('links products to the parent category of their matching product line', function (): void {
+    $path = writeCategoryFixture([
+        ['CSAPÁGYAK', 'GOLYÓS CSAPÁGY', 'FAG egysorú mélyhornyú golyóscsapágy'],
+        ['CSAPÁGYAK', 'TŰGÖRGŐS CSAPÁGY', 'INA tűgörgős csapágy'],
+    ]);
+
+    $golyos = Product::factory()->create(['name' => 'FAG egysorú mélyhornyú golyóscsapágy 6203-2RS']);
+    $tu = Product::factory()->create(['name' => 'INA tűgörgős csapágy NK 12/16']);
     $noMatch = Product::factory()->create(['name' => 'OKS kenőzsír 200ml']);
 
-    $linked = (new CategoryImporter())->linkProducts();
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+    $linked = $importer->linkProducts();
 
-    expect($specific->products()->pluck('products.id')->all())->toBe([$match->id])
-        ->and($generic->products()->count())->toBe(0)
-        ->and($match->categories()->count())->toBe(1)
+    $golyosCat = Category::query()->where('name', 'GOLYÓS CSAPÁGY')->first();
+    $tuCat = Category::query()->where('name', 'TŰGÖRGŐS CSAPÁGY')->first();
+
+    expect($golyosCat->products()->pluck('products.id')->all())->toBe([$golyos->id])
+        ->and($tuCat->products()->pluck('products.id')->all())->toBe([$tu->id])
         ->and($noMatch->categories()->count())->toBe(0)
-        ->and($linked)->toBe(1);
+        ->and($linked)->toBe(2);
 });
 
 it('matches case- and accent-insensitively', function (): void {
-    $parent = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
-    $leaf = Category::query()->create(['name' => 'golyóscsapágy', 'slug' => 'golyoscsapagy', 'category_id' => $parent->id]);
+    $path = writeCategoryFixture([
+        ['CSAPÁGYAK', 'GOLYÓS CSAPÁGY', 'FAG mélyhornyú golyóscsapágy'],
+    ]);
 
-    $product = Product::factory()->create(['name' => 'FAG GOLYOSCSAPAGY 6203']);
+    $product = Product::factory()->create(['name' => 'FAG MELYHORNYU GOLYOSCSAPAGY 6203']);
 
-    (new CategoryImporter())->linkProducts();
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+    $importer->linkProducts();
 
-    expect($leaf->products()->pluck('products.id')->all())->toBe([$product->id]);
+    $cat = Category::query()->where('name', 'GOLYÓS CSAPÁGY')->first();
+    expect($cat->products()->pluck('products.id')->all())->toBe([$product->id]);
 });
 
-it('does not link products to non-leaf (parent) categories', function (): void {
-    $parent = Category::query()->create(['name' => 'csapágy', 'slug' => 'csapagy']);
-    Category::query()->create(['name' => 'csapágy egysoros', 'slug' => 'csapagy-egysoros', 'category_id' => $parent->id]);
-    Product::factory()->create(['name' => 'valami csapágy egysoros termék']);
-
-    (new CategoryImporter())->linkProducts();
-
-    expect($parent->products()->count())->toBe(0);
-});
-
-it('does not link products to brand leaves under FORGALMAZOTT MÁRKÁINK', function (): void {
-    $brandRoot = Category::query()->create(['name' => 'FORGALMAZOTT MÁRKÁINK', 'slug' => 'forgalmazott-markaink']);
-    $skf = Category::query()->create(['name' => 'SKF', 'slug' => 'skf-brand', 'category_id' => $brandRoot->id]);
+it('does not link products via brand names under FORGALMAZOTT MÁRKÁINK', function (): void {
+    $path = writeCategoryFixture([
+        ['FORGALMAZOTT MÁRKÁINK', 'SKF'],
+    ]);
 
     Product::factory()->create(['name' => 'SKF egysorú mélyhornyú golyóscsapágy 6203']);
 
-    (new CategoryImporter())->linkProducts();
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+    $linked = $importer->linkProducts();
 
-    expect($skf->products()->count())->toBe(0);
+    expect($linked)->toBe(0);
 });
 
-it('skips leaves with names shorter than the minimum length', function (): void {
-    $parent = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
-    $short = Category::query()->create(['name' => 'EZO', 'slug' => 'ezo-leaf', 'category_id' => $parent->id]);
+it('the longest matching product line wins', function (): void {
+    $path = writeCategoryFixture([
+        ['CSAPÁGYAK', 'ÁLTALÁNOS', 'golyóscsapágy'],
+        ['CSAPÁGYAK', 'SPECIÁLIS', 'rozsdamentes egysorú mélyhornyú golyóscsapágy'],
+    ]);
 
-    Product::factory()->create(['name' => 'EZO egysorú mélyhornyú golyóscsapágy']);
+    $product = Product::factory()->create(['name' => 'FAG rozsdamentes egysorú mélyhornyú golyóscsapágy 6203']);
 
-    (new CategoryImporter())->linkProducts();
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+    $importer->linkProducts();
 
-    expect($short->products()->count())->toBe(0);
+    $special = Category::query()->where('name', 'SPECIÁLIS')->first();
+    $general = Category::query()->where('name', 'ÁLTALÁNOS')->first();
+
+    expect($special->products()->pluck('products.id')->all())->toBe([$product->id])
+        ->and($general->products()->count())->toBe(0);
 });
 
 it('link step is idempotent', function (): void {
-    $leaf = Category::query()->create(['name' => 'egyedi termék', 'slug' => 'egyedi-termek']);
-    Product::factory()->create(['name' => 'egyedi termék']);
+    $path = writeCategoryFixture([
+        ['CSAPÁGYAK', 'GOLYÓS CSAPÁGY', 'FAG mélyhornyú golyóscsapágy'],
+    ]);
+
+    Product::factory()->create(['name' => 'FAG mélyhornyú golyóscsapágy 6203']);
 
     $importer = new CategoryImporter();
-    $importer->linkProducts();
+    $importer->importTree($path);
 
-    $first = $leaf->products()->count();
-    $importer->linkProducts();
+    $first = $importer->linkProducts();
+    $second = $importer->linkProducts();
 
-    expect($leaf->products()->count())->toBe($first);
+    $cat = Category::query()->where('name', 'GOLYÓS CSAPÁGY')->first();
+
+    expect($first)->toBe(1)
+        ->and($second)->toBe(0)
+        ->and($cat->products()->count())->toBe(1);
 });
