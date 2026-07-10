@@ -4,7 +4,7 @@
      nested submenu reacts to its immediate parent (nearest ancestor) — this keeps
      the cascade working for any depth (the tree is up to 4 levels). --}}
 <ul
-    class="invisible opacity-0 group-hover/item:visible group-hover/item:opacity-100 transition-opacity duration-150 absolute left-full top-0 z-50 min-w-56 max-h-[70vh] overflow-y-auto bg-white rounded-lg shadow-xl border border-gray-200 p-2">
+    class="invisible opacity-0 group-hover/item:visible group-hover/item:opacity-100 transition-opacity duration-150 absolute left-full top-0 z-50 min-w-56 bg-white rounded-lg shadow-xl border border-gray-200 p-2">
     @foreach ($categories->sortBy('name') as $category)
         <li class="group/item relative" wire:key="flyout-{{ $category->id }}">
             <a href="{{ route('categories.show', $category) }}"

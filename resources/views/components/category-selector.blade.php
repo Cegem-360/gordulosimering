@@ -3,7 +3,7 @@
 @php
     $categories = Category::query()
         ->whereNull('category_id')
-        ->with('children.children.children')
+        ->with('children.children.children.children')
         ->orderBy('name')
         ->get();
 @endphp
