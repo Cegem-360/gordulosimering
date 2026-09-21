@@ -33,6 +33,8 @@ final class Show extends Component
 
     public function mount(Product $product): void
     {
+        abort_unless($product->is_web_visible === true, 404);
+
         $this->quantity = $product->min_order_quantity <= 1 ? 1 : $product->min_order_quantity;
     }
 

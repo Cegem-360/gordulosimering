@@ -73,7 +73,7 @@ final class Index extends Component
 
     public function getProductsProperty()
     {
-        $query = Product::query();
+        $query = Product::query()->webVisible();
 
         // Apply product_variety filter
         if (! empty($this->selectedFilters['product_variety'])) {
@@ -123,6 +123,7 @@ final class Index extends Component
     private function getFilterOptions(string $column, int $limit = 10): array
     {
         return Product::query()
+            ->webVisible()
             ->select($column, DB::raw('count(*) as count'))
             ->whereNotNull($column)
             ->where($column, '!=', '')
@@ -141,6 +142,7 @@ final class Index extends Component
     private function getInStockCount(): int
     {
         return Product::query()
+            ->webVisible()
             ->where('minimum_stock', '>', 0)
             ->count();
     }
@@ -148,6 +150,7 @@ final class Index extends Component
     private function getOutOfStockCount(): int
     {
         return Product::query()
+            ->webVisible()
             ->where(function ($query): void {
                 $query->whereNull('minimum_stock')
                     ->orWhere('minimum_stock', '<=', 0);

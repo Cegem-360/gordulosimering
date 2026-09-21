@@ -24,6 +24,7 @@ final class LiveSearch extends Component
         }
 
         return Product::query()
+            ->webVisible()
             ->select(['id', 'name', 'slug', 'product_code', 'net_selling_price', 'images', 'minimum_stock'])
             ->where(function ($q): void {
                 $q->where('product_code', 'LIKE', $this->query . '%')

@@ -82,7 +82,7 @@ final class Index extends Component
 
     public function getProductsProperty()
     {
-        $query = Product::query();
+        $query = Product::query()->webVisible();
 
         // Apply search filter
         if (mb_strlen($this->search) >= 2) {
@@ -146,6 +146,7 @@ final class Index extends Component
     private function getFilterOptions(string $column, int $limit = 10): array
     {
         $query = Product::query()
+            ->webVisible()
             ->select($column, DB::raw('count(*) as count'))
             ->whereNotNull($column)
             ->where($column, '!=', '');
@@ -174,7 +175,7 @@ final class Index extends Component
 
     private function getInStockCount(): int
     {
-        $query = Product::query()->where('minimum_stock', '>', 0);
+        $query = Product::query()->webVisible()->where('minimum_stock', '>', 0);
 
         if (mb_strlen($this->search) >= 2) {
             $query->where(function ($q): void {
@@ -189,7 +190,7 @@ final class Index extends Component
 
     private function getOutOfStockCount(): int
     {
-        $query = Product::query()->where(function ($query): void {
+        $query = Product::query()->webVisible()->where(function ($query): void {
             $query->whereNull('minimum_stock')
                 ->orWhere('minimum_stock', '<=', 0);
         });

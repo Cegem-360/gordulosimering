@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\ProductFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +29,20 @@ final class Product extends Model
     public function isInStock(): bool
     {
         return $this->minimum_stock > 0;
+    }
+
+    /**
+     * A webshop felületén megjelenő termékek. Az ERP-export
+     * "WEBÁRUHÁZBAN SZEREPELJEN" oszlopa dönt róla. A kosár és az admin
+     * szándékosan nem használja, hogy a már kosárba tett vagy megrendelt
+     * termék akkor is elérhető maradjon, ha időközben lekerült a webről.
+     *
+     * @param  Builder<Product>  $query
+     */
+    #[Scope]
+    protected function webVisible(Builder $query): void
+    {
+        $query->where('is_web_visible', true);
     }
 
     /**

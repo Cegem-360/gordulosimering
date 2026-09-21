@@ -8,7 +8,7 @@
         </div>
 
         @php
-            $products = Product::query()->inRandomOrder()->latest()->limit(10)->get();
+            $products = Product::query()->webVisible()->inRandomOrder()->latest()->limit(10)->get();
         @endphp
 
         @if ($products->count() > 0)

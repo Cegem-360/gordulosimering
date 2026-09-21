@@ -29,8 +29,8 @@ final class ProductFactory extends Factory
             'group_code' => $this->faker->optional()->numerify('##'),
             'product_code' => $this->faker->unique()->bothify('???-#####'),
             'is_service' => $this->faker->boolean(10),
-            'is_web_visible' => $this->faker->boolean(80),
-            'is_inactive' => $this->faker->boolean(10),
+            'is_web_visible' => true,
+            'is_inactive' => false,
             'name' => $this->faker->words(3, true),
             'slug' => $this->faker->unique()->slug(),
             'catalog_number' => $this->faker->optional()->bothify('CAT-####'),
@@ -91,5 +91,15 @@ final class ProductFactory extends Factory
                 $this->faker->imageUrl(640, 480, 'products'),
             ]),
         ];
+    }
+
+    /**
+     * A webshopban nem megjelenő termék (az ERP-export NEM értéke).
+     */
+    public function hidden(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'is_web_visible' => false,
+        ]);
     }
 }

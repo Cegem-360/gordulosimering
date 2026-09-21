@@ -58,6 +58,7 @@ final class Show extends Component
         $categoryIds = $this->descendantIds();
 
         return Product::query()
+            ->webVisible()
             ->whereHas('categories', fn ($query) => $query->whereIn('product_categories.id', $categoryIds))
             ->orderBy('name')
             ->paginate(24);
