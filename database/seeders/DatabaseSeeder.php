@@ -18,7 +18,7 @@ final class DatabaseSeeder extends Seeder
     {
         User::factory()->create([
             'name' => 'Test User',
-            'email' => 'admin@admin.com',
+            'email' => 'info@cegem360.hu',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
