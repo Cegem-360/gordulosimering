@@ -78,7 +78,7 @@ final class ManageCookieConsentSettings extends Page implements HasSchemas
                 Section::make('Kategóriák')
                     ->schema([
                         Repeater::make('categories')
-                            ->label('')
+                            ->hiddenLabel()
                             ->schema([
                                 TextInput::make('name')->required(),
                                 TextInput::make('key')->label('Kulcs')->required()->alphaDash(),

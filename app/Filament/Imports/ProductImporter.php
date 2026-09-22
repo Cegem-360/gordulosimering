@@ -127,10 +127,10 @@ final class ProductImporter extends Importer
 
     public static function getCompletedNotificationBody(Import $import): string
     {
-        $body = 'Your product import has completed and ' . Number::format($import->successful_rows) . ' ' . str('row')->plural($import->successful_rows) . ' imported.';
+        $body = 'A termékimport befejeződött, ' . Number::format($import->successful_rows) . ' sor importálva.';
 
         if (($failedRowsCount = $import->getFailedRowsCount()) !== 0) {
-            $body .= ' ' . Number::format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to import.';
+            $body .= ' ' . Number::format($failedRowsCount) . ' sor importálása nem sikerült.';
         }
 
         return $body;

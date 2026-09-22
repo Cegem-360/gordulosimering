@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum OrderStatus: string
+use Filament\Support\Contracts\HasLabel;
+
+enum OrderStatus: string implements HasLabel
 {
     case PENDING = 'pending';
     case PROCESSING = 'processing';
@@ -18,5 +20,19 @@ enum OrderStatus: string
     public static function toArray(): array
     {
         return array_column(self::cases(), 'value');
+    }
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::PENDING => 'Feldolgozásra vár',
+            self::PROCESSING => 'Feldolgozás alatt',
+            self::ONHOLD => 'Várakoztatva',
+            self::COMPLETED => 'Teljesítve',
+            self::CANCELLED => 'Törölve',
+            self::REFUNDED => 'Visszatérítve',
+            self::FAILED => 'Sikertelen',
+            self::TRASH => 'Kukában',
+        };
     }
 }
