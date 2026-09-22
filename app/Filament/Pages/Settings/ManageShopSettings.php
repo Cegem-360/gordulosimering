@@ -60,23 +60,25 @@ final class ManageShopSettings extends Page implements HasSchemas
                 Section::make('Árazás')
                     ->schema([
                         Select::make('pricing_mode')
+                            ->label('Árazás módja')
                             ->options([
                                 'gross' => 'Bruttó (a megadott ár az ÁFÁ-t tartalmazza)',
                                 'net' => 'Nettó (az ÁFÁ-t felszámoljuk)',
                             ])
                             ->required(),
                         Select::make('default_vat_rate')
-                            ->label('Default VAT rate')
+                            ->label('Alapértelmezett ÁFA-kulcs')
                             ->options(collect(VatRate::cases())->mapWithKeys(fn (VatRate $v): array => [$v->value => $v->label()]))
                             ->required(),
                         TextInput::make('currency')
+                            ->label('Pénznem')
                             ->required()
                             ->maxLength(3),
                     ])->columns(3),
                 Section::make('Készlet')
                     ->schema([
                         Toggle::make('track_inventory')
-                            ->label('Stock tracking enabled'),
+                            ->label('Készletkövetés bekapcsolva'),
                     ]),
             ])
             ->statePath('data');
@@ -97,7 +99,7 @@ final class ManageShopSettings extends Page implements HasSchemas
         Notification::make()->title('Beállítások mentve.')->success()->send();
     }
 
-    protected function getFormActions(): array
+    private function getFormActions(): array
     {
         return [
             Action::make('save')

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Filament\Support\FieldLabel;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Table;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -32,5 +33,7 @@ final class AppServiceProvider extends ServiceProvider
 
         Table::configureUsing(fn (Table $table): Table => $table->reorderableColumns());
         Column::configureUsing(fn (Column $column): Column => $column->toggleable());
+
+        FieldLabel::registerAsDefaultLabel();
     }
 }

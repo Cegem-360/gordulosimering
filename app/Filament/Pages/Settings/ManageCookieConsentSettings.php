@@ -33,7 +33,7 @@ final class ManageCookieConsentSettings extends Page implements HasSchemas
 
     protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Settings;
 
-    protected static ?string $navigationLabel = 'Cookie Consent';
+    protected static ?string $navigationLabel = 'Sütikezelés';
 
     protected static ?string $title = 'Cookie Consent beállítások';
 
@@ -63,7 +63,7 @@ final class ManageCookieConsentSettings extends Page implements HasSchemas
                 Section::make('Általános')
                     ->schema([
                         Toggle::make('enabled')
-                            ->label('Cookie banner enabled'),
+                            ->label('Sütibanner bekapcsolva'),
                         TextInput::make('title')
                             ->required(),
                         Textarea::make('description')
@@ -71,9 +71,9 @@ final class ManageCookieConsentSettings extends Page implements HasSchemas
                     ]),
                 Section::make('Gombok')
                     ->schema([
-                        TextInput::make('accept_button_text')->label('Accept button'),
-                        TextInput::make('reject_button_text')->label('Reject button'),
-                        TextInput::make('settings_button_text')->label('Settings button'),
+                        TextInput::make('accept_button_text')->label('Elfogadás gomb'),
+                        TextInput::make('reject_button_text')->label('Elutasítás gomb'),
+                        TextInput::make('settings_button_text')->label('Beállítások gomb'),
                     ])->columns(3),
                 Section::make('Kategóriák')
                     ->schema([
@@ -81,9 +81,9 @@ final class ManageCookieConsentSettings extends Page implements HasSchemas
                             ->label('')
                             ->schema([
                                 TextInput::make('name')->required(),
-                                TextInput::make('key')->required()->alphaDash(),
+                                TextInput::make('key')->label('Kulcs')->required()->alphaDash(),
                                 Textarea::make('description')->rows(2),
-                                Toggle::make('required'),
+                                Toggle::make('required')->label('Kötelező'),
                             ])
                             ->columns(2)
                             ->collapsible()
@@ -111,7 +111,7 @@ final class ManageCookieConsentSettings extends Page implements HasSchemas
         Notification::make()->title('Beállítások mentve.')->success()->send();
     }
 
-    protected function getFormActions(): array
+    private function getFormActions(): array
     {
         return [
             Action::make('save')->submit('save'),

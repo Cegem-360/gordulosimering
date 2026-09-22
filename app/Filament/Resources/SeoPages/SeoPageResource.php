@@ -8,6 +8,7 @@ use App\Enums\NavigationGroup;
 use App\Filament\Resources\SeoPages\Pages\CreateSeoPage;
 use App\Filament\Resources\SeoPages\Pages\EditSeoPage;
 use App\Filament\Resources\SeoPages\Pages\ListSeoPages;
+use App\Filament\Support\FieldLabel;
 use App\Models\SeoPage;
 use BackedEnum;
 use Filament\Actions\BulkActionGroup;
@@ -15,6 +16,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -83,23 +85,19 @@ final class SeoPageResource extends Resource
                         TextInput::make('sort_order')
                             ->numeric()
                             ->default(0),
-                        Toggle::make('is_published')
-                            ->label('Published'),
-                        Toggle::make('is_featured')
-                            ->label('Featured'),
+                        Toggle::make('is_published'),
+                        Toggle::make('is_featured'),
                     ])->columns(2),
                 SeoFields::make()
                     ->schema([
-                        ...SeoFields::schema(),
+                        ...self::translatedSeoFields(),
                         Select::make('og_type')
-                            ->label('OG type')
                             ->options([
                                 'article' => 'article',
                                 'website' => 'website',
                             ])
                             ->default('article'),
                         Textarea::make('schema_markup')
-                            ->label('Custom JSON-LD (schema.org)')
                             ->rows(5)
                             ->helperText('Opcionális, érvényes JSON. Automatikus structured data mellé.')
                             ->rules(['nullable', 'json'])
@@ -120,20 +118,17 @@ final class SeoPageResource extends Resource
                 TextColumn::make('slug')
                     ->searchable(),
                 IconColumn::make('is_published')
-                    ->label('Published')
                     ->boolean(),
                 IconColumn::make('is_featured')
-                    ->label('Featured')
                     ->boolean(),
                 TextColumn::make('published_at')
-                    ->label('Date')
                     ->dateTime('Y. m. d.')
                     ->placeholder('—')
                     ->sortable(),
             ])
             ->filters([
-                TernaryFilter::make('is_published')->label('Published'),
-                TernaryFilter::make('is_featured')->label('Featured'),
+                TernaryFilter::make('is_published'),
+                TernaryFilter::make('is_featured'),
             ])
             ->recordActions([
                 EditAction::make(),
@@ -154,5 +149,22 @@ final class SeoPageResource extends Resource
             'create' => CreateSeoPage::route('/create'),
             'edit' => EditSeoPage::route('/{record}/edit'),
         ];
+    }
+
+    /**
+     * The SEO package ships its fields with hardcoded English labels, which
+     * the global default-label resolver cannot override. Relabel them here,
+     * keeping the package's own validation rules.
+     *
+     * @return array<Field>
+     */
+    private static function translatedSeoFields(): array
+    {
+        return array_map(
+            fn (Field $field): Field => $field->label(
+                FieldLabel::for('seo.' . $field->getName()) ?? $field->getLabel(),
+            ),
+            SeoFields::schema(),
+        );
     }
 }

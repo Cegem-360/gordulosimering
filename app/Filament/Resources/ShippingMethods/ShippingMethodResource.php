@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\ShippingMethods;
 
+use App\Enums\NavigationGroup;
 use App\Filament\Resources\ShippingMethods\Pages\CreateShippingMethod;
 use App\Filament\Resources\ShippingMethods\Pages\EditShippingMethod;
 use App\Filament\Resources\ShippingMethods\Pages\ListShippingMethods;
@@ -17,6 +18,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use MadBox99\FilamentTranslatableModelLabels\Concerns\TranslatesFilamentModelLabels;
 use Override;
+use UnitEnum;
 
 final class ShippingMethodResource extends Resource
 {
@@ -24,7 +26,13 @@ final class ShippingMethodResource extends Resource
 
     protected static ?string $model = ShippingMethod::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTruck;
+
+    protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Webshop;
+
+    protected static ?int $navigationSort = 4;
+
+    protected static ?string $navigationLabel = 'Szállítási módok';
 
     protected static ?string $recordTitleAttribute = 'name';
 

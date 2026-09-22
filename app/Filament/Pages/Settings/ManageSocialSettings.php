@@ -30,7 +30,7 @@ final class ManageSocialSettings extends Page implements HasSchemas
 
     protected static string|UnitEnum|null $navigationGroup = NavigationGroup::Settings;
 
-    protected static ?string $navigationLabel = 'Social média';
+    protected static ?string $navigationLabel = 'Közösségi média';
 
     protected static ?string $title = 'Social média linkek';
 
@@ -87,7 +87,7 @@ final class ManageSocialSettings extends Page implements HasSchemas
         Notification::make()->title('Beállítások mentve.')->success()->send();
     }
 
-    protected function getFormActions(): array
+    private function getFormActions(): array
     {
         return [
             Action::make('save')->submit('save'),

@@ -63,19 +63,19 @@ final class ManageGeneralSettings extends Page implements HasSchemas
                 Section::make('Alapadatok')
                     ->schema([
                         TextInput::make('site_name')
-                            ->label('Website name')
+                            ->label('Oldal neve')
                             ->required(),
                         TextInput::make('tagline')
-                            ->label('Slogan'),
+                            ->label('Szlogen'),
                     ]),
                 Section::make('Megjelenés')
                     ->schema([
                         FileUpload::make('logo_light')
-                            ->label('Logo (light)')
+                            ->label('Logó (világos)')
                             ->image()
                             ->directory('settings'),
                         FileUpload::make('logo_dark')
-                            ->label('Logo (dark)')
+                            ->label('Logó (sötét)')
                             ->image()
                             ->directory('settings'),
                         FileUpload::make('favicon')
@@ -85,7 +85,7 @@ final class ManageGeneralSettings extends Page implements HasSchemas
                 Section::make('Nyelvek')
                     ->schema([
                         Select::make('default_locale')
-                            ->label('Default language')
+                            ->label('Alapértelmezett nyelv')
                             ->options([
                                 'hu' => 'Magyar',
                                 'en' => 'English',
@@ -93,7 +93,7 @@ final class ManageGeneralSettings extends Page implements HasSchemas
                             ])
                             ->required(),
                         CheckboxList::make('available_locales')
-                            ->label('Available languages')
+                            ->label('Elérhető nyelvek')
                             ->options([
                                 'hu' => 'Magyar',
                                 'en' => 'English',
@@ -122,7 +122,7 @@ final class ManageGeneralSettings extends Page implements HasSchemas
         Notification::make()->title('Beállítások mentve.')->success()->send();
     }
 
-    protected function getFormActions(): array
+    private function getFormActions(): array
     {
         return [
             Action::make('save')

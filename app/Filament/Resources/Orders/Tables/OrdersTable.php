@@ -19,7 +19,7 @@ final class OrdersTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('id')
-                    ->label('Order ID')
+                    ->label('Rendelésszám')
                     ->sortable(),
                 TextColumn::make('user.name')
                     ->searchable(),

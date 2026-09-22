@@ -69,7 +69,7 @@ final class ManageIntegrationSettings extends Page implements HasSchemas
                     ])->columns(2),
                 Section::make('Egyéb')
                     ->schema([
-                        TextInput::make('chat_plugin_key')->label('Cégem 360 AI Chat Plugin key'),
+                        TextInput::make('chat_plugin_key')->label('Cégem 360 AI Chat Plugin kulcs'),
                     ]),
             ])
             ->statePath('data');
@@ -89,7 +89,7 @@ final class ManageIntegrationSettings extends Page implements HasSchemas
         Notification::make()->title('Beállítások mentve.')->success()->send();
     }
 
-    protected function getFormActions(): array
+    private function getFormActions(): array
     {
         return [
             Action::make('save')->submit('save'),

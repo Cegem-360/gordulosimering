@@ -63,16 +63,16 @@ final class ManageContactSettings extends Page implements HasSchemas
             ->schema([
                 Section::make('Cégadatok')
                     ->schema([
-                        TextInput::make('company_name'),
-                        TextInput::make('tax_number'),
-                        TextInput::make('registration_number')->label('Company registration number'),
+                        TextInput::make('company_name')->label('Cégnév'),
+                        TextInput::make('tax_number')->label('Adószám'),
+                        TextInput::make('registration_number')->label('Cégjegyzékszám'),
                     ])->columns(3),
                 Section::make('Cím')
                     ->schema([
-                        TextInput::make('address')->label('Street address'),
-                        TextInput::make('city'),
-                        TextInput::make('zip_code')->label('Postal code'),
-                        TextInput::make('country'),
+                        TextInput::make('address')->label('Utca, házszám'),
+                        TextInput::make('city')->label('Város'),
+                        TextInput::make('zip_code')->label('Postakód'),
+                        TextInput::make('country')->label('Ország'),
                     ])->columns(2),
                 Section::make('Elérhetőség')
                     ->schema([
@@ -81,7 +81,7 @@ final class ManageContactSettings extends Page implements HasSchemas
                     ])->columns(2),
                 Section::make('Térkép')
                     ->schema([
-                        Textarea::make('google_maps_embed')->label('Google Maps embed code')->rows(3),
+                        Textarea::make('google_maps_embed')->label('Google Maps beágyazó kód')->rows(3),
                     ]),
             ])
             ->statePath('data');
@@ -101,7 +101,7 @@ final class ManageContactSettings extends Page implements HasSchemas
         Notification::make()->title('Beállítások mentve.')->success()->send();
     }
 
-    protected function getFormActions(): array
+    private function getFormActions(): array
     {
         return [
             Action::make('save')->submit('save'),
