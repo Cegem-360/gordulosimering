@@ -18,9 +18,9 @@ it('lists the root categories and nested subcategories on the homepage', functio
     $response->assertOk()
         ->assertSee('Csapágyak')
         ->assertSee('Tömítések')
-        ->assertSee(route('categories.show', $root), escape: false)
+        ->assertSeeHtml(route('categories.show', $root))
         ->assertSee($child->name)
-        ->assertSee(route('categories.show', $child), escape: false)
+        ->assertSeeHtml(route('categories.show', $child))
         ->assertSee($grandchild->name)
         ->assertSee($greatGrandchild->name); // 4th level renders through the recursive fly-out
 });

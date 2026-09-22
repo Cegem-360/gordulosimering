@@ -32,7 +32,7 @@ it('assigns the type image to products of that variety that have no image', func
 
     $path = writeTypeImageFixture([['szimering', 'https://kepek.hu/szimering.png']]);
 
-    $stats = app(ProductTypeImageImporter::class)->import($path);
+    $stats = resolve(ProductTypeImageImporter::class)->import($path);
 
     expect($product->refresh()->featured_image)->toBe('https://kepek.hu/szimering.png')
         ->and($stats['products'])->toBe(1);
@@ -46,7 +46,7 @@ it('never overwrites a product specific image', function (): void {
 
     $path = writeTypeImageFixture([['szimering', 'https://kepek.hu/szimering.png']]);
 
-    app(ProductTypeImageImporter::class)->import($path);
+    resolve(ProductTypeImageImporter::class)->import($path);
 
     expect($product->refresh()->featured_image)->toBe('uploads/sajat-kep.jpg');
 });
@@ -62,7 +62,7 @@ it('replaces a previously assigned type image when the mapping changes', functio
         ['o gyűrű', 'https://kepek.hu/regi-szimering.png'],
     ]);
 
-    app(ProductTypeImageImporter::class)->import($path);
+    resolve(ProductTypeImageImporter::class)->import($path);
 
     expect($product->refresh()->featured_image)->toBe('https://kepek.hu/uj-szimering.png');
 });
@@ -76,7 +76,7 @@ it('leaves the gallery images untouched', function (): void {
 
     $path = writeTypeImageFixture([['szimering', 'https://kepek.hu/szimering.png']]);
 
-    app(ProductTypeImageImporter::class)->import($path);
+    resolve(ProductTypeImageImporter::class)->import($path);
 
     expect($product->refresh()->images)->toBe(['uploads/galeria-1.jpg']);
 });
@@ -89,7 +89,7 @@ it('ignores varieties that no product uses', function (): void {
         ['nincs ilyen', 'https://kepek.hu/semmi.png'],
     ]);
 
-    $stats = app(ProductTypeImageImporter::class)->import($path);
+    $stats = resolve(ProductTypeImageImporter::class)->import($path);
 
     expect($stats['types'])->toBe(2)
         ->and($stats['matched_types'])->toBe(1)
@@ -104,7 +104,7 @@ it('reports the counts without writing anything on a dry run', function (): void
 
     $path = writeTypeImageFixture([['szimering', 'https://kepek.hu/szimering.png']]);
 
-    $stats = app(ProductTypeImageImporter::class)->import($path, dryRun: true);
+    $stats = resolve(ProductTypeImageImporter::class)->import($path, dryRun: true);
 
     expect($stats['products'])->toBe(1)
         ->and($product->refresh()->featured_image)->toBeNull();

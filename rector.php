@@ -6,12 +6,11 @@ use Madbox99\RectorFilament\Set\FilamentSetList;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\SetList;
 use RectorLaravel\Set\LaravelSetList;
-use RectorLaravel\Set\LaravelSetProvider;
 
 return RectorConfig::configure()
     ->withImportNames()
     ->withParallel()
-    ->withSetProviders(LaravelSetProvider::class)
+    ->withComposerBased(laravel: true)
     ->withPhpSets(php84: true)
     ->withSets([
         LaravelSetList::LARAVEL_ARRAYACCESS_TO_METHOD_CALL,
@@ -26,11 +25,9 @@ return RectorConfig::configure()
         LaravelSetList::LARAVEL_LEGACY_FACTORIES_TO_CLASSES,
         FilamentSetList::FILAMENT_CODE_QUALITY,
         FilamentSetList::FILAMENT_TESTS,
-        LaravelSetList::LARAVEL_130,
         SetList::DEAD_CODE,
         SetList::CODE_QUALITY,
         SetList::CODING_STYLE,
-        SetList::PHP_83,
         SetList::TYPE_DECLARATION,
         SetList::CODING_STYLE,
     ])
@@ -44,6 +41,8 @@ return RectorConfig::configure()
     ])
     ->withPreparedSets(
         deadCode: true,
+        codeQuality: true,
+        codingStyle: true,
         typeDeclarations: true,
         privatization: true,
         earlyReturn: true,

@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -42,7 +43,8 @@ final class Index extends Component
     /**
      * @return array<int, array{title: string, key: string, items: array<int, array{name: string, value: string, count: int}>}>
      */
-    public function getFiltersProperty(): array
+    #[Computed]
+    public function filters(): array
     {
         return [
             [
@@ -71,7 +73,8 @@ final class Index extends Component
         ];
     }
 
-    public function getProductsProperty()
+    #[Computed]
+    public function products()
     {
         $query = Product::query()->webVisible();
 

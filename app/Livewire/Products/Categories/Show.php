@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -27,7 +28,8 @@ final class Show extends Component
     /**
      * Direct child categories, shown as sub-navigation cards.
      */
-    public function getSubcategoriesProperty(): Collection
+    #[Computed]
+    public function subcategories(): Collection
     {
         return $this->category->children()->orderBy('name')->get();
     }
@@ -37,7 +39,8 @@ final class Show extends Component
      *
      * @return array<int, Category>
      */
-    public function getBreadcrumbsProperty(): array
+    #[Computed]
+    public function breadcrumbs(): array
     {
         $trail = [];
         $node = $this->category;
@@ -53,7 +56,8 @@ final class Show extends Component
     /**
      * Products linked to this category or any of its descendants.
      */
-    public function getProductsProperty(): LengthAwarePaginator
+    #[Computed]
+    public function products(): LengthAwarePaginator
     {
         $categoryIds = $this->descendantIds();
 

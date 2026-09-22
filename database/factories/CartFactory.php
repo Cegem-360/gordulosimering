@@ -22,7 +22,7 @@ final class CartFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'session_id' => $this->faker->uuid(),
+            'session_id' => fake()->uuid(),
         ];
     }
 }

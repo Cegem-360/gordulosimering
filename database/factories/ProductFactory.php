@@ -19,76 +19,76 @@ final class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $purchasePrice = $this->faker->randomFloat(2, 100, 10000);
-        $profitMargin = $this->faker->randomFloat(2, 10, 60);
+        $purchasePrice = fake()->randomFloat(2, 100, 10000);
+        $profitMargin = fake()->randomFloat(2, 10, 60);
         $netSellingPrice = $purchasePrice * (1 + $profitMargin / 100);
         $grossSellingPrice = $netSellingPrice * 1.27;
 
         return [
             // Basic product information
-            'group_code' => $this->faker->optional()->numerify('##'),
-            'product_code' => $this->faker->unique()->bothify('???-#####'),
-            'is_service' => $this->faker->boolean(10),
+            'group_code' => fake()->optional()->numerify('##'),
+            'product_code' => fake()->unique()->bothify('???-#####'),
+            'is_service' => fake()->boolean(10),
             'is_web_visible' => true,
             'is_inactive' => false,
-            'name' => $this->faker->words(3, true),
-            'slug' => $this->faker->unique()->slug(),
-            'catalog_number' => $this->faker->optional()->bothify('CAT-####'),
-            'type' => $this->faker->optional()->randomElement(['Standard', 'Premium', 'Economy']),
-            'size' => $this->faker->optional()->randomElement(['S', 'M', 'L', 'XL', '10x20', '20x30']),
-            'weight' => $this->faker->optional()->randomFloat(3, 0.1, 100),
+            'name' => fake()->words(3, true),
+            'slug' => fake()->unique()->slug(),
+            'catalog_number' => fake()->optional()->bothify('CAT-####'),
+            'type' => fake()->optional()->randomElement(['Standard', 'Premium', 'Economy']),
+            'size' => fake()->optional()->randomElement(['S', 'M', 'L', 'XL', '10x20', '20x30']),
+            'weight' => fake()->optional()->randomFloat(3, 0.1, 100),
 
             // Quality and classification
-            'rating' => $this->faker->optional()->randomElement(['A', 'B', 'C']),
-            'quality' => $this->faker->optional()->randomElement(['Premium', 'Standard', 'Economy']),
-            'product_variety' => $this->faker->optional()->word(),
-            'trade_type' => $this->faker->optional()->randomElement(['L', 'K']),
-            'usage_type' => $this->faker->optional()->word(),
+            'rating' => fake()->optional()->randomElement(['A', 'B', 'C']),
+            'quality' => fake()->optional()->randomElement(['Premium', 'Standard', 'Economy']),
+            'product_variety' => fake()->optional()->word(),
+            'trade_type' => fake()->optional()->randomElement(['L', 'K']),
+            'usage_type' => fake()->optional()->word(),
 
             // Currency and pricing
-            'currency_settlement' => $this->faker->optional()->word(),
-            'discount_group' => $this->faker->optional()->randomElement(['A', 'B', 'C']),
-            'is_on_sale' => $this->faker->boolean(20),
-            'sale_percentage' => $this->faker->optional()->randomFloat(2, 0, 50),
-            'pricing' => $this->faker->randomElement(['S', 'F']),
+            'currency_settlement' => fake()->optional()->word(),
+            'discount_group' => fake()->optional()->randomElement(['A', 'B', 'C']),
+            'is_on_sale' => fake()->boolean(20),
+            'sale_percentage' => fake()->optional()->randomFloat(2, 0, 50),
+            'pricing' => fake()->randomElement(['S', 'F']),
             'net_selling_price' => round($netSellingPrice, 2),
-            'vat_class' => $this->faker->randomElement(['AFA27', 'AFA5', 'AFA0']),
+            'vat_class' => fake()->randomElement(['AFA27', 'AFA5', 'AFA0']),
             'gross_selling_price' => round($grossSellingPrice, 2),
 
             // Stock and units
-            'quantity_unit' => $this->faker->randomElement(['db', 'kg', 'm', 'l']),
-            'secondary_unit' => $this->faker->optional()->randomElement(['csomag', 'raklap']),
-            'minimum_stock' => $this->faker->numberBetween(0, 10),
-            'maximum_stock' => $this->faker->numberBetween(50, 500),
-            'buffer_stock' => $this->faker->numberBetween(5, 20),
-            'order_unit' => $this->faker->numberBetween(1, 10),
+            'quantity_unit' => fake()->randomElement(['db', 'kg', 'm', 'l']),
+            'secondary_unit' => fake()->optional()->randomElement(['csomag', 'raklap']),
+            'minimum_stock' => fake()->numberBetween(0, 10),
+            'maximum_stock' => fake()->numberBetween(50, 500),
+            'buffer_stock' => fake()->numberBetween(5, 20),
+            'order_unit' => fake()->numberBetween(1, 10),
 
             // Official codes
-            'ksh_prefix' => $this->faker->optional()->bothify('VTSZ'),
-            'ksh_number' => $this->faker->optional()->numerify('####'),
+            'ksh_prefix' => fake()->optional()->bothify('VTSZ'),
+            'ksh_number' => fake()->optional()->numerify('####'),
 
             // Supplier and notes
-            'supplier' => $this->faker->optional()->company(),
-            'short_note' => $this->faker->optional()->sentence(5),
-            'description' => $this->faker->optional()->paragraph(),
+            'supplier' => fake()->optional()->company(),
+            'short_note' => fake()->optional()->sentence(5),
+            'description' => fake()->optional()->paragraph(),
 
             // Barcodes
-            'barcode' => $this->faker->optional()->ean13(),
-            'ean_code' => $this->faker->optional()->ean13(),
+            'barcode' => fake()->optional()->ean13(),
+            'ean_code' => fake()->optional()->ean13(),
 
             // Order quantities
-            'min_order_quantity' => $this->faker->numberBetween(1, 5),
-            'trade_quantity' => $this->faker->optional()->numberBetween(10, 100),
-            'pallet_quantity' => $this->faker->optional()->numberBetween(50, 500),
+            'min_order_quantity' => fake()->numberBetween(1, 5),
+            'trade_quantity' => fake()->optional()->numberBetween(10, 100),
+            'pallet_quantity' => fake()->optional()->numberBetween(50, 500),
 
             // Custom fields and images
-            'custom_fields' => $this->faker->optional()->passthrough([
-                'color' => $this->faker->safeColorName(),
-                'material' => $this->faker->word(),
+            'custom_fields' => fake()->optional()->passthrough([
+                'color' => fake()->safeColorName(),
+                'material' => fake()->word(),
             ]),
-            'images' => $this->faker->optional()->passthrough([
-                $this->faker->imageUrl(640, 480, 'products'),
-                $this->faker->imageUrl(640, 480, 'products'),
+            'images' => fake()->optional()->passthrough([
+                fake()->imageUrl(640, 480, 'products'),
+                fake()->imageUrl(640, 480, 'products'),
             ]),
         ];
     }

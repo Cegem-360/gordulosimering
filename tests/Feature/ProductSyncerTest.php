@@ -64,7 +64,7 @@ it('updates the ERP fields of an existing product matched by product code', func
         ]),
     ]);
 
-    app(ProductSyncer::class)->sync($path);
+    resolve(ProductSyncer::class)->sync($path);
 
     $product->refresh();
 
@@ -90,7 +90,7 @@ it('leaves the slug, images, documents and category links untouched', function (
 
     $path = writeSyncFixture([syncRow([2 => 'BEHAJTO-1', 4 => 'Új név'])]);
 
-    app(ProductSyncer::class)->sync($path);
+    resolve(ProductSyncer::class)->sync($path);
 
     $product->refresh();
 
@@ -106,7 +106,7 @@ it('leaves the slug, images, documents and category links untouched', function (
 it('creates products that are missing from the database', function (): void {
     $path = writeSyncFixture([syncRow([2 => 'UJ-KOD', 4 => 'Új termék', 19 => '500'])]);
 
-    $stats = app(ProductSyncer::class)->sync($path);
+    $stats = resolve(ProductSyncer::class)->sync($path);
 
     $product = Product::query()->where('product_code', 'UJ-KOD')->firstOrFail();
 
@@ -121,7 +121,7 @@ it('gives a created product a unique slug when the generated one is taken', func
 
     $path = writeSyncFixture([syncRow([2 => 'UJ-KOD', 4 => 'Új termék'])]);
 
-    app(ProductSyncer::class)->sync($path);
+    resolve(ProductSyncer::class)->sync($path);
 
     expect(Product::query()->where('product_code', 'UJ-KOD')->value('slug'))->toBe('uj-kod-1');
 });
@@ -137,7 +137,7 @@ it('deactivates products that are absent from the export', function (): void {
 
     $path = writeSyncFixture([syncRow([2 => 'MARAD', 4 => 'Marad'])]);
 
-    $stats = app(ProductSyncer::class)->sync($path);
+    $stats = resolve(ProductSyncer::class)->sync($path);
 
     $gone = Product::query()->where('product_code', 'MEGSZUNT')->firstOrFail();
 
@@ -153,7 +153,7 @@ it('does not create products flagged as not web visible when the filter is on', 
         syncRow([1 => 'NEM', 2 => 'REJTETT', 4 => 'Rejtett']),
     ]);
 
-    $stats = app(ProductSyncer::class)->sync($path, onlyWebVisible: true);
+    $stats = resolve(ProductSyncer::class)->sync($path, onlyWebVisible: true);
 
     expect(Product::query()->where('product_code', 'LATHATO')->exists())->toBeTrue()
         ->and(Product::query()->where('product_code', 'REJTETT')->exists())->toBeFalse()
@@ -171,7 +171,7 @@ it('deactivates a stored product that the export turned not web visible', functi
 
     $path = writeSyncFixture([syncRow([1 => 'NEM', 2 => 'ELREJTETT', 4 => 'Elrejtett'])]);
 
-    $stats = app(ProductSyncer::class)->sync($path, onlyWebVisible: true);
+    $stats = resolve(ProductSyncer::class)->sync($path, onlyWebVisible: true);
 
     $product = Product::query()->where('product_code', 'ELREJTETT')->firstOrFail();
 
@@ -199,7 +199,7 @@ it('reports the counts without writing anything on a dry run', function (): void
         syncRow([2 => 'UJ', 4 => 'Új termék']),
     ]);
 
-    $stats = app(ProductSyncer::class)->sync($path, dryRun: true);
+    $stats = resolve(ProductSyncer::class)->sync($path, dryRun: true);
 
     expect($stats['created'])->toBe(1)
         ->and($stats['updated'])->toBe(1)

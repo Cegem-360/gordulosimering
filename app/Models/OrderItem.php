@@ -27,11 +27,6 @@ final class OrderItem extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'product_id' => 'int',
-        'quantity' => 'int',
-    ];
-
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
@@ -40,5 +35,13 @@ final class OrderItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'product_id' => 'int',
+            'quantity' => 'int',
+        ];
     }
 }

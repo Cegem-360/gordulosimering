@@ -26,12 +26,6 @@ final class CartItem extends Model
 {
     use HasFactory;
 
-    protected $casts = [
-        'product_id' => 'int',
-        'cart_id' => 'int',
-        'quantity' => 'int',
-    ];
-
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
@@ -45,5 +39,14 @@ final class CartItem extends Model
     public function isSimpleProduct(): bool
     {
         return $this->product->type === ProductType::SIMPLE;
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'product_id' => 'int',
+            'cart_id' => 'int',
+            'quantity' => 'int',
+        ];
     }
 }

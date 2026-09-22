@@ -161,9 +161,7 @@ final class CategoryImporter
                 $key = implode(self::PATH_SEPARATOR, $names);
                 $parentKey = $parentNames === null ? null : implode(self::PATH_SEPARATOR, $parentNames);
 
-                if (! isset($nodes[$key])) {
-                    $nodes[$key] = ['name' => $cells[$i], 'names' => $names, 'parentKey' => $parentKey, 'order' => $order++];
-                }
+                $nodes[$key] ??= ['name' => $cells[$i], 'names' => $names, 'parentKey' => $parentKey, 'order' => $order++];
 
                 if ($parentKey !== null) {
                     $hasChildren[$parentKey] = true;
@@ -266,13 +264,7 @@ final class CategoryImporter
      */
     private function isBlank(array $cells): bool
     {
-        foreach ($cells as $cell) {
-            if ($cell !== '') {
-                return false;
-            }
-        }
-
-        return true;
+        return array_all($cells, fn ($cell): bool => $cell === '');
     }
 
     /**

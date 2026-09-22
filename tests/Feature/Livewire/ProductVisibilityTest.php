@@ -10,6 +10,7 @@ use App\Livewire\Products\Index as ProductsIndex;
 use App\Models\Category;
 use App\Models\Product;
 use Livewire\Livewire;
+use Tests\TestCase;
 
 function visibleProduct(array $attributes = []): Product
 {
@@ -22,12 +23,14 @@ function hiddenProduct(array $attributes = []): Product
 }
 
 it('returns 404 for the product page of a product that is not web visible', function (): void {
+    /** @var TestCase $this */
     $product = hiddenProduct(['slug' => 'rejtett-termek', 'name' => 'Rejtett termék']);
 
     $this->get(route('products.show', $product->slug))->assertNotFound();
 });
 
 it('still serves the product page of a web visible product', function (): void {
+    /** @var TestCase $this */
     $product = visibleProduct(['slug' => 'lathato-termek', 'name' => 'Látható termék']);
 
     $this->get(route('products.show', $product->slug))->assertSuccessful();
@@ -71,6 +74,7 @@ it('keeps products that are not web visible out of the category index list', fun
 });
 
 it('keeps products that are not web visible off the home page', function (): void {
+    /** @var TestCase $this */
     visibleProduct(['name' => 'Kiemelt Lathato Termek']);
     hiddenProduct(['name' => 'Kiemelt Rejtett Termek']);
 

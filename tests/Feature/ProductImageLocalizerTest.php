@@ -17,7 +17,7 @@ it('downloads a distinct url once and points every product at the stored file', 
     $first = Product::factory()->create(['featured_image' => 'https://kepek.hu/kozos.png', 'images' => null]);
     $second = Product::factory()->create(['featured_image' => 'https://kepek.hu/kozos.png', 'images' => null]);
 
-    $stats = app(ProductImageLocalizer::class)->localize();
+    $stats = resolve(ProductImageLocalizer::class)->localize();
 
     $path = $first->refresh()->featured_image;
 
@@ -36,7 +36,7 @@ it('stores the downloaded file on the public disk', function (): void {
 
     $product = Product::factory()->create(['featured_image' => 'https://kepek.hu/kep.png', 'images' => null]);
 
-    app(ProductImageLocalizer::class)->localize();
+    resolve(ProductImageLocalizer::class)->localize();
 
     Storage::disk('public')->assertExists($product->refresh()->featured_image);
 
@@ -48,7 +48,7 @@ it('leaves images that are already stored locally alone', function (): void {
 
     $product = Product::factory()->create(['featured_image' => 'products/mar-itt-van.png', 'images' => null]);
 
-    $stats = app(ProductImageLocalizer::class)->localize();
+    $stats = resolve(ProductImageLocalizer::class)->localize();
 
     expect($product->refresh()->featured_image)->toBe('products/mar-itt-van.png')
         ->and($stats['urls'])->toBe(0);
@@ -64,7 +64,7 @@ it('rewrites the gallery image urls too', function (): void {
         'images' => ['https://kepek.hu/galeria-1.png', 'products/sajat.png'],
     ]);
 
-    app(ProductImageLocalizer::class)->localize();
+    resolve(ProductImageLocalizer::class)->localize();
 
     $images = $product->refresh()->images;
 
@@ -78,7 +78,7 @@ it('keeps the original url when the download fails', function (): void {
 
     $product = Product::factory()->create(['featured_image' => 'https://kepek.hu/nincs.png', 'images' => null]);
 
-    $stats = app(ProductImageLocalizer::class)->localize();
+    $stats = resolve(ProductImageLocalizer::class)->localize();
 
     expect($product->refresh()->featured_image)->toBe('https://kepek.hu/nincs.png')
         ->and($stats['failed'])->toBe(1)
@@ -90,7 +90,7 @@ it('writes nothing on a dry run', function (): void {
 
     $product = Product::factory()->create(['featured_image' => 'https://kepek.hu/kep.png', 'images' => null]);
 
-    $stats = app(ProductImageLocalizer::class)->localize(dryRun: true);
+    $stats = resolve(ProductImageLocalizer::class)->localize(dryRun: true);
 
     expect($product->refresh()->featured_image)->toBe('https://kepek.hu/kep.png')
         ->and($stats['urls'])->toBe(1)

@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,12 +15,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 use Override;
 
+#[Unguarded]
 final class Product extends Model
 {
     /** @use HasFactory<ProductFactory> */
     use HasFactory;
-
-    protected $guarded = [];
 
     public function categories(): BelongsToMany
     {

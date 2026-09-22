@@ -20,11 +20,11 @@ final class ShippingMethodFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->word(),
-            'title' => $this->faker->sentence(3),
-            'slug' => $this->faker->unique()->slug(),
-            'description' => $this->faker->paragraph(),
-            'cost' => $this->faker->numberBetween(500, 3000),
+            'name' => fake()->unique()->word(),
+            'title' => fake()->sentence(3),
+            'slug' => fake()->unique()->slug(),
+            'description' => fake()->paragraph(),
+            'cost' => fake()->numberBetween(500, 3000),
         ];
     }
 }

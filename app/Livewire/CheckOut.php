@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 final class CheckOut extends Component implements HasActions, HasSchemas
@@ -93,12 +94,14 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         }
     }
 
-    public function getShippingMethodsProperty(): Collection
+    #[Computed]
+    public function shippingMethods(): Collection
     {
         return ShippingMethod::all();
     }
 
-    public function getSelectedShippingProperty(): ?ShippingMethod
+    #[Computed]
+    public function selectedShipping(): ?ShippingMethod
     {
         if (! $this->selectedShippingMethod) {
             return null;
@@ -107,7 +110,8 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         return ShippingMethod::query()->find($this->selectedShippingMethod);
     }
 
-    public function getShippingCostProperty(): float
+    #[Computed]
+    public function shippingCost(): float
     {
         return $this->selectedShipping?->cost ?? 0;
     }
@@ -168,27 +172,32 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             ->model(Order::class);
     }
 
-    public function getSubtotalProperty(): float
+    #[Computed]
+    public function subtotal(): float
     {
         return $this->cartItems->sum(fn ($item): int|float => $item->product->net_selling_price * $item->quantity);
     }
 
-    public function getVatAmountProperty(): float
+    #[Computed]
+    public function vatAmount(): float
     {
         return $this->subtotal * 0.27;
     }
 
-    public function getTotalProperty(): float
+    #[Computed]
+    public function total(): float
     {
         return $this->subtotal + $this->vatAmount + $this->shippingCost;
     }
 
-    public function getItemCountProperty(): int
+    #[Computed]
+    public function itemCount(): int
     {
         return $this->cartItems->sum('quantity');
     }
 
-    public function getPaymentMethodsProperty(): array
+    #[Computed]
+    public function paymentMethods(): array
     {
         return [
             'bacs' => [
