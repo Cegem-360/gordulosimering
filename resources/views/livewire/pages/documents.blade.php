@@ -12,7 +12,7 @@
                         <div class="text-gray-700 space-y-2">
                             <p>ÁFÁS számlát minden vásárláskor adunk, ehhez pontos név és cím szükséges.</p>
                             <p>Üzletünkben az egységcsomagok miatt a minimális vásárlási összeg 100 forint (bruttó).</p>
-                            <p>Bankkártyával (VISA, VISA Electron, MAESTRO, MasterCard, American Express) történő
+                            <p>Bankkártyával (VISA, VISA Electron, MAESTRO, MasterCard) történő
                                 fizetési szándékát kérjük, előre jelezze!</p>
                             <p>Átutalásos vásárlásra 25.000 Ft. (bruttó) feletti számlánál van lehetőség, abban az
                                 esetben, ha a vásárló rendelkezik vevőkóddal. Ezeket a számlákat az átvevőnek minden

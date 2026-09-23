@@ -55,7 +55,7 @@
                                 </path>
                             </svg>
                         </h3>
-                        <p class="text-white/80 text-sm mt-1">3 helyszín Budapesten</p>
+                        <p class="text-white/80 text-sm mt-1">2 helyszín Budapesten</p>
                     </div>
                 </div>
             </a>

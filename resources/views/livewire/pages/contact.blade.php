@@ -12,7 +12,7 @@
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-16">
         <!-- Locations Grid -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div class="grid md:grid-cols-2 gap-8 mb-16">
             <!-- X. kerület -->
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
                 <div class="aspect-w-16 aspect-h-9">
@@ -49,48 +49,6 @@
                             <p class="flex justify-between">
                                 <span class="text-gray-600">Szombat:</span>
                                 <span>8:30 - 12:30</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- XIV. kerület -->
-            <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
-                <div class="aspect-w-16 aspect-h-9">
-                    <img src="{{ Vite::asset('resources/images/stores/nagylajos.jpg') }}" alt="XIV. kerületi üzlet"
-                        class="rounded-t-lg object-cover w-full h-48">
-                </div>
-                <div class="p-5">
-                    <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">XIV. kerület</h3>
-                    <p class="text-gray-700 mb-3">1148 Budapest, Nagy Lajos király útja 117.</p>
-                    <p class="mb-4">
-                        <a href="tel:+3613830951" class="text-blue-600 hover:text-blue-700">+36 1 383 0951</a>
-                    </p>
-
-                    <!-- Map -->
-                    <div class="mb-4 rounded-lg overflow-hidden">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d5389.253476409828!2d19.117627!3d47.51666!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741db664176936f%3A0xf71c2a916486b511!2sBudapest%2C%20Nagy%20Lajos%20kir%C3%A1ly%20%C3%BAtja%20117%2C%201149%20Magyarorsz%C3%A1g!5e0!3m2!1shu!2sus!4v1762533265560!5m2!1shu!2sus"
-                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-
-                    <!-- Opening Hours -->
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <h4 class="font-semibold mb-2">Nyitvatartás</h4>
-                        <div class="space-y-1 text-sm">
-                            <p class="flex justify-between">
-                                <span class="text-gray-600">Hétfő - Csütörtök:</span>
-                                <span>8:30 - 16:30</span>
-                            </p>
-                            <p class="flex justify-between">
-                                <span class="text-gray-600">Péntek:</span>
-                                <span>8:30 - 16:00</span>
-                            </p>
-                            <p class="flex justify-between">
-                                <span class="text-gray-600">Szombat:</span>
-                                <span>Zárva</span>
                             </p>
                         </div>
                     </div>

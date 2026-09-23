@@ -90,3 +90,10 @@ it('resets form after successful submission', function (): void {
         ->assertSet('data.subject', '')
         ->assertSet('data.message', '');
 });
+
+it('no longer lists the closing XIV. district store', function (): void {
+    $this->get(route('contact'))->assertOk()
+        ->assertSee('X. kerület')
+        ->assertDontSee('XIV. kerület')
+        ->assertDontSee('Nagy Lajos kir. útja');
+});

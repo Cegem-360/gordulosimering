@@ -76,11 +76,6 @@
                         <a href="tel:+3612611566" class="hover:text-blue-400">Tel: +36 1 261 1566</a>
                     </li>
                     <li>
-                        <p class="font-medium text-blue-400">XIV. kerület</p>
-                        <p>1148 Budapest, Nagy Lajos kir. útja 117.</p>
-                        <a href="tel:+3613830951" class="hover:text-blue-400">Tel: +36 1 383 0951</a>
-                    </li>
-                    <li>
                         <p class="font-medium text-blue-400">XVII. kerület</p>
                         <p>1173 Budapest, Pesti út 203.</p>
                         <a href="tel:+3612574450" class="hover:text-blue-400">Tel: +36 1 257 4450</a>

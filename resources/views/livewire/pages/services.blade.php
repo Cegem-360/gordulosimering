@@ -122,21 +122,13 @@
             <p class="text-gray-600 mb-8">Keressen fel minket személyesen üzleteinkben, ahol szakértő kollégáink
                 várják Önt!</p>
 
-            <div class="grid md:grid-cols-3 gap-6">
+            <div class="grid md:grid-cols-2 gap-6">
                 <!-- X. kerület -->
                 <div class="bg-white rounded-lg p-6">
                     <h3 class="font-semibold text-lg mb-2">X. kerület</h3>
                     <p class="text-gray-600 mb-2">1102 Budapest, Kőrösi Csoma S. út 18-20.</p>
                     <a href="tel:+3612611566" class="text-blue-600 hover:text-blue-700 font-medium">+36 1 261
                         1566</a>
-                </div>
-
-                <!-- XIV. kerület -->
-                <div class="bg-white rounded-lg p-6">
-                    <h3 class="font-semibold text-lg mb-2">XIV. kerület</h3>
-                    <p class="text-gray-600 mb-2">1148 Budapest, Nagy Lajos kir. útja 117.</p>
-                    <a href="tel:+3613830951" class="text-blue-600 hover:text-blue-700 font-medium">+36 1 383
-                        0951</a>
                 </div>
 
                 <!-- XVII. kerület -->
