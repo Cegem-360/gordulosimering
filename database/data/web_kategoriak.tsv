@@ -1917,10 +1917,10 @@ KÖTŐELEMEK, GÉPÉPÍTŐ ELEMEK	HATLAPFEJŰ CSAVAR
 		3-AS TÍPUS
 		4-ES TÍPUS
 		5-ÖS TÍPUS
-	BILINCS	NORMA benzincsőbilincs
-		NORMA csuklós-csapos szorítóbilincs
-		NORMA szorítóbilincs
-		NORMA szorítóbilincs (rozsdamentes)
+	BILINCS	NORMA BENZINCSŐBILINCS	NORMA benzincsőbilincs
+		NORMA CSUKLÓS-CSAPOS SZORÍTÓBILINCS	NORMA csuklós-csapos szorítóbilincs
+		NORMA SZORÍTÓBILINCS	NORMA szorítóbilincs
+		NORMA SZORÍTÓBILINCS (ROZSDAMENTES)	NORMA szorítóbilincs (rozsdamentes)
 	ZÁRTSZELVÉNY- ÉS CSŐVÉG DUGÓ
 	MAROKCSAVAR ÉS MAROKANYA
 
@@ -2600,10 +2600,10 @@ KÉZI SZERSZÁMOK, MŰSZEREK	CSAPÁGYSZERELŐ SZERSZÁM	BAHCO háromkaros csapá
 		YATO nyomatékkulcs 1/2" 10-60Nm 415mm
 		YATO vonalzó
 
-BILINCSEK	NORMA benzincsőbilincs
-	NORMA csuklós-csapos szorítóbilincs
-	NORMA szorítóbilincs
-	NORMA szorítóbilincs (rozsdamentes)
+BILINCSEK	NORMA BENZINCSŐBILINCS	NORMA benzincsőbilincs
+	NORMA CSUKLÓS-CSAPOS SZORÍTÓBILINCS	NORMA csuklós-csapos szorítóbilincs
+	NORMA SZORÍTÓBILINCS	NORMA szorítóbilincs
+	NORMA SZORÍTÓBILINCS (ROZSDAMENTES)	NORMA szorítóbilincs (rozsdamentes)
 
 ELEMEK, AKKUMULÁTOROK	HAGYOMÁNYOS ELEMEK	DURACELL 9V-os elem
 		DURACELL 9V-os elem (10 darabosával csomagolva)

@@ -10,7 +10,7 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
 #[Description('Kategóriafa importálása a web_kategoriak.tsv-ből, opcionális termék-összekötéssel')]
-#[Signature('app:import-categories {--link : Termékek hozzákötése a kategórialevelekhez}')]
+#[Signature('app:import-categories {--link : Termékek hozzákötése a kategóriákhoz és a márkákhoz}')]
 final class ImportCategoriesCommand extends Command
 {
     public function handle(CategoryImporter $importer): int
@@ -31,6 +31,10 @@ final class ImportCategoriesCommand extends Command
             $this->info('Termékek összekötése a kategóriákkal...');
             $links = $importer->linkProducts();
             $this->info(sprintf('Kész: %d termék-kapcsolat létrehozva.', $links));
+
+            $this->info('Termékek összekötése a márkákkal...');
+            $brandLinks = $importer->linkBrands();
+            $this->info(sprintf('Kész: %d márka-kapcsolat létrehozva.', $brandLinks));
         }
 
         return self::SUCCESS;

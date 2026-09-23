@@ -140,3 +140,102 @@ it('link step is idempotent', function (): void {
         ->and($second)->toBe(0)
         ->and($cat->products()->count())->toBe(1);
 });
+
+it('makes an uppercase cell a category even when nothing is listed under it', function (): void {
+    $path = writeCategoryFixture([
+        ['KÖTŐELEMEK', 'CSAVAR', 'HATLAPFEJŰ CSAVAR'],
+        ['', '', 'FAG csavar'],
+    ]);
+
+    (new CategoryImporter())->importTree($path);
+
+    expect(Category::query()->where('name', 'HATLAPFEJŰ CSAVAR')->exists())->toBeTrue()
+        ->and(Category::query()->where('name', 'FAG csavar')->exists())->toBeFalse();
+});
+
+it('links products to a multi-word uppercase leaf by its own name, but not to a one-word one', function (): void {
+    $path = writeCategoryFixture([
+        ['CSAPÁGYAK', 'SKF VASÚTI ÁGYTOKCSAPÁGY'],
+        ['KÖTŐELEMEK', 'ANYA', 'NORMÁL'],
+    ]);
+    $railway = Product::factory()->create(['name' => 'SKF vasúti ágytokcsapágy 123']);
+    $nut = Product::factory()->create(['name' => 'Normál hatlapanya M8']);
+
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+    $importer->linkProducts();
+
+    expect($railway->categories()->pluck('name')->all())->toBe(['SKF VASÚTI ÁGYTOKCSAPÁGY'])
+        ->and($nut->categories()->count())->toBe(0);
+});
+
+it('links a product to every category whose equally long line matches it', function (): void {
+    $path = writeCategoryFixture([
+        ['KÖTŐELEMEK', 'BILINCS', 'NORMA BENZINCSŐBILINCS', 'NORMA benzincsőbilincs'],
+        ['BILINCSEK', 'NORMA BENZINCSŐBILINCS', 'NORMA benzincsőbilincs'],
+    ]);
+    $clamp = Product::factory()->create(['name' => 'NORMA benzincsőbilincs 9-11/9']);
+
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+    $importer->linkProducts();
+
+    expect($clamp->categories()->with('parentCategory')->get()->map(fn (Category $category): string => $category->parentCategory->name)->sort()->values()->all())
+        ->toBe(['BILINCS', 'BILINCSEK']);
+});
+
+it('moves a product out of the parent it was linked to before its subcategory existed', function (): void {
+    $bilincsek = Category::query()->create(['name' => 'BILINCSEK', 'slug' => 'bilincsek']);
+    $elsewhere = Category::query()->create(['name' => 'AKCIÓS', 'slug' => 'akcios']);
+    $clamp = Product::factory()->create(['name' => 'NORMA benzincsőbilincs 9-11/9']);
+    $clamp->categories()->attach([$bilincsek->id, $elsewhere->id]);
+
+    $path = writeCategoryFixture([
+        ['BILINCSEK', 'NORMA BENZINCSŐBILINCS', 'NORMA benzincsőbilincs'],
+    ]);
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+    $importer->linkProducts();
+
+    expect($clamp->categories()->pluck('name')->sort()->values()->all())
+        ->toBe(['AKCIÓS', 'NORMA BENZINCSŐBILINCS']);
+});
+
+it('orders new categories by their row in the sheet and keeps an order set in the admin', function (): void {
+    $path = writeCategoryFixture([
+        ['CSAPÁGYAK', 'GOLYÓS CSAPÁGY', 'SKF golyóscsapágy'],
+        ['CSAPÁGYAK', 'GÖRGŐS CSAPÁGY', 'SKF görgőscsapágy'],
+        ['CSAPÁGYAK', 'GÖMBCSUKLÓ', 'SKF gömbcsukló'],
+    ]);
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+
+    $root = Category::query()->where('name', 'CSAPÁGYAK')->firstOrFail();
+    expect($root->children->pluck('name')->all())->toBe(['GOLYÓS CSAPÁGY', 'GÖRGŐS CSAPÁGY', 'GÖMBCSUKLÓ']);
+
+    Category::query()->where('name', 'GÖMBCSUKLÓ')->update(['sort_order' => 0]);
+    $importer->importTree($path);
+
+    expect($root->fresh()->children->pluck('name')->all())->toBe(['GÖMBCSUKLÓ', 'GOLYÓS CSAPÁGY', 'GÖRGŐS CSAPÁGY']);
+});
+
+it('links products to the brands named in them as whole words, across categories', function (): void {
+    $path = writeCategoryFixture([
+        ['CSAPÁGYAK', 'GOLYÓS CSAPÁGY', 'FAG golyóscsapágy'],
+        ['FORGALMAZOTT MÁRKÁINK', 'FAG'],
+        ['', 'INA'],
+    ]);
+    $fag = Product::factory()->create(['name' => 'FAG golyóscsapágy 6203']);
+    $bracketed = Product::factory()->create(['name' => 'Tokés (FAG) csapágy']);
+    $laminated = Product::factory()->create(['name' => 'Laminált tömítés']);
+
+    $importer = new CategoryImporter();
+    $importer->importTree($path);
+    $linked = $importer->linkBrands();
+
+    $fagBrand = Category::query()->where('name', 'FAG')->firstOrFail();
+    expect($fagBrand->products()->pluck('products.id')->sort()->values()->all())->toBe([$fag->id, $bracketed->id])
+        ->and(Category::query()->where('name', 'INA')->firstOrFail()->products()->count())->toBe(0)
+        ->and($laminated->categories()->count())->toBe(0)
+        ->and($linked)->toBe(2);
+});
