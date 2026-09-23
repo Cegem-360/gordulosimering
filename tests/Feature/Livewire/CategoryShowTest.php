@@ -87,3 +87,13 @@ it('lists every product of a brand on its brand page, whatever its category', fu
         ->assertSee('SKF golyóscsapágy 6203')
         ->assertSee('SKF kenőzsír LGMT 2');
 });
+
+it('writes the product count with a Hungarian thousands separator', function (): void {
+    $category = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    $products = Product::factory()->count(1001)->create();
+    $category->products()->attach($products->modelKeys());
+
+    Livewire::test(Show::class, ['category' => $category])
+        ->assertSee("1\u{a0}001 termék található")
+        ->assertDontSee('1,001 termék');
+});

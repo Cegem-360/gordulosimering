@@ -27,7 +27,7 @@
             </a>
             <h1 class="text-2xl font-bold mb-2">{{ $category->name }}</h1>
             <p class="text-sm text-gray-600 mb-6">
-                {{ number_format($products->total()) }} termék található
+                {{ Number::format($products->total(), locale: 'hu') }} termék található
             </p>
 
             <!-- Subcategories -->

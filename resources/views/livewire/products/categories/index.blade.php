@@ -25,7 +25,7 @@
                         <div>
                             <h1 class="text-2xl font-bold">Termékek</h1>
                             <p class="text-sm text-gray-600 mt-1">
-                                {{ number_format($products->total()) }} termék található
+                                {{ Number::format($products->total(), locale: 'hu') }} termék található
                             </p>
                         </div>
 
