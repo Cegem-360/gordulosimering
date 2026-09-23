@@ -26,12 +26,8 @@ final class LiveSearch extends Component
         return Product::query()
             ->webVisible()
             ->select(['id', 'name', 'slug', 'product_code', 'net_selling_price', 'images', 'minimum_stock'])
-            ->where(function ($q): void {
-                $q->where('product_code', 'LIKE', $this->query . '%')
-                    ->orWhere('product_code', 'LIKE', '%' . $this->query . '%')
-                    ->orWhere('name', 'LIKE', '%' . $this->query . '%');
-            })
-            ->orderByRaw('CASE WHEN product_code LIKE ? THEN 0 ELSE 1 END', [$this->query . '%'])
+            ->matchingSearch($this->query)
+            ->orderBySearchRelevance($this->query)
             ->limit(8)
             ->get();
     }

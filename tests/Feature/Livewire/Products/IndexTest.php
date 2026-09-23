@@ -102,3 +102,19 @@ it('accepts search from URL query parameter', function (): void {
     expect($component->get('search'))->toBe('SKF');
     expect($component->get('products')->total())->toBe(1);
 });
+
+it('finds a size written with a decimal comma when searching with a decimal point', function (): void {
+    Product::factory()->create(['name' => 'Hüvelyes csapágy', 'product_code' => 'R 16', 'size' => '25,4X50,8X6,35']);
+    Product::factory()->create(['name' => 'Másik csapágy', 'product_code' => 'R 20', 'size' => '31,75X50,8X9,525']);
+
+    $component = Livewire::test(Index::class)->set('search', '25.4x50.8');
+
+    expect($component->get('products')->total())->toBe(1)
+        ->and($component->get('products')->first()->product_code)->toBe('R 16');
+});
+
+it('lists the stock filter first', function (): void {
+    $component = Livewire::test(Index::class);
+
+    expect($component->instance()->filters()[0]['key'])->toBe('stock');
+});

@@ -53,3 +53,24 @@ it('finds products by name', function (): void {
     expect($component->get('results'))->toHaveCount(1);
     expect($component->get('results')->first()->name)->toBe('Golyóscsapágy 6205');
 });
+
+it('treats a decimal comma and a decimal point as the same', function (string $query): void {
+    Product::factory()->create([
+        'name' => 'SKF hüvelyes csapágy',
+        'product_code' => 'R 16-2Z_S',
+        'size' => '25,4X50,8X6,35',
+    ]);
+    Product::factory()->create([
+        'name' => 'Másik csapágy',
+        'product_code' => 'R 20_S',
+        'size' => '31,75X50,8X9,525',
+    ]);
+
+    $component = Livewire::test(LiveSearch::class)->set('query', $query);
+
+    expect($component->get('results'))->toHaveCount(1)
+        ->and($component->get('results')->first()->product_code)->toBe('R 16-2Z_S');
+})->with([
+    'decimal point' => '25.4x50.8x6.35',
+    'decimal comma' => '25,4x50,8x6,35',
+]);

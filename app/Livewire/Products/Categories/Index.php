@@ -48,6 +48,14 @@ final class Index extends Component
     {
         return [
             [
+                'title' => 'Készlet',
+                'key' => 'stock',
+                'items' => [
+                    ['name' => 'Készleten', 'value' => 'in_stock', 'count' => $this->getInStockCount()],
+                    ['name' => 'Rendelésre', 'value' => 'out_of_stock', 'count' => $this->getOutOfStockCount()],
+                ],
+            ],
+            [
                 'title' => 'Kategória',
                 'key' => 'product_variety',
                 'items' => $this->getFilterOptions('product_variety', 10),
@@ -61,14 +69,6 @@ final class Index extends Component
                 'title' => 'Minőség',
                 'key' => 'quality',
                 'items' => $this->getFilterOptions('quality', 10),
-            ],
-            [
-                'title' => 'Készlet',
-                'key' => 'stock',
-                'items' => [
-                    ['name' => 'Készleten', 'value' => 'in_stock', 'count' => $this->getInStockCount()],
-                    ['name' => 'Rendelésre', 'value' => 'out_of_stock', 'count' => $this->getOutOfStockCount()],
-                ],
             ],
         ];
     }

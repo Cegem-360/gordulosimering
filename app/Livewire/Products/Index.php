@@ -57,6 +57,14 @@ final class Index extends Component
     {
         return [
             [
+                'title' => 'Készlet',
+                'key' => 'stock',
+                'items' => [
+                    ['name' => 'Készleten', 'value' => 'in_stock', 'count' => $this->getInStockCount()],
+                    ['name' => 'Rendelésre', 'value' => 'out_of_stock', 'count' => $this->getOutOfStockCount()],
+                ],
+            ],
+            [
                 'title' => 'Kategória',
                 'key' => 'product_variety',
                 'items' => $this->getFilterOptions('product_variety', 10),
@@ -71,14 +79,6 @@ final class Index extends Component
                 'key' => 'quality',
                 'items' => $this->getFilterOptions('quality', 10),
             ],
-            [
-                'title' => 'Készlet',
-                'key' => 'stock',
-                'items' => [
-                    ['name' => 'Készleten', 'value' => 'in_stock', 'count' => $this->getInStockCount()],
-                    ['name' => 'Rendelésre', 'value' => 'out_of_stock', 'count' => $this->getOutOfStockCount()],
-                ],
-            ],
         ];
     }
 
@@ -89,11 +89,7 @@ final class Index extends Component
 
         // Apply search filter
         if (mb_strlen($this->search) >= 2) {
-            $query->where(function ($q): void {
-                $q->where('product_code', 'LIKE', $this->search . '%')
-                    ->orWhere('product_code', 'LIKE', '%' . $this->search . '%')
-                    ->orWhere('name', 'LIKE', '%' . $this->search . '%');
-            });
+            $query->matchingSearch($this->search);
         }
 
         // Apply product_variety filter
@@ -129,7 +125,7 @@ final class Index extends Component
 
         // Order by relevance if searching
         if (mb_strlen($this->search) >= 2) {
-            $query->orderByRaw('CASE WHEN product_code LIKE ? THEN 0 ELSE 1 END', [$this->search . '%']);
+            $query->orderBySearchRelevance($this->search);
         }
 
         return $query->paginate(24);
@@ -156,11 +152,7 @@ final class Index extends Component
 
         // Apply search filter to filter options too
         if (mb_strlen($this->search) >= 2) {
-            $query->where(function ($q): void {
-                $q->where('product_code', 'LIKE', $this->search . '%')
-                    ->orWhere('product_code', 'LIKE', '%' . $this->search . '%')
-                    ->orWhere('name', 'LIKE', '%' . $this->search . '%');
-            });
+            $query->matchingSearch($this->search);
         }
 
         return $query
@@ -181,11 +173,7 @@ final class Index extends Component
         $query = Product::query()->webVisible()->where('minimum_stock', '>', 0);
 
         if (mb_strlen($this->search) >= 2) {
-            $query->where(function ($q): void {
-                $q->where('product_code', 'LIKE', $this->search . '%')
-                    ->orWhere('product_code', 'LIKE', '%' . $this->search . '%')
-                    ->orWhere('name', 'LIKE', '%' . $this->search . '%');
-            });
+            $query->matchingSearch($this->search);
         }
 
         return $query->count();
@@ -199,11 +187,7 @@ final class Index extends Component
         });
 
         if (mb_strlen($this->search) >= 2) {
-            $query->where(function ($q): void {
-                $q->where('product_code', 'LIKE', $this->search . '%')
-                    ->orWhere('product_code', 'LIKE', '%' . $this->search . '%')
-                    ->orWhere('name', 'LIKE', '%' . $this->search . '%');
-            });
+            $query->matchingSearch($this->search);
         }
 
         return $query->count();

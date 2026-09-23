@@ -46,6 +46,39 @@ final class Product extends Model
     }
 
     /**
+     * Keresés termékkódra, névre és méretre, részszóra is. A tizedesvessző és
+     * a tizedespont egyenértékű: a "25,4x50,8" és a "25.4x50.8" ugyanazt adja,
+     * mert a vevők és az ERP-export sem egységesen írják a méreteket.
+     *
+     * @param  Builder<Product>  $query
+     */
+    #[Scope]
+    protected function matchingSearch(Builder $query, string $term): void
+    {
+        $pattern = '%' . self::normalizeDecimalSeparator($term) . '%';
+
+        $query->where(function (Builder $query) use ($pattern): void {
+            foreach (['product_code', 'name', 'size'] as $column) {
+                $query->orWhereRaw("REPLACE({$column}, ',', '.') LIKE ?", [$pattern]);
+            }
+        });
+    }
+
+    /**
+     * A termékkóddal kezdődő találatok kerülnek előre.
+     *
+     * @param  Builder<Product>  $query
+     */
+    #[Scope]
+    protected function orderBySearchRelevance(Builder $query, string $term): void
+    {
+        $query->orderByRaw(
+            'CASE WHEN REPLACE(product_code, \',\', \'.\') LIKE ? THEN 0 ELSE 1 END',
+            [self::normalizeDecimalSeparator($term) . '%'],
+        );
+    }
+
+    /**
      * The primary image path: the dedicated featured image, or the first
      * gallery image as a fallback.
      */
@@ -102,6 +135,11 @@ final class Product extends Model
             'images' => 'json',
             'documents' => 'json',
         ];
+    }
+
+    private static function normalizeDecimalSeparator(string $term): string
+    {
+        return str_replace(',', '.', mb_trim($term));
     }
 
     private function resolveImageUrl(?string $path): ?string

@@ -138,10 +138,12 @@
                 </div>
             </div>
 
-            <!-- Search Bar -->
-            <div class="hidden lg:flex flex-1 max-w-2xl mx-8">
-                <livewire:live-search />
-            </div>
+            <!-- Search Bar (the homepage has its own, above the category list) -->
+            @unless (request()->routeIs('index'))
+                <div class="hidden lg:flex flex-1 max-w-2xl mx-8">
+                    <livewire:live-search />
+                </div>
+            @endunless
 
             <!-- Right Side Menu -->
             <div class="flex items-center space-x-4">
