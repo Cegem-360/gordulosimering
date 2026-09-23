@@ -68,6 +68,7 @@ return [
 
     'category_id' => 'Szülő kategória',
     'display' => 'Megjelenítés',
+    'image' => 'Kép',
     'parentCategory.name' => 'Szülő kategória',
 
     'user_id' => 'Vevő',

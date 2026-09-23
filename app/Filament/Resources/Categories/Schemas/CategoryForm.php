@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Categories\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -39,6 +40,19 @@ final class CategoryForm
                             ->placeholder('Nincs (főkategória)'),
                         TextInput::make('display')
                             ->label('Megjelenítés'),
+                        TextInput::make('sort_order')
+                            ->label('Sorrend')
+                            ->numeric()
+                            ->minValue(0)
+                            ->helperText('Kisebb szám előrébb kerül a menüben és az alkategóriák között. Üresen a kategória-táblázat sorrendje érvényes.'),
+                        FileUpload::make('image')
+                            ->label('Kép')
+                            ->helperText('Az alkategória-csempén jelenik meg. Kép nélkül az első termék képe látszik.')
+                            ->image()
+                            ->disk('public')
+                            ->directory('categories')
+                            ->imageEditor()
+                            ->columnSpanFull(),
                         Textarea::make('description')
                             ->label('Leírás')
                             ->columnSpanFull(),
