@@ -1,12 +1,13 @@
 @props(['categories'])
 
-{{-- Recursive hover fly-out submenu. Each <li> is its own `group/item`, so a
-     nested submenu reacts to its immediate parent (nearest ancestor) — this keeps
-     the cascade working for any depth (the tree is up to 4 levels). --}}
+{{-- Recursive hover fly-out submenu. A submenu is revealed by its own parent
+     <li> only (`[&:hover>ul]`), so the menu opens one level per hover. A
+     `group-hover` variant would match any hovered ancestor and open every level
+     of the tree at once. --}}
 <ul
-    class="invisible opacity-0 group-hover/item:visible group-hover/item:opacity-100 transition-opacity duration-150 absolute left-full top-0 z-50 min-w-56 bg-white rounded-lg shadow-xl border border-gray-200 p-2">
+    class="invisible opacity-0 transition-opacity duration-150 absolute left-full top-0 z-50 min-w-56 bg-white rounded-lg shadow-xl border border-gray-200 p-2">
     @foreach ($categories->sortBy('name') as $category)
-        <li class="group/item relative" wire:key="flyout-{{ $category->id }}">
+        <li class="relative [&:hover>ul]:visible [&:hover>ul]:opacity-100" wire:key="flyout-{{ $category->id }}">
             <a href="{{ route('categories.show', $category) }}"
                 class="flex items-center gap-2 p-2 rounded-md text-xs text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
                 <span class="grow">{{ $category->name }}</span>

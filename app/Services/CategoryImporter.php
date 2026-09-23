@@ -18,7 +18,7 @@ final class CategoryImporter
      * márkanevek, pl. "SKF") kihagyjuk a termék-linkelésből, mert substringként
      * a terméknevek tömegére illenek és szétkenik a besorolást.
      */
-    private const string BRAND_ROOT_NAME = 'FORGALMAZOTT MÁRKÁINK';
+    private const string BRAND_ROOT_NAME = Category::BRAND_ROOT_NAME;
 
     /**
      * Ennél rövidebb termék-sor nevet nem linkelünk (túl generikus, túl-illeszt).

@@ -2,9 +2,8 @@
 
 @php
     $categories = Category::query()
-        ->whereNull('category_id')
+        ->menuRoots()
         ->with('children.children.children.children')
-        ->orderBy('name')
         ->get();
 @endphp
 
@@ -13,7 +12,7 @@
 
     <ul class="space-y-0">
         @forelse ($categories as $category)
-            <li class="group/item relative" wire:key="category-{{ $category->id }}">
+            <li class="group/item relative [&:hover>ul]:visible [&:hover>ul]:opacity-100" wire:key="category-{{ $category->id }}">
                 <a href="{{ route('categories.show', $category) }}"
                     class="flex items-center gap-3 p-3 hover:bg-gray-200 rounded-lg transition-colors">
                     <span class="w-5 h-5 shrink-0">

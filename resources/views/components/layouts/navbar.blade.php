@@ -1,3 +1,9 @@
+@use('App\Models\Category')
+
+@php
+    $menuCategories = Category::query()->menuRoots()->get(['id', 'name', 'slug']);
+@endphp
+
 <!-- Main Navigation -->
 <div x-data="{ mobileMenuOpen: false, categoryMenuOpen: false }" class="bg-white border-b">
     <div class="container mx-auto px-4">
@@ -31,66 +37,21 @@
                             x-transition:leave-start="opacity-100 translate-y-0"
                             x-transition:leave-end="opacity-0 translate-y-1"
                             class="absolute left-0 z-10 mt-2 w-80 bg-white border rounded-lg shadow-lg">
-                            <div class="p-4 grid grid-cols-1 gap-4">
-                                <!-- Main Categories -->
-                                <div>
-                                    <h3 class="font-bold text-gray-900 mb-2">{{ __('Csapágytípusok') }}</h3>
-                                    <ul class="space-y-2">
-                                        <li>
-                                            <a href="#"
-                                                class="text-gray-600 hover:text-blue-600 flex items-center justify-between group">
-                                                <span>{{ __('Mélyhornyú golyóscsapágyak') }}</span>
-                                                <i
-                                                    class="fas fa-chevron-right text-gray-400 group-hover:text-blue-600"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="text-gray-600 hover:text-blue-600 flex items-center justify-between group">
-                                                <span>{{ __('Tűgörgős csapágyak') }}</span>
-                                                <i
-                                                    class="fas fa-chevron-right text-gray-400 group-hover:text-blue-600"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"
-                                                class="text-gray-600 hover:text-blue-600 flex items-center justify-between group">
-                                                <span>{{ __('Hengergörgős csapágyak') }}</span>
-                                                <i
-                                                    class="fas fa-chevron-right text-gray-400 group-hover:text-blue-600"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <!-- Popular Series -->
-                                <div>
-                                    <h3 class="font-bold text-gray-900 mb-2">{{ __('Népszerű sorozatok') }}</h3>
-                                    <div class="grid grid-cols-2 gap-2">
-                                        <a href="#"
-                                            class="text-sm bg-gray-50 hover:bg-gray-100 rounded p-2 text-gray-600 hover:text-blue-600">
-                                            {{ __('62XX sorozat') }}
+                            <ul class="py-2">
+                                @foreach ($menuCategories as $category)
+                                    <li wire:key="nav-category-{{ $category->id }}">
+                                        <a href="{{ route('categories.show', $category) }}"
+                                            class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 group">
+                                            <span>{{ $category->name }}</span>
+                                            <i class="fas fa-chevron-right text-xs text-gray-400 group-hover:text-blue-600"></i>
                                         </a>
-                                        <a href="#"
-                                            class="text-sm bg-gray-50 hover:bg-gray-100 rounded p-2 text-gray-600 hover:text-blue-600">
-                                            {{ __('63XX sorozat') }}
-                                        </a>
-                                        <a href="#"
-                                            class="text-sm bg-gray-50 hover:bg-gray-100 rounded p-2 text-gray-600 hover:text-blue-600">
-                                            {{ __('60XX sorozat') }}
-                                        </a>
-                                        <a href="#"
-                                            class="text-sm bg-gray-50 hover:bg-gray-100 rounded p-2 text-gray-600 hover:text-blue-600">
-                                            {{ __('NK sorozat') }}
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
 
                     <!-- Other Nav Items -->
-                    <a href="#" class="text-gray-700 hover:text-blue-600">{{ __('Márkák') }}</a>
                     <a href="#" class="text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
 
                     <!-- Cégünkről Menu -->
@@ -261,16 +222,13 @@
                 </div>
 
                 <div x-show="open" class="mt-2 space-y-2 pl-4">
-                    <a href="#"
-                        class="block py-2 text-gray-600 hover:text-blue-600">{{ __('Mélyhornyú golyóscsapágyak') }}</a>
-                    <a href="#"
-                        class="block py-2 text-gray-600 hover:text-blue-600">{{ __('Tűgörgős csapágyak') }}</a>
-                    <a href="#"
-                        class="block py-2 text-gray-600 hover:text-blue-600">{{ __('Hengergörgős csapágyak') }}</a>
+                    @foreach ($menuCategories as $category)
+                        <a href="{{ route('categories.show', $category) }}" wire:key="mobile-category-{{ $category->id }}"
+                            class="block py-2 text-gray-600 hover:text-blue-600">{{ $category->name }}</a>
+                    @endforeach
                 </div>
             </div>
 
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Márkák') }}</a>
             <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
 
             <!-- Mobile Cégünkről Menu -->
