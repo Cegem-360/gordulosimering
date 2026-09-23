@@ -1,6 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="GÖRDÜLŐ-Simmering">
-  <rect width="400" height="400" fill="#f3f4f6"/>
-  <circle cx="200" cy="170" r="92" fill="none" stroke="#2271B3" stroke-width="10" opacity="0.25"/>
-  <text x="200" y="208" text-anchor="middle" font-family="Instrument Sans, ui-sans-serif, system-ui, sans-serif" font-size="120" font-weight="700" fill="#2271B3">G</text>
-  <text x="200" y="318" text-anchor="middle" font-family="Instrument Sans, ui-sans-serif, system-ui, sans-serif" font-size="26" font-weight="600" letter-spacing="1" fill="#293133" opacity="0.6">GÖRDÜLŐ-Simmering</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="GÖRDÜLŐ-Simmering – nincs termékfotó">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F6F9FC"/>
+      <stop offset="1" stop-color="#E7EFF7"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <g fill="none" stroke="#7FA6D3">
+    <circle cx="200" cy="168" r="110" stroke-width="10"/>
+    <circle cx="200" cy="168" r="62" stroke-width="10"/>
+  </g>
+  <g fill="#DCEAF5" stroke="#7FA6D3" stroke-width="2.5">
+    <circle cx="283.1" cy="190.3" r="13"/>
+    <circle cx="260.8" cy="228.8" r="13"/>
+    <circle cx="222.3" cy="251.1" r="13"/>
+    <circle cx="177.7" cy="251.1" r="13"/>
+    <circle cx="139.2" cy="228.8" r="13"/>
+    <circle cx="116.9" cy="190.3" r="13"/>
+    <circle cx="116.9" cy="145.7" r="13"/>
+    <circle cx="139.2" cy="107.2" r="13"/>
+    <circle cx="177.7" cy="84.9" r="13"/>
+    <circle cx="222.3" cy="84.9" r="13"/>
+    <circle cx="260.8" cy="107.2" r="13"/>
+    <circle cx="283.1" cy="145.7" r="13"/>
+  </g>
+  <path d="M223.3 144.7 A33 33 0 1 0 233.0 168.0 H204" fill="none" stroke="#2C6BB6" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="200" y="336" text-anchor="middle" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="27" font-weight="700" letter-spacing="0.5" fill="#4F7FBF">GÖRDÜLŐ-Simmering</text>
 </svg>

@@ -3,7 +3,7 @@
         <input type="text" wire:model.live.debounce.300ms="query" @focus="$wire.showResultsPanel()"
             placeholder="{{ __('Cikkszám, méret vagy név') }}"
             title="{{ __('Keresés termékek között... (pl: 6205-2RS, SKF golyóscsapágy)') }}"
-            class="w-full pl-12 pr-4 py-2 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            class="w-full pl-12 pr-4 py-2 rounded-lg border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             autocomplete="off">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <i class="fas fa-search text-gray-400"></i>
