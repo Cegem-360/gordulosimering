@@ -1,7 +1,8 @@
 @use('App\Models\Category')
+@inject('categoryTree', 'App\Services\CategoryTree')
 
 @php
-    $menuCategories = Category::query()->menuRoots()->get(['id', 'name', 'slug']);
+    $menuCategories = $categoryTree->stocked(Category::query()->menuRoots()->get(['id', 'name', 'slug']));
 @endphp
 
 <!-- Main Navigation -->

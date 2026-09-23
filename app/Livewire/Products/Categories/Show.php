@@ -6,10 +6,11 @@ namespace App\Livewire\Products\Categories;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\CategoryTree;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -26,12 +27,21 @@ final class Show extends Component
     }
 
     /**
-     * Direct child categories, shown as sub-navigation cards.
+     * Direct child categories that hold products, in menu order, each with
+     * the picture its tile shows.
+     *
+     * @return Collection<int, array{category: Category, image: ?string}>
      */
     #[Computed]
     public function subcategories(): Collection
     {
-        return $this->category->children()->orderBy('name')->get();
+        $tree = resolve(CategoryTree::class);
+
+        return $tree->stocked($this->category->children)
+            ->map(fn (Category $subcategory): array => [
+                'category' => $subcategory,
+                'image' => $tree->coverImageUrl($subcategory),
+            ]);
     }
 
     /**
@@ -59,7 +69,7 @@ final class Show extends Component
     #[Computed]
     public function products(): LengthAwarePaginator
     {
-        $categoryIds = $this->descendantIds();
+        $categoryIds = resolve(CategoryTree::class)->descendantIds($this->category);
 
         return Product::query()
             ->webVisible()
@@ -75,29 +85,5 @@ final class Show extends Component
             'subcategories' => $this->subcategories,
             'products' => $this->products,
         ]);
-    }
-
-    /**
-     * The current category id plus every descendant id (tree is up to 4 deep).
-     *
-     * @return array<int, int>
-     */
-    private function descendantIds(): array
-    {
-        $byParent = Category::query()->get(['id', 'category_id'])->groupBy('category_id');
-
-        $ids = [$this->category->id];
-        $stack = [$this->category->id];
-
-        while ($stack !== []) {
-            $parentId = array_pop($stack);
-
-            foreach ($byParent->get($parentId, collect()) as $child) {
-                $ids[] = $child->id;
-                $stack[] = $child->id;
-            }
-        }
-
-        return $ids;
     }
 }

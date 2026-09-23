@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Livewire\Products\Categories\Show;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -41,4 +42,48 @@ it('resolves the full page route with the slug binding', function (): void {
     $this->get(route('categories.show', $category))
         ->assertOk()
         ->assertSeeLivewire(Show::class);
+});
+
+it('shows only subcategories with products, in menu order, as photo tiles', function (): void {
+    Storage::fake('public');
+    $root = Category::query()->create(['name' => 'BILINCSEK', 'slug' => 'bilincsek']);
+    $second = Category::query()->create(['name' => 'NORMA SZORÍTÓBILINCS', 'slug' => 'szorito', 'category_id' => $root->id, 'sort_order' => 2]);
+    $first = Category::query()->create(['name' => 'NORMA BENZINCSŐBILINCS', 'slug' => 'benzin', 'category_id' => $root->id, 'sort_order' => 1, 'image' => 'categories/benzin.jpg']);
+    Category::query()->create(['name' => 'ÜRES TÍPUS', 'slug' => 'ures-tipus', 'category_id' => $root->id, 'sort_order' => 0]);
+    $first->products()->attach(Product::factory()->create());
+    $second->products()->attach(Product::factory()->create(['featured_image' => 'products/szorito.jpg']));
+
+    Livewire::test(Show::class, ['category' => $root])
+        ->assertSeeInOrder(['NORMA BENZINCSŐBILINCS', 'NORMA SZORÍTÓBILINCS'])
+        ->assertDontSee('ÜRES TÍPUS')
+        ->assertSeeHtml(Storage::disk('public')->url('categories/benzin.jpg'))
+        ->assertSeeHtml(Storage::disk('public')->url('products/szorito.jpg'));
+});
+
+it('links back to the parent category, or to all categories from a root', function (): void {
+    $root = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    $child = Category::query()->create(['name' => 'GOLYÓS CSAPÁGY', 'slug' => 'golyos', 'category_id' => $root->id]);
+
+    Livewire::test(Show::class, ['category' => $child])
+        ->assertSee('Vissza: CSAPÁGYAK')
+        ->assertSeeHtml(route('categories.show', $root));
+
+    Livewire::test(Show::class, ['category' => $root])
+        ->assertSee('Vissza az összes kategóriához');
+});
+
+it('lists every product of a brand on its brand page, whatever its category', function (): void {
+    $brandRoot = Category::query()->create(['name' => Category::BRAND_ROOT_NAME, 'slug' => 'markak']);
+    $skf = Category::query()->create(['name' => 'SKF', 'slug' => 'skf', 'category_id' => $brandRoot->id]);
+    $bearings = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    $grease = Category::query()->create(['name' => 'ZSÍRZÁSTECHNIKA', 'slug' => 'zsir']);
+    $bearing = Product::factory()->create(['name' => 'SKF golyóscsapágy 6203']);
+    $lubricant = Product::factory()->create(['name' => 'SKF kenőzsír LGMT 2']);
+    $bearings->products()->attach($bearing);
+    $grease->products()->attach($lubricant);
+    $skf->products()->attach([$bearing->id, $lubricant->id]);
+
+    Livewire::test(Show::class, ['category' => $skf])
+        ->assertSee('SKF golyóscsapágy 6203')
+        ->assertSee('SKF kenőzsír LGMT 2');
 });

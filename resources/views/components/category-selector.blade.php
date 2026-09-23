@@ -1,10 +1,10 @@
 @use('App\Models\Category')
+@inject('categoryTree', 'App\Services\CategoryTree')
 
 @php
-    $categories = Category::query()
-        ->menuRoots()
-        ->with('children.children.children.children')
-        ->get();
+    $categories = $categoryTree->stocked(
+        Category::query()->menuRoots()->with('children.children.children.children')->get(),
+    );
 @endphp
 
 <div class="bg-white rounded-lg shadow-lg p-4 w-full">
@@ -29,8 +29,9 @@
                     </svg>
                 </a>
 
-                @if ($category->children->isNotEmpty())
-                    <x-category-flyout :categories="$category->children" />
+                @php($subcategories = $categoryTree->stocked($category->children))
+                @if ($subcategories->isNotEmpty())
+                    <x-category-flyout :categories="$subcategories" />
                 @endif
             </li>
         @empty
