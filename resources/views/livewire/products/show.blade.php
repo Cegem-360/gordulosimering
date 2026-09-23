@@ -73,7 +73,7 @@
                                         </div>
                                     @endforeach
                                 @else
-                                    <img src="{{ Vite::asset('resources/images/bearing.webp') }}"
+                                    <img src="{{ Vite::asset('resources/images/product-placeholder.svg') }}"
                                         alt="{{ $product->name }}" class="w-full h-full object-contain">
                                 @endif
                             </div>
@@ -195,8 +195,9 @@
                         <!-- Price Section -->
                         <div class="mb-5">
                             @if ($product->net_selling_price)
-                                <p class="text-3xl md:text-4xl font-bold text-blue-600">
-                                    {{ Number::currency($product->net_selling_price, 'HUF', 'hu', 0) }}
+                                <p class="text-3xl md:text-4xl text-blue-600">
+                                    <span class="font-bold">{{ Number::currency($product->net_selling_price, 'HUF', 'hu', 0) }}</span>
+                                    <span class="font-light">+ÁFA</span>
                                 </p>
                                 <p class="text-sm text-gray-500 mt-1">Nettó eladási ár</p>
                                 @if ($product->gross_selling_price)

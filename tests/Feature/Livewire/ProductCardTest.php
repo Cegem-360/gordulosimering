@@ -65,3 +65,25 @@ it('adds minimum order quantity to cart', function (): void {
     $cart = Cart::query()->where('user_id', $user->id)->first();
     expect($cart->items->first()->quantity)->toBe(5);
 });
+
+it('shows the product code and the net price with a +ÁFA label, not the product variety', function (): void {
+    $product = Product::factory()->create([
+        'product_code' => 'TORRO SL 9-11/9 SZW1',
+        'product_variety' => 'bilincs',
+        'supplier' => null,
+        'net_selling_price' => 75,
+    ]);
+
+    Livewire::test(ProductCard::class, ['product' => $product])
+        ->assertSee('TORRO SL 9-11/9 SZW1')
+        ->assertSee('+ÁFA')
+        ->assertDontSee('bilincs');
+});
+
+it('falls back to the company placeholder instead of a bearing photo', function (): void {
+    $product = Product::factory()->create(['featured_image' => null, 'images' => null]);
+
+    Livewire::test(ProductCard::class, ['product' => $product])
+        ->assertSeeHtml('product-placeholder')
+        ->assertDontSeeHtml('bearing');
+});

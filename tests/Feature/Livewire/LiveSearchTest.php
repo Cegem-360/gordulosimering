@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Livewire\LiveSearch;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 it('renders successfully', function (): void {
@@ -74,3 +75,16 @@ it('treats a decimal comma and a decimal point as the same', function (string $q
     'decimal point' => '25.4x50.8x6.35',
     'decimal comma' => '25,4x50,8x6,35',
 ]);
+
+it('shows the stored featured image of a result instead of the raw path', function (): void {
+    Product::factory()->create([
+        'name' => 'Képes termék',
+        'product_code' => 'KEP-001',
+        'featured_image' => 'products/abc.jpg',
+        'images' => null,
+    ]);
+
+    Livewire::test(LiveSearch::class)
+        ->set('query', 'KEP-001')
+        ->assertSeeHtml('src="' . Storage::disk('public')->url('products/abc.jpg') . '"');
+});

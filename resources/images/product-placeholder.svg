@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="GÖRDÜLŐ-Simmering">
+  <rect width="400" height="400" fill="#f3f4f6"/>
+  <circle cx="200" cy="170" r="92" fill="none" stroke="#2271B3" stroke-width="10" opacity="0.25"/>
+  <text x="200" y="208" text-anchor="middle" font-family="Instrument Sans, ui-sans-serif, system-ui, sans-serif" font-size="120" font-weight="700" fill="#2271B3">G</text>
+  <text x="200" y="318" text-anchor="middle" font-family="Instrument Sans, ui-sans-serif, system-ui, sans-serif" font-size="26" font-weight="600" letter-spacing="1" fill="#293133" opacity="0.6">GÖRDÜLŐ-Simmering</text>
+</svg>

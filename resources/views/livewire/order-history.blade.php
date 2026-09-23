@@ -158,8 +158,8 @@
                                         @foreach ($order->orderItems->take(3) as $item)
                                             <div class="flex items-center gap-4 p-2 rounded-lg hover:bg-gray-50 transition-colors">
                                                 <div class="w-16 h-16 bg-gray-100 rounded-lg shrink-0 overflow-hidden border border-gray-200">
-                                                    @if ($item->product && $item->product->images)
-                                                        <img src="{{ $item->product->image }}" alt="{{ $item->product->name }}"
+                                                    @if ($item->product)
+                                                        <img src="{{ $item->product->image_url ?? Vite::asset('resources/images/product-placeholder.svg') }}" alt="{{ $item->product->name }}"
                                                             class="w-full h-full object-contain">
                                                     @else
                                                         <div class="w-full h-full flex items-center justify-center">

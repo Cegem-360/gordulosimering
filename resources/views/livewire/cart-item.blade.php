@@ -3,13 +3,8 @@
          <!-- Product Image -->
          <a href="{{ route('products.show', $product->slug) }}"
              class="shrink-0 w-full md:w-32 h-32 bg-gray-100 rounded-lg overflow-hidden">
-             @if ($product->images)
-                 <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-contain">
-             @else
-                 <div class="w-full h-full flex products-center justify-center">
-                     <i class="fas fa-box text-4xl text-gray-300"></i>
-                 </div>
-             @endif
+             <img src="{{ $product->image_url ?? Vite::asset('resources/images/product-placeholder.svg') }}"
+                 alt="{{ $product->name }}" class="w-full h-full object-contain">
          </a>
 
          <!-- Product Details -->

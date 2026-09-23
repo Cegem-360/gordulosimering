@@ -2,13 +2,13 @@
     class="group bg-white hover:bg-gray-100 hover:shadow-xl transition-all border border-gray-400 rounded-lg p-4 flex flex-col h-full">
     @php
         $mainImage = $product->image_url;
-        $defaultImage = Vite::asset('resources/images/bearing.webp');
+        $defaultImage = Vite::asset('resources/images/product-placeholder.svg');
         $inStock = ($product->minimum_stock ?? 0) > 0;
     @endphp
 
     <a href="{{ isset($product->slug) ? route('products.show', ['product' => $product->slug]) : '#' }}"
         class="relative mb-4">
-        <img src="{{ $mainImage ?? $defaultImage }}"
+        <img src="{{ $mainImage ?? $defaultImage }}" onerror="this.onerror = null; this.src = '{{ $defaultImage }}'"
             alt="{{ $product->name ?? 'Nincs termék név' }}" class="w-full h-40 object-contain">
         @if ($inStock)
             <span
@@ -28,10 +28,12 @@
         {{ $product->name ?? 'Nincs termék név' }}
     </a>
 
-    <div class="text-sm font-medium mb-2 text-gray-600">{{ $product->supplier ?? ($product->product_variety ?? '') }}
-    </div>
-    <div class="text-xl font-bold text-blue-600 mb-4">
-        {{ Number::currency($product->net_selling_price ?? 0, 'HUF', 'hu', 0) }}
+    @if (filled($product->product_code))
+        <div class="text-sm font-medium mb-2 text-gray-600">{{ $product->product_code }}</div>
+    @endif
+    <div class="text-xl text-blue-600 mb-4">
+        <span class="font-bold">{{ Number::currency($product->net_selling_price ?? 0, 'HUF', 'hu', 0) }}</span>
+        <span class="font-light">+ÁFA</span>
     </div>
     @if ($inStock)
         <button type="button" wire:click="addToCart"

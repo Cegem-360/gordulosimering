@@ -25,7 +25,7 @@ final class LiveSearch extends Component
 
         return Product::query()
             ->webVisible()
-            ->select(['id', 'name', 'slug', 'product_code', 'net_selling_price', 'images', 'minimum_stock'])
+            ->select(['id', 'name', 'slug', 'product_code', 'net_selling_price', 'featured_image', 'images', 'minimum_stock'])
             ->matchingSearch($this->query)
             ->orderBySearchRelevance($this->query)
             ->limit(8)

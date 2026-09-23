@@ -27,14 +27,8 @@
                             class="w-full flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors text-left">
                             <!-- Product Image -->
                             <div class="w-12 h-12 bg-gray-100 rounded shrink-0 overflow-hidden">
-                                @if ($product->images)
-                                    <img src="{{ $product->image }}" alt="{{ $product->name }}"
-                                        class="w-full h-full object-contain">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center">
-                                        <i class="fas fa-box text-gray-300"></i>
-                                    </div>
-                                @endif
+                                <img src="{{ $product->image_url ?? Vite::asset('resources/images/product-placeholder.svg') }}"
+                                    alt="{{ $product->name }}" class="w-full h-full object-contain">
                             </div>
 
                             <!-- Product Info -->
