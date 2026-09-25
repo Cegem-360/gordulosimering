@@ -133,3 +133,30 @@ it('splits the work safety category into shoes and gloves', function (): void {
         ->and($lace->categories()->pluck('name')->all())->toBe(['MUNKAVÉDELMI CIPŐ'])
         ->and($glove->categories()->pluck('name')->all())->toBe(['MUNKAVÉDELMI KESZTYŰ']);
 });
+
+it('puts the chemicals subcategories into the order the client asked for', function (): void {
+    $chemicals = Category::query()->create(['name' => 'VEGYI ÁRUK', 'slug' => 'vegyi-aruk']);
+    $before = ['EGYÉB RAGASZTÓ ÉS TÖMÍTŐ', 'PILLANATRAGASZTÓ', 'UV FÉNYRE KÖTŐ RAGASZTÓ', 'CSAVARRÖGZÍTŐ', 'ADAGOLÓ ESZKÖZ'];
+    foreach ($before as $index => $name) {
+        Category::query()->create(['name' => $name, 'slug' => 'c' . $index, 'category_id' => $chemicals->id, 'sort_order' => 100 + $index * 10]);
+    }
+
+    $migration = require database_path('migrations/2026_09_25_114159_reorder_chemicals_subcategories.php');
+    $migration->up();
+
+    expect($chemicals->children()->pluck('name')->all())
+        ->toBe(['PILLANATRAGASZTÓ', 'CSAVARRÖGZÍTŐ', 'UV FÉNYRE KÖTŐ RAGASZTÓ', 'EGYÉB RAGASZTÓ ÉS TÖMÍTŐ', 'ADAGOLÓ ESZKÖZ'])
+        ->and($chemicals->children()->pluck('sort_order')->all())->toBe([100, 110, 120, 130, 140]);
+});
+
+it('lists the chemicals subcategories in the client\'s order after a fresh import', function (): void {
+    (new CategoryImporter())->importTree(database_path('data/web_kategoriak.tsv'));
+
+    $chemicals = Category::query()->whereNull('category_id')->where('name', 'VEGYI ÁRUK')->sole();
+
+    expect($chemicals->children()->pluck('name')->all())->toBe([
+        'PILLANATRAGASZTÓ', 'CSAVARRÖGZÍTŐ', 'CSAPÁGYRÖGZÍTŐ', 'MENETTÖMÍTŐ', 'FELÜLETTÖMÍTŐ',
+        'KÉTKOMPONENSŰ RAGASZTÓ', 'BERÁGÓDÁSGÁTLÓ', 'TISZTÍTÁS, ZSÍRTALANÍTÁS', 'AKTIVÁTOR, PRIMER', 'ZSÍR, OLAJ',
+        'UV FÉNYRE KÖTŐ RAGASZTÓ', 'EGYÉB RAGASZTÓ ÉS TÖMÍTŐ', 'RAGASZTÓSZALAG', 'KARBANTARTÁSI TERMÉKEK', 'ADAGOLÓ ESZKÖZ',
+    ]);
+});

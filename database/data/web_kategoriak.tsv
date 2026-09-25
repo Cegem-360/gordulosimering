@@ -1510,22 +1510,7 @@ HAJTÁSTECHNIKA	SZÍJHATÁS	ÉKSZÍJ	SKF ékszíj
 	KARDÁNCSUKLÓ	Hevederes kardáncsukló
 		Hevederes kardáncsukló, dupla
 
-VEGYI ÁRUK	EGYÉB RAGASZTÓ ÉS TÖMÍTŐ	F.BS extra erős szilikon ragasztó, színtelen
-		F.BS univ szilikon paszta vízvezeték-rendszerekhez
-		LOCTITE bemaró alapozó vakrozsda ellen
-		LOCTITE gyorsan kötő csőjavító ragasztó 50mmX1.8mm
-		LOCTITE kék nagy viszkozitású indikátor paszta
-		LOCTITE kis súrlódású kenhető epoxigyanta
-		LOCTITE megszorulásgátló STIFT
-		LOCTITE nagy nyírószilárdságú gyors fém-fém rag.
-		LOCTITE nagy ütésállóságú epoxi mágnes ragasztása
-		LOCTITE PATTEX cipőragasztó
-		LOCTITE PATTEX PALMATEX univerzális erősragasztó
-		LOCTITE rugalmas fekete ragasztó/tömítőanyag
-		LOCTITE vízbázisú szintetikus latexgyanta bevonat
-		LOCTITE vízzel elegyedő hűtő-kenő vágófolyadék
-		LOCTITE vörös jelölőfesték elektronikus berendezésekhez
-	PILLANATRAGASZTÓ	LOCTITE 2K általános gél pillanatragasztó
+VEGYI ÁRUK	PILLANATRAGASZTÓ	LOCTITE 2K általános gél pillanatragasztó
 		LOCTITE alacsony kifehéredésű pillanatragasztó
 		LOCTITE általános felhasználású pillanatragasztó
 		LOCTITE általános felhasználású pillanatragasztó gél
@@ -1541,11 +1526,6 @@ VEGYI ÁRUK	EGYÉB RAGASZTÓ ÉS TÖMÍTŐ	F.BS extra erős szilikon ragasztó, 
 		LOCTITE pillanatragasztó alapozó műanyagokhoz
 		LOCTITE rugalmas pillanatragasztó
 		LOCTITE ütésálló pillanatragasztó
-	UV FÉNYRE KÖTŐ RAGASZTÓ	LOCTITE UV-fényre kötő műanyag ragasztó
-		LOCTITE UV-fényre kötő orvostechnikai ragasztó
-		LOCTITE UV-fényre kötő üveg és fém ragasztó
-		LOCTITE UV-fényre kötő üveg, fém, műanyag ragasztó
-		LOCTITE UV-fényre kötő üveg-üveg üveg-fém ragasztó
 	CSAVARRÖGZÍTŐ	LOCTITE kis szilárdságú menetrögzítő kis csavarhoz
 		LOCTITE közepes szilárdságú menetrögzítő
 		LOCTITE közepes szilárdságú menetrögzítő STIFT
@@ -1557,21 +1537,6 @@ VEGYI ÁRUK	EGYÉB RAGASZTÓ ÉS TÖMÍTŐ	F.BS extra erős szilikon ragasztó, 
 		LOCTITE lassú kikeményedésű csapágyrögzítő
 		LOCTITE nagy szilárdságú általános csapágyrögzítő
 		LOCTITE nagy szilárdságú csapágyrögzítő
-	BERÁGÓDÁSGÁTLÓ	LOCTITE élelmiszeripari fémmentes berágódásgátló
-		LOCTITE fémmentes berágódásgátló
-		LOCTITE grafit- és alumínium tartalmú berágódásgátló
-		LOCTITE grafit-és alu tartalmú berágódásgátló
-		LOCTITE kerámia tartalmú fehér berágódásgátló
-		LOCTITE MoS2 tartalmú berágódásgátló spray
-		LOCTITE réz- és grafittartalmú berágódásgátló spray
-		LOCTITE réztartalmú berágódásgátló
-		LOCTITE tengerészeti fémmentes berágódásgátló
-		MOTIP réz spray
-		NICRO szerelöpaszta spray, 1200°C
-		OKS fehér fémmentes univerzális szerelőpaszta 250g
-		OKS fehér fémmentes univerzális szerelőpaszta 80ml
-		OKS fehér fémmentes univerzális szerelőpaszta400ml
-		OKS rézpaszta nagyteljesítményű korrózióvédelemmel
 	MENETTÖMÍTŐ	LOCTITE általános menettömítő
 		LOCTITE általános menettömítő ivóvízhez
 		LOCTITE gyorsan kötő hidraulika menettömítő
@@ -1632,14 +1597,21 @@ VEGYI ÁRUK	EGYÉB RAGASZTÓ ÉS TÖMÍTŐ	F.BS extra erős szilikon ragasztó, 
 		LOCTITE 2K nagy szilárdságú fém-fém epoxi
 		LOCTITE 2K nagy szilárdságú folyékony epoxi
 		LOCTITE 2K PU ragasztó műanyag alkatr. javítására
-	RAGASZTÓSZALAG	LOCTITE kompozit, gyantával kombinált szövetszalag
-		LOCTITE nagy szilárdságú 3 rétegű ragasztószalag
-		LOCTITE önhegedő szilikongumigumi szalag (4,27m)
-		LOCTITE PATTEX fix montázsszalag 120 kg
-		Szigetelőszalag 18mm x 20m, különböző színek
-	AKTIVÁTOR, PRIMER	LOCTITE kötésgyorsító aktivátor anaerob termékhez
-		LOCTITE kötésgyorsító pillanatragasztókhoz
-		LOCTITE pillanatragasztó alapozó műanyagokhoz
+	BERÁGÓDÁSGÁTLÓ	LOCTITE élelmiszeripari fémmentes berágódásgátló
+		LOCTITE fémmentes berágódásgátló
+		LOCTITE grafit- és alumínium tartalmú berágódásgátló
+		LOCTITE grafit-és alu tartalmú berágódásgátló
+		LOCTITE kerámia tartalmú fehér berágódásgátló
+		LOCTITE MoS2 tartalmú berágódásgátló spray
+		LOCTITE réz- és grafittartalmú berágódásgátló spray
+		LOCTITE réztartalmú berágódásgátló
+		LOCTITE tengerészeti fémmentes berágódásgátló
+		MOTIP réz spray
+		NICRO szerelöpaszta spray, 1200°C
+		OKS fehér fémmentes univerzális szerelőpaszta 250g
+		OKS fehér fémmentes univerzális szerelőpaszta 80ml
+		OKS fehér fémmentes univerzális szerelőpaszta400ml
+		OKS rézpaszta nagyteljesítményű korrózióvédelemmel
 	TISZTÍTÁS, ZSÍRTALANÍTÁS	FELÜLET TISZTÍTÁS	Ipari géptisztító géprongy
 			Ipari géptisztító géprongy, 200-250 lap
 			Ipari géptisztító kendő 28x38cm, 400lap, perforált
@@ -1676,6 +1648,9 @@ VEGYI ÁRUK	EGYÉB RAGASZTÓ ÉS TÖMÍTŐ	F.BS extra erős szilikon ragasztó, 
 			LOCTITE előnedvesített tisztító törlőkendő 70db
 			LOCTITE kéztisztító (citrusolaj,aloe vera,lanolin)
 			Pumpa a 4L Goldhand speziel kéztisztító krémhez
+	AKTIVÁTOR, PRIMER	LOCTITE kötésgyorsító aktivátor anaerob termékhez
+		LOCTITE kötésgyorsító pillanatragasztókhoz
+		LOCTITE pillanatragasztó alapozó műanyagokhoz
 	ZSÍR, OLAJ	CX80 kerékpárokhoz lánckenő olaj 100ml
 		CX80 kerékpárokhoz száraz lánckenő spray 150ml
 		CX80 kerékpárokhoz száraz lánckenő spray 500ml
@@ -1736,6 +1711,31 @@ VEGYI ÁRUK	EGYÉB RAGASZTÓ ÉS TÖMÍTŐ	F.BS extra erős szilikon ragasztó, 
 		WD-40 univerzális olajozó, rozsdaoldó spray
 		WD-40 univerzális olajozó, rozsdaoldó, 5 liter
 		Zárolajzó jégoldó spray 50ml
+	UV FÉNYRE KÖTŐ RAGASZTÓ	LOCTITE UV-fényre kötő műanyag ragasztó
+		LOCTITE UV-fényre kötő orvostechnikai ragasztó
+		LOCTITE UV-fényre kötő üveg és fém ragasztó
+		LOCTITE UV-fényre kötő üveg, fém, műanyag ragasztó
+		LOCTITE UV-fényre kötő üveg-üveg üveg-fém ragasztó
+	EGYÉB RAGASZTÓ ÉS TÖMÍTŐ	F.BS extra erős szilikon ragasztó, színtelen
+		F.BS univ szilikon paszta vízvezeték-rendszerekhez
+		LOCTITE bemaró alapozó vakrozsda ellen
+		LOCTITE gyorsan kötő csőjavító ragasztó 50mmX1.8mm
+		LOCTITE kék nagy viszkozitású indikátor paszta
+		LOCTITE kis súrlódású kenhető epoxigyanta
+		LOCTITE megszorulásgátló STIFT
+		LOCTITE nagy nyírószilárdságú gyors fém-fém rag.
+		LOCTITE nagy ütésállóságú epoxi mágnes ragasztása
+		LOCTITE PATTEX cipőragasztó
+		LOCTITE PATTEX PALMATEX univerzális erősragasztó
+		LOCTITE rugalmas fekete ragasztó/tömítőanyag
+		LOCTITE vízbázisú szintetikus latexgyanta bevonat
+		LOCTITE vízzel elegyedő hűtő-kenő vágófolyadék
+		LOCTITE vörös jelölőfesték elektronikus berendezésekhez
+	RAGASZTÓSZALAG	LOCTITE kompozit, gyantával kombinált szövetszalag
+		LOCTITE nagy szilárdságú 3 rétegű ragasztószalag
+		LOCTITE önhegedő szilikongumigumi szalag (4,27m)
+		LOCTITE PATTEX fix montázsszalag 120 kg
+		Szigetelőszalag 18mm x 20m, különböző színek
 	KARBANTARTÁSI TERMÉKEK	GCE száraz jelölőfesték, piros
 		Jégoldó
 		LOCTITE -43°C-ig fagyasztó, csavarlazító spray
