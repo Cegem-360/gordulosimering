@@ -49,6 +49,8 @@ it('rounds the sale price to whole forints', function (float $netPrice, float $p
     '999 Ft, 52%' => [999, 52, 480],
     '999.50 Ft, 30%' => [999.50, 30, 700],
     '15 Ft, 55%' => [15, 55, 7],
+    'exactly half a forint, 45 Ft, 30%' => [45, 30, 32],
+    'exactly half a forint, 85 Ft, 30%' => [85, 30, 60],
 ]);
 
 it('never goes below zero for a discount of 100% or more', function (float $percentage): void {

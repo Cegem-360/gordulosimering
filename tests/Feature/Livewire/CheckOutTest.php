@@ -41,7 +41,10 @@ it('saves cart items as order items when order is created', function (): void {
         'session_id' => session()->getId(),
     ]);
 
-    $products = Product::factory()->count(2)->create();
+    $products = Product::factory()->count(2)->sequence(
+        ['net_selling_price' => 9912.40],
+        ['net_selling_price' => 1500],
+    )->create();
 
     $cartItem1 = CartItem::factory()->create([
         'cart_id' => $cart->id,

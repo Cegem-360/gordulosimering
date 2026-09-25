@@ -123,7 +123,7 @@ final class Product extends Model
     protected function salePrice(): Attribute
     {
         return Attribute::get(fn (): ?int => $this->isOnSale()
-            ? (int) round((float) $this->net_selling_price * (1 - $this->effective_sale_percentage / 100))
+            ? (int) round((float) $this->net_selling_price * (100 - $this->effective_sale_percentage) / 100)
             : null);
     }
 

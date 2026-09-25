@@ -200,7 +200,7 @@
                                     <span class="text-3xl md:text-4xl font-light text-blue-600">+ÁFA</span>
                                 </div>
                                 <p class="text-sm text-gray-500 mt-1">Nettó eladási ár</p>
-                                @if ($product->gross_selling_price)
+                                @if ($product->gross_selling_price && ! $product->isOnSale())
                                     <p class="text-sm text-gray-400 mt-1">
                                         Bruttó: {{ Number::currency($product->gross_selling_price, 'HUF', 'hu', 0) }}
                                     </p>
@@ -323,11 +323,12 @@
                             @if ($product->net_selling_price && $product->net_selling_price > 0)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Nettó eladási ár</dt>
-                                    <dd class="font-bold text-right text-blue-600">
-                                        {{ Number::currency($product->net_selling_price, 'HUF', 'hu', 0) }}</dd>
+                                    <dd>
+                                        <x-product-price :product="$product" size="sm" class="justify-end" />
+                                    </dd>
                                 </div>
                             @endif
-                            @if ($product->gross_selling_price && $product->gross_selling_price > 0)
+                            @if ($product->gross_selling_price && $product->gross_selling_price > 0 && ! $product->isOnSale())
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Bruttó eladási ár</dt>
                                     <dd class="font-bold text-right">

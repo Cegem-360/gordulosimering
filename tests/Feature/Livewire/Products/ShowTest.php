@@ -38,3 +38,17 @@ it('shows the sale price on the product page', function (): void {
         ->assertSee('-52%')
         ->assertSeeHtml('line-through');
 });
+
+it('does not show the full gross price next to the sale price on the product page', function (): void {
+    $product = Product::factory()->onSale(52)->create(['net_selling_price' => 999, 'gross_selling_price' => 1269]);
+
+    Livewire::test(Show::class, ['product' => $product])
+        ->assertDontSee(Number::currency(1269, 'HUF', 'hu', 0));
+});
+
+it('still shows the gross price of a regular product on the product page', function (): void {
+    $product = Product::factory()->create(['net_selling_price' => 999, 'gross_selling_price' => 1269]);
+
+    Livewire::test(Show::class, ['product' => $product])
+        ->assertSee(Number::currency(1269, 'HUF', 'hu', 0));
+});

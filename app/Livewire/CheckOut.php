@@ -305,8 +305,8 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             $record->orderItems()->create([
                 'product_id' => $cartItem->product_id,
                 'quantity' => $cartItem->quantity,
-                'total' => $cartItem->product->unit_price,
-                'subtotal' => $cartItem->product->unit_price * $cartItem->quantity,
+                'total' => number_format($cartItem->product->unit_price, 2, '.', ''),
+                'subtotal' => number_format($cartItem->product->unit_price * $cartItem->quantity, 2, '.', ''),
                 'subtotal_tax' => 0,
                 'total_tax' => 0,
                 'tax_class' => '',
