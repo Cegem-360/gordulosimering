@@ -286,12 +286,6 @@
                                     <dd class="font-medium text-right">{{ $product->catalog_number }}</dd>
                                 </div>
                             @endif
-                            @if ($product->group_code)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Csoport kód</dt>
-                                    <dd class="font-medium text-right">{{ $product->group_code }}</dd>
-                                </div>
-                            @endif
                             @if ($product->product_variety)
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Termék kategória</dt>
@@ -316,16 +310,6 @@
                                     <dd class="font-medium text-right">{{ $product->weight }} kg</dd>
                                 </div>
                             @endif
-                            <div class="flex justify-between">
-                                <dt class="text-gray-600">Szolgáltatás</dt>
-                                <dd class="font-medium text-right">
-                                    @if ($product->is_service)
-                                        <span class="text-green-600">Igen</span>
-                                    @else
-                                        <span class="text-gray-500">Nem</span>
-                                    @endif
-                                </dd>
-                            </div>
                         </dl>
                     </div>
 
@@ -356,12 +340,6 @@
                                     <dd class="font-medium text-right">{{ $product->vat_class }}</dd>
                                 </div>
                             @endif
-                            @if ($product->discount_group)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Kedvezmény csoport</dt>
-                                    <dd class="font-medium text-right">{{ $product->discount_group }}</dd>
-                                </div>
-                            @endif
                             <div class="flex justify-between">
                                 <dt class="text-gray-600">Akciós</dt>
                                 <dd class="font-medium text-right">
@@ -387,18 +365,6 @@
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Mennyiségi egység</dt>
                                     <dd class="font-medium text-right">{{ $product->quantity_unit }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->secondary_unit)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Másodlagos egység</dt>
-                                    <dd class="font-medium text-right">{{ $product->secondary_unit }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->minimum_stock !== null)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Minimum készlet</dt>
-                                    <dd class="font-medium text-right">{{ $product->minimum_stock }}</dd>
                                 </div>
                             @endif
                             @if ($product->maximum_stock !== null && $product->maximum_stock > 0)
