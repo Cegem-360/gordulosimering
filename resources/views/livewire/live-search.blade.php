@@ -45,9 +45,7 @@
 
                             <!-- Price -->
                             <div class="text-right shrink-0">
-                                <p class="text-sm font-semibold text-blue-600">
-                                    {{ number_format($product->net_selling_price, 0, ',', ' ') }} Ft
-                                </p>
+                                <x-product-price :product="$product" size="sm" class="justify-end" />
                                 <p class="text-xs text-gray-400">nettó</p>
                             </div>
                         </button>

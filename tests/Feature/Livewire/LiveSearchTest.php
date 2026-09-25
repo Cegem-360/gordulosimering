@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Livewire\LiveSearch;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Number;
 use Livewire\Livewire;
 
 it('renders successfully', function (): void {
@@ -87,4 +88,12 @@ it('shows the stored featured image of a result instead of the raw path', functi
     Livewire::test(LiveSearch::class)
         ->set('query', 'KEP-001')
         ->assertSeeHtml('src="' . Storage::disk('public')->url('products/abc.jpg') . '"');
+});
+
+it('shows the sale price in the search results', function (): void {
+    Product::factory()->onSale(30)->create(['name' => 'Akciós szimering', 'net_selling_price' => 1000]);
+
+    Livewire::test(LiveSearch::class)
+        ->set('query', 'Akciós szim')
+        ->assertSee(Number::currency(700, 'HUF', 'hu', 0));
 });

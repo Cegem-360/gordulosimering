@@ -58,12 +58,8 @@
                  <!-- Price -->
                  <div class="text-right">
                      <p class="text-sm text-gray-500">Egységár (nettó)</p>
-                     <p class="text-lg font-semibold">
-                         {{ Number::currency($product->net_selling_price, 'HUF', 'hu', 0) }}
-                     </p>
-                     <p class="text-xl font-bold text-blue-600 mt-1">
-                         {{ Number::currency($product->net_selling_price * $quantity, 'HUF', 'hu', 0) }}
-                     </p>
+                     <x-product-price :product="$product" size="sm" class="justify-end" />
+                     <x-product-price :product="$product" :quantity="$quantity" class="justify-end mt-1" />
                  </div>
              </div>
 

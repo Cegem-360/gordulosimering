@@ -195,10 +195,10 @@
                         <!-- Price Section -->
                         <div class="mb-5">
                             @if ($product->net_selling_price)
-                                <p class="text-3xl md:text-4xl text-blue-600">
-                                    <span class="font-bold">{{ Number::currency($product->net_selling_price, 'HUF', 'hu', 0) }}</span>
-                                    <span class="font-light">+ÁFA</span>
-                                </p>
+                                <div class="flex flex-wrap items-baseline gap-x-2">
+                                    <x-product-price :product="$product" size="lg" />
+                                    <span class="text-3xl md:text-4xl font-light text-blue-600">+ÁFA</span>
+                                </div>
                                 <p class="text-sm text-gray-500 mt-1">Nettó eladási ár</p>
                                 @if ($product->gross_selling_price)
                                     <p class="text-sm text-gray-400 mt-1">
@@ -345,7 +345,7 @@
                                 <dd class="font-medium text-right">
                                     @if ($product->is_on_sale)
                                         <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-sm">Igen -
-                                            {{ $product->sale_percentage }}%</span>
+                                            {{ rtrim(rtrim(number_format($product->effective_sale_percentage, 2, ',', ''), '0'), ',') }}%</span>
                                     @else
                                         <span class="text-gray-500">Nem</span>
                                     @endif

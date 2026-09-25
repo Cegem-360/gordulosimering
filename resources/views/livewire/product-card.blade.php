@@ -31,9 +31,9 @@
     @if (filled($product->product_code))
         <div class="text-sm font-medium mb-2 text-gray-600">{{ $product->product_code }}</div>
     @endif
-    <div class="text-xl text-blue-600 mb-4">
-        <span class="font-bold">{{ Number::currency($product->net_selling_price ?? 0, 'HUF', 'hu', 0) }}</span>
-        <span class="font-light">+ÁFA</span>
+    <div class="mb-4 flex flex-wrap items-baseline gap-x-2">
+        <x-product-price :product="$product" />
+        <span class="text-xl font-light text-blue-600">+ÁFA</span>
     </div>
     @if ($inStock)
         <button type="button" wire:click="addToCart"
