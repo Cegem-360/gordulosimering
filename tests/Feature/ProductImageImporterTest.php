@@ -163,3 +163,16 @@ it('keeps existing images when the import is not fresh', function (): void {
 
     expect($product->fresh()->featured_image)->toBe('products/' . str_repeat('b', 64) . '.jpg');
 });
+
+it('splits an image cell holding several URLs joined by "||"', function (): void {
+    $product = Product::factory()->create(['product_code' => 'SY 505 M', 'featured_image' => null, 'images' => null]);
+
+    $path = writeImageFixture([
+        ['SY 505 M', 'SKF Y csapágyház', 'https://cdn.test/a.png', 'https://cdn.test/b.svg||https://cdn.test/c.svg', ''],
+    ]);
+
+    (new ProductImageImporter())->import($path);
+
+    expect($product->fresh()->featured_image)->toBe('https://cdn.test/a.png')
+        ->and($product->fresh()->images)->toBe(['https://cdn.test/b.svg', 'https://cdn.test/c.svg']);
+});

@@ -122,7 +122,8 @@ final class ProductImageImporter
 
     /**
      * Reads the TSV into a product-code => image-URL list map (first row per
-     * code wins). Rows without any image URL are ignored.
+     * code wins). A cell may hold several URLs joined by "||". Rows without
+     * any image URL are ignored.
      *
      * @return array<string, array<int, string>>
      */
@@ -140,11 +141,10 @@ final class ProductImageImporter
                 continue;
             }
 
-            $images = array_values(array_filter([
-                mb_trim($row[2] ?? ''),
-                mb_trim($row[3] ?? ''),
-                mb_trim($row[4] ?? ''),
-            ], fn (string $url): bool => $url !== ''));
+            $images = array_values(array_filter(
+                array_map(mb_trim(...), explode('||', implode('||', array_slice(array_pad($row, 5, ''), 2, 3)))),
+                fn (string $url): bool => $url !== '',
+            ));
             if ($images === []) {
                 continue;
             }
