@@ -88,3 +88,20 @@ it('keeps categories without web-visible products out of the sidebar and the top
             ->assertDontSee('ÜRES TÍPUS');
     }
 });
+
+it('shows the submenu arrow only on categories that have subcategories', function (): void {
+    /** @var TestCase $this */
+    $parent = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    Category::query()->create(['name' => 'GOLYÓS CSAPÁGY', 'slug' => 'golyos-csapagy', 'category_id' => $parent->id])
+        ->products()->attach(Product::factory()->create());
+    $leaf = Category::query()->create(['name' => 'LINEÁRTECHNIKA', 'slug' => 'linear']);
+    $leaf->products()->attach(Product::factory()->create());
+    $emptyChildOnly = Category::query()->create(['name' => 'BILINCSEK', 'slug' => 'bilincsek']);
+    $emptyChildOnly->products()->attach(Product::factory()->create());
+    Category::query()->create(['name' => 'ÜRES', 'slug' => 'ures', 'category_id' => $emptyChildOnly->id]);
+
+    $html = (string) $this->blade('<x-category-selector />');
+
+    expect(mb_substr_count($html, 'd="M9 5l7 7-7 7"'))->toBe(1)
+        ->and($html)->toContain('LINEÁRTECHNIKA', 'BILINCSEK', 'GOLYÓS CSAPÁGY');
+});

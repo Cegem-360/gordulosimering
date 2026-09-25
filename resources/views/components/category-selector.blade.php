@@ -13,6 +13,7 @@
     <ul class="space-y-0">
         @forelse ($categories as $category)
             <li class="group/item relative [&:hover>ul]:visible [&:hover>ul]:opacity-100" wire:key="category-{{ $category->id }}">
+                @php($subcategories = $categoryTree->stocked($category->children))
                 <a href="{{ route('categories.show', $category) }}"
                     class="flex items-center gap-3 p-3 hover:bg-gray-200 rounded-lg transition-colors">
                     <span class="w-5 h-5 shrink-0">
@@ -23,13 +24,14 @@
                         </svg>
                     </span>
                     <span class="text-gray-700 grow text-xs">{{ $category->name }}</span>
-                    <svg class="w-4 h-4 text-gray-400 shrink-0 transform transition-transform group-hover/item:translate-x-1"
-                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
+                    @if ($subcategories->isNotEmpty())
+                        <svg class="w-4 h-4 text-gray-400 shrink-0 transform transition-transform group-hover/item:translate-x-1"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    @endif
                 </a>
 
-                @php($subcategories = $categoryTree->stocked($category->children))
                 @if ($subcategories->isNotEmpty())
                     <x-category-flyout :categories="$subcategories" />
                 @endif
