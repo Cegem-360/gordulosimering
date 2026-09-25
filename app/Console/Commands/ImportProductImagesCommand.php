@@ -10,7 +10,7 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 
 #[Description('Termékképek importálása a termek_kepek.tsv-ből, termékkód (és csoportkód-wildcard) alapján')]
-#[Signature('app:import-product-images {--path= : Egyedi TSV útvonal} {--max=25 : Egy kódhoz tartozó maximális termékszám (felette túl-generikus, kihagyva)}')]
+#[Signature('app:import-product-images {--path= : Egyedi TSV útvonal} {--max=25 : Egy kódhoz tartozó maximális termékszám (felette túl-generikus, kihagyva)} {--fresh : Előbb minden importált képet levesz a termékekről (az admin feltöltéseit megtartja)}')]
 final class ImportProductImagesCommand extends Command
 {
     public function handle(ProductImageImporter $importer): int
@@ -24,9 +24,10 @@ final class ImportProductImagesCommand extends Command
         }
 
         $this->info('Termékképek importálása...');
-        $stats = $importer->import($path, (int) $this->option('max'));
+        $stats = $importer->import($path, (int) $this->option('max'), (bool) $this->option('fresh'));
 
         $this->table(['', 'Darab'], [
+            ['Levett régi kép (--fresh)', $stats['cleared']],
             ['Kódok képpel', $stats['codes']],
             ['Pontos egyezés', $stats['exact']],
             ['Wildcard/előtag egyezés', $stats['wildcard']],

@@ -20,6 +20,14 @@ final class ProductTypeImageImporter
     private const int BATCH_SIZE = 500;
 
     /**
+     * Gyűjtő-termékféleségek, amelyek nem egy típust jelölnek, hanem annak
+     * hiányát – egyetlen képük minden besorolatlan termékre rossz képet tenne.
+     *
+     * @var array<int, string>
+     */
+    private const array UNCLASSIFIED_VARIETIES = ['Nincs megadva'];
+
+    /**
      * @return array{types: int, matched_types: int, products: int}
      */
     public function import(string $path, bool $dryRun = false): array
@@ -56,7 +64,8 @@ final class ProductTypeImageImporter
 
     /**
      * Beolvassa a termékféleség => kép URL leképezést. Az első sor fejléc, a
-     * későbbi duplikált termékféleséget figyelmen kívül hagyjuk.
+     * későbbi duplikált termékféleséget és a gyűjtő-termékféleségeket
+     * figyelmen kívül hagyjuk.
      *
      * @return array<string, string>
      */
@@ -73,7 +82,7 @@ final class ProductTypeImageImporter
             $variety = mb_trim($row[0] ?? '');
             $image = mb_trim($row[1] ?? '');
 
-            if ($variety === '' || $image === '' || isset($map[$variety])) {
+            if ($variety === '' || $image === '' || isset($map[$variety]) || in_array($variety, self::UNCLASSIFIED_VARIETIES, true)) {
                 continue;
             }
 

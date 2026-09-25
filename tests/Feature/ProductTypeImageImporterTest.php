@@ -109,3 +109,17 @@ it('reports the counts without writing anything on a dry run', function (): void
     expect($stats['products'])->toBe(1)
         ->and($product->refresh()->featured_image)->toBeNull();
 });
+
+it('never assigns a type image to products without a known variety', function (): void {
+    $product = Product::factory()->create([
+        'product_variety' => 'Nincs megadva',
+        'featured_image' => null,
+    ]);
+
+    $path = writeTypeImageFixture([['Nincs megadva', 'https://kepek.hu/tmbr.png']]);
+
+    $stats = resolve(ProductTypeImageImporter::class)->import($path);
+
+    expect($product->refresh()->featured_image)->toBeNull()
+        ->and($stats['types'])->toBe(0);
+});
