@@ -10,7 +10,9 @@ it('schedules the product image import once a week', function (): void {
         ->first(fn (Event $event): bool => str_contains($event->command ?? '', 'app:import-product-images'));
 
     expect($event)->not->toBeNull()
-        ->and($event->expression)->toBe('0 3 * * 1');
+        ->and($event->expression)->toBe('0 3 * * 1')
+        ->and($event->command)->toContain('--sheet')
+        ->and($event->command)->toContain('--fresh');
 });
 
 it('schedules the type image import weekly, after the code based image import', function (): void {
@@ -20,4 +22,12 @@ it('schedules the type image import weekly, after the code based image import', 
 
     expect($typeImages)->not->toBeNull()
         ->and($typeImages->expression)->toBe('30 3 * * 1');
+});
+
+it('downloads the imported images weekly, after both image imports', function (): void {
+    $event = collect(resolve(Schedule::class)->events())
+        ->first(fn (Event $event): bool => str_contains($event->command ?? '', 'app:localize-product-images'));
+
+    expect($event)->not->toBeNull()
+        ->and($event->expression)->toBe('0 4 * * 1');
 });
