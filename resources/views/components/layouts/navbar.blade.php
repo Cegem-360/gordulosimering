@@ -6,7 +6,7 @@
 @endphp
 
 <!-- Main Navigation -->
-<div x-data="{ mobileMenuOpen: false, categoryMenuOpen: false }" class="bg-white border-b">
+<div x-data="{ mobileMenuOpen: false, categoryMenuOpen: false }" class="sticky top-0 z-40 bg-white border-b">
     <div class="container mx-auto px-4">
         <nav class="flex items-center justify-between h-16">
             <!-- Logo and Navigation -->
@@ -213,7 +213,7 @@
     <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 -translate-y-2" class="lg:hidden">
+        x-transition:leave-end="opacity-0 -translate-y-2" class="lg:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto">
         <div class="border-t px-4 py-4 space-y-4">
             <!-- Mobile Category Menu -->
             <div x-data="{ open: false }">

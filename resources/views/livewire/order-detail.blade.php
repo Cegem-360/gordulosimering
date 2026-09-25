@@ -238,7 +238,7 @@
                     </div>
 
                     <!-- Right Column - Sticky Sidebar -->
-                    <div class="lg:sticky lg:top-4 space-y-4 h-fit">
+                    <div class="lg:sticky lg:top-20 space-y-4 h-fit">
                         <!-- Order Summary -->
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                             <div class="px-5 py-3 border-b border-gray-100 bg-gray-50">

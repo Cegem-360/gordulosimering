@@ -160,3 +160,11 @@ it('lists the chemicals subcategories in the client\'s order after a fresh impor
         'UV FÉNYRE KÖTŐ RAGASZTÓ', 'EGYÉB RAGASZTÓ ÉS TÖMÍTŐ', 'RAGASZTÓSZALAG', 'KARBANTARTÁSI TERMÉKEK', 'ADAGOLÓ ESZKÖZ',
     ]);
 });
+
+it('keeps the header on screen and offers a back-to-top button', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('contact'))->assertOk()
+        ->assertSeeHtml('class="sticky top-0 z-40 bg-white border-b"')
+        ->assertSeeHtml('aria-label="Vissza az oldal tetejére"')
+        ->assertSeeHtml("window.scrollTo({ top: 0, behavior: 'smooth' })");
+});

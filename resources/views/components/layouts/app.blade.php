@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-pt-20">
 
     <head>
         <meta charset="utf-8" />
@@ -32,6 +32,8 @@
         </main>
 
         <x-layouts.footer />
+
+        <x-back-to-top />
 
         @livewire('notifications')
 

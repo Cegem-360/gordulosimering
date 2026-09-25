@@ -42,7 +42,7 @@
 
                 <!-- Order Summary -->
                 <div class="lg:col-span-1">
-                    <div class="bg-white rounded-lg border-2 border-blue-100 p-6 shadow-sm sticky top-4">
+                    <div class="bg-white rounded-lg border-2 border-blue-100 p-6 shadow-sm sticky top-20">
                         <h2 class="text-xl font-bold mb-6 pb-4 border-b flex items-center gap-2">
                             <i class="fas fa-receipt text-gray-500"></i>
                             Összesítés
