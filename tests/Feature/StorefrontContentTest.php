@@ -116,3 +116,20 @@ it('does not show the brand logo strip on the homepage', function (): void {
     /** @var TestCase $this */
     $this->get('/')->assertOk()->assertDontSeeHtml('>Márkáink</h2>');
 });
+
+it('splits the work safety category into shoes and gloves', function (): void {
+    $shoe = Product::factory()->create(['name' => 'BETA mérsékelten vízálló bőr munkavédelmi cipő']);
+    $lace = Product::factory()->create(['name' => 'BETA cipőfűző narancs/fekete 120cm']);
+    $glove = Product::factory()->create(['name' => 'Védőkesztyű PU tenyérmártott prec. rug. FEKETE 9']);
+
+    $importer = new CategoryImporter();
+    $importer->importTree(database_path('data/web_kategoriak.tsv'));
+    $importer->linkProducts();
+
+    $safety = Category::query()->whereNull('category_id')->where('name', 'MUNKAVÉDELMI CIPŐ, KESZTYŰ')->sole();
+
+    expect($safety->children()->pluck('name')->all())->toBe(['MUNKAVÉDELMI CIPŐ', 'MUNKAVÉDELMI KESZTYŰ'])
+        ->and($shoe->categories()->pluck('name')->all())->toBe(['MUNKAVÉDELMI CIPŐ'])
+        ->and($lace->categories()->pluck('name')->all())->toBe(['MUNKAVÉDELMI CIPŐ'])
+        ->and($glove->categories()->pluck('name')->all())->toBe(['MUNKAVÉDELMI KESZTYŰ']);
+});
