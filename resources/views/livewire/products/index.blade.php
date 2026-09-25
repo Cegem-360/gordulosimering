@@ -19,7 +19,7 @@
             <div class="grid md:grid-cols-[300px_1fr] gap-8">
                 <!-- Left: Filter Sidebar -->
                 <div>
-                    <x-categories.filter-sidebar :filters="$filters" />
+                    <x-categories.filter-sidebar :filters="$filters" :selected="$selectedFilters" />
                 </div>
 
                 <!-- Right: Products Grid -->
@@ -54,11 +54,14 @@
                                         </button>
                                     </span>
                                 @endif
+                                @php
+                                    $filterLabels = collect($filters)->mapWithKeys(fn ($filter) => [$filter['key'] => collect($filter['items'])->pluck('name', 'value')]);
+                                @endphp
                                 @foreach ($selectedFilters as $key => $values)
                                     @foreach ($values as $value)
-                                        <span
+                                        <span wire:key="chip-{{ $key }}-{{ $value }}"
                                             class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                                            {{ $value }}
+                                            {{ $filterLabels[$key][$value] ?? $value }}
                                             <button type="button"
                                                 wire:click="$set('selectedFilters.{{ $key }}', {{ json_encode(array_values(array_diff($values, [$value]))) }})"
                                                 class="hover:text-blue-600">

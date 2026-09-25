@@ -36,3 +36,7 @@
         --color-brand-blue: #2271B3;
 }
 
+
+[x-cloak] {
+    display: none !important;
+}

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
+use App\Livewire\Concerns\FiltersProducts;
 use App\Models\Product;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -14,116 +16,33 @@ use Livewire\WithPagination;
 
 final class Index extends Component
 {
+    use FiltersProducts;
     use WithPagination;
 
     #[Url(as: 'search')]
     public string $search = '';
-
-    /** @var array<string, array<int, string>> */
-    public array $selectedFilters = [
-        'product_variety' => [],
-        'size' => [],
-        'quality' => [],
-        'stock' => [],
-    ];
 
     public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatedSelectedFilters(): void
-    {
-        $this->resetPage();
-    }
-
     public function clearFilters(): void
     {
-        $this->selectedFilters = [
-            'product_variety' => [],
-            'size' => [],
-            'quality' => [],
-            'stock' => [],
-        ];
+        $this->resetProductFilters();
         $this->search = '';
         $this->resetPage();
     }
 
     /**
-     * @return array<int, array{title: string, key: string, items: array<int, array{name: string, value: string, count: int}>}>
+     * @return LengthAwarePaginator<int, Product>
      */
     #[Computed]
-    public function filters(): array
+    public function products(): LengthAwarePaginator
     {
-        return [
-            [
-                'title' => 'Készlet',
-                'key' => 'stock',
-                'items' => [
-                    ['name' => 'Készleten', 'value' => 'in_stock', 'count' => $this->getInStockCount()],
-                    ['name' => 'Rendelésre', 'value' => 'out_of_stock', 'count' => $this->getOutOfStockCount()],
-                ],
-            ],
-            [
-                'title' => 'Kategória',
-                'key' => 'product_variety',
-                'items' => $this->getFilterOptions('product_variety', 10),
-            ],
-            [
-                'title' => 'Méret',
-                'key' => 'size',
-                'items' => $this->getFilterOptions('size', 10),
-            ],
-            [
-                'title' => 'Minőség',
-                'key' => 'quality',
-                'items' => $this->getFilterOptions('quality', 10),
-            ],
-        ];
-    }
+        $query = $this->filterableProducts();
+        $this->applySelectedFilters($query);
 
-    #[Computed]
-    public function products()
-    {
-        $query = Product::query()->webVisible();
-
-        // Apply search filter
-        if (mb_strlen($this->search) >= 2) {
-            $query->matchingSearch($this->search);
-        }
-
-        // Apply product_variety filter
-        if (! empty($this->selectedFilters['product_variety'])) {
-            $query->whereIn('product_variety', $this->selectedFilters['product_variety']);
-        }
-
-        // Apply size filter
-        if (! empty($this->selectedFilters['size'])) {
-            $query->whereIn('size', $this->selectedFilters['size']);
-        }
-
-        // Apply quality filter
-        if (! empty($this->selectedFilters['quality'])) {
-            $query->whereIn('quality', $this->selectedFilters['quality']);
-        }
-
-        // Apply stock filter
-        if (! empty($this->selectedFilters['stock'])) {
-            $query->where(function ($q): void {
-                if (in_array('in_stock', $this->selectedFilters['stock'])) {
-                    $q->orWhere('minimum_stock', '>', 0);
-                }
-
-                if (in_array('out_of_stock', $this->selectedFilters['stock'])) {
-                    $q->orWhere(function ($subQ): void {
-                        $subQ->whereNull('minimum_stock')
-                            ->orWhere('minimum_stock', '<=', 0);
-                    });
-                }
-            });
-        }
-
-        // Order by relevance if searching
         if (mb_strlen($this->search) >= 2) {
             $query->orderBySearchRelevance($this->search);
         }
@@ -140,56 +59,15 @@ final class Index extends Component
     }
 
     /**
-     * @return array<int, array{name: string, value: string, count: int}>
+     * The web-visible products, narrowed by the search term once it has two
+     * characters. The filter counts follow the search too.
+     *
+     * @return Builder<Product>
      */
-    private function getFilterOptions(string $column, int $limit = 10): array
+    protected function filterableProducts(): Builder
     {
-        $query = Product::query()
+        return Product::query()
             ->webVisible()
-            ->select($column, DB::raw('count(*) as count'))
-            ->whereNotNull($column)
-            ->where($column, '!=', '');
-
-        // Apply search filter to filter options too
-        if (mb_strlen($this->search) >= 2) {
-            $query->matchingSearch($this->search);
-        }
-
-        return $query
-            ->groupBy($column)
-            ->orderByDesc('count')
-            ->limit($limit)
-            ->get()
-            ->map(fn ($item): array => [
-                'name' => $item->{$column},
-                'value' => $item->{$column},
-                'count' => $item->count,
-            ])
-            ->all();
-    }
-
-    private function getInStockCount(): int
-    {
-        $query = Product::query()->webVisible()->where('minimum_stock', '>', 0);
-
-        if (mb_strlen($this->search) >= 2) {
-            $query->matchingSearch($this->search);
-        }
-
-        return $query->count();
-    }
-
-    private function getOutOfStockCount(): int
-    {
-        $query = Product::query()->webVisible()->where(function ($query): void {
-            $query->whereNull('minimum_stock')
-                ->orWhere('minimum_stock', '<=', 0);
-        });
-
-        if (mb_strlen($this->search) >= 2) {
-            $query->matchingSearch($this->search);
-        }
-
-        return $query->count();
+            ->when(mb_strlen($this->search) >= 2, fn (Builder $query) => $query->matchingSearch($this->search));
     }
 }
