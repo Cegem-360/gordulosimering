@@ -420,3 +420,33 @@ it('does not send admin notification when admin email is default placeholder', f
     Mail::assertQueued(OrderConfirmationMail::class);
     Mail::assertNotQueued(NewOrderNotificationMail::class);
 });
+
+it('saves the sale price on the order items', function (): void {
+    $user = User::factory()->create();
+    $cart = Cart::factory()->create(['user_id' => $user->id, 'session_id' => session()->getId()]);
+
+    $onSale = Product::factory()->onSale(52)->create(['net_selling_price' => 999]);
+    CartItem::factory()->create(['cart_id' => $cart->id, 'product_id' => $onSale->id, 'quantity' => 3]);
+
+    $shippingMethod = ShippingMethod::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->assertSee('Megtakarítás')
+        ->set('data.billing_name', 'Test User')
+        ->set('data.billing_email', 'test@example.com')
+        ->set('data.billing_phone', '+36301234567')
+        ->set('data.billing_postcode', '1234')
+        ->set('data.billing_city', 'Budapest')
+        ->set('data.billing_address_1', 'Test Street 1')
+        ->set('data.billing_country', 'Magyarország')
+        ->set('selectedShippingMethod', $shippingMethod->id)
+        ->set('selectedPaymentMethod', 'bacs')
+        ->set('acceptTerms', true)
+        ->call('create');
+
+    $item = Order::query()->where('user_id', $user->id)->firstOrFail()->orderItems->first();
+
+    expect((float) $item->total)->toBe(480.0)      // round(999 × 0.48)
+        ->and((float) $item->subtotal)->toBe(1440.0); // 3 × 480
+});

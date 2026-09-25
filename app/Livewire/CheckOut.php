@@ -175,7 +175,16 @@ final class CheckOut extends Component implements HasActions, HasSchemas
     #[Computed]
     public function subtotal(): float
     {
-        return $this->cartItems->sum(fn ($item): int|float => $item->product->net_selling_price * $item->quantity);
+        return $this->cartItems->sum(fn ($item): int|float => $item->product->unit_price * $item->quantity);
+    }
+
+    /**
+     * Az akciók miatt megspórolt nettó összeg.
+     */
+    #[Computed]
+    public function savings(): float
+    {
+        return $this->cartItems->sum(fn ($item): int|float => ((float) $item->product->net_selling_price - $item->product->unit_price) * $item->quantity);
     }
 
     #[Computed]
@@ -296,8 +305,8 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             $record->orderItems()->create([
                 'product_id' => $cartItem->product_id,
                 'quantity' => $cartItem->quantity,
-                'total' => $cartItem->product->net_selling_price,
-                'subtotal' => $cartItem->product->net_selling_price * $cartItem->quantity,
+                'total' => $cartItem->product->unit_price,
+                'subtotal' => $cartItem->product->unit_price * $cartItem->quantity,
                 'subtotal_tax' => 0,
                 'total_tax' => 0,
                 'tax_class' => '',

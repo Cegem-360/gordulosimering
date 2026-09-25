@@ -50,11 +50,11 @@ final class Cart extends Model
         return $this->products->isEmpty();
     }
 
-    public function total(): int
+    public function total(): float
     {
-        $total = 0;
+        $total = 0.0;
         foreach ($this->items as $cartItem) {
-            $total += $cartItem->quantity * $cartItem->product->net_selling_price;
+            $total += $cartItem->quantity * $cartItem->product->unit_price;
         }
 
         return $total;

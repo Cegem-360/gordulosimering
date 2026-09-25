@@ -68,7 +68,7 @@ final readonly class CartService
 
     public function getTotal(): int|float
     {
-        return $this->cart->cartItems->sum(fn ($item): int|float => $item->product->net_selling_price * $item->quantity);
+        return $this->cart->cartItems->sum(fn ($item): int|float => $item->product->unit_price * $item->quantity);
     }
 
     public function getItem(int $productId): ?CartItem

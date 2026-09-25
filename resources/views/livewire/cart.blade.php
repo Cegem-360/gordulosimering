@@ -53,6 +53,12 @@
                                 <dt class="text-gray-600">Termékek ({{ $this->itemCount }} db)</dt>
                                 <dd class="font-medium">{{ number_format($this->subtotal, 0, ',', ' ') }} Ft</dd>
                             </div>
+                            @if ($this->savings > 0)
+                                <div class="flex justify-between text-green-700">
+                                    <dt>Megtakarítás</dt>
+                                    <dd class="font-medium">−{{ number_format($this->savings, 0, ',', ' ') }} Ft</dd>
+                                </div>
+                            @endif
                             <div class="flex justify-between">
                                 <dt class="text-gray-600">Nettó összesen</dt>
                                 <dd class="font-semibold">{{ number_format($this->subtotal, 0, ',', ' ') }} Ft</dd>

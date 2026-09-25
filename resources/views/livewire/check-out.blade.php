@@ -113,7 +113,7 @@
                                             </p>
                                         </div>
                                         <p class="font-medium text-gray-900 ml-2 whitespace-nowrap">
-                                            {{ number_format($item->product->net_selling_price * $item->quantity, 0, ',', ' ') }}
+                                            {{ number_format($item->product->unit_price * $item->quantity, 0, ',', ' ') }}
                                             Ft
                                         </p>
                                     </div>
@@ -125,6 +125,13 @@
                                     <dt class="text-gray-600">Részösszeg</dt>
                                     <dd class="font-medium">{{ number_format($this->subtotal, 0, ',', ' ') }} Ft</dd>
                                 </div>
+
+                                @if ($this->savings > 0)
+                                    <div class="flex justify-between py-2 border-b border-gray-100 text-green-700">
+                                        <dt>Megtakarítás</dt>
+                                        <dd class="font-medium">−{{ number_format($this->savings, 0, ',', ' ') }} Ft</dd>
+                                    </div>
+                                @endif
 
                                 <div class="flex justify-between py-2 border-b border-gray-100">
                                     <dt class="text-gray-600">Szállítás</dt>

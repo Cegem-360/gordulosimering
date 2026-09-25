@@ -46,3 +46,37 @@ it('recomputes the totals after a line item is removed', function (): void {
         ->assertSee('1 000 Ft')
         ->assertDontSee('1 250 Ft');
 });
+
+it('charges sale products at their sale price and shows the saving', function (): void {
+    $onSale = Product::factory()->onSale(30)->create(['net_selling_price' => 1000]);
+    $regular = Product::factory()->create(['net_selling_price' => 250]);
+
+    $cartService = resolve(CartService::class);
+    $cartService->addItem($onSale->id, 2);
+    $cartService->addItem($regular->id, 2);
+
+    $component = Livewire::test(Cart::class);
+
+    expect($component->instance()->subtotal)->toBe(1900.0); // 2 × 700 + 2 × 250
+
+    $component
+        ->assertSee('1 900 Ft')
+        ->assertSee('Megtakarítás')
+        ->assertSee('600 Ft');            // 2 × (1000 − 700)
+});
+
+it('hides the saving row when nothing in the cart is on sale', function (): void {
+    $regular = Product::factory()->create(['net_selling_price' => 250]);
+    resolve(CartService::class)->addItem($regular->id, 1);
+
+    Livewire::test(Cart::class)->assertDontSee('Megtakarítás');
+});
+
+it('follows a sale that changes while the product sits in the cart', function (): void {
+    $product = Product::factory()->onSale(30)->create(['net_selling_price' => 1000]);
+    resolve(CartService::class)->addItem($product->id, 1);
+
+    $product->update(['is_on_sale' => false]);
+
+    expect(Livewire::test(Cart::class)->instance()->subtotal)->toBe(1000.0);
+});
