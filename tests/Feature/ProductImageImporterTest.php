@@ -135,9 +135,9 @@ it('clears every imported image first on a fresh import, but keeps admin uploads
         'featured_image' => "products/{$hash}.jpg",
         'images' => ["products/{$hash}.png", 'products/images/admin-galeria.jpg'],
     ]);
-    $remote = Product::factory()->create(['product_code' => 'KULSO/1', 'featured_image' => 'https://cdn.test/old.jpg']);
-    $uploaded = Product::factory()->create(['product_code' => 'ADMIN/1', 'featured_image' => 'products/featured/admin.jpg']);
-    $listed = Product::factory()->create(['product_code' => 'LISTAN/1', 'featured_image' => "products/{$hash}.jpg"]);
+    $remote = Product::factory()->create(['product_code' => 'KULSO/1', 'featured_image' => 'https://cdn.test/old.jpg', 'images' => null]);
+    $uploaded = Product::factory()->create(['product_code' => 'ADMIN/1', 'featured_image' => 'products/featured/admin.jpg', 'images' => null]);
+    $listed = Product::factory()->create(['product_code' => 'LISTAN/1', 'featured_image' => "products/{$hash}.jpg", 'images' => null]);
 
     $path = writeImageFixture([
         ['LISTAN/1', 'Listán', 'https://cdn.test/new.jpg', '', ''],
