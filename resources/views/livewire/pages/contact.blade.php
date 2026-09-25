@@ -116,8 +116,8 @@
                 <div class="space-y-2">
                     <p>
                         <strong>Email:</strong>
-                        <a href="mailto:info@gordulo-simmering.hu" class="text-blue-600 hover:text-blue-700">
-                            info@gordulo-simmering.hu
+                        <a href="mailto:gs@gordulo-simmering.hu" class="text-blue-600 hover:text-blue-700">
+                            gs@gordulo-simmering.hu
                         </a>
                     </p>
                     <p>
