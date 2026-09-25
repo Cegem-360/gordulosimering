@@ -57,13 +57,30 @@ it('turns the single-product categories into products of their parent category',
         ->and($sameNameElsewhere->fresh())->not->toBeNull();
 });
 
+it('turns the SEEGER DIN categories into products of their parent category', function (): void {
+    $shaft = Category::query()->create(['name' => 'TENGELYRE', 'slug' => 'tengelyre']);
+    $bore = Category::query()->create(['name' => 'FURATBA', 'slug' => 'furatba']);
+    $din6799 = Category::query()->create(['name' => 'SEEGER DIN6799', 'slug' => 'seeger-din6799', 'category_id' => $shaft->id]);
+    $din9928 = Category::query()->create(['name' => 'SEEGER DIN9928', 'slug' => 'seeger-din9928', 'category_id' => $bore->id]);
+    $din6799->products()->attach($ring = Product::factory()->create(['name' => 'SEEGER DIN6799']));
+    $din9928->products()->attach($boreRing = Product::factory()->create(['name' => 'SEEGER DIN9928']));
+
+    $migration = require database_path('migrations/2026_09_25_102714_turn_seeger_din_categories_into_products.php');
+    $migration->up();
+
+    expect($din6799->fresh())->toBeNull()
+        ->and($din9928->fresh())->toBeNull()
+        ->and($shaft->products()->pluck('products.id')->all())->toBe([$ring->id])
+        ->and($bore->products()->pluck('products.id')->all())->toBe([$boreRing->id]);
+});
+
 it('imports the single-product rows of the category sheet as products, not categories', function (): void {
     $importer = new CategoryImporter();
     $importer->importTree(database_path('data/web_kategoriak.tsv'));
     $product = Product::factory()->create(['name' => 'SKF VASÚTI ÁGYTOKCSAPÁGY']);
     $importer->linkProducts();
 
-    foreach (['SKF VASÚTI ÁGYTOKCSAPÁGY', 'SKF/LINCOLN 084110', 'GRAFITOS ZSÍR', 'SEEGER DIN9926'] as $name) {
+    foreach (['SKF VASÚTI ÁGYTOKCSAPÁGY', 'SKF/LINCOLN 084110', 'GRAFITOS ZSÍR', 'SEEGER DIN9926', 'SEEGER DIN6799', 'SEEGER DIN9927', 'SEEGER DIN9928'] as $name) {
         expect(Category::query()->where('name', $name)->exists())->toBeFalse();
     }
 
