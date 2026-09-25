@@ -48,8 +48,8 @@ final class ProductFactory extends Factory
             // Currency and pricing
             'currency_settlement' => fake()->optional()->word(),
             'discount_group' => fake()->optional()->randomElement(['A', 'B', 'C']),
-            'is_on_sale' => fake()->boolean(20),
-            'sale_percentage' => fake()->optional()->randomFloat(2, 0, 50),
+            'is_on_sale' => false,
+            'sale_percentage' => null,
             'pricing' => fake()->randomElement(['S', 'F']),
             'net_selling_price' => round($netSellingPrice, 2),
             'vat_class' => fake()->randomElement(['AFA27', 'AFA5', 'AFA0']),
@@ -100,6 +100,17 @@ final class ProductFactory extends Factory
     {
         return $this->state(fn (array $attributes): array => [
             'is_web_visible' => false,
+        ]);
+    }
+
+    /**
+     * Akciós termék. A null százalék az ERP üres „Akció %” mezőjét utánozza.
+     */
+    public function onSale(?float $percentage = 30): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'is_on_sale' => true,
+            'sale_percentage' => $percentage,
         ]);
     }
 }

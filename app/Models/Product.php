@@ -31,6 +31,11 @@ final class Product extends Model
         return $this->minimum_stock > 0;
     }
 
+    public function isOnSale(): bool
+    {
+        return (bool) $this->is_on_sale;
+    }
+
     /**
      * A webshop felületén megjelenő termékek. Az ERP-export
      * "WEBÁRUHÁZBAN SZEREPELJEN" oszlopa dönt róla. A kosár és az admin
@@ -93,6 +98,41 @@ final class Product extends Model
     protected function imageUrl(): Attribute
     {
         return Attribute::get(fn (): ?string => $this->resolveImageUrl($this->image));
+    }
+
+    /**
+     * Az érvényes kedvezmény százalékban. Akciós terméknél az ERP „Akció %”
+     * értéke, vagy 10%, ha az 0 vagy üres; nem akciósnál 0. 0 és 100 közé szorítva.
+     */
+    protected function effectiveSalePercentage(): Attribute
+    {
+        return Attribute::get(function (): float {
+            if (! $this->isOnSale()) {
+                return 0.0;
+            }
+
+            $percentage = (float) $this->sale_percentage;
+
+            return $percentage > 0 ? min($percentage, 100.0) : 10.0;
+        });
+    }
+
+    /**
+     * Akciós nettó egységár egész forintra kerekítve; nem akciós terméknél null.
+     */
+    protected function salePrice(): Attribute
+    {
+        return Attribute::get(fn (): ?int => $this->isOnSale()
+            ? (int) round((float) $this->net_selling_price * (1 - $this->effective_sale_percentage / 100))
+            : null);
+    }
+
+    /**
+     * A vevő által fizetendő nettó egységár: akciós terméknél az akciós ár.
+     */
+    protected function unitPrice(): Attribute
+    {
+        return Attribute::get(fn (): float => (float) ($this->sale_price ?? $this->net_selling_price));
     }
 
     /**
