@@ -59,7 +59,8 @@ it('opens a fly-out submenu only from its own parent item', function (): void {
         ->products()->attach(Product::factory()->create());
 
     $this->get('/')->assertOk()
-        ->assertSeeHtml('[&:hover>ul]:visible')
+        ->assertSeeHtml('[&:hover>ul]:block')
+        ->assertDontSeeHtml('invisible opacity-0')
         ->assertDontSeeHtml('group-hover/item:visible');
 });
 

@@ -12,7 +12,7 @@
 
     <ul class="space-y-0">
         @forelse ($categories as $category)
-            <li class="group/item relative [&:hover>ul]:visible [&:hover>ul]:opacity-100" wire:key="category-{{ $category->id }}">
+            <li class="group/item relative [&:hover>ul]:block" wire:key="category-{{ $category->id }}">
                 @php($subcategories = $categoryTree->stocked($category->children))
                 <a href="{{ route('categories.show', $category) }}"
                     class="flex items-center gap-3 p-3 hover:bg-gray-200 rounded-lg transition-colors">

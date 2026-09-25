@@ -5,16 +5,18 @@
      <li> only (`[&:hover>ul]`), so the menu opens one level per hover. A
      `group-hover` variant would match any hovered ancestor and open every level
      of the tree at once. A list without further levels (the 41 brands) may
-     scroll; one with submenus must not, because overflow would clip them. --}}
+     scroll; one with submenus must not, because overflow would clip them.
+     Closed menus are display:none, not invisible: an invisible menu still
+     takes up layout space and made phone pages scroll sideways. --}}
 @php
     $submenus = $categories->mapWithKeys(fn ($category) => [$category->id => $categoryTree->stocked($category->children)]);
 @endphp
 <ul @class([
-    'invisible opacity-0 transition-opacity duration-150 absolute left-full top-0 z-50 min-w-56 bg-white rounded-lg shadow-xl border border-gray-200 p-2',
+    'hidden absolute left-full top-0 z-50 min-w-56 bg-white rounded-lg shadow-xl border border-gray-200 p-2',
     'max-h-[70vh] overflow-y-auto' => $submenus->every(fn ($children) => $children->isEmpty()),
 ])>
     @foreach ($categories as $category)
-        <li class="relative [&:hover>ul]:visible [&:hover>ul]:opacity-100" wire:key="flyout-{{ $category->id }}">
+        <li class="relative [&:hover>ul]:block" wire:key="flyout-{{ $category->id }}">
             <a href="{{ route('categories.show', $category) }}"
                 class="flex items-center gap-2 p-2 rounded-md text-xs text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
                 <span class="grow">{{ $category->name }}</span>

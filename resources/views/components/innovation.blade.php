@@ -1,4 +1,4 @@
-<section class="py-16 bg-linear-to-br from-blue-900 to-blue-800 text-white">
+<section class="overflow-x-clip py-16 bg-linear-to-br from-blue-900 to-blue-800 text-white">
     <div class="container mx-auto px-4">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
             <!-- Left side: Image -->
