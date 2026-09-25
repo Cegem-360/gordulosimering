@@ -31,3 +31,12 @@ it('downloads the imported images weekly, after both image imports', function ()
     expect($event)->not->toBeNull()
         ->and($event->expression)->toBe('0 4 * * 1');
 });
+
+it('works through the queued mails every minute, since no queue worker runs on the server', function (): void {
+    $event = collect(resolve(Schedule::class)->events())
+        ->first(fn (Event $event): bool => str_contains($event->command ?? '', 'queue:work'));
+
+    expect($event)->not->toBeNull()
+        ->and($event->expression)->toBe('* * * * *')
+        ->and($event->command)->toContain('--stop-when-empty');
+});

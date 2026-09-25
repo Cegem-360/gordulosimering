@@ -36,3 +36,13 @@ Schedule::command('app:localize-product-images')
     ->weeklyOn(1, '04:00')
     ->withoutOverlapping()
     ->runInBackground();
+
+/**
+ * A levelek (rendelés-visszaigazolás, rendelési értesítő, kapcsolati űrlap)
+ * sorba kerülnek, de ezen a szerveren nem fut állandó queue worker: percenként
+ * feldolgozzuk a sort, és kilépünk, ha kiürült.
+ */
+Schedule::command('queue:work', ['--stop-when-empty', '--max-time' => 50, '--tries' => 3])
+    ->everyMinute()
+    ->withoutOverlapping()
+    ->runInBackground();

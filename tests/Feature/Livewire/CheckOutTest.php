@@ -453,3 +453,38 @@ it('saves the sale price on the order items', function (): void {
     expect((float) $item->total)->toBe(480.0)      // round(999 × 0.48)
         ->and((float) $item->subtotal)->toBe(1440.0); // 3 × 480
 });
+
+it('notifies the client\'s gs@ address about every new order by default', function (): void {
+    Mail::fake();
+
+    $user = User::factory()->create();
+    $cart = Cart::factory()->create([
+        'user_id' => $user->id,
+        'session_id' => session()->getId(),
+    ]);
+
+    $product = Product::factory()->create();
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => $product->id,
+        'quantity' => 1,
+    ]);
+
+    $shippingMethod = ShippingMethod::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->set('data.billing_name', 'Test User')
+        ->set('data.billing_email', 'customer@example.com')
+        ->set('data.billing_phone', '+36301234567')
+        ->set('data.billing_postcode', '1234')
+        ->set('data.billing_city', 'Budapest')
+        ->set('data.billing_address_1', 'Test Street 1')
+        ->set('data.billing_country', 'Magyarország')
+        ->set('selectedShippingMethod', $shippingMethod->id)
+        ->set('selectedPaymentMethod', 'bacs')
+        ->set('acceptTerms', true)
+        ->call('create');
+
+    Mail::assertQueued(NewOrderNotificationMail::class, fn (NewOrderNotificationMail $mail): bool => $mail->hasTo('gs@gordulo-simmering.hu'));
+});

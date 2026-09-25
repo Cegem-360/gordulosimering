@@ -3,7 +3,10 @@
 declare(strict_types=1);
 
 return [
-    'admin_email' => env('SHOP_ADMIN_EMAIL', 'admin@example.com'),
+    /*
+     * Az új rendelésekről szóló értesítő címzettje: az ügyfél központi címe.
+     */
+    'admin_email' => env('SHOP_ADMIN_EMAIL', 'gs@gordulo-simmering.hu'),
 
     /*
      * A Kapcsolat oldal űrlapjának címzettje: az ügyfél központi címe.
