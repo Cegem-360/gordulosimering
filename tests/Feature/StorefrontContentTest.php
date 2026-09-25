@@ -38,6 +38,31 @@ it('renames the bearing housings root category and leaves other categories alone
     expect($housings->fresh())->name->toBe('CSAPÁGYHÁZAK (S1,S2,S3,S4,S5)')->slug->toBe('csapagyhazak-s1s2s3s4s5');
 });
 
+it('renames the hand tools root and the instruments categories', function (): void {
+    $tools = Category::query()->create(['name' => 'KÉZI SZERSZÁMOK, MŰSZEREK', 'slug' => 'kezi-szerszamok-muszerek']);
+    $instruments = Category::query()->create(['name' => 'MŰSZEREK', 'slug' => 'kezi-szerszamok-muszerek-muszerek', 'category_id' => $tools->id]);
+    $measuring = Category::query()->create(['name' => 'MÉRŐESZKÖZÖK, MŰSZEREK', 'slug' => 'meroeszkozok', 'category_id' => $tools->id]);
+    $elsewhere = Category::query()->create(['name' => 'MŰSZEREK', 'slug' => 'other-muszerek']);
+    $beltDrive = Category::query()->create(['name' => 'SZÍJHATÁS', 'slug' => 'szijhatas']);
+    $beltInstrument = Category::query()->create(['name' => 'MÉRŐ ÉS ELLENÖRZŐ MŰSZER', 'slug' => 'belt-instrument', 'category_id' => $beltDrive->id]);
+
+    $migration = require database_path('migrations/2026_09_25_103310_rename_hand_tools_and_instruments_categories.php');
+    $migration->up();
+
+    expect($tools->fresh())->name->toBe('KÉZISZERSZÁMOK ÉS MŰSZEREK')->slug->toBe('keziszerszamok-es-muszerek')
+        ->and($instruments->fresh())->name->toBe('MÉRŐ- ÉS ELLENŐRZŐ MŰSZEREK')
+        ->slug->toBe('keziszerszamok-es-muszerek-mero-es-ellenorzo-muszerek')
+        ->and($measuring->fresh()->name)->toBe('MÉRŐESZKÖZÖK, MŰSZEREK')
+        ->and($elsewhere->fresh()->name)->toBe('MŰSZEREK')
+        ->and($beltInstrument->fresh())->name->toBe('MÉRŐ- ÉS ELLENŐRZŐ MŰSZER')->slug->toBe('belt-instrument');
+
+    $migration->down();
+
+    expect($tools->fresh())->name->toBe('KÉZI SZERSZÁMOK, MŰSZEREK')->slug->toBe('kezi-szerszamok-muszerek')
+        ->and($instruments->fresh()->name)->toBe('MŰSZEREK')
+        ->and($beltInstrument->fresh()->name)->toBe('MÉRŐ ÉS ELLENÖRZŐ MŰSZER');
+});
+
 it('turns the single-product categories into products of their parent category', function (): void {
     $bearings = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
     $railway = Category::query()->create(['name' => 'SKF VASÚTI ÁGYTOKCSAPÁGY', 'slug' => 'skf-vasuti-agytokcsapagy', 'category_id' => $bearings->id]);
