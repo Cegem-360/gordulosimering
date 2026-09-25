@@ -38,10 +38,8 @@ it('validates minimum length requirements', function (): void {
         ->assertHasErrors(['data.name', 'data.subject', 'data.message']);
 });
 
-it('sends contact form email when admin email is configured', function (): void {
+it('sends the contact form to the client\'s gs@ address by default', function (): void {
     Mail::fake();
-
-    config(['shop.admin_email' => 'admin@test.com']);
 
     Livewire::test(Contact::class)
         ->set('data.name', 'Test User')
@@ -51,17 +49,32 @@ it('sends contact form email when admin email is configured', function (): void 
         ->call('sendMessage')
         ->assertHasNoErrors();
 
-    Mail::assertQueued(ContactFormMail::class, fn (ContactFormMail $mail): bool => $mail->hasTo('admin@test.com')
+    Mail::assertQueued(ContactFormMail::class, fn (ContactFormMail $mail): bool => $mail->hasTo('gs@gordulo-simmering.hu')
+        && $mail->hasReplyTo('sender@example.com')
         && $mail->senderName === 'Test User'
-        && $mail->senderEmail === 'sender@example.com'
         && $mail->formSubject === 'Test Subject'
         && $mail->messageContent === 'This is a test message content.');
 });
 
-it('does not send email when admin email is default placeholder', function (): void {
+it('sends the contact form to its own address, not to the order notification address', function (): void {
     Mail::fake();
 
-    config(['shop.admin_email' => 'admin@example.com']);
+    config(['shop.contact_email' => 'contact@test.com', 'shop.admin_email' => 'orders@test.com']);
+
+    Livewire::test(Contact::class)
+        ->set('data.name', 'Test User')
+        ->set('data.email', 'sender@example.com')
+        ->set('data.subject', 'Test Subject')
+        ->set('data.message', 'This is a test message content.')
+        ->call('sendMessage');
+
+    Mail::assertQueued(ContactFormMail::class, fn (ContactFormMail $mail): bool => $mail->hasTo('contact@test.com') && ! $mail->hasTo('orders@test.com'));
+});
+
+it('does not send email when no contact address is configured', function (): void {
+    Mail::fake();
+
+    config(['shop.contact_email' => '']);
 
     Livewire::test(Contact::class)
         ->set('data.name', 'Test User')

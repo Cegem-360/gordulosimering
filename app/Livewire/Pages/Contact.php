@@ -56,10 +56,10 @@ final class Contact extends Component implements HasSchemas
     {
         $data = $this->form->getState();
 
-        $adminEmail = config('shop.admin_email');
+        $recipient = config('shop.contact_email');
 
-        if ($adminEmail && $adminEmail !== 'admin@example.com') {
-            Mail::to($adminEmail)->send(new ContactFormMail(
+        if (filled($recipient)) {
+            Mail::to($recipient)->send(new ContactFormMail(
                 senderName: $data['name'],
                 senderEmail: $data['email'],
                 formSubject: $data['subject'],
