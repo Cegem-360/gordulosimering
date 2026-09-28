@@ -19,7 +19,7 @@ it('groups the user form into sections', function (): void {
 
     get('admin/users/' . $customer->getKey() . '/edit')
         ->assertSuccessful()
-        ->assertSeeInOrder(['Fiók', 'Számlázási adatok', 'Szállítási cím', 'Hozzáférés', 'Kedvezmények']);
+        ->assertSeeInOrder(['Fiók', 'Számlázási adatok', 'Szállítási cím', 'Hozzáférés', 'Alap kedvezmény', 'Csoportkedvezmények']);
 });
 
 it('summarises the user on the view page', function (): void {

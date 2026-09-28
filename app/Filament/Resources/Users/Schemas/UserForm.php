@@ -7,8 +7,6 @@ namespace App\Filament\Resources\Users\Schemas;
 use App\Models\DiscountGroup;
 use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
@@ -37,9 +35,10 @@ final class UserForm
                             ->columnSpan(1)
                             ->schema([
                                 self::accessSection(),
-                                self::discountSection(),
+                                self::baseDiscountSection(),
                             ]),
                     ]),
+                self::groupDiscountSection(),
             ]);
     }
 
@@ -119,35 +118,45 @@ final class UserForm
             ]);
     }
 
-    private static function discountSection(): Section
+    private static function baseDiscountSection(): Section
     {
-        return Section::make('Kedvezmények')
+        return Section::make('Alap kedvezmény')
             ->description('A vevő minden terméknél a legnagyobb kedvezményt kapja: az alap kedvezményt, a termék csoportkódjára adottat vagy az akciót. Ezek nem adódnak össze.')
             ->schema([
                 self::percentageInput('base_discount_percentage')
                     ->default(10)
+                    ->required()
                     ->helperText('Minden termékre jár.'),
-                Repeater::make('discounts')
-                    ->hiddenLabel()
-                    ->relationship()
-                    ->schema([
-                        Select::make('discount_group_id')
-                            ->relationship('discountGroup', 'code')
-                            ->getOptionLabelFromRecordUsing(fn (DiscountGroup $record): string => filled($record->name)
-                                ? $record->code . ' – ' . $record->name
-                                : $record->code)
-                            ->searchable(['code', 'name'])
-                            ->preload()
-                            ->distinct()
-                            ->required(),
-                        self::percentageInput('percentage'),
-                    ])
-                    ->itemLabel(fn (array $state): ?string => filled($state['percentage'] ?? null)
-                        ? $state['percentage'] . '%'
-                        : null)
-                    ->defaultItems(0)
-                    ->addActionLabel('Csoportkedvezmény hozzáadása'),
             ]);
+    }
+
+    private static function groupDiscountSection(): Section
+    {
+        return Section::make('Csoportkedvezmények')
+            ->description('Minden termékcsoport (Csoportkód) itt szerepel. Írd be a kedvezmény százalékát; az üresen hagyott vagy 0 csoportokra nincs kedvezmény. A lista a csoportokból épül, így új csoport magától megjelenik, a megszűnt eltűnik.')
+            ->collapsible()
+            ->columnSpanFull()
+            ->columns([
+                'default' => 2,
+                'sm' => 3,
+                'md' => 4,
+                'xl' => 6,
+            ])
+            ->schema(self::groupDiscountInputs());
+    }
+
+    /**
+     * @return array<int, TextInput>
+     */
+    private static function groupDiscountInputs(): array
+    {
+        return DiscountGroup::query()
+            ->orderBy('code')
+            ->get()
+            ->map(fn (DiscountGroup $group): TextInput => self::percentageInput('group_discounts.' . $group->code)
+                ->label($group->code)
+                ->helperText(filled($group->name) ? $group->name : null))
+            ->all();
     }
 
     private static function percentageInput(string $name): TextInput
@@ -156,7 +165,6 @@ final class UserForm
             ->numeric()
             ->minValue(0)
             ->maxValue(100)
-            ->suffix('%')
-            ->required();
+            ->suffix('%');
     }
 }

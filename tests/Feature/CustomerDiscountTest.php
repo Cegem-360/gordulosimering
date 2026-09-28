@@ -13,7 +13,6 @@ use App\Models\Product;
 use App\Models\ShippingMethod;
 use App\Models\User;
 use App\Models\UserDiscount;
-use Filament\Forms\Components\Repeater;
 use Illuminate\Support\Number;
 use Livewire\Livewire;
 
@@ -148,23 +147,31 @@ it('shows the struck-through price and the discount on the product page', functi
         ->assertSeeHtml('line-through');
 });
 
-it('edits the base and group discounts of a user in the admin', function (): void {
-    $undoRepeaterFake = Repeater::fake();
+it('pre-fills every discount group and reflects added and removed groups', function (): void {
     actingAs(User::factory()->admin()->create());
 
     $customer = customerWithDiscounts(10, ['CT' => 20]);
-    $newGroup = DiscountGroup::factory()->create(['code' => 'FA']);
-    $password = $customer->password;
+    DiscountGroup::factory()->create(['code' => 'FA']);
 
     Livewire::test(EditUser::class, ['record' => $customer->getRouteKey()])
         ->assertSchemaStateSet(function (array $state): void {
-            expect($state['discounts'])->toHaveCount(1);
-        })
+            expect($state['group_discounts'])->toHaveKeys(['CT', 'FA'])
+                ->and((float) $state['group_discounts']['CT'])->toBe(20.0)
+                ->and($state['group_discounts']['FA'])->toBeNull();
+        });
+});
+
+it('edits the base and group discounts of a user in the admin', function (): void {
+    actingAs(User::factory()->admin()->create());
+
+    $customer = customerWithDiscounts(10, ['CT' => 20]);
+    DiscountGroup::factory()->create(['code' => 'FA']);
+    $password = $customer->password;
+
+    Livewire::test(EditUser::class, ['record' => $customer->getRouteKey()])
         ->fillForm([
             'base_discount_percentage' => 12,
-            'discounts' => [
-                ['discount_group_id' => $newGroup->id, 'percentage' => 30],
-            ],
+            'group_discounts' => ['CT' => null, 'FA' => 30],
         ])
         ->call('save')
         ->assertHasNoFormErrors();
@@ -176,33 +183,24 @@ it('edits the base and group discounts of a user in the admin', function (): voi
         ->and($customer->discounts()->with('discountGroup')->get()->mapWithKeys(
             fn (UserDiscount $discount): array => [$discount->discountGroup->code => $discount->percentage],
         )->all())->toBe(['FA' => '30.00']);
-
-    $undoRepeaterFake();
 });
 
-it('rejects the same discount group twice and percentages outside 0-100', function (): void {
-    $undoRepeaterFake = Repeater::fake();
+it('rejects percentages outside 0-100', function (): void {
     actingAs(User::factory()->admin()->create());
 
     $customer = customerWithDiscounts(10);
-    $group = DiscountGroup::factory()->create(['code' => 'CT']);
+    DiscountGroup::factory()->create(['code' => 'CT']);
 
     Livewire::test(EditUser::class, ['record' => $customer->getRouteKey()])
         ->fillForm([
             'base_discount_percentage' => 101,
-            'discounts' => [
-                ['discount_group_id' => $group->id, 'percentage' => 20],
-                ['discount_group_id' => $group->id, 'percentage' => -5],
-            ],
+            'group_discounts' => ['CT' => 150],
         ])
         ->call('save')
         ->assertHasFormErrors([
             'base_discount_percentage',
-            'discounts.0.discount_group_id',
-            'discounts.1.percentage',
+            'group_discounts.CT',
         ]);
-
-    $undoRepeaterFake();
 });
 
 it('lets the admin add discount groups by hand', function (): void {
