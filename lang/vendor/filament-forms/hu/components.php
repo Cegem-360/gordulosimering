@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 return [
     'builder' => [
+        'block_picker' => [
+            'no_search_results_message' => 'Egyetlen blokk sem illeszkedik a keresésre.',
+            'search_prompt' => 'Blokkok keresése',
+        ],
         'actions' => [
             'clone' => [
                 'label' => 'Duplikálás',
@@ -277,6 +281,19 @@ return [
         ],
     ],
     'rich_editor' => [
+        'custom_blocks' => [
+            'actions' => [
+                'delete' => [
+                    'label' => 'Blokk törlése',
+                ],
+                'edit' => [
+                    'label' => 'Blokk szerkesztése',
+                ],
+            ],
+            'no_search_results_message' => 'Egyetlen blokk sem illeszkedik a keresésre.',
+            'search_label' => 'Blokkok keresése',
+            'search_prompt' => 'Blokkok keresése',
+        ],
         'dialogs' => [
             'link' => [
                 'actions' => [
@@ -305,6 +322,9 @@ return [
             'undo' => 'Visszavonás',
         ],
         'actions' => [
+            'close_panel' => [
+                'label' => 'Panel bezárása',
+            ],
             'grid' => [
                 'label' => 'Rács',
                 'modal' => [
