@@ -24,6 +24,7 @@ final class UserForm
             ->components([
                 Grid::make()
                     ->columns(3)
+                    ->columnSpanFull()
                     ->schema([
                         Group::make()
                             ->columnSpan(2)

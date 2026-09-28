@@ -61,6 +61,7 @@ final class UserInfolist
                     ]),
                 Grid::make()
                     ->columns(2)
+                    ->columnSpanFull()
                     ->schema([
                         Group::make()
                             ->schema([
