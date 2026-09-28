@@ -27,9 +27,7 @@ return RectorConfig::configure()
         FilamentSetList::FILAMENT_TESTS,
         SetList::DEAD_CODE,
         SetList::CODE_QUALITY,
-        SetList::CODING_STYLE,
         SetList::TYPE_DECLARATION,
-        SetList::CODING_STYLE,
     ])
     ->withPaths([
         __DIR__ . '/app',
@@ -42,8 +40,6 @@ return RectorConfig::configure()
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
-        codingStyle: true,
         typeDeclarations: true,
         privatization: true,
-        earlyReturn: true,
     );

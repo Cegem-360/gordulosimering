@@ -157,7 +157,9 @@ it('edits the base and group discounts of a user in the admin', function (): voi
     $password = $customer->password;
 
     Livewire::test(EditUser::class, ['record' => $customer->getRouteKey()])
-        ->assertSchemaStateSet(fn (array $state) => expect($state['discounts'])->toHaveCount(1))
+        ->assertSchemaStateSet(function (array $state): void {
+            expect($state['discounts'])->toHaveCount(1);
+        })
         ->fillForm([
             'base_discount_percentage' => 12,
             'discounts' => [
