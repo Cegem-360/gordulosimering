@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- GÖRDÜLŐ-Simmering favicon: the logo's bearing "G", simplified from
+       resources/images/product-placeholder.svg, on the logo's text blue.
+       Filled shapes only: ImageMagick's SVG renderer ignores strokes, and
+       tools/brand/build-favicons.sh rasterises this file with it. -->
+  <rect width="64" height="64" rx="14" fill="#0F50A9"/>
+  <circle cx="32" cy="32" r="26" fill="#FFFFFF"/>
+  <circle cx="32" cy="32" r="22" fill="#0F50A9"/>
+  <g fill="#FFFFFF">
+    <circle cx="50.5" cy="32" r="3.2"/>
+    <circle cx="45.08" cy="45.08" r="3.2"/>
+    <circle cx="32" cy="50.5" r="3.2"/>
+    <circle cx="18.92" cy="45.08" r="3.2"/>
+    <circle cx="13.5" cy="32" r="3.2"/>
+    <circle cx="18.92" cy="18.92" r="3.2"/>
+    <circle cx="32" cy="13.5" r="3.2"/>
+    <circle cx="45.08" cy="18.92" r="3.2"/>
+    <path d="M41.19 22.81 A13 13 0 1 0 45 32 L40 32 A8 8 0 1 1 37.66 26.34 Z"/>
+    <rect x="33.3" y="29.5" width="11.7" height="5" rx="1"/>
+  </g>
+</svg>

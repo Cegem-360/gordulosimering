@@ -10,6 +10,8 @@
 
         <title>{{ config('app.name') }}</title>
 
+        <x-favicons />
+
         <style>
             [x-cloak] {
                 display: none !important;

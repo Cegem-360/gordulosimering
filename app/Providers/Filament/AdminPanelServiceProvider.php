@@ -29,6 +29,7 @@ final class AdminPanelServiceProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->favicon(asset('favicon.svg'))
             ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,

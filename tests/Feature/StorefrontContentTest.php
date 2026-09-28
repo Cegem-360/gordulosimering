@@ -166,5 +166,19 @@ it('keeps the header on screen and offers a back-to-top button', function (): vo
     $this->get(route('contact'))->assertOk()
         ->assertSeeHtml('class="sticky top-0 z-40 bg-white border-b"')
         ->assertSeeHtml('aria-label="Vissza az oldal tetejére"')
-        ->assertSeeHtml("window.scrollTo({ top: 0, behavior: 'smooth' })");
+        ->assertSeeHtml('window.scrollTo({ top: 0, behavior: \'smooth\' })');
+});
+
+it('serves the GÖRDÜLŐ-Simmering favicon set on the storefront and in the admin', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('contact'))->assertOk()
+        ->assertSeeHtml('<link rel="icon" href="' . asset('favicon.ico') . '" sizes="32x32">')
+        ->assertSeeHtml('<link rel="icon" href="' . asset('favicon.svg') . '" type="image/svg+xml">')
+        ->assertSeeHtml('<link rel="apple-touch-icon" href="' . asset('apple-touch-icon.png') . '">');
+
+    $this->get(route('login'))->assertOk()->assertSeeHtml('href="' . asset('favicon.svg') . '"');
+    $this->get('/admin/login')->assertOk()->assertSeeHtml(asset('favicon.svg'));
+
+    expect(getimagesize(public_path('apple-touch-icon.png')))->toMatchArray([0 => 180, 1 => 180])
+        ->and(file_get_contents(public_path('favicon.svg')))->toContain('fill="#0F50A9"')->not->toContain('stroke=');
 });

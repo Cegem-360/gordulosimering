@@ -1,0 +1,5 @@
+{{-- Built by tools/brand/build-favicons.sh from public/favicon.svg. --}}
+<link rel="icon" href="{{ asset('favicon.ico') }}" sizes="32x32">
+<link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+<meta name="theme-color" content="#0F50A9">
