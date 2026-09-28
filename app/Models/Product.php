@@ -75,6 +75,17 @@ final class Product extends Model
     }
 
     /**
+     * Az adminban kiemeltnek jelölt termékek (főoldal, "Kiemelt termékeink").
+     *
+     * @param  Builder<Product>  $query
+     */
+    #[Scope]
+    protected function featured(Builder $query): void
+    {
+        $query->where('is_featured', true);
+    }
+
+    /**
      * Keresés termékkódra, névre és méretre, részszóra is. A tizedesvessző és
      * a tizedespont egyenértékű: a "25,4x50,8" és a "25.4x50.8" ugyanazt adja,
      * mert a vevők és az ERP-export sem egységesen írják a méreteket.
@@ -208,6 +219,7 @@ final class Product extends Model
             'is_inactive' => 'boolean',
             'weight' => 'decimal:3',
             'is_on_sale' => 'boolean',
+            'is_featured' => 'boolean',
             'sale_percentage' => 'decimal:2',
             'net_selling_price' => 'decimal:2',
             'gross_selling_price' => 'decimal:2',

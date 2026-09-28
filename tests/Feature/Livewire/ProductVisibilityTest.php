@@ -75,8 +75,8 @@ it('keeps products that are not web visible out of the category index list', fun
 
 it('keeps products that are not web visible off the home page', function (): void {
     /** @var TestCase $this */
-    visibleProduct(['name' => 'Kiemelt Lathato Termek']);
-    hiddenProduct(['name' => 'Kiemelt Rejtett Termek']);
+    visibleProduct(['name' => 'Kiemelt Lathato Termek', 'is_featured' => true]);
+    hiddenProduct(['name' => 'Kiemelt Rejtett Termek', 'is_featured' => true]);
 
     $this->get(route('index'))
         ->assertSee('Kiemelt Lathato Termek')

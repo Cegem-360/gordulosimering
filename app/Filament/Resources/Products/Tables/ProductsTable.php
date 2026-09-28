@@ -11,6 +11,8 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 final class ProductsTable
@@ -33,6 +35,8 @@ final class ProductsTable
                     ->boolean(),
                 IconColumn::make('is_inactive')
                     ->boolean(),
+                ToggleColumn::make('is_featured')
+                    ->label('Kiemelt'),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('slug')
@@ -122,7 +126,8 @@ final class ProductsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('is_featured')
+                    ->label('Kiemelt'),
             ])
             ->recordActions([
                 ViewAction::make(),

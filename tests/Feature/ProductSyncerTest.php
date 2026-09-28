@@ -230,3 +230,11 @@ it('does not register discount groups on a dry run', function (): void {
 
     expect(DiscountGroup::query()->count())->toBe(0);
 });
+
+it('keeps the admin\'s featured flag when the ERP export updates the product', function (): void {
+    $product = Product::factory()->create(['product_code' => 'KIEMELT-1', 'name' => 'Régi név', 'is_featured' => true]);
+
+    resolve(ProductSyncer::class)->sync(writeSyncFixture([syncRow([2 => 'KIEMELT-1', 4 => 'Új név'])]));
+
+    expect($product->refresh())->name->toBe('Új név')->is_featured->toBeTrue();
+});

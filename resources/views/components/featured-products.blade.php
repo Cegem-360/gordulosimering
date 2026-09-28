@@ -1,29 +1,21 @@
 @use('App\Models\Product')
 
-<!-- Real Products from Database -->
-<section class="py-8 bg-gray-50">
-    <div class="container mx-auto px-4">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold">Legkeresettebb termékeink</h2>
-        </div>
+{{-- Products ticked as "Kiemelt termék" in the admin; up to ten, two rows.
+     Hidden until at least one is ticked. It used to list ten random products
+     as "Legkeresettebb termékeink", which nothing measured. --}}
+@php
+    $products = Product::query()->webVisible()->featured()->orderBy('name')->limit(10)->get();
+@endphp
 
-        @php
-            $products = Product::query()->webVisible()->inRandomOrder()->latest()->limit(10)->get();
-        @endphp
-
-        @if ($products->count() > 0)
+@if ($products->isNotEmpty())
+    <section class="py-8 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold mb-6">Kiemelt termékeink</h2>
             <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
                 @foreach ($products as $product)
-                    <livewire:product-card :product="$product" :wire:key="'product-'.$product->id" />
+                    <livewire:product-card :product="$product" :wire:key="'featured-product-'.$product->id" />
                 @endforeach
             </div>
-        @else
-            <div class="bg-yellow-100 border border-yellow-400 rounded-lg p-6">
-                <p class="text-yellow-800">
-                    <i class="fa fa-exclamation-triangle mr-2"></i>
-                    Nincsenek termékek az adatbázisban. Kérjük, töltse fel a products táblát adatokkal.
-                </p>
-            </div>
-        @endif
-    </div>
-</section>
+        </div>
+    </section>
+@endif

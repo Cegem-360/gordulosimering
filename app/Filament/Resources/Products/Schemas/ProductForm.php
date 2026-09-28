@@ -57,6 +57,9 @@ final class ProductForm
                             ->label('Szolgáltatás'),
                         Toggle::make('is_on_sale')
                             ->label('Akciós'),
+                        Toggle::make('is_featured')
+                            ->label('Kiemelt termék')
+                            ->helperText('A főoldal "Kiemelt termékeink" szekciójában jelenik meg.'),
                     ]),
 
                 Section::make('Média')

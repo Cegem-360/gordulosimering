@@ -10,7 +10,9 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 final class CategoriesTable
@@ -35,6 +37,8 @@ final class CategoriesTable
                 TextColumn::make('sort_order')
                     ->numeric()
                     ->sortable(),
+                ToggleColumn::make('is_featured')
+                    ->label('Kiemelt'),
                 TextColumn::make('display')
                     ->searchable(),
                 TextColumn::make('created_at')
@@ -52,6 +56,8 @@ final class CategoriesTable
                     ->relationship('parentCategory', 'name')
                     ->searchable()
                     ->preload(),
+                TernaryFilter::make('is_featured')
+                    ->label('Kiemelt'),
             ])
             ->recordActions([
                 ViewAction::make(),

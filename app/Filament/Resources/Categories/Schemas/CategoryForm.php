@@ -8,6 +8,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
@@ -45,6 +46,9 @@ final class CategoryForm
                             ->numeric()
                             ->minValue(0)
                             ->helperText('Kisebb szám előrébb kerül a menüben és az alkategóriák között. Üresen a kategória-táblázat sorrendje érvényes.'),
+                        Toggle::make('is_featured')
+                            ->label('Kiemelt kategória')
+                            ->helperText('A főoldal "Kiemelt kategóriáink" szekciójában jelenik meg, a fenti sorrendben.'),
                         FileUpload::make('image')
                             ->label('Kép')
                             ->helperText('Az alkategória-csempén jelenik meg. Kép nélkül az első termék képe látszik.')

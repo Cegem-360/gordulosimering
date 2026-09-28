@@ -25,6 +25,7 @@ use Override;
     'description',
     'image',
     'display',
+    'is_featured',
 ])]
 #[Table(name: 'product_categories')]
 final class Category extends Model
@@ -66,6 +67,17 @@ final class Category extends Model
      *
      * @param  Builder<Category>  $query
      */
+    /**
+     * Az adminban kiemeltnek jelölt kategóriák (főoldal, "Kiemelt kategóriáink").
+     *
+     * @param  Builder<Category>  $query
+     */
+    #[Scope]
+    protected function featured(Builder $query): void
+    {
+        $query->where('is_featured', true);
+    }
+
     #[Scope]
     protected function ordered(Builder $query): void
     {
@@ -100,6 +112,7 @@ final class Category extends Model
     {
         return [
             'sort_order' => 'integer',
+            'is_featured' => 'boolean',
         ];
     }
 }

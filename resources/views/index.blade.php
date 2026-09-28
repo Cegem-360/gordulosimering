@@ -15,7 +15,8 @@
             <x-feature-cards faboryAppUrl="#" faboryLogicUrl="#" innovationUrl="#" />
         </div>
     </div>
-    <!-- Featured Products Section -->
+    <!-- Featured Categories and Products, both picked in the admin -->
+    <x-featured-categories />
     <x-featured-products />
 
     <!-- Innovation Section -->
