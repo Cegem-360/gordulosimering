@@ -62,7 +62,6 @@ final class CheckOut extends Component implements HasActions, HasSchemas
                 'billing_phone' => $user->phone ?? '',
                 'billing_company_name' => $user->billing_company_name ?? '',
                 'billing_vat_number' => $user->billing_vat_number ?? '',
-                'billing_company_office' => $user->billing_company_office ?? '',
                 'billing_postcode' => $user->billing_postcode ?? '',
                 'billing_city' => $user->billing_city ?? '',
                 'billing_address_1' => $user->billing_address_1 ?? '',
@@ -140,8 +139,6 @@ final class CheckOut extends Component implements HasActions, HasSchemas
                             ->label('Cégnév'),
                         TextInput::make('billing_vat_number')
                             ->label('Adószám'),
-                        TextInput::make('billing_company_office')
-                            ->label('Cégjegyzékszám'),
                     ]),
                 Section::make('Számlázási cím')
                     ->columnSpanFull()
@@ -252,7 +249,6 @@ final class CheckOut extends Component implements HasActions, HasSchemas
                 'billing_name' => $data['billing_name'],
                 'billing_company_name' => $data['billing_company_name'] ?? null,
                 'billing_vat_number' => $data['billing_vat_number'] ?? null,
-                'billing_company_office' => $data['billing_company_office'] ?? null,
                 'billing_postcode' => $data['billing_postcode'] ?? null,
                 'billing_city' => $data['billing_city'] ?? null,
                 'billing_address_1' => $data['billing_address_1'] ?? null,
@@ -323,7 +319,6 @@ final class CheckOut extends Component implements HasActions, HasSchemas
                 'billing_name' => $data['billing_name'] ?? $user->billing_name,
                 'billing_company_name' => $data['billing_company_name'] ?? $user->billing_company_name,
                 'billing_vat_number' => $data['billing_vat_number'] ?? $user->billing_vat_number,
-                'billing_company_office' => $data['billing_company_office'] ?? $user->billing_company_office,
                 'billing_postcode' => $data['billing_postcode'] ?? $user->billing_postcode,
                 'billing_city' => $data['billing_city'] ?? $user->billing_city,
                 'billing_address_1' => $data['billing_address_1'] ?? $user->billing_address_1,

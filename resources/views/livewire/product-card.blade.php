@@ -3,7 +3,7 @@
     @php
         $mainImage = $product->image_url;
         $defaultImage = Vite::asset('resources/images/product-placeholder.svg');
-        $inStock = ($product->minimum_stock ?? 0) > 0;
+        $inStock = $product->isInStock();
     @endphp
 
     <a href="{{ isset($product->slug) ? route('products.show', ['product' => $product->slug]) : '#' }}"
