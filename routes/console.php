@@ -11,6 +11,15 @@ Artisan::command('inspire', function (): void {
 })->purpose('Display an inspiring quote');
 
 /**
+ * Az ERP webshop-exportjából naponta frissíti a termékeket (ár, készletadatok,
+ * láthatóság); élesen csak a webáruházban szereplő termékek vannak fent.
+ */
+Schedule::command('app:sync-products', ['--only-web-visible'])
+    ->dailyAt('02:00')
+    ->withoutOverlapping()
+    ->runInBackground();
+
+/**
  * Az ügyfél publikált táblázatából, tiszta lappal: a táblázatból kikerült
  * kódok képe is lekerül a termékekről.
  */
