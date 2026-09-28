@@ -12,7 +12,7 @@ Nem szükséges.
 
 ## 4. Elérhetőség
 
-info@gordulo-simmering.hu
+gs@gordulo-simmering.hu
 
 ## 5. Az adatkezelés megnevezése
 
@@ -20,7 +20,14 @@ Adatkezelés a felhasználók önkéntes, és határozott hozzájárulása alapj
 
 ## 6. Az adatkezelés jogalapja
 
-2011\. évi CXII törvény az információs önrendelkezési jogról és az információszabadságról 5. § (1) bekezdése alapján az érintett önkéntes hozzájárulásával
+Az adatkezelés jogalapja az Európai Parlament és a Tanács (EU) 2016/679 rendelete (általános adatvédelmi rendelet, a továbbiakban: GDPR):
+
+- a regisztráció és a hírlevél-feliratkozás esetén az érintett önkéntes hozzájárulása (GDPR 6. cikk (1) bekezdés a) pont);
+- a megrendelések teljesítése és kiszállítása esetén a szerződés teljesítése (GDPR 6. cikk (1) bekezdés b) pont);
+- a számlák kiállítása és megőrzése esetén az adatkezelőre vonatkozó jogi kötelezettség teljesítése (GDPR 6. cikk (1) bekezdés c) pont, a számvitelről szóló 2000. évi C. törvény 169. §);
+- a kamerás megfigyelés esetén az adatkezelő jogos érdeke (GDPR 6. cikk (1) bekezdés f) pont, lásd a 13. pontot).
+
+A GDPR mellett az információs önrendelkezési jogról és az információszabadságról szóló 2011. évi CXII. törvény rendelkezései is irányadóak.
 
 ## 7. A kezelt adatok köre
 
@@ -51,11 +58,15 @@ Az érdeklődők a GÖRDÜLŐ-Simmering Kft. a kereskedelmi feltételeiről, az 
 
 A felhasználó által megadott adatok esetében, amíg a felhasználó a regisztrációját saját kérésre nem törölteti. A GÖRDÜLŐ-Simmering Kft. a kért adattörlést, a kérelemtől számított 3 munkanapon belül elvégzi.
 
+A számlákat és az azokon szereplő adatokat a számvitelről szóló 2000. évi C. törvény 169. § (2) bekezdése alapján 8 évig megőrizzük; ezek a regisztráció törlése után sem törölhetők.
+
+A hírlevélre feliratkozott e-mail címet a leiratkozásig kezeljük.
+
 A honlapon regisztrált felhasználók (ha vannak ilyenek) személyes adatai a saját felhasználói profiljukban is tárolásra kerülnek. Minden felhasználó megtekintheti, szerkesztheti vagy törölheti a személyes adatait bármikor (kivéve, hogy nem változtathatja meg a saját felhasználói nevét). A honlap rendszergazdái ezen információkat szintén megtekinthetik és szerkeszthetik.
 
 ## 10. A személyes adatok törlése
 
-A felhasználó saját személyes adatainak törlési igényét a hírlevél, illetve a webáruház adattörlési felületén, továbbá e-mailben, az gs@gordulo-simmering.hu címre eljuttatva jelezheti.
+A felhasználó saját személyes adatainak törlési igényét a hírlevél, illetve a webáruház adattörlési felületén, továbbá e-mailben, a gs@gordulo-simmering.hu címre eljuttatva jelezheti.
 
 Kérhető továbbá, hogy bármilyen korábban megadott személyes adatot töröljük. Ez nem vonatkozik azokra az adatokra, amelyeket adminisztrációs, jogi vagy biztonsági okokból kötelező megőriznünk.
 
@@ -67,11 +78,13 @@ A GÖRDÜLŐ-Simmering Kft. kizárólag regisztrált email címekre küld hírle
 
 ## 12. Cookie (süti) használata
 
-Jelen webhely sütiket (Cookie-kat) használ szolgáltatásainak működése, fejlesztése, statisztikai adatgyűjtés, valamint a felhasználói élmény fokozása érdekében. A Webhely használatával a felhasználó elfogadja a sütikre vonatkozó alábbi irányelveket, valamint adatvédelmi nyilatkozatot.
+A Cookie, süti a böngésző által az Ön eszközére helyezett rövid számsorból áll, ami a weblapot letöltő számítógép vagy egyéb eszköz megkülönböztetésére szolgál. A sütik személyes adatot nem tartalmaznak.
 
-A Cookie, süti a böngésző által az Ön eszközére helyezett rövid számsorból áll, ami a weblapot letöltő számítógép vagy egyéb eszköz megkülönböztetésére és statisztikai adatgyűjtésre szolgál. A sütik személyes adatot nem tartalmaznak.
+Jelen webhely kizárólag a működéséhez szükséges sütiket használja; statisztikai, reklám- vagy közösségimédia-sütit nem helyez el, és a sütik adatait harmadik félnek nem adja át. A szükséges sütik elhelyezéséhez nincs szükség hozzájárulásra, a webhely nélkülük nem működne:
 
-A cookie-k által gyűjtött statisztikai adatokat a Webhely nem értékesíti, nem adja bérbe és semmilyen egyéb módon nem terjeszti harmadik fél számára, kivéve azon szolgáltatásokat, amely szolgáltatásokhoz Ön a szükséges információt előzetesen és önkéntesen megadta.
+- **Munkamenet-süti:** a kosár tartalmát és a bejelentkezést tárolja a látogatás idejére. Utolsó használatától számítva 2 óra múlva lejár.
+- **XSRF-TOKEN:** az űrlapok (rendelés, kapcsolatfelvétel) biztonságát védi a csalárd kérésekkel szemben. 2 óra múlva lejár.
+- **Bejelentkezés megjegyzése (remember_web_…):** csak akkor jön létre, ha bejelentkezéskor az „Emlékezz rám” lehetőséget választja. Kijelentkezéskor törlődik, egyébként legfeljebb 400 napig érvényes.
 
 Az Ön számítógépét érintő sütik beállítását szabályozhatja a böngészőjében, illetve a sütikről és azok beállításairól az alábbi weboldalakon tud tájékozódni:
 
@@ -84,7 +97,7 @@ A GÖRDÜLŐ-Simmering Kft. fenntartja a jogot, hogy saját belátása szerint b
 
 ## 13. Kameraszabályzat
 
-Felhívjuk szíves figyelmét, hogy Társaságunk valamennyi üzletében, (jelenleg: 1102 Budapest, Kőrösi Csoma Sándor út. 18-20. és a 1148 Budapest, Nagy Lajos király útja 117.) a vagyonbiztonság, továbbá munkavállalóink és látogatóink személyi biztonságának és egyéb jogainak védelme érdekében térfigyelő kamerarendszer működik. A kamerarendszer kizárólag az üzletek területéről készít felvételt, közterületről kamerafelvétel nem készülhet. A kamerarendszer működéséről az üzletbe történő belépést megelőzően figyelemfelhívó tájékoztatás került elhelyezésre („Kamerával megfigyelt terület!”), amelyre figyelemmel üzlethelyiségünkbe történő belépéssel egyidejűleg Ön ráutaló magatartásával önkéntesen hozzájárul a jelen pontban foglaltakhoz és az adatkezeléshez.
+Felhívjuk szíves figyelmét, hogy Társaságunk Kőrösi Csoma Sándor úti üzletében (1102 Budapest, Kőrösi Csoma Sándor út 18-20.) a vagyonbiztonság, továbbá munkavállalóink és látogatóink személyi biztonságának és egyéb jogainak védelme érdekében térfigyelő kamerarendszer működik. A kamerarendszer kizárólag az üzletek területéről készít felvételt, közterületről kamerafelvétel nem készülhet. A kamerarendszer működéséről az üzletbe történő belépést megelőzően figyelemfelhívó tájékoztatás került elhelyezésre („Kamerával megfigyelt terület!”), amelyre figyelemmel üzlethelyiségünkbe történő belépéssel egyidejűleg Ön ráutaló magatartásával önkéntesen hozzájárul a jelen pontban foglaltakhoz és az adatkezeléshez.
 
 Tájékoztatjuk, hogy a biztonsági kamerarendszer által Önről készült video- és képfelvétel személyes adatnak minősül, amelyre tekintettel adatkezelésünk a személy- és vagyonvédelemhez, vagyonbiztonsághoz fűződő jogos érdeken alapul (GDPR 6. cikk (1) bekezdés f) pont). Az adattakarékosság elvére tekintettel a felvétel során hanganyag rögzítésére nem kerül sor, Társaságunk a jelen pontban szabályozott technikai eszközök alkalmazását az adatkezelés céljának megvalósulásához szükséges legalacsonyabb mértékre korlátozza.
 
@@ -96,8 +109,10 @@ A felvételek megsemmisítésig, vagy a felhasználásig történő tárolása T
 
 ## 14. A felhasználók jogai személyes adataik kezelésével kapcsolatban
 
-Személyes adatai kezeléséről a felhasználók tájékoztatást kérhetnek. A GÖRDÜLŐ-Simmering Kft. kérésre tájékoztatást ad az érintettnek az általa kezelt adatairól, az adatkezelés céljáról, jogalapjáról, időtartamáról, az adatfeldolgozó nevéről, címéről (székhelyéről) és az adatkezeléssel összefüggő tevékenységéről, továbbá arról, hogy kik és milyen célból kapják vagy kapták meg az adatokat. A tájékoztatás iránti kérelmet e-mailben az info@gordulo-simmering.hu címre kell eljuttatni, amire cégünk 5 munkanapon belül válaszol.
+Személyes adatai kezeléséről a felhasználók tájékoztatást kérhetnek. A GÖRDÜLŐ-Simmering Kft. kérésre tájékoztatást ad az érintettnek az általa kezelt adatairól, az adatkezelés céljáról, jogalapjáról, időtartamáról, az adatfeldolgozó nevéről, címéről (székhelyéről) és az adatkezeléssel összefüggő tevékenységéről, továbbá arról, hogy kik és milyen célból kapják vagy kapták meg az adatokat. A tájékoztatás iránti kérelmet e-mailben a gs@gordulo-simmering.hu címre kell eljuttatni, amire cégünk 5 munkanapon belül válaszol.
 
 ## 15. Jogérvényesítési lehetőségek
 
-A felhasználó jogérvényesítési lehetőségeit az Adatvédelmi törvény, valamint a Ptk. alapján bíróság előtt gyakorolhatja, vagy kérheti a Nemzeti Adatvédelmi és Információs Hatóság (1125 Budapest Szilágyi E. fasor 22 c) segítségét is.
+A GDPR alapján Ön jogosult személyes adataihoz hozzáférni, azok helyesbítését, törlését vagy kezelésének korlátozását kérni, tiltakozni az adatkezelés ellen, kérni adatai hordozható formában történő kiadását, valamint hozzájárulását bármikor visszavonni. Kérelmét a gs@gordulo-simmering.hu címre küldheti.
+
+Ha úgy ítéli meg, hogy személyes adatainak kezelése sérti a jogszabályokat, panaszt tehet a Nemzeti Adatvédelmi és Információszabadság Hatóságnál (1055 Budapest, Falk Miksa utca 9–11.; postacím: 1363 Budapest, Pf. 9.; telefon: +36 1 391 1400; e-mail: ugyfelszolgalat@naih.hu; honlap: <https://www.naih.hu>), vagy bírósághoz fordulhat. A per – választása szerint – a lakóhelye vagy tartózkodási helye szerinti törvényszék előtt is megindítható.
