@@ -133,3 +133,12 @@ it('lists the open XVII. district store as the company premises, not the closed 
         ->assertSee(['A cég telephelye', '1173 Budapest, Pesti út 203.'])
         ->assertDontSee(['Nagy Lajos', '1149 Budapest']);
 });
+
+it('keeps the store notice in line with the privacy notice on camera footage', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('documents'))->assertOk()
+        ->assertSee(['Hirdetmény', 'A felvételeket 3 munkanapig őrizzük', 'Budapest, 2026. szeptember 28.'])
+        ->assertSeeHtml('href="' . route('privacy-policy') . '"')
+        ->assertSeeHtml('href="' . route('terms-and-conditions') . '"')
+        ->assertDontSee(['72 órán', 'American Express', '2010.01.01']);
+});

@@ -25,8 +25,10 @@
                     <div>
                         <h3 class="text-xl font-semibold text-gray-900 mb-3">Biztonság</h3>
                         <div class="text-gray-700">
-                            <p>Üzletünkben kamerarendszer működik, a felvételeket 72 órán keresztül őrizzük meg kivétel,
-                                ha büntetőeljárásban bizonyítékként kell felhasználni.</p>
+                            <p>Kőrösi Csoma úti üzletünkben kamerarendszer működik. A felvételeket 3 munkanapig őrizzük
+                                meg, kivéve, ha bírósági vagy más hatósági eljárásban bizonyítékként kell felhasználni.
+                                Részletek az <a href="{{ route('privacy-policy') }}"
+                                    class="text-blue-600 hover:underline">Adatvédelmi nyilatkozat</a> 13. pontjában.</p>
                         </div>
                     </div>
 
@@ -36,7 +38,9 @@
                             <p>Minőségi reklamáció esetén az eredeti számla bemutatását követően reklamációs jegyzőkönyv
                                 kitöltése szükséges (ezt az eladó biztosítja Önnek). A szakvéleménytől (pl.: KERMI, SKF
                                 ZRt.) függően történik a további eljárás és a reklamáció kezelése, részleteket a
-                                GÖRDÜLŐ-Simmering Kft. Általános Szerződési Feltételei (ÁSZF.) tartalmazzák.</p>
+                                GÖRDÜLŐ-Simmering Kft. <a href="{{ route('terms-and-conditions') }}"
+                                    class="text-blue-600 hover:underline">Általános Szerződési Feltételei</a> (ÁSZF)
+                                tartalmazzák.</p>
                             <p>SKF és egyéb minőségi csapágyakra a számla bemutatását követően cseregarancia is érvényes
                                 (sértetlen csomagolás esetén). Olcsóbb, keleti csapágyakra cserejogot nem tudunk
                                 biztosítani.</p>
@@ -47,7 +51,7 @@
                     </div>
 
                     <div class="mt-8 text-gray-600 text-sm">
-                        <p>Budapest, 2010.01.01</p>
+                        <p>Budapest, 2026. szeptember 28.</p>
                     </div>
                 </div>
             </div>
