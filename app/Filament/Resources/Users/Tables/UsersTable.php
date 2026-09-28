@@ -8,6 +8,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -23,6 +24,15 @@ final class UsersTable
                     ->searchable(),
                 TextColumn::make('email_verified_at')
                     ->dateTime()
+                    ->sortable(),
+                IconColumn::make('is_admin')
+                    ->boolean()
+                    ->sortable(),
+                TextColumn::make('base_discount_percentage')
+                    ->suffix('%')
+                    ->sortable(),
+                TextColumn::make('discounts_count')
+                    ->counts('discounts')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()

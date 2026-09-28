@@ -19,6 +19,8 @@ use Override;
     'name',
     'email',
     'password',
+    'is_admin',
+    'base_discount_percentage',
     'phone',
     'billing_name',
     'billing_company_name',
@@ -48,18 +50,32 @@ final class User extends Authenticatable implements FilamentUser
     use Notifiable;
 
     /**
-     * Get the attributes that should be cast.
+     * Az új vevő alap kedvezménye, egyezik az adatbázis alapértékével, hogy a
+     * mentés előtt (pl. a pénztárban regisztrált vevőnél) is ez érvényesüljön.
      *
-     * @return array<string, string>
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'is_admin' => false,
+        'base_discount_percentage' => 10,
+    ];
+
+    /**
+     * Az admin felületre csak az adminok léphetnek be.
      */
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return $this->is_admin;
     }
 
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function discounts(): HasMany
+    {
+        return $this->hasMany(UserDiscount::class);
     }
 
     #[Override]
@@ -68,6 +84,8 @@ final class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
+            'base_discount_percentage' => 'decimal:2',
         ];
     }
 }

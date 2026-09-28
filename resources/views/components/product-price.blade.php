@@ -9,7 +9,7 @@
 @endphp
 
 <div {{ $attributes->class('flex flex-wrap items-baseline gap-x-2 gap-y-1') }}>
-    @if ($product->isOnSale() && (float) $product->net_selling_price > 0)
+    @if ($product->hasDiscount() && (float) $product->net_selling_price > 0)
         <span class="{{ $sizes['old'] }} text-gray-500 line-through">
             {{ Number::currency((float) $product->net_selling_price * $quantity, 'HUF', 'hu', 0) }}
         </span>
@@ -17,7 +17,7 @@
             {{ Number::currency($product->unit_price * $quantity, 'HUF', 'hu', 0) }}
         </span>
         <span class="{{ $sizes['badge'] }} rounded bg-red-600 py-0.5 font-bold text-white">
-            -{{ rtrim(rtrim(number_format($product->effective_sale_percentage, 2, ',', ''), '0'), ',') }}%
+            -{{ rtrim(rtrim(number_format($product->discount_percentage, 2, ',', ''), '0'), ',') }}%
         </span>
     @else
         <span class="{{ $sizes['main'] }} text-blue-600">

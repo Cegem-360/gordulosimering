@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Category;
+use App\Models\DiscountGroup;
 use App\Models\Product;
 use App\Services\ProductSyncer;
 
@@ -207,4 +208,25 @@ it('reports the counts without writing anything on a dry run', function (): void
         ->and(Product::query()->where('product_code', 'UJ')->exists())->toBeFalse()
         ->and(Product::query()->where('product_code', 'VALTOZIK')->value('name'))->toBe('Régi név')
         ->and(Product::query()->where('product_code', 'MEGSZUNT')->value('is_inactive'))->toBeFalsy();
+});
+
+it('registers the new group codes of the synced products as discount groups', function (): void {
+    DiscountGroup::factory()->create(['code' => 'CT', 'name' => 'Csapágyak']);
+
+    $path = writeSyncFixture([
+        syncRow([0 => 'CT', 2 => 'A1']),
+        syncRow([0 => 'SM', 2 => 'A2']),
+        syncRow([0 => '', 2 => 'A3']),
+    ]);
+
+    resolve(ProductSyncer::class)->sync($path);
+
+    expect(DiscountGroup::query()->orderBy('code')->pluck('name', 'code')->all())
+        ->toBe(['CT' => 'Csapágyak', 'SM' => null]);
+});
+
+it('does not register discount groups on a dry run', function (): void {
+    resolve(ProductSyncer::class)->sync(writeSyncFixture([syncRow([0 => 'SM'])]), dryRun: true);
+
+    expect(DiscountGroup::query()->count())->toBe(0);
 });

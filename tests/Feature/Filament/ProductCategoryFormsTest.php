@@ -15,7 +15,7 @@ use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
 beforeEach(function (): void {
-    actingAs(User::factory()->create());
+    actingAs(User::factory()->admin()->create());
 });
 
 it('renders the reworked product create and edit forms', function (): void {

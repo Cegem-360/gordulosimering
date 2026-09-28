@@ -58,7 +58,7 @@ it('labels a table filter from the field translations', function (): void {
 });
 
 it('shows Hungarian column headers on the resource index pages', function (string $path, string $label): void {
-    actingAs(User::factory()->create());
+    actingAs(User::factory()->admin()->create());
 
     get($path)->assertSuccessful()->assertSee($label);
 })->with([
@@ -71,7 +71,7 @@ it('shows Hungarian column headers on the resource index pages', function (strin
 ]);
 
 it('shows Hungarian labels for the SEO package fields', function (string $label): void {
-    actingAs(User::factory()->create());
+    actingAs(User::factory()->admin()->create());
 
     get('admin/seo-pages/create')->assertSuccessful()->assertSee($label);
 })->with([
@@ -82,7 +82,7 @@ it('shows Hungarian labels for the SEO package fields', function (string $label)
 ]);
 
 it('shows Hungarian field labels on the settings pages', function (string $path, string $label): void {
-    actingAs(User::factory()->create());
+    actingAs(User::factory()->admin()->create());
 
     get($path)->assertSuccessful()->assertSee($label);
 })->with([
@@ -110,7 +110,7 @@ it('shows Hungarian field labels on the settings pages', function (string $path,
 ]);
 
 it('shows the sidebar navigation items in Hungarian', function (string $label): void {
-    actingAs(User::factory()->create());
+    actingAs(User::factory()->admin()->create());
 
     get('admin/products')->assertSuccessful()->assertSee($label);
 })->with([
