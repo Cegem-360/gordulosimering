@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Models\User;
+use App\Models\UserDiscount;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -15,6 +17,16 @@ final class UserInfolist
             ->components([
                 TextEntry::make('name'),
                 TextEntry::make('email'),
+                TextEntry::make('base_discount_percentage')
+                    ->suffix('%'),
+                TextEntry::make('discounts')
+                    ->state(fn (User $record): array => $record->discounts()
+                        ->with('discountGroup')
+                        ->get()
+                        ->map(fn (UserDiscount $discount): string => $discount->discountGroup->code . ': ' . mb_rtrim(mb_rtrim($discount->percentage, '0'), '.') . '%')
+                        ->all())
+                    ->badge()
+                    ->placeholder('-'),
                 TextEntry::make('email_verified_at')
                     ->dateTime()
                     ->placeholder('-'),

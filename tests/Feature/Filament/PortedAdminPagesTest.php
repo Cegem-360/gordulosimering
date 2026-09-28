@@ -10,7 +10,7 @@ use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
 beforeEach(function (): void {
-    actingAs(User::factory()->create());
+    actingAs(User::factory()->admin()->create());
 });
 
 it('renders the ported settings pages', function (string $path): void {

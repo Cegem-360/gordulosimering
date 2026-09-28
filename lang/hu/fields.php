@@ -116,6 +116,15 @@ return [
     'password' => 'Jelszó',
     'phone' => 'Telefon',
 
+    'is_admin' => 'Admin',
+    'base_discount_percentage' => 'Alap kedvezmény',
+    'discounts' => 'Csoportkedvezmények',
+    'discounts_count' => 'Csoportkedvezmények',
+    'discount_group_id' => 'Kedvezménycsoport',
+    'percentage' => 'Kedvezmény',
+    'code' => 'Kód',
+    'user_discounts_count' => 'Vevők',
+
     'cost' => 'Szállítási költség',
 
     'excerpt' => 'Kivonat',

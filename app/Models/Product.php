@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Closure;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
@@ -21,6 +22,21 @@ final class Product extends Model
     /** @use HasFactory<ProductFactory> */
     use HasFactory;
 
+    /**
+     * A bejelentkezett vevő kedvezménye a termékre (lásd AppServiceProvider).
+     *
+     * @var (Closure(Product): float)|null
+     */
+    private static ?Closure $customerDiscountResolver = null;
+
+    /**
+     * @param  (Closure(Product): float)|null  $resolver
+     */
+    public static function resolveCustomerDiscountUsing(?Closure $resolver): void
+    {
+        self::$customerDiscountResolver = $resolver;
+    }
+
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
@@ -34,6 +50,14 @@ final class Product extends Model
     public function isOnSale(): bool
     {
         return (bool) $this->is_on_sale;
+    }
+
+    /**
+     * Kap-e a vevő kedvezményt a termékre: akciót vagy vevőkedvezményt.
+     */
+    public function hasDiscount(): bool
+    {
+        return $this->discount_percentage > 0;
     }
 
     /**
@@ -128,11 +152,34 @@ final class Product extends Model
     }
 
     /**
-     * A vevő által fizetendő nettó egységár: akciós terméknél az akciós ár.
+     * A vevőnek járó kedvezmény százalékban: az akció és a vevő kedvezménye
+     * (alap vagy a termék csoportkódjára adott) közül a nagyobb. Nem
+     * adódnak össze.
+     */
+    protected function discountPercentage(): Attribute
+    {
+        return Attribute::get(fn (): float => max(
+            $this->effective_sale_percentage,
+            self::$customerDiscountResolver instanceof Closure ? (self::$customerDiscountResolver)($this) : 0.0,
+        ));
+    }
+
+    /**
+     * Kedvezményes nettó egységár egész forintra kerekítve; kedvezmény nélkül null.
+     */
+    protected function discountedPrice(): Attribute
+    {
+        return Attribute::get(fn (): ?int => $this->hasDiscount()
+            ? (int) round((float) $this->net_selling_price * (100 - $this->discount_percentage) / 100)
+            : null);
+    }
+
+    /**
+     * A vevő által fizetendő nettó egységár: kedvezménnyel a kedvezményes ár.
      */
     protected function unitPrice(): Attribute
     {
-        return Attribute::get(fn (): float => (float) ($this->sale_price ?? $this->net_selling_price));
+        return Attribute::get(fn (): float => (float) ($this->discounted_price ?? $this->net_selling_price));
     }
 
     /**

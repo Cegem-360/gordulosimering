@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Models\DiscountGroup;
 use App\Models\Product;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -130,6 +131,10 @@ final class ProductSyncer
      */
     private function flush(array $batch, array &$stats, bool $dryRun): void
     {
+        if (! $dryRun) {
+            $this->registerDiscountGroups($batch);
+        }
+
         $existing = Product::query()
             ->whereIn('product_code', array_keys($batch))
             ->get()
@@ -162,6 +167,26 @@ final class ProductSyncer
             }
 
             $stats['updated']++;
+        }
+    }
+
+    /**
+     * Az exportban megjelenő új csoportkódokat kedvezménycsoportként felveszi,
+     * hogy a vevőknek rögtön lehessen rájuk kedvezményt adni.
+     *
+     * @param  array<string, array<string, mixed>>  $batch
+     */
+    private function registerDiscountGroups(array $batch): void
+    {
+        $codes = collect($batch)
+            ->pluck('group_code')
+            ->filter(fn (?string $code): bool => filled($code))
+            ->unique();
+
+        $existing = DiscountGroup::query()->whereIn('code', $codes)->pluck('code');
+
+        foreach ($codes->diff($existing) as $code) {
+            DiscountGroup::query()->create(['code' => $code]);
         }
     }
 

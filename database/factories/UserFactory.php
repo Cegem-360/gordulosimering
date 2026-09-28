@@ -25,6 +25,8 @@ final class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => 'password', // Hashed by model's 'hashed' cast
+            'is_admin' => false,
+            'base_discount_percentage' => 0,
             'remember_token' => Str::random(10),
             'phone' => null,
             'billing_name' => null,
@@ -45,6 +47,27 @@ final class UserFactory extends Factory
             'shipping_country' => null,
             'shipping_state' => null,
         ];
+    }
+
+    /**
+     * Admin felületre beléphető felhasználó.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'is_admin' => true,
+        ]);
+    }
+
+    /**
+     * A vevő minden termékre járó alap kedvezménye. A gyár alapból 0%-ot ad,
+     * hogy a tesztek árai kiszámíthatók maradjanak; élesben 10% az alap.
+     */
+    public function withBaseDiscount(float $percentage = 10): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'base_discount_percentage' => $percentage,
+        ]);
     }
 
     /**

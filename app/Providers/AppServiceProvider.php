@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Filament\Support\FieldLabel;
+use App\Models\Product;
+use App\Services\CustomerDiscounts;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\Column;
@@ -24,7 +26,7 @@ final class AppServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        //
+        $this->app->scoped(CustomerDiscounts::class);
     }
 
     /**
@@ -39,6 +41,10 @@ final class AppServiceProvider extends ServiceProvider
         Column::configureUsing(fn (Column $column): Column => $column->toggleable());
 
         FieldLabel::registerAsDefaultLabel();
+
+        Product::resolveCustomerDiscountUsing(
+            fn (Product $product): float => $this->app->make(CustomerDiscounts::class)->percentageFor($product->group_code),
+        );
 
         Resource::titleCaseModelLabel(false);
 

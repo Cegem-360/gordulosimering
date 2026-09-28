@@ -136,7 +136,7 @@ it('labels the seo page model in Hungarian', function (): void {
 });
 
 it('formats the admin money columns in forints', function (): void {
-    actingAs(User::factory()->create());
+    actingAs(User::factory()->admin()->create());
     Product::factory()->create(['net_selling_price' => 1234, 'gross_selling_price' => 1567]);
 
     get('admin/products')->assertSuccessful()->assertDontSee('USD');
@@ -150,7 +150,7 @@ it('keeps the resource page titles in Hungarian sentence case', function (string
 ]);
 
 it('hides the cookie category repeater label rather than falling back to English', function (): void {
-    actingAs(User::factory()->create());
+    actingAs(User::factory()->admin()->create());
 
     get('admin/manage-cookie-consent-settings')->assertSuccessful()->assertDontSee('Categories');
 });
