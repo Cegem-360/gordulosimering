@@ -1,0 +1,118 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Models\Category;
+use App\Models\Product;
+use Tests\TestCase;
+
+/**
+ * The categories the footer's product links point at.
+ */
+function createFooterCategories(): void
+{
+    $brands = Category::query()->create(['name' => Category::BRAND_ROOT_NAME, 'slug' => 'forgalmazott-markaink']);
+    $chemicals = Category::query()->create(['name' => 'VEGYI ÁRUK', 'slug' => 'vegyi-aruk']);
+
+    foreach ([
+        ['SKF', 'forgalmazott-markaink-skf', $brands->id],
+        ['LOCTITE', 'forgalmazott-markaink-loctite', $brands->id],
+        ['HAJTÁSTECHNIKA', 'hajtastechnika', null],
+        ['KÉZISZERSZÁMOK ÉS MŰSZEREK', 'keziszerszamok-es-muszerek', null],
+        ['ZSÍR, OLAJ', 'vegyi-aruk-zsir-olaj', $chemicals->id],
+        ['TÖMÍTÉSEK', 'tomitesek', null],
+    ] as [$name, $slug, $parentId]) {
+        Category::query()->create(['name' => $name, 'slug' => $slug, 'category_id' => $parentId])
+            ->products()->attach(Product::factory()->create());
+    }
+}
+
+it('has no dead or placeholder links in the footer', function (): void {
+    /** @var TestCase $this */
+    createFooterCategories();
+
+    $html = $this->get(route('contact'))->assertOk()->getContent();
+    preg_match('/<footer.*<\/footer>/s', $html, $footer);
+    preg_match_all('/href="([^"]+)"/', $footer[0], $links);
+
+    expect($links[1])->not->toContain('#')
+        ->and(count($links[1]))->toBeGreaterThanOrEqual(16);
+
+    foreach (array_unique($links[1]) as $href) {
+        if (str_starts_with($href, 'tel:')) {
+            continue;
+        }
+
+        $this->get(strtok($href, '#'))->assertOk();
+    }
+});
+
+it('links the footer products to their real categories and drops a missing one', function (): void {
+    /** @var TestCase $this */
+    createFooterCategories();
+    Category::query()->where('name', 'LOCTITE')->delete();
+
+    $this->get(route('contact'))->assertOk()
+        ->assertSeeHtml('href="' . route('categories.show', 'forgalmazott-markaink-skf') . '"')
+        ->assertSeeHtml('href="' . route('categories.show', 'vegyi-aruk-zsir-olaj') . '"')
+        ->assertSee(['SKF csapágyak', 'Szíjak és láncok', 'Kenőanyagok', 'Tömítések'])
+        ->assertDontSee('LOCTITE termékek');
+});
+
+it('links the footer services to the matching part of the services page', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('contact'))->assertOk()
+        ->assertSeeHtml('href="' . route('services') . '#ugyelet"')
+        ->assertSeeHtml('href="' . route('services') . '#hazhozszallitas"')
+        ->assertSeeHtml('href="' . route('services') . '#tovabbi-szolgaltatasok"');
+
+    $this->get(route('services'))->assertOk()
+        ->assertSeeHtml('id="ugyelet"')
+        ->assertSeeHtml('id="hazhozszallitas"')
+        ->assertSeeHtml('id="tovabbi-szolgaltatasok"');
+});
+
+it('calls the privacy notice Adatvédelmi nyilatkozat everywhere', function (): void {
+    /** @var TestCase $this */
+    expect(route('privacy-policy', absolute: false))->toBe('/adatvedelmi-nyilatkozat');
+
+    $this->get(route('privacy-policy'))->assertOk()
+        ->assertSeeInOrder(['<h1', 'Adatvédelmi nyilatkozat'], false)
+        ->assertDontSee(['Adatkezelési tájékoztató', 'Adatvédelmi politika', 'GDPR</a>'], false);
+});
+
+it('sends the old privacy notice address to the new one', function (): void {
+    /** @var TestCase $this */
+    $this->get('/adatkezelesi-tajekoztato')->assertMovedPermanently()->assertRedirect('/adatvedelmi-nyilatkozat');
+});
+
+it('shows the full privacy notice from the old site, without its WordPress-only parts', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('privacy-policy'))->assertOk()
+        ->assertSee([
+            '1. Adatkezelő neve',
+            'A feliratkozással az érintett hozzájárulását adja',
+            'A cookie-k által gyűjtött statisztikai adatokat a Webhely nem értékesíti',
+            '(„Kamerával megfigyelt terület!”)',
+            'A felvételek megsemmisítésig, vagy a felhasználásig történő tárolása',
+            '15. Jogérvényesítési lehetőségek',
+        ])
+        ->assertSeeHtml('href="http://support.google.com/chrome/answer/95647?hl=hu"')
+        ->assertSeeHtml('<p>2011. évi CXII törvény')
+        ->assertDontSeeHtml('<ol')
+        ->assertDontSee(['Gravatar', 'hozzászól', 'EXIF', 'szerkesztőfelület']);
+});
+
+it('shows the full terms and conditions from the old site', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('terms-and-conditions'))->assertOk()
+        ->assertSeeInOrder(['I. A szerződés hatálya', 'II. Árak', 'VIII. Reklamáció', 'A. Mennyiségi reklamáció', 'B. Minőségi reklamáció', 'X. Jelen Általános Szerződési Feltételek érvényessége'])
+        ->assertSee([
+            'A titoktartási kötelezettség megsértése esetén',
+            'a fizetési határidőt 60 nappal túllépi',
+            'a Vevő által átadott előleg, foglaló, vagy egyéb érték a G-S-nél letétben marad',
+            'fogyó anyagnál (pl.: ragasztó, zsír, stb.)',
+            'Hatvani Zoltán',
+        ])
+        ->assertSeeHtml('<p>2000. január 26.</p>');
+});

@@ -54,7 +54,8 @@ Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function (): v
     Route::get('/altalanos-szerzodesi-feltetelek', TermsAndConditions::class)->name('terms-and-conditions');
     Route::get('/szallitasi-keretszerzodes', DeliveryFramework::class)->name('delivery-framework');
     Route::get('/minosegpolitika', QualityPolicy::class)->name('quality-policy');
-    Route::get('/adatkezelesi-tajekoztato', PrivacyPolicy::class)->name('privacy-policy');
+    Route::get('/adatvedelmi-nyilatkozat', PrivacyPolicy::class)->name('privacy-policy');
+    Route::permanentRedirect('/adatkezelesi-tajekoztato', '/adatvedelmi-nyilatkozat');
 });
 
 Route::middleware('auth')->group(function (): void {

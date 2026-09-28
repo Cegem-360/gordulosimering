@@ -1,3 +1,30 @@
+@use('App\Models\Category')
+
+{{-- The product links point at real categories, found by name (and parent
+     name, since names repeat), so a renamed or emptied category drops out
+     instead of leaving a dead link. --}}
+@php
+    $productLinks = [
+        ['label' => 'SKF csapágyak', 'parent' => Category::BRAND_ROOT_NAME, 'name' => 'SKF'],
+        ['label' => 'LOCTITE termékek', 'parent' => Category::BRAND_ROOT_NAME, 'name' => 'LOCTITE'],
+        ['label' => 'Szíjak és láncok', 'parent' => null, 'name' => 'HAJTÁSTECHNIKA'],
+        ['label' => 'Szerszámok', 'parent' => null, 'name' => 'KÉZISZERSZÁMOK ÉS MŰSZEREK'],
+        ['label' => 'Kenőanyagok', 'parent' => 'VEGYI ÁRUK', 'name' => 'ZSÍR, OLAJ'],
+        ['label' => 'Tömítések', 'parent' => null, 'name' => 'TÖMÍTÉSEK'],
+    ];
+    $linkedCategories = Category::query()
+        ->with('parentCategory:id,name')
+        ->whereIn('name', array_column($productLinks, 'name'))
+        ->get(['id', 'name', 'slug', 'category_id']);
+    $productLinks = collect($productLinks)
+        ->map(fn (array $link): array => [
+            ...$link,
+            'category' => $linkedCategories->first(fn (Category $category): bool => $category->name === $link['name']
+                && $category->parentCategory?->name === $link['parent']),
+        ])
+        ->filter(fn (array $link): bool => $link['category'] !== null);
+@endphp
+
 <!-- Footer -->
 <footer class="bg-[#00204A] text-white pt-16 pb-8">
     <div class="container mx-auto px-4">
@@ -16,7 +43,7 @@
             </form>
             <p class="text-sm text-gray-400 mt-2">
                 Bármikor leiratkozhat. <a href="{{ route('privacy-policy') }}"
-                    class="text-blue-400 hover:underline">Adatvédelmi szabályzatunkban</a> megtudhatja, hogyan kezeljük
+                    class="text-blue-400 hover:underline">Adatvédelmi nyilatkozatunkban</a> megtudhatja, hogyan kezeljük
                 adatait.
             </p>
         </div>
@@ -42,14 +69,12 @@
             <div>
                 <h3 class="text-lg font-semibold mb-6">Szolgáltatások</h3>
                 <ul class="space-y-3">
-                    <li><a href="/webshop" class="hover:text-blue-400 transition-colors">Webáruház</a></li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">24 órás csapágy ügyelet</a></li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">Ingyenes házhozszállítás</a>
-                    </li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">SKF szervízszolgáltatások</a>
-                    </li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">Motoros futárszolgálat</a></li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">Műszaki tanácsadás</a></li>
+                    <li><a href="{{ route('products.index') }}" class="hover:text-blue-400 transition-colors">Webáruház</a></li>
+                    <li><a href="{{ route('services') }}#ugyelet" class="hover:text-blue-400 transition-colors">24 órás csapágy ügyelet</a></li>
+                    <li><a href="{{ route('services') }}#hazhozszallitas" class="hover:text-blue-400 transition-colors">Ingyenes házhozszállítás</a></li>
+                    <li><a href="{{ route('services') }}#tovabbi-szolgaltatasok" class="hover:text-blue-400 transition-colors">SKF szervizszolgáltatás</a></li>
+                    <li><a href="{{ route('services') }}#hazhozszallitas" class="hover:text-blue-400 transition-colors">Motoros futárszolgálat</a></li>
+                    <li><a href="{{ route('services') }}#tovabbi-szolgaltatasok" class="hover:text-blue-400 transition-colors">Műszaki tanácsadás</a></li>
                 </ul>
             </div>
 
@@ -57,12 +82,9 @@
             <div>
                 <h3 class="text-lg font-semibold mb-6">Termékek</h3>
                 <ul class="space-y-3">
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">SKF Csapágyak</a></li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">LOCTITE termékek</a></li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">Szíjak és láncok</a></li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">Szerszámok</a></li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">Kenőanyagok</a></li>
-                    <li><a href="#" class="hover:text-blue-400 transition-colors">Tömítések</a></li>
+                    @foreach ($productLinks as $link)
+                        <li wire:key="footer-category-{{ $link['category']->id }}"><a href="{{ route('categories.show', $link['category']) }}" class="hover:text-blue-400 transition-colors">{{ $link['label'] }}</a></li>
+                    @endforeach
                 </ul>
             </div>
 
@@ -90,10 +112,9 @@
                 <!-- Copyright and Links -->
                 <div class="flex flex-wrap justify-center md:justify-start gap-4 text-sm text-gray-400">
                     <span>© {{ date('Y') }} GÖRDÜLŐ-Simmering Kft.</span>
-                    <a href="/adatkezelesi-tajekoztato" class="hover:text-white transition-colors">Adatvédelmi
-                        politika</a>
-                    <a href="/gdpr" class="hover:text-white transition-colors">GDPR</a>
-                    <a href="#" class="hover:text-white transition-colors">Általános szerződési feltételek</a>
+                    <a href="{{ route('privacy-policy') }}" class="hover:text-white transition-colors">Adatvédelmi
+                        nyilatkozat</a>
+                    <a href="{{ route('terms-and-conditions') }}" class="hover:text-white transition-colors">Általános szerződési feltételek</a>
                 </div>
                 <!-- Payment Methods -->
                 {{-- <div class="flex items-center gap-2">

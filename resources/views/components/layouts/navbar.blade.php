@@ -125,7 +125,7 @@
                                             </a>
                                             <a href="{{ route('privacy-policy') }}"
                                                 class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-600">
-                                                {{ __('Adatkezelési tájékoztató') }}
+                                                {{ __('Adatvédelmi nyilatkozat') }}
                                             </a>
                                         </div>
                                     </div>
@@ -268,7 +268,7 @@
                             <a href="{{ route('quality-policy') }}"
                                 class="block py-2 text-gray-500 hover:text-blue-600">{{ __('Minőségpolitika') }}</a>
                             <a href="{{ route('privacy-policy') }}"
-                                class="block py-2 text-gray-500 hover:text-blue-600">{{ __('Adatkezelési tájékoztató') }}</a>
+                                class="block py-2 text-gray-500 hover:text-blue-600">{{ __('Adatvédelmi nyilatkozat') }}</a>
                         </div>
                     </div>
                 </div>

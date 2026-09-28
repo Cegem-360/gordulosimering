@@ -283,8 +283,8 @@
                     <p class="text-xs text-gray-500 text-center">
                         A személyes adatokat a rendelés feldolgozásához, a weboldalon történő vásárlási élmény
                         fenntartásához és más célokra használjuk, melyeket az
-                        <a href="{{ route('privacy-policy') }}" class="text-blue-600 hover:underline">Adatkezelési
-                            tájékoztató</a> tartalmaz.
+                        <a href="{{ route('privacy-policy') }}" class="text-blue-600 hover:underline">Adatvédelmi
+                            nyilatkozat</a> tartalmaz.
                     </p>
 
                     <!-- Back Button (desktop) -->
