@@ -488,3 +488,22 @@ it('notifies the client\'s gs@ address about every new order by default', functi
 
     Mail::assertQueued(NewOrderNotificationMail::class, fn (NewOrderNotificationMail $mail): bool => $mail->hasTo('gs@gordulo-simmering.hu'));
 });
+
+it('does not ask for the company registration number at checkout', function (): void {
+    $user = User::factory()->create();
+    $cart = Cart::factory()->create([
+        'user_id' => $user->id,
+        'session_id' => session()->getId(),
+    ]);
+
+    CartItem::factory()->create([
+        'cart_id' => $cart->id,
+        'product_id' => Product::factory()->create()->id,
+        'quantity' => 1,
+    ]);
+
+    Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->assertDontSee('Cégjegyzékszám')
+        ->assertFormFieldDoesNotExist('billing_company_office');
+});
