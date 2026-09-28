@@ -120,6 +120,9 @@ it('shows the full terms and conditions from the old site', function (): void {
             'a Vevő által átadott előleg, foglaló, vagy egyéb érték a G-S-nél letétben marad',
             'fogyó anyagnál (pl.: ragasztó, zsír, stb.)',
             'Hatvani Zoltán',
+            'Ptk.) 6:155. §-a szerinti mértékben',
+            'Fővárosi Törvényszék',
         ])
-        ->assertSeeHtml('<p>2000. január 26.</p>');
+        ->assertSeeHtml('<p>Budapest, 2026. szeptember 28.</p>')
+        ->assertDontSee(['301/A', 'Budapesti Fővárosi Bíróság']);
 });

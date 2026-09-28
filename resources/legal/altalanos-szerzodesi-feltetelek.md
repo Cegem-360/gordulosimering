@@ -14,7 +14,7 @@ A Vevő a megvásárolt termék tulajdonjogát csak a teljes vételár és járu
 
 G-S termékeit azonnali készpénzes fizetés ellenében árusítja. Egyedi megállapodás alapján G-S Vevőinek átutalást engedélyezhet. A vételár későbbi kifizetésére, vagy részletvásárlásra tett vevői ajánlat esetén G-S-nek jogában áll előleget, foglalót, bankgaranciát, vagy a teljes vételár előre történő kiegyenlítését, illetve más alkalmas fizetési biztosítékot kérnie a Vevőtől. A G-S által kért biztosíték tekintetében való megegyezés, vagy a megfelelő biztosíték határidőre történő szolgáltatásának hiányában G-S azonnali fizetést kérhet, vagy termékeinek eladását megtagadhatja.
 
-Amennyiben a Vevő a kifizetéssel késedelembe esik, úgy éves késedelmi kamatot fizet az esedékességet követő naptól, melynek mértéke megegyezik a mindenkori késedelmi kamat legmagasabb mértékével, amely ma a Ptk. 301/A. §–a szerinti a jegybanki alapkamat + 7 százalék, – a Ptk. 301/A. §-a szerinti kamatperiódussal számítva. Vevő tudomásul veszi, hogy amennyiben a fizetési határidőt 60 nappal túllépi, úgy Szállító jogosult ellene felszámolási eljárást indítani.
+Amennyiben a Vevő a kifizetéssel késedelembe esik, úgy az esedékességet követő naptól késedelmi kamatot fizet: vállalkozások közötti szerződés esetén a Polgári Törvénykönyvről szóló 2013. évi V. törvény (Ptk.) 6:155. §-a szerinti mértékben (a késedelemmel érintett naptári félév első napján érvényes jegybanki alapkamat + 8 százalékpont), egyéb esetben a Ptk. 6:48. §-a szerinti mértékben. Vevő tudomásul veszi, hogy amennyiben a fizetési határidőt 60 nappal túllépi, úgy Szállító jogosult ellene felszámolási eljárást indítani.
 
 ## IV. Rajzok és dokumentumok
 
@@ -74,13 +74,13 @@ Az itt nem szabályozott kérdésekben a Ptk. és az egyéb idevonatkozó hatál
 
 Minden egyéb kérdésben a felek törekednek a mindkettőjük számára elfogadható, békés megoldásra.
 
-Amennyiben mégsem sikerül megállapodni, a felek alávetik magukat az ügyértéktől függően a Pesti Központi Kerületi Bíróság, illetve a Budapesti Fővárosi Bíróság kizárólagos illetékességének.
+Amennyiben mégsem sikerül megállapodni, a felek alávetik magukat az ügyértéktől függően a Pesti Központi Kerületi Bíróság, illetve a Fővárosi Törvényszék kizárólagos illetékességének.
 
 ## X. Jelen Általános Szerződési Feltételek érvényessége
 
 A G-S jelen Általános Szerződési Feltételei érvénytelenítik a korábban kiadott hasonló dokumentumokat. Jelen Általános Szerződési Feltételek érvényességi határideje a következő Általános Szerződési Feltételek kibocsátásáig tart.
 
-2000\. január 26.
+Budapest, 2026. szeptember 28.
 
 Hatvani Zoltán  
 Kereskedelmi vezető
