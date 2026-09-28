@@ -44,7 +44,7 @@ final class Product extends Model
 
     public function isInStock(): bool
     {
-        return $this->minimum_stock > 0;
+        return $this->stock_quantity > 0;
     }
 
     public function isOnSale(): bool
@@ -212,6 +212,7 @@ final class Product extends Model
             'net_selling_price' => 'decimal:2',
             'gross_selling_price' => 'decimal:2',
             'minimum_stock' => 'integer',
+            'stock_quantity' => 'float',
             'maximum_stock' => 'integer',
             'buffer_stock' => 'integer',
             'order_unit' => 'integer',

@@ -56,7 +56,7 @@ trait FiltersProducts
                 'key' => 'stock',
                 'visible' => 5,
                 'items' => [
-                    ['name' => 'Készleten', 'value' => 'in_stock', 'count' => $this->filterableProducts()->where('minimum_stock', '>', 0)->count()],
+                    ['name' => 'Készleten', 'value' => 'in_stock', 'count' => $this->filterableProducts()->where('stock_quantity', '>', 0)->count()],
                     ['name' => 'Rendelésre', 'value' => 'out_of_stock', 'count' => $this->outOfStock($this->filterableProducts())->count()],
                 ],
             ],
@@ -103,7 +103,7 @@ trait FiltersProducts
 
         if ($stock !== [] && ! (in_array('in_stock', $stock, true) && in_array('out_of_stock', $stock, true))) {
             if (in_array('in_stock', $stock, true)) {
-                $query->where('minimum_stock', '>', 0);
+                $query->where('stock_quantity', '>', 0);
             } else {
                 $this->outOfStock($query);
             }
@@ -198,6 +198,6 @@ trait FiltersProducts
      */
     private function outOfStock(Builder $query): Builder
     {
-        return $query->where(fn (Builder $query) => $query->whereNull('minimum_stock')->orWhere('minimum_stock', '<=', 0));
+        return $query->where('stock_quantity', '<=', 0);
     }
 }

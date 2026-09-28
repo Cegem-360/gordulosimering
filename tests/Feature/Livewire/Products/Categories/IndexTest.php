@@ -108,3 +108,13 @@ it('clears the category, size and stock filters and the size search', function (
         ->assertSet('selectedFilters', ['category' => [], 'size' => [], 'stock' => []])
         ->assertSet('sizeSearch', '');
 });
+
+it('counts products as in stock by their Integra7 stock, not the minimum stock', function (): void {
+    Product::factory()->create(['stock_quantity' => 3, 'minimum_stock' => 0]);
+    Product::factory()->create(['stock_quantity' => 0, 'minimum_stock' => 10]);
+    Product::factory()->create(['stock_quantity' => 0, 'minimum_stock' => 0]);
+
+    $stockFilter = collect(Livewire::test(ProductsIndex::class)->instance()->filters)->firstWhere('key', 'stock');
+
+    expect(array_column($stockFilter['items'], 'count', 'value'))->toBe(['in_stock' => 1, 'out_of_stock' => 2]);
+});

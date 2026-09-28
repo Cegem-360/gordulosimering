@@ -61,6 +61,7 @@ final class ProductFactory extends Factory
             'minimum_stock' => fake()->numberBetween(0, 10),
             'maximum_stock' => fake()->numberBetween(50, 500),
             'buffer_stock' => fake()->numberBetween(5, 20),
+            'stock_quantity' => fake()->numberBetween(0, 100),
             'order_unit' => fake()->numberBetween(1, 10),
 
             // Official codes

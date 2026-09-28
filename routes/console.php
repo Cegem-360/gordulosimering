@@ -20,6 +20,15 @@ Schedule::command('app:sync-products', ['--only-web-visible'])
     ->runInBackground();
 
 /**
+ * A tényleges készlet óránként az Integra7-ből, hogy a „Készleten” jelzés és a
+ * rendelhetőség kövesse a raktárt.
+ */
+Schedule::command('app:sync-stock')
+    ->hourly()
+    ->withoutOverlapping()
+    ->runInBackground();
+
+/**
  * Az ügyfél publikált táblázatából, tiszta lappal: a táblázatból kikerült
  * kódok képe is lekerül a termékekről.
  */

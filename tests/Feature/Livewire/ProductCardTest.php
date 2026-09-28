@@ -13,7 +13,7 @@ it('renders product card successfully', function (): void {
     $product = Product::factory()->create([
         'name' => 'Test Product',
         'net_selling_price' => 1000,
-        'minimum_stock' => 5,
+        'stock_quantity' => 5,
     ]);
 
     Livewire::test(ProductCard::class, ['product' => $product])
@@ -25,7 +25,7 @@ it('renders product card successfully', function (): void {
 it('shows out of stock badge when product has no stock', function (): void {
     $product = Product::factory()->create([
         'name' => 'Out of Stock Product',
-        'minimum_stock' => 0,
+        'stock_quantity' => 0,
     ]);
 
     Livewire::test(ProductCard::class, ['product' => $product])
@@ -36,7 +36,7 @@ it('shows out of stock badge when product has no stock', function (): void {
 it('can add product to cart when in stock', function (): void {
     $user = User::factory()->create();
     $product = Product::factory()->create([
-        'minimum_stock' => 5,
+        'stock_quantity' => 5,
         'min_order_quantity' => 1,
     ]);
 
@@ -54,7 +54,7 @@ it('can add product to cart when in stock', function (): void {
 it('adds minimum order quantity to cart', function (): void {
     $user = User::factory()->create();
     $product = Product::factory()->create([
-        'minimum_stock' => 5,
+        'stock_quantity' => 5,
         'min_order_quantity' => 5,
     ]);
 
