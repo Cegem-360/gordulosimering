@@ -41,18 +41,16 @@ it('works through the queued mails every minute, since no queue worker runs on t
         ->and($event->command)->toContain('--stop-when-empty');
 });
 
-it('syncs the web visible products from the ERP export every night', function (): void {
+it('no longer syncs the products from the temporary TSV export', function (): void {
     $event = collect(resolve(Schedule::class)->events())
         ->first(fn (Event $event): bool => str_contains($event->command ?? '', 'app:sync-products'));
 
-    expect($event)->not->toBeNull()
-        ->and($event->expression)->toBe('0 2 * * *')
-        ->and($event->command)->toContain('--only-web-visible');
+    expect($event)->toBeNull();
 });
 
-it('syncs the stock quantities from Integra7 every hour', function (): void {
+it('syncs the products and stock from Integra7 every hour', function (): void {
     $event = collect(resolve(Schedule::class)->events())
-        ->first(fn (Event $event): bool => str_contains($event->command ?? '', 'app:sync-stock'));
+        ->first(fn (Event $event): bool => str_contains($event->command ?? '', 'app:sync-integra7'));
 
     expect($event)->not->toBeNull()
         ->and($event->expression)->toBe('0 * * * *');

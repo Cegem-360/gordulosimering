@@ -11,19 +11,10 @@ Artisan::command('inspire', function (): void {
 })->purpose('Display an inspiring quote');
 
 /**
- * Az ERP webshop-exportjából naponta frissíti a termékeket (ár, készletadatok,
- * láthatóság); élesen csak a webáruházban szereplő termékek vannak fent.
+ * Az Integra7 a termékadatok forrása: óránként onnan jön a tényleges készlet (a
+ * „Készleten” jelzés és a rendelhetőség), az ár, az akció és a megnevezés.
  */
-Schedule::command('app:sync-products', ['--only-web-visible'])
-    ->dailyAt('02:00')
-    ->withoutOverlapping()
-    ->runInBackground();
-
-/**
- * A tényleges készlet óránként az Integra7-ből, hogy a „Készleten” jelzés és a
- * rendelhetőség kövesse a raktárt.
- */
-Schedule::command('app:sync-stock')
+Schedule::command('app:sync-integra7')
     ->hourly()
     ->withoutOverlapping()
     ->runInBackground();
