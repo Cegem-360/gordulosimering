@@ -111,8 +111,7 @@
                             </tr>
                             <tr class="border-b border-gray-200">
                                 <td class="py-4 px-4 font-medium text-gray-900">A cég telephelye</td>
-                                <td class="py-4 px-4 text-gray-700" colspan="2">1149 Budapest, Nagy Lajos Kir. útja
-                                    117.</td>
+                                <td class="py-4 px-4 text-gray-700" colspan="2">1173 Budapest, Pesti út 203.</td>
                             </tr>
                             <tr>
                                 <td class="py-4 px-4 font-medium text-gray-900">KSH azonosító</td>

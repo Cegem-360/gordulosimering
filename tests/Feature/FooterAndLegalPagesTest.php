@@ -126,3 +126,10 @@ it('shows the full terms and conditions from the old site', function (): void {
         ->assertSeeHtml('<p>Budapest, 2026. szeptember 28.</p>')
         ->assertDontSee(['301/A', 'Budapesti Fővárosi Bíróság']);
 });
+
+it('lists the open XVII. district store as the company premises, not the closed XIV. one', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('company-data'))->assertOk()
+        ->assertSee(['A cég telephelye', '1173 Budapest, Pesti út 203.'])
+        ->assertDontSee(['Nagy Lajos', '1149 Budapest']);
+});
