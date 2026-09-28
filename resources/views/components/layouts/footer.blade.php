@@ -33,16 +33,9 @@
             <h2 class="text-2xl font-bold mb-4">Iratkozzon fel hírlevelünkre</h2>
             <p class="text-gray-300 mb-4">Legyen naprakész a termékekkel és szolgáltatásokkal kapcsolatos
                 újdonságokról, akciókról és műszaki információkról.</p>
-            <form class="flex flex-col sm:flex-row gap-4 max-w-2xl">
-                <input type="email" placeholder="Adja meg az email címét"
-                    class="flex-1 px-4 py-3 rounded bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-white/40">
-                <button type="submit"
-                    class="px-8 py-3 bg-green-600 hover:bg-green-700 rounded font-medium transition-colors">
-                    Regisztrálok
-                </button>
-            </form>
+            <livewire:newsletter-signup />
             <p class="text-sm text-gray-400 mt-2">
-                Bármikor leiratkozhat. <a href="{{ route('privacy-policy') }}"
+                Bármikor leiratkozhat a gs@gordulo-simmering.hu címen. <a href="{{ route('privacy-policy') }}"
                     class="text-blue-400 hover:underline">Adatvédelmi nyilatkozatunkban</a> megtudhatja, hogyan kezeljük
                 adatait.
             </p>
