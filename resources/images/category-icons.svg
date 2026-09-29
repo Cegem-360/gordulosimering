@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+<!-- Category menu icons for GÖRDÜLŐ-Simmering, drawn by hand on a 24 px grid
+     after the client's AI icon sheet (2026-09-29, kept in __client/). Each
+     symbol is referenced by id from resources/views/components/category-icon.blade.php;
+     config/category-icons.php maps categories to ids. Strokes use currentColor,
+     so an icon takes its menu label's colour. -->
+
+<symbol id="bearing" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4.5"/>
+</g><g fill="currentColor">
+  <circle cx="19.25" cy="12" r="1.35"/><circle cx="17.13" cy="17.13" r="1.35"/><circle cx="12" cy="19.25" r="1.35"/><circle cx="6.87" cy="17.13" r="1.35"/>
+  <circle cx="4.75" cy="12" r="1.35"/><circle cx="6.87" cy="6.87" r="1.35"/><circle cx="12" cy="4.75" r="1.35"/><circle cx="17.13" cy="6.87" r="1.35"/>
+</g></symbol>
+
+<symbol id="ball" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="8.5"/><path d="M8 10.5a4.5 4.5 0 0 1 3.5-3.4"/>
+</g></symbol>
+
+<symbol id="pillow-block" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M5.5 17v-5a6.5 6.5 0 0 1 13 0v5"/><rect x="2" y="17" width="20" height="3.5" rx="1"/>
+  <circle cx="12" cy="12" r="3"/><path d="M12 5.5V3"/>
+</g></symbol>
+
+<symbol id="flange-housing" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2.5" y="2.5" width="19" height="19" rx="3"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="2"/>
+</g><g fill="currentColor">
+  <circle cx="6.3" cy="6.3" r="1.2"/><circle cx="17.7" cy="6.3" r="1.2"/><circle cx="6.3" cy="17.7" r="1.2"/><circle cx="17.7" cy="17.7" r="1.2"/>
+</g></symbol>
+
+<symbol id="circlip" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M15.18 4.12 A8.5 8.5 0 1 0 20.48 11.41"/><circle cx="13.71" cy="6.04" r="1.5"/><circle cx="18.20" cy="12.22" r="1.5"/>
+</g></symbol>
+
+<symbol id="linear-rail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="1.5" y="15" width="21" height="4.5" rx="1"/><path d="M6 15V9.5A1.5 1.5 0 0 1 7.5 8h9A1.5 1.5 0 0 1 18 9.5V15"/><path d="M9.5 11.5h5"/>
+</g><g fill="currentColor"><circle cx="4" cy="17.25" r=".9"/><circle cx="20" cy="17.25" r=".9"/></g></symbol>
+
+<symbol id="seal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="4"/>
+</g></symbol>
+
+<symbol id="o-ring" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5.5"/>
+</g></symbol>
+
+<symbol id="gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M19.34 10.03 21.88 10.44 21.88 13.56 19.34 13.97 18.58 15.8 20.09 17.88 17.88 20.09 15.8 18.58 13.97 19.34 13.56 21.88 10.44 21.88 10.03 19.34 8.2 18.58 6.12 20.09 3.91 17.88 5.42 15.8 4.66 13.97 2.12 13.56 2.12 10.44 4.66 10.03 5.42 8.2 3.91 6.12 6.12 3.91 8.2 5.42 10.03 4.66 10.44 2.12 13.56 2.12 13.97 4.66 15.8 5.42 17.88 3.91 20.09 6.12 18.58 8.2z"/>
+  <circle cx="12" cy="12" r="3"/>
+</g></symbol>
+
+<symbol id="belt-drive" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="7" cy="15.5" r="5"/><circle cx="17.5" cy="7" r="3.5"/><path d="M4.2 11.35 15.3 4.25M9.95 19.55l10.1-9.5"/>
+</g><g fill="currentColor"><circle cx="7" cy="15.5" r="1.3"/><circle cx="17.5" cy="7" r="1.1"/></g></symbol>
+
+<symbol id="coupling" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3.5" y="6.5" width="7" height="11" rx="1.5"/><rect x="13.5" y="6.5" width="7" height="11" rx="1.5"/><path d="M10.5 10h3M10.5 14h3M1 12h2.5M20.5 12H23"/>
+</g></symbol>
+
+<symbol id="canister" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M7 7h8.5l3 3v10a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 20V8.5A1.5 1.5 0 0 1 7 7z"/><path d="M8.5 7V4h4.5v3"/><path d="M15.5 7l1.5-3h2"/>
+  <path d="M12 11.5c1.6 2 2.3 3.1 2.3 4.2a2.3 2.3 0 0 1-4.6 0c0-1.1.7-2.2 2.3-4.2z"/>
+</g></symbol>
+
+<symbol id="spray-can" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="5.5" y="9" width="9" height="13" rx="2"/><path d="M7.5 9V6.5h5V9"/><path d="M10 6.5V3.5h3"/>
+</g><g fill="currentColor"><circle cx="17" cy="3.5" r="1"/><circle cx="19.5" cy="5.5" r="1"/><circle cx="17" cy="7" r="1"/><circle cx="20" cy="2" r="1"/></g></symbol>
+
+<symbol id="grease-gun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-35 12 12)">
+  <rect x="3.5" y="8.5" width="12" height="5.5" rx="1.5"/><path d="M15.5 11.25h4.5l1.5-1.5"/><path d="M5.5 14l-1 6"/><path d="M9 14v3l-3.5 3.5"/>
+</g></symbol>
+
+<symbol id="grease-tub" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3.5" y="9" width="17" height="3.5" rx="1"/><path d="M5 12.5l1 7.5a1.5 1.5 0 0 0 1.5 1.3h9a1.5 1.5 0 0 0 1.5-1.3l1-7.5"/>
+  <path d="M8.5 9c.6-2 2.4-2.8 3.5-5 1.1 2.2 2.9 3 3.5 5"/>
+</g></symbol>
+
+<symbol id="bolt" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" transform="rotate(35 12 12)">
+  <rect x="6.5" y="2" width="11" height="4.5" rx="1"/><rect x="9" y="6.5" width="6" height="15.5" rx="1"/><path d="M9 10.5l6-1.2M9 14l6-1.2M9 17.5l6-1.2"/>
+</g></symbol>
+
+<symbol id="nut" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20.5 12 16.25 19.36 7.75 19.36 3.5 12 7.75 4.64 16.25 4.64z"/><circle cx="12" cy="12" r="3.5"/>
+</g></symbol>
+
+<symbol id="washer" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="3.5"/>
+</g></symbol>
+
+<symbol id="caster" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="5.5" y="2" width="13" height="3" rx="1"/><path d="M9 5l1.5 8M15 5l-1.5 8"/><circle cx="12" cy="16" r="5.5"/>
+</g><g fill="currentColor"><circle cx="12" cy="16" r="1.4"/></g></symbol>
+
+<symbol id="roller" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <ellipse cx="8.5" cy="12" rx="4" ry="8.5"/><path d="M8.5 3.5h7a4 8.5 0 0 1 0 17h-7"/><ellipse cx="8.5" cy="12" rx="1.4" ry="3"/>
+</g></symbol>
+
+<symbol id="wrench" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.4-3.4a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/>
+</g></symbol>
+
+<symbol id="screwdriver" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" transform="rotate(45 12 12)">
+  <rect x="9" y="1.5" width="6" height="9" rx="2"/><path d="M12 10.5v8.5M10.8 19h2.4L12 22.5z"/><path d="M10.5 4v4"/>
+</g></symbol>
+
+<symbol id="caliper" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2" y="4" width="20" height="3.5" rx="1"/><path d="M4.5 7.5V19l3-3.5v-8"/><rect x="11" y="2.5" width="6.5" height="6.5" rx="1.2"/><path d="M12.5 9v9l3-3.5V9"/>
+</g></symbol>
+
+<symbol id="hose-clamp" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="13.5" r="8"/><circle cx="12" cy="13.5" r="5.5"/><rect x="8" y="2" width="8" height="4.5" rx="1"/><path d="M10.5 4.25h3"/>
+</g></symbol>
+
+<symbol id="battery" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="6" y="4.5" width="12" height="17" rx="2"/><path d="M10 2.5h4"/><path d="M9.5 10.5h5M9.5 14h5M9.5 17.5h5"/>
+</g></symbol>
+
+<symbol id="boot" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M5 3h7v7.5l5.5 3.3a3 3 0 0 1 1.5 2.6V18H4V4a1 1 0 0 1 1-1z"/><path d="M3 21h18"/><path d="M12 6H9.5M12 8.5H9.5"/><path d="M4 18v3M19 18v3"/>
+</g></symbol>
+
+<symbol id="glove" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M8 21.5v-3.8L4.4 13.3a1.6 1.6 0 0 1 2.5-2L8.5 13V5.2a1.3 1.3 0 0 1 2.6 0V11V3.8a1.3 1.3 0 0 1 2.6 0V11V4.8a1.3 1.3 0 0 1 2.6 0V11.5V7a1.3 1.3 0 0 1 2.6 0v8.2c0 3.4-2.4 6.3-5.5 6.3z"/><path d="M8 21.5h8"/>
+</g></symbol>
+
+<symbol id="brand-tag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12.6 2.5H4a1.5 1.5 0 0 0-1.5 1.5v8.6l9.4 9.4a1.5 1.5 0 0 0 2.1 0l7.4-7.4a1.5 1.5 0 0 0 0-2.1z"/><circle cx="7.5" cy="7.5" r="1.5"/>
+</g></symbol>
+</svg>

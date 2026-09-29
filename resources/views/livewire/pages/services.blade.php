@@ -1,12 +1,6 @@
 @php
-    /* Figures from the client's current site, gordulo-simmering.hu/szolgaltatasaink (2026-09-25). */
-    $onCallRates = [
-        ['when' => 'Munkanapokon (péntek kivételével)', 'what' => 'Soron kívüli üzletnyitás a Kőrösi Csoma úti üzletünkben, 1–2 órán belül', 'price' => '20 000 Ft + ÁFA'],
-        ['when' => 'Hétvégén, ünnep- és pihenőnapokon', 'what' => 'Soron kívüli üzletnyitás a Kőrösi Csoma úti üzletünkben, 1–3 órán belül', 'price' => '22 000 Ft + ÁFA'],
-        ['when' => 'Munkanapokon (péntek kivételével)', 'what' => 'Üzletnyitás és házhozszállítás Budapest területén, 2–3 órán belül', 'price' => '25 000 Ft + ÁFA'],
-        ['when' => 'Hétvégén, ünnep- és pihenőnapokon', 'what' => 'Üzletnyitás és házhozszállítás Budapest területén, 2–3 órán belül', 'price' => '28 000 Ft + ÁFA'],
-    ];
-
+    /* Delivery figures from the client's old site, gordulo-simmering.hu/szolgaltatasaink (2026-09-25).
+       The on-call section has a single option since 2026-09-29, at the client's request. */
     $freeDelivery = [
         ['threshold' => '80 000 Ft felett', 'area' => 'VIII., IX., X., XIII., XIV., XV., XVI., XVII., XVIII., XIX. és XX. kerület'],
         ['threshold' => '100 000 Ft felett', 'area' => 'IV., V., VI., VII., XXI. és XXIII. kerület'],
@@ -53,8 +47,8 @@
                     24/7 Ügyelet</span>
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">Csapágy éjjel-nappal</h2>
                 <p class="text-gray-600 mb-6">Ha munkaidőn kívül, hétvégén vagy ünnepnapon azonnal csapágyra van
-                    szüksége, ügyeleti díj ellenében soron kívül kinyitjuk az üzletet, vagy házhoz is szállítjuk
-                    Budapesten. Üzleteink készlete a webáruházban megtekinthető.</p>
+                    szüksége, ügyeleti díj ellenében soron kívül kinyitjuk az üzletet. Üzleteink készlete a
+                    webáruházban megtekinthető.</p>
 
                 <div class="flex items-center gap-4 mb-6">
                     <div class="shrink-0 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
@@ -67,17 +61,10 @@
                     </div>
                 </div>
 
-                <dl class="divide-y divide-blue-100 bg-white rounded-xl border border-blue-100">
-                    @foreach ($onCallRates as $rate)
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 p-4">
-                            <dt class="grow">
-                                <span class="block font-semibold text-gray-900">{{ $rate['when'] }}</span>
-                                <span class="block text-sm text-gray-600">{{ $rate['what'] }}</span>
-                            </dt>
-                            <dd class="shrink-0 font-bold text-blue-700 whitespace-nowrap">{{ $rate['price'] }}</dd>
-                        </div>
-                    @endforeach
-                </dl>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 p-4 bg-white rounded-xl border border-blue-100">
+                    <p class="grow font-semibold text-gray-900">Az üzlet nyitvatartásán túl üzletnyitás 2–3 órán belül.</p>
+                    <p class="shrink-0 text-lg font-bold text-blue-700 whitespace-nowrap">25 000 Ft + ÁFA</p>
+                </div>
 
                 <p class="mt-6 flex gap-3 text-sm text-gray-700 bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <i class="fas fa-info-circle text-amber-600 mt-0.5"></i>

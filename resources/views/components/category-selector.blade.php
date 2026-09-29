@@ -17,11 +17,7 @@
                 <a href="{{ route('categories.show', $category) }}"
                     class="flex items-center gap-3 p-3 hover:bg-gray-200 rounded-lg transition-colors">
                     <span class="w-5 h-5 shrink-0">
-                        <svg class="w-full h-full text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
+                        <x-category-icon :name="$category->name" class="w-full h-full text-gray-600" />
                     </span>
                     <span class="text-gray-700 grow text-xs">{{ $category->name }}</span>
                     @if ($subcategories->isNotEmpty())
@@ -33,7 +29,7 @@
                 </a>
 
                 @if ($subcategories->isNotEmpty())
-                    <x-category-flyout :categories="$subcategories" />
+                    <x-category-flyout :categories="$subcategories" :icon-parent="$category->name" />
                 @endif
             </li>
         @empty

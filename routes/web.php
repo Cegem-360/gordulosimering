@@ -17,6 +17,7 @@ use App\Livewire\Pages\TermsAndConditions;
 use App\Livewire\Products\Categories\Index as CategoriesIndex;
 use App\Livewire\Products\Categories\Show as CategoriesShow;
 use App\Livewire\Products\Index as ProductsIndex;
+use App\Livewire\Products\Sale;
 use App\Livewire\Products\Show as ProductsShow;
 use App\Livewire\Profile;
 use App\Livewire\QualityPolicy;
@@ -36,6 +37,8 @@ Route::middleware(['throttle:global'])->prefix('products')->as('products.')->gro
         Route::get('/test/51050', ProductsShow::class)->name('test');
     }
 });
+
+Route::middleware(['throttle:global'])->get('/akciok', Sale::class)->name('sale');
 
 Route::middleware(['throttle:global'])->prefix('termekkategoriak')->as('categories.')->group(function (): void {
     Route::get('/', CategoriesIndex::class)->name('index');
