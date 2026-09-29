@@ -54,7 +54,7 @@
                     </div>
 
                     <!-- Other Nav Items -->
-                    <a href="#" class="text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
+                    <a href="{{ route('sale') }}" class="text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
 
                     <!-- Cégünkről Menu -->
                     <div class="relative" x-data="{ open: false }">
@@ -233,7 +233,7 @@
                 </div>
             </div>
 
-            <a href="#" class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
+            <a href="{{ route('sale') }}" class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
 
             <!-- Mobile Cégünkről Menu -->
             <div x-data="{ open: false }">

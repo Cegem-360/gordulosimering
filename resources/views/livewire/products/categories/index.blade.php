@@ -6,7 +6,7 @@
                 <div class="flex items-center flex-wrap gap-2 text-sm">
                     <a href="{{ route('products.index') }}" class="text-blue-600 hover:underline">Termékek</a>
                     <span class="text-gray-500">&gt;</span>
-                    <span class="text-gray-700">Termékkategóriák</span>
+                    <span class="text-gray-700">{{ $breadcrumb ?? 'Termékkategóriák' }}</span>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
                     <!-- Header -->
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                         <div>
-                            <h1 class="text-2xl font-bold">Termékek</h1>
+                            <h1 class="text-2xl font-bold">{{ $heading ?? 'Termékek' }}</h1>
                             <p class="text-sm text-gray-600 mt-1">
                                 {{ Number::format($products->total(), locale: 'hu') }} termék található
                             </p>
