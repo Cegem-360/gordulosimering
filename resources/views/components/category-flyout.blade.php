@@ -1,4 +1,5 @@
-@props(['categories'])
+@props(['categories', 'iconParent' => null])
+@use('App\View\Components\CategoryIcon')
 @inject('categoryTree', 'App\Services\CategoryTree')
 
 {{-- Recursive hover fly-out submenu. A submenu is revealed by its own parent
@@ -9,6 +10,9 @@
      Closed menus are display:none, not invisible: an invisible menu still
      takes up layout space and made phone pages scroll sideways. --}}
 @php
+    /* Only the first fly-out level gets icons, and not the brand names. */
+    $showsIcons = $iconParent !== null && $categories->isNotEmpty()
+        && CategoryIcon::keyFor($categories->first()->name, $iconParent) !== null;
     $submenus = $categories->mapWithKeys(fn ($category) => [$category->id => $categoryTree->stocked($category->children)]);
 @endphp
 <ul @class([
@@ -19,6 +23,11 @@
         <li class="relative [&:hover>ul]:block" wire:key="flyout-{{ $category->id }}">
             <a href="{{ route('categories.show', $category) }}"
                 class="flex items-center gap-2 p-2 rounded-md text-xs text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                @if ($showsIcons)
+                    <span class="w-4 h-4 shrink-0">
+                        <x-category-icon :name="$category->name" :parent-name="$iconParent" class="w-full h-full" />
+                    </span>
+                @endif
                 <span class="grow">{{ $category->name }}</span>
                 @if ($submenus[$category->id]->isNotEmpty())
                     <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
