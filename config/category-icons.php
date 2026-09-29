@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 /*
  * Which icon the homepage category menu shows for a category, matched by
- * name. The icons are resources/images/category-icons/<key>.svg, traced from
- * the client's icon sheet (sent 2026-09-29) by a potrace script kept locally
- * in the gitignored __client/ folder.
+ * name. The keys are symbol ids in resources/images/category-icons.svg, line
+ * icons drawn by hand after the client's AI icon sheet (2026-09-29).
  *
  * "roots": the main categories. "children": first-level subcategories, keyed
  * by their parent's name; a subcategory that is not listed gets its parent's
@@ -38,8 +37,7 @@ return [
 
     'children' => [
         'CSAPÁGYAK' => [
-            'GOLYÓS CSAPÁGY' => 'ball-bearing-small',
-            'VEZETŐ- ÉS TÁMASZTÓ GÖRGŐ' => 'roller-wheel',
+            'VEZETŐ- ÉS TÁMASZTÓ GÖRGŐ' => 'roller',
             'SIKLÓ CSAPÁGY / CSÚSZÓ CSAPÁGY' => 'washer',
             'LINEÁRIS CSAPÁGY' => 'linear-rail',
         ],
@@ -47,25 +45,25 @@ return [
             'CSAPÁGYHÁZ Y CSAPÁGYAKHOZ' => 'pillow-block',
         ],
         'CSAPÁGYTARTOZÉKOK, ALKATRÉSZEK' => [
-            'GOLYÓ, TŰGÖRGŐ' => 'ball-bearing-small',
-            'CSAPÁGYANYA ÉS BIZTOSÍTÓLEMEZ' => 'hex-nut',
+            'GOLYÓ, TŰGÖRGŐ' => 'ball',
+            'CSAPÁGYANYA ÉS BIZTOSÍTÓLEMEZ' => 'nut',
             'ZSÍRZÓGOMB' => 'grease-gun',
             'HÉZAGOLÓ ALÁTÉT' => 'washer',
             'KOMPENZÁCIÓS LEMEZ' => 'washer',
-            'NILOS GYŰRŰ' => 'seal-ring-small',
+            'NILOS GYŰRŰ' => 'o-ring',
             'TÖMÍTŐ ALÁTÉTEK' => 'washer',
         ],
         'TÖMÍTÉSEK' => [
-            'SZIMERING' => 'shaft-seal-large',
-            'V-GYŰRŰ' => 'seal-ring-small',
+            'SZIMERING' => 'seal',
+            'V-GYŰRŰ' => 'o-ring',
             'O-GYŰRŰ' => 'o-ring',
             'TÖMÍTŐ ZSINÓR' => 'o-ring',
-            'SZIMERING RUGÓ' => 'shaft-seal-large',
+            'SZIMERING RUGÓ' => 'seal',
             'SZERELŐ SZERSZÁM TÖMÍTÉSEKHEZ' => 'screwdriver',
         ],
         'HAJTÁSTECHNIKA' => [
-            'SZÍJHATÁS' => 'motor',
-            'TENGELYKAPCSOLÓ' => 'motor',
+            'SZÍJHATÁS' => 'belt-drive',
+            'TENGELYKAPCSOLÓ' => 'coupling',
         ],
         'VEGYI ÁRUK' => [
             'CSAVARRÖGZÍTŐ' => 'bolt',
@@ -79,11 +77,11 @@ return [
         ],
         'KÖTŐELEMEK, GÉPÉPÍTŐ ELEMEK' => [
             'ALÁTÉT' => 'washer',
-            'GOLYÓS BETÉT' => 'ball-bearing-small',
+            'GOLYÓS BETÉT' => 'ball',
             'BILINCS' => 'hose-clamp',
         ],
         'KEREKEK ÉS GÖRGŐK' => [
-            'IPARI GÖRGŐ' => 'roller-wheel',
+            'IPARI GÖRGŐ' => 'roller',
         ],
         'KÉZISZERSZÁMOK ÉS MŰSZEREK' => [
             'MÉRŐ- ÉS ELLENŐRZŐ MŰSZEREK' => 'caliper',
@@ -94,6 +92,7 @@ return [
         ],
         'MUNKAVÉDELMI CIPŐ, KESZTYŰ' => [
             'MUNKAVÉDELMI CIPŐ' => 'boot',
+            'MUNKAVÉDELMI KESZTYŰ' => 'glove',
         ],
     ],
 

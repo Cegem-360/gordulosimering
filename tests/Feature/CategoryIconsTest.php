@@ -7,25 +7,21 @@ use App\Models\Product;
 use App\View\Components\CategoryIcon;
 use Tests\TestCase;
 
-it('has a traced SVG and a sprite symbol for every icon the config names', function (): void {
+it('draws every icon the config names as a line icon in the sprite', function (): void {
     $keys = collect(config('category-icons.roots'))
         ->merge(collect(config('category-icons.children'))->flatten())
         ->unique();
-
-    foreach ($keys as $key) {
-        $svg = file_get_contents(resource_path("images/category-icons/{$key}.svg"));
-
-        expect($svg)->toContain('viewBox="0 0 24 24"', 'fill="currentColor"')
-            ->not->toContain('M0 2400')
-            ->not->toContain('stroke=');
-    }
-
     $sprite = file_get_contents(resource_path('images/category-icons.svg'));
+
     foreach ($keys as $key) {
-        expect($sprite)->toContain('<symbol id="' . $key . '" viewBox="0 0 24 24">');
+        preg_match('/<symbol id="' . preg_quote($key, '/') . '" viewBox="0 0 24 24">(.*?)<\/symbol>/s', $sprite, $symbol);
+
+        expect($symbol)->not->toBeEmpty()
+            ->and($symbol[1])->toContain('stroke="currentColor" stroke-width="1.75"');
     }
 
-    expect($keys->count())->toBeGreaterThan(20);
+    expect($keys->count())->toBeGreaterThan(20)
+        ->and(mb_strlen($sprite))->toBeLessThan(20_000);
 });
 
 it('picks the main category icon, a subcategory\'s own icon or its parent\'s, and none for brands', function (): void {
@@ -33,6 +29,7 @@ it('picks the main category icon, a subcategory\'s own icon or its parent\'s, an
         ->and(CategoryIcon::keyFor('ELEMEK, AKKUMULÁTOROK'))->toBe('battery')
         ->and(CategoryIcon::keyFor('O-GYŰRŰ', 'TÖMÍTÉSEK'))->toBe('o-ring')
         ->and(CategoryIcon::keyFor('ZÁRÓSAPKA', 'TÖMÍTÉSEK'))->toBe('seal')
+        ->and(CategoryIcon::keyFor('MUNKAVÉDELMI KESZTYŰ', 'MUNKAVÉDELMI CIPŐ, KESZTYŰ'))->toBe('glove')
         ->and(CategoryIcon::keyFor('SKF', Category::BRAND_ROOT_NAME))->toBeNull()
         ->and(CategoryIcon::keyFor('ISMERETLEN'))->toBeNull();
 });

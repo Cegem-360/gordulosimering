@@ -15,6 +15,9 @@ use Illuminate\View\Component;
  */
 final class CategoryIcon extends Component
 {
+    /** @var array<string, true>|null */
+    private static ?array $symbols = null;
+
     public function __construct(
         public string $name,
         public ?string $parentName = null,
@@ -48,10 +51,25 @@ final class CategoryIcon extends Component
         return view('components.category-icon', ['key' => $this->key()]);
     }
 
+    /**
+     * The symbol ids the sprite defines, read once per process.
+     *
+     * @return array<string, true>
+     */
+    private static function symbols(): array
+    {
+        if (self::$symbols === null) {
+            preg_match_all('/<symbol id="([^"]+)"/', (string) file_get_contents(resource_path('images/category-icons.svg')), $matches);
+            self::$symbols = array_fill_keys($matches[1], true);
+        }
+
+        return self::$symbols;
+    }
+
     private function key(): ?string
     {
         $key = self::keyFor($this->name, $this->parentName);
 
-        return $key !== null && is_file(resource_path("images/category-icons/{$key}.svg")) ? $key : null;
+        return $key !== null && isset(self::symbols()[$key]) ? $key : null;
     }
 }
