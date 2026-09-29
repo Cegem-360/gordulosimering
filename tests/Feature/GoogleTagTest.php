@@ -42,6 +42,22 @@ it('renders no Google tag when no ID is configured', function (): void {
         ->assertDontSee('googletagmanager.com', false);
 });
 
+it('renders the Search Console verification meta tag when a code is configured', function (): void {
+    /** @var TestCase $this */
+    configureSiteVerification(' MNkntRA_test ');
+
+    $this->get(route('documents'))->assertOk()
+        ->assertSee('<meta name="google-site-verification" content="MNkntRA_test" />', false);
+});
+
+it('renders no Search Console verification meta tag without a code', function (): void {
+    /** @var TestCase $this */
+    configureSiteVerification('');
+
+    $this->get(route('documents'))->assertOk()
+        ->assertDontSee('google-site-verification', false);
+});
+
 it('denies every Google consent type by default while the cookie banner is on', function (): void {
     /** @var TestCase $this */
     configureGoogleTags('G-TEST12345', '');
@@ -101,5 +117,12 @@ function configureCookieBanner(bool $enabled): void
         ['name' => 'Szükséges', 'key' => 'necessary', 'description' => 'Működéshez kell.', 'required' => true],
         ['name' => 'Statisztika', 'key' => 'analytics', 'description' => 'Látogatottság mérése.', 'required' => false],
     ];
+    $settings->save();
+}
+
+function configureSiteVerification(string $code): void
+{
+    $settings = resolve(IntegrationSettings::class);
+    $settings->google_site_verification = $code;
     $settings->save();
 }

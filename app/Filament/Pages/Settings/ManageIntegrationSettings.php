@@ -45,6 +45,7 @@ final class ManageIntegrationSettings extends Page implements HasSchemas
         $this->form->fill([
             'google_analytics_id' => $settings->google_analytics_id,
             'google_tag_manager_id' => $settings->google_tag_manager_id,
+            'google_site_verification' => $settings->google_site_verification,
             'facebook_pixel_id' => $settings->facebook_pixel_id,
             'hotjar_id' => $settings->hotjar_id,
             'linkedin_insight_id' => $settings->linkedin_insight_id,
@@ -60,6 +61,10 @@ final class ManageIntegrationSettings extends Page implements HasSchemas
                     ->schema([
                         TextInput::make('google_analytics_id')->label('Google Analytics 4 ID')->placeholder('G-XXXXXXXXXX'),
                         TextInput::make('google_tag_manager_id')->label('Google Tag Manager ID')->placeholder('GTM-XXXXXXX'),
+                        TextInput::make('google_site_verification')
+                            ->label('Google Search Console ellenőrző kód')
+                            ->helperText('A google-site-verification meta tag content értéke.')
+                            ->columnSpanFull(),
                     ])->columns(2),
                 Section::make('Marketing')
                     ->schema([

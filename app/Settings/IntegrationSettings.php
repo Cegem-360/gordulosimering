@@ -12,6 +12,8 @@ final class IntegrationSettings extends Settings
 
     public string $google_tag_manager_id;
 
+    public string $google_site_verification;
+
     public string $facebook_pixel_id;
 
     public string $hotjar_id;
