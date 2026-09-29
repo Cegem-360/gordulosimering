@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Livewire\Products\Categories\Index;
 use App\Livewire\Products\Index as ProductsIndex;
 use App\Models\Category;
+use App\Models\DiscountGroup;
 use App\Models\Product;
 use Livewire\Livewire;
 
@@ -13,12 +14,13 @@ it('renders successfully', function (): void {
         ->assertStatus(200);
 });
 
-it('offers stock, category and size filters but no quality filter', function (string $component): void {
+it('offers the stock, category, group, size, brand and material filters but no quality filter', function (string $component): void {
     Livewire::test($component)
-        ->assertSee(['Készlet', 'Kategória', 'Méret'])
+        ->assertSee(['Készlet', 'Kategória', 'Termékcsoport', 'Méret', 'Márka', 'Anyag'])
         ->assertDontSee('Minőség');
 
-    expect(collect(Livewire::test($component)->instance()->filters)->pluck('key')->all())->toBe(['stock', 'category', 'size']);
+    expect(collect(Livewire::test($component)->instance()->filters)->pluck('key')->all())
+        ->toBe(['stock', 'category', 'group', 'size', 'brand', 'material']);
 })->with([
     'category index' => [Index::class],
     'product list' => [ProductsIndex::class],
@@ -105,7 +107,7 @@ it('clears the category, size and stock filters and the size search', function (
         ->set('selectedFilters.stock', ['in_stock'])
         ->set('sizeSearch', '25')
         ->call('clearFilters')
-        ->assertSet('selectedFilters', ['category' => [], 'size' => [], 'stock' => []])
+        ->assertSet('selectedFilters', ['category' => [], 'group' => [], 'size' => [], 'brand' => [], 'material' => [], 'stock' => []])
         ->assertSet('sizeSearch', '');
 });
 
@@ -117,4 +119,81 @@ it('counts products as in stock by their Integra7 stock, not the minimum stock',
     $stockFilter = collect(Livewire::test(ProductsIndex::class)->instance()->filters)->firstWhere('key', 'stock');
 
     expect(array_column($stockFilter['items'], 'count', 'value'))->toBe(['in_stock' => 1, 'out_of_stock' => 2]);
+});
+
+it('lists the brands and materials by how many products have them', function (): void {
+    Product::factory()->count(2)->create(['name' => 'SKF simmering, NBR']);
+    Product::factory()->create(['name' => 'KOYO simmering, VITON']);
+    Product::factory()->create(['name' => 'Gumiházas simmering']);
+    Product::factory()->create(['name' => 'INA csapágy', 'is_web_visible' => false]);
+
+    $filters = collect(Livewire::test(Index::class)->instance()->filters);
+
+    expect($filters->firstWhere('key', 'brand')['items'])->toBe([
+        ['name' => 'SKF', 'value' => 'SKF', 'count' => 2],
+        ['name' => 'KOYO', 'value' => 'KOYO', 'count' => 1],
+    ])->and($filters->firstWhere('key', 'material')['items'])->toBe([
+        ['name' => 'NBR', 'value' => 'NBR', 'count' => 2],
+        ['name' => 'FKM (Viton)', 'value' => 'FKM (Viton)', 'count' => 1],
+    ]);
+});
+
+it('filters by brand and by material', function (string $key, string $value): void {
+    $skfNbr = Product::factory()->create(['name' => 'SKF simmering, NBR']);
+    Product::factory()->create(['name' => 'KOYO simmering, VITON']);
+
+    $component = Livewire::test(Index::class)->set("selectedFilters.{$key}", [$value]);
+
+    expect($component->instance()->products->pluck('id')->all())->toBe([$skfNbr->id]);
+})->with([
+    'brand' => ['brand', 'SKF'],
+    'material' => ['material', 'NBR'],
+]);
+
+it('merges the product groups that share a name and leaves out the discontinued and unnamed ones', function (): void {
+    DiscountGroup::factory()->create(['code' => 'S2', 'name' => 'SKF csapágy']);
+    DiscountGroup::factory()->create(['code' => 'S5', 'name' => 'SKF csapágy']);
+    DiscountGroup::factory()->create(['code' => 'CT', 'name' => 'Tőkés (minőségi) csapágy']);
+    DiscountGroup::factory()->create(['code' => 'PM', 'name' => 'Megszűnt termék']);
+    DiscountGroup::factory()->create(['code' => 'XX', 'name' => null]);
+    DiscountGroup::factory()->create(['code' => 'EK', 'name' => 'Szíjhajtások']);
+    Product::factory()->create(['group_code' => 'S2']);
+    Product::factory()->count(2)->create(['group_code' => 'S5']);
+    Product::factory()->create(['group_code' => 'CT']);
+    Product::factory()->create(['group_code' => 'PM']);
+    Product::factory()->create(['group_code' => 'XX']);
+
+    $groups = collect(Livewire::test(Index::class)->instance()->filters)->firstWhere('key', 'group')['items'];
+
+    expect($groups)->toBe([
+        ['name' => 'SKF csapágy', 'value' => 'SKF csapágy', 'count' => 3],
+        ['name' => 'Tőkés (minőségi) csapágy', 'value' => 'Tőkés (minőségi) csapágy', 'count' => 1],
+    ]);
+});
+
+it('filters by a product group name across all of its codes and labels the chip with it', function (): void {
+    DiscountGroup::factory()->create(['code' => 'S2', 'name' => 'SKF csapágy']);
+    DiscountGroup::factory()->create(['code' => 'S5', 'name' => 'SKF csapágy']);
+    DiscountGroup::factory()->create(['code' => 'CT', 'name' => 'Tőkés (minőségi) csapágy']);
+    $s2 = Product::factory()->create(['group_code' => 'S2', 'name' => 'A']);
+    $s5 = Product::factory()->create(['group_code' => 'S5', 'name' => 'B']);
+    Product::factory()->create(['group_code' => 'CT']);
+
+    $component = Livewire::test(Index::class)->set('selectedFilters.group', ['SKF csapágy']);
+
+    expect($component->instance()->products->pluck('id')->sort()->values()->all())->toBe([$s2->id, $s5->id])
+        ->and($component->html())->toContain('wire:key="chip-group-SKF csapágy"');
+});
+
+it('clears the new filters with "Szűrők törlése"', function (): void {
+    $component = Livewire::test(Index::class)
+        ->set('selectedFilters.brand', ['SKF'])
+        ->set('selectedFilters.material', ['NBR'])
+        ->set('selectedFilters.group', ['SKF csapágy'])
+        ->call('clearFilters');
+
+    expect($component->get('selectedFilters'))
+        ->brand->toBe([])
+        ->material->toBe([])
+        ->group->toBe([]);
 });

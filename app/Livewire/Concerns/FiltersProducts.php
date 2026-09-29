@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Livewire\Concerns;
 
 use App\Models\Category;
+use App\Models\DiscountGroup;
 use App\Models\Product;
 use App\Services\CategoryTree;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 
 /**
  * The filter sidebar shared by the product list and the category index:
- * stock, the real top-level categories and sizes. The category filter covers
+ * stock, the real top-level categories, product groups, sizes, brands and materials. The category filter covers
  * each category's whole subtree. Sizes run into the ten thousands, so the
  * sidebar lists the most common ones and a search field finds the rest.
  */
@@ -21,10 +23,15 @@ trait FiltersProducts
 {
     private const int SIZE_OPTION_LIMIT = 30;
 
-    /** @var array{category: array<int, string>, size: array<int, string>, stock: array<int, string>} */
+    private const string DISCONTINUED_GROUP_NAME = 'Megszűnt termék';
+
+    /** @var array{category: array<int, string>, group: array<int, string>, size: array<int, string>, brand: array<int, string>, material: array<int, string>, stock: array<int, string>} */
     public array $selectedFilters = [
         'category' => [],
+        'group' => [],
         'size' => [],
+        'brand' => [],
+        'material' => [],
         'stock' => [],
     ];
 
@@ -67,6 +74,12 @@ trait FiltersProducts
                 'items' => $this->categoryOptions(),
             ],
             [
+                'title' => 'Termékcsoport',
+                'key' => 'group',
+                'visible' => 5,
+                'items' => $this->groupOptions(),
+            ],
+            [
                 'title' => 'Méret',
                 'key' => 'size',
                 'visible' => $isSearchingSizes ? self::SIZE_OPTION_LIMIT : 5,
@@ -77,12 +90,24 @@ trait FiltersProducts
                     'empty' => $isSearchingSizes ? 'Nincs ilyen méret.' : null,
                 ],
             ],
+            [
+                'title' => 'Márka',
+                'key' => 'brand',
+                'visible' => 5,
+                'items' => $this->columnOptions('brand'),
+            ],
+            [
+                'title' => 'Anyag',
+                'key' => 'material',
+                'visible' => 5,
+                'items' => $this->columnOptions('material'),
+            ],
         ];
     }
 
     protected function resetProductFilters(): void
     {
-        $this->selectedFilters = ['category' => [], 'size' => [], 'stock' => []];
+        $this->selectedFilters = ['category' => [], 'group' => [], 'size' => [], 'brand' => [], 'material' => [], 'stock' => []];
         $this->sizeSearch = '';
     }
 
@@ -97,6 +122,16 @@ trait FiltersProducts
 
         if ($this->selectedFilters['size'] !== []) {
             $query->whereIn('size', $this->selectedFilters['size']);
+        }
+
+        if ($this->selectedFilters['group'] !== []) {
+            $query->whereIn('group_code', DiscountGroup::query()->whereIn('name', $this->selectedFilters['group'])->pluck('code'));
+        }
+
+        foreach (['brand', 'material'] as $column) {
+            if ($this->selectedFilters[$column] !== []) {
+                $query->whereIn($column, $this->selectedFilters[$column]);
+            }
         }
 
         $stock = $this->selectedFilters['stock'];
@@ -128,6 +163,59 @@ trait FiltersProducts
             ])
             ->filter(fn (array $option): bool => $option['count'] > 0)
             ->values()
+            ->all();
+    }
+
+    /**
+     * The named product groups, those sharing a name merged into one option.
+     *
+     * @return array<int, array{name: string, value: string, count: int}>
+     */
+    private function groupOptions(): array
+    {
+        $countsByCode = $this->filterableProducts()
+            ->select('group_code', DB::raw('count(*) as count'))
+            ->whereNotNull('group_code')
+            ->groupBy('group_code')
+            ->get()
+            ->mapWithKeys(fn (Product $row): array => [$row->group_code => (int) $row->getAttribute('count')]);
+
+        return DiscountGroup::query()
+            ->whereNotNull('name')
+            ->where('name', '!=', '')
+            ->where('name', '!=', self::DISCONTINUED_GROUP_NAME)
+            ->get(['code', 'name'])
+            ->groupBy('name')
+            ->map(fn (Collection $groups, string $name): array => [
+                'name' => $name,
+                'value' => $name,
+                'count' => $groups->sum(fn (DiscountGroup $group): int => $countsByCode->get($group->code, 0)),
+            ])
+            ->filter(fn (array $option): bool => $option['count'] > 0)
+            ->sortBy([['count', 'desc'], ['name', 'asc']])
+            ->values()
+            ->all();
+    }
+
+    /**
+     * The values of a plain attribute column, the most common first.
+     *
+     * @return array<int, array{name: string, value: string, count: int}>
+     */
+    private function columnOptions(string $column): array
+    {
+        return $this->filterableProducts()
+            ->select($column, DB::raw('count(*) as count'))
+            ->whereNotNull($column)
+            ->groupBy($column)
+            ->orderByDesc('count')
+            ->orderBy($column)
+            ->get()
+            ->map(fn (Product $row): array => [
+                'name' => (string) $row->getAttribute($column),
+                'value' => (string) $row->getAttribute($column),
+                'count' => (int) $row->getAttribute('count'),
+            ])
             ->all();
     }
 
