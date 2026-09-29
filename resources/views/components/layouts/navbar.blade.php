@@ -8,7 +8,7 @@
 <!-- Main Navigation -->
 <div x-data="{ mobileMenuOpen: false, categoryMenuOpen: false }" class="sticky top-0 z-40 bg-white border-b">
     <div class="container mx-auto px-4">
-        <nav class="flex items-center justify-between h-16 lg:h-20 2xl:h-24">
+        <nav class="flex items-center justify-between h-16 lg:h-20">
             <!-- Logo and Navigation -->
             <div class="flex items-center space-x-8">
                 <!-- Logo -->
@@ -16,7 +16,7 @@
                 <a href="/" class="shrink-0">
                     <img src="{{ Vite::asset('resources/images/GS-logo.webp') }}"
                         alt="GÖRDÜLŐ-Simmering Kft. - SKF csapágyak és kapcsolódó termékek kereskedése"
-                        width="280" height="59" class="h-12 w-auto lg:h-auto lg:w-[254px] xl:w-[309px] 2xl:w-[373px]">
+                        width="280" height="59" class="h-12 w-auto lg:h-auto lg:w-[230px] xl:w-[270px] 2xl:w-[300px]">
                 </a>
 
                 <!-- Desktop Navigation -->
