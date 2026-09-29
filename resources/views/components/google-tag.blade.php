@@ -5,8 +5,13 @@
     $integrations = app(\App\Settings\IntegrationSettings::class);
     $googleAnalyticsId = trim($integrations->google_analytics_id);
     $googleTagManagerId = trim($integrations->google_tag_manager_id);
+    $googleSiteVerification = trim($integrations->google_site_verification);
     $isConsentRequired = app(\App\Settings\CookieConsentSettings::class)->enabled;
 @endphp
+
+@if ($googleSiteVerification !== '')
+    <meta name="google-site-verification" content="{{ $googleSiteVerification }}" />
+@endif
 
 @if ($googleAnalyticsId !== '' || $googleTagManagerId !== '')
     <script>
