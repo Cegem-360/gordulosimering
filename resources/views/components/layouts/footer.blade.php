@@ -108,6 +108,7 @@
                     <a href="{{ route('privacy-policy') }}" class="hover:text-white transition-colors">Adatvédelmi
                         nyilatkozat</a>
                     <a href="{{ route('terms-and-conditions') }}" class="hover:text-white transition-colors">Általános szerződési feltételek</a>
+                    <button type="button" x-data @click="$dispatch('open-cookie-settings')" class="hover:text-white transition-colors">Süti beállítások</button>
                 </div>
                 <!-- Payment Methods -->
                 {{-- <div class="flex items-center gap-2">

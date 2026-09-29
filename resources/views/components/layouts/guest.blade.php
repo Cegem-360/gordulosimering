@@ -12,6 +12,8 @@
 
         <x-favicons />
 
+        <x-google-tag />
+
         <style>
             [x-cloak] {
                 display: none !important;
@@ -41,6 +43,8 @@
         </main>
 
         <x-layouts.footer />
+
+        <x-cookie-consent />
 
         @livewire('notifications')
 
