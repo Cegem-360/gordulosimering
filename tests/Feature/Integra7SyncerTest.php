@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\DiscountGroup;
 use App\Models\Product;
 use App\Services\Integra7Syncer;
 use Illuminate\Database\Schema\Blueprint;
@@ -23,6 +24,20 @@ beforeEach(function (): void {
         $table->decimal('taxpercent', 5, 2)->default(27);
         $table->boolean('inactive')->default(false);
         $table->string('quantity_unit')->nullable();
+        $table->string('product_group_code')->nullable();
+        $table->string('product_type_code')->nullable();
+    });
+
+    Schema::connection('integra7')->create('product_groups', function (Blueprint $table): void {
+        $table->id();
+        $table->string('code');
+        $table->string('name');
+    });
+
+    Schema::connection('integra7')->create('product_types', function (Blueprint $table): void {
+        $table->id();
+        $table->string('code');
+        $table->string('name');
     });
 
     Schema::connection('integra7')->create('quantities', function (Blueprint $table): void {
@@ -47,6 +62,16 @@ function seedIntegraProduct(string $code, array $attributes = []): void
         'quantity_unit' => 'db        ',
         ...$attributes,
     ]);
+}
+
+function seedIntegraGroup(string $code, string $name): void
+{
+    DB::connection('integra7')->table('product_groups')->insert(['code' => $code, 'name' => $name]);
+}
+
+function seedIntegraType(string $code, string $name): void
+{
+    DB::connection('integra7')->table('product_types')->insert(['code' => $code, 'name' => $name]);
 }
 
 function seedIntegraQuantity(string $code, string $store, float $quantity, float $reserved = 0): void
@@ -168,4 +193,46 @@ it('matches product codes that the ERP pads with spaces', function (): void {
     resolve(Integra7Syncer::class)->sync();
 
     expect($product->fresh()->stock_quantity)->toBe(6.0);
+});
+
+it('takes the product group and product type from Integra7', function (): void {
+    $product = Product::factory()->create(['product_code' => '6204', 'group_code' => 'CD', 'product_variety' => 'csapágy (olcsóbb, keleti)']);
+    seedIntegraType('110', 'csapágy SKF   ');
+    seedIntegraProduct('6204', ['product_group_code' => 'S5  ', 'product_type_code' => '110']);
+
+    resolve(Integra7Syncer::class)->sync();
+
+    expect($product->fresh())
+        ->group_code->toBe('S5')
+        ->product_variety->toBe('csapágy SKF');
+});
+
+it('keeps the product group and type when Integra7 has none for the product', function (): void {
+    $product = Product::factory()->create(['product_code' => 'NOGROUP', 'group_code' => 'CT', 'product_variety' => 'szimering']);
+    seedIntegraProduct('NOGROUP', ['product_group_code' => '  ', 'product_type_code' => '404']);
+
+    resolve(Integra7Syncer::class)->sync();
+
+    expect($product->fresh())
+        ->group_code->toBe('CT')
+        ->product_variety->toBe('szimering');
+});
+
+it('names the existing product groups and adds the new ones from Integra7', function (): void {
+    DiscountGroup::factory()->create(['code' => 'CT', 'name' => null]);
+    seedIntegraGroup('CT  ', 'Tőkés (minőségi) csapágy ');
+    seedIntegraGroup('SM', 'Simmering');
+
+    resolve(Integra7Syncer::class)->sync();
+
+    expect(DiscountGroup::query()->orderBy('code')->pluck('name', 'code')->all())
+        ->toBe(['CT' => 'Tőkés (minőségi) csapágy', 'SM' => 'Simmering']);
+});
+
+it('leaves the product groups alone on a dry run', function (): void {
+    seedIntegraGroup('SM', 'Simmering');
+
+    resolve(Integra7Syncer::class)->sync(dryRun: true);
+
+    expect(DiscountGroup::query()->count())->toBe(0);
 });
