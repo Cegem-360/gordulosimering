@@ -21,7 +21,7 @@
             </a>
 
             <!-- 24/7 Service Card -->
-            <a href="/szolgaltatasaink" class="group block">
+            <a href="{{ route('services') }}#ugyelet" class="group block">
                 <div
                     class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     <img src="{{ Vite::asset('resources/images/24-7-service.webp') }}" alt="24 órás ügyelet"
