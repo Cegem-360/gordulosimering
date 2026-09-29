@@ -25,6 +25,7 @@ Az adatkezelés jogalapja az Európai Parlament és a Tanács (EU) 2016/679 rend
 - a regisztráció és a hírlevél-feliratkozás esetén az érintett önkéntes hozzájárulása (GDPR 6. cikk (1) bekezdés a) pont);
 - a megrendelések teljesítése és kiszállítása esetén a szerződés teljesítése (GDPR 6. cikk (1) bekezdés b) pont);
 - a számlák kiállítása és megőrzése esetén az adatkezelőre vonatkozó jogi kötelezettség teljesítése (GDPR 6. cikk (1) bekezdés c) pont, a számvitelről szóló 2000. évi C. törvény 169. §);
+- a statisztikai és marketing sütik esetén az érintett hozzájárulása, amelyet a sütibannerben ad meg vagy tagad meg (GDPR 6. cikk (1) bekezdés a) pont, lásd a 12. pontot);
 - a kamerás megfigyelés esetén az adatkezelő jogos érdeke (GDPR 6. cikk (1) bekezdés f) pont, lásd a 13. pontot).
 
 A GDPR mellett az információs önrendelkezési jogról és az információszabadságról szóló 2011. évi CXII. törvény rendelkezései is irányadóak.
@@ -80,11 +81,16 @@ A GÖRDÜLŐ-Simmering Kft. kizárólag regisztrált email címekre küld hírle
 
 A Cookie, süti a böngésző által az Ön eszközére helyezett rövid számsorból áll, ami a weblapot letöltő számítógép vagy egyéb eszköz megkülönböztetésére szolgál. A sütik személyes adatot nem tartalmaznak.
 
-Jelen webhely kizárólag a működéséhez szükséges sütiket használja; statisztikai, reklám- vagy közösségimédia-sütit nem helyez el, és a sütik adatait harmadik félnek nem adja át. A szükséges sütik elhelyezéséhez nincs szükség hozzájárulásra, a webhely nélkülük nem működne:
+A webhely működéséhez szükséges sütik elhelyezéséhez nincs szükség hozzájárulásra, a webhely nélkülük nem működne:
 
 - **Munkamenet-süti:** a kosár tartalmát és a bejelentkezést tárolja a látogatás idejére. Utolsó használatától számítva 2 óra múlva lejár.
 - **XSRF-TOKEN:** az űrlapok (rendelés, kapcsolatfelvétel) biztonságát védi a csalárd kérésekkel szemben. 2 óra múlva lejár.
 - **Bejelentkezés megjegyzése (remember_web_…):** csak akkor jön létre, ha bejelentkezéskor az „Emlékezz rám” lehetőséget választja. Kijelentkezéskor törlődik, egyébként legfeljebb 400 napig érvényes.
+
+Statisztikai és marketing sütiket csak az Ön hozzájárulásával helyezünk el. Az első látogatáskor megjelenő sütibannerben kategóriánként (Analitikai, Marketing) dönthet, a döntését a lábléc „Süti beállítások” gombjával bármikor módosíthatja vagy visszavonhatja. Hozzájárulás nélkül ezek a sütik nem jönnek létre.
+
+- **Google Analytics, Google Tag Manager (_ga, _ga_…):** a látogatottság névtelen, összesített méréséhez. Legfeljebb 2 évig érvényesek. Hozzájárulás esetén a statisztikai adatokat a Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Írország) kezeli adatfeldolgozóként; részletek: <https://policies.google.com/privacy?hl=hu>.
+- **A hozzájárulás megjegyzése (cookie_consent):** nem süti, hanem a böngésző helyi tárolójában (localStorage) őrzött bejegyzés, amely a sütibannerben hozott döntését tárolja, hogy ne kérdezzük meg újra. Törlődik, ha a böngésző webhelyadatait törli.
 
 Az Ön számítógépét érintő sütik beállítását szabályozhatja a böngészőjében, illetve a sütikről és azok beállításairól az alábbi weboldalakon tud tájékozódni:
 

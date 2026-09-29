@@ -105,9 +105,10 @@ it('keeps the privacy notice current: gs@, the GDPR, this site\'s cookies, the o
     /** @var TestCase $this */
     $this->get(route('privacy-policy'))->assertOk()
         ->assertSee(['gs@gordulo-simmering.hu', 'GDPR 6. cikk (1) bekezdés b) pont', '2000. évi C. törvény 169. §', '8 évig megőrizzük'])
-        ->assertSee(['kizárólag a működéséhez szükséges sütiket', 'Munkamenet-süti', 'XSRF-TOKEN', 'remember_web_'])
+        ->assertSee(['A webhely működéséhez szükséges sütik', 'Munkamenet-süti', 'XSRF-TOKEN', 'remember_web_'])
         ->assertSee(['Nemzeti Adatvédelmi és Információszabadság Hatóság', '1055 Budapest, Falk Miksa utca 9–11.'])
-        ->assertDontSee(['info@gordulo-simmering.hu', 'az gs@', 'Nagy Lajos', 'Szilágyi E. fasor', 'statisztikai adatgyűjtés']);
+        ->assertSee(['Statisztikai és marketing sütiket csak az Ön hozzájárulásával', 'Süti beállítások', 'Google Ireland Limited', 'cookie_consent', 'GDPR 6. cikk (1) bekezdés a) pont, lásd a 12. pontot'])
+        ->assertDontSee(['info@gordulo-simmering.hu', 'az gs@', 'Nagy Lajos', 'Szilágyi E. fasor', 'statisztikai adatgyűjtés', 'statisztikai, reklám- vagy közösségimédia-sütit nem helyez el']);
 });
 
 it('shows the full terms and conditions from the old site', function (): void {
