@@ -38,50 +38,19 @@
                         </div>
 
                         <!-- Active Filters -->
-                        @php
-                            $hasActiveFilters = collect($selectedFilters)->flatten()->isNotEmpty() || $search || $this->dimensionRangeChips !== [];
-                        @endphp
-                        @if ($hasActiveFilters)
-                            <div class="flex flex-wrap gap-2">
-                                @if ($search)
-                                    <span
-                                        class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                                        <i class="fas fa-search text-xs"></i>
-                                        {{ $search }}
-                                        <button type="button" wire:click="$set('search', '')"
-                                            class="hover:text-blue-600">
-                                            <i class="fas fa-times text-xs"></i>
-                                        </button>
-                                    </span>
-                                @endif
-                                @php
-                                    $filterLabels = collect($filters)->mapWithKeys(fn ($filter) => [$filter['key'] => collect($filter['items'])->pluck('name', 'value')]);
-                                @endphp
-                                @foreach ($selectedFilters as $key => $values)
-                                    @foreach ($values as $value)
-                                        <span wire:key="chip-{{ $key }}-{{ $value }}"
-                                            class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                                            {{ $filterLabels[$key][$value] ?? $value }}
-                                            <button type="button"
-                                                wire:click="$set('selectedFilters.{{ $key }}', {{ json_encode(array_values(array_diff($values, [$value]))) }})"
-                                                class="hover:text-blue-600">
-                                                <i class="fas fa-times text-xs"></i>
-                                            </button>
-                                        </span>
-                                    @endforeach
-                                @endforeach
-                                @foreach ($this->dimensionRangeChips as $chip)
-                                    <span wire:key="chip-dimension-{{ $chip['key'] }}"
-                                        class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                                        {{ $chip['label'] }}
-                                        <button type="button" wire:click="clearDimensionRange('{{ $chip['key'] }}')"
-                                            class="hover:text-blue-600">
-                                            <i class="fas fa-times text-xs"></i>
-                                        </button>
-                                    </span>
-                                @endforeach
-                            </div>
-                        @endif
+                        <x-categories.active-filters :filters="$filters" :selected="$selectedFilters" :range-chips="$this->dimensionRangeChips">
+                            @if ($search)
+                                <span
+                                    class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                                    <i class="fas fa-search text-xs"></i>
+                                    {{ $search }}
+                                    <button type="button" wire:click="$set('search', '')"
+                                        class="hover:text-blue-600">
+                                        <i class="fas fa-times text-xs"></i>
+                                    </button>
+                                </span>
+                            @endif
+                        </x-categories.active-filters>
                     </div>
 
                     <!-- Products Grid -->

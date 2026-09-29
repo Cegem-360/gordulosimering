@@ -97,3 +97,51 @@ it('writes the product count with a Hungarian thousands separator', function ():
         ->assertSee("1\u{a0}001 termék található")
         ->assertDontSee('1,001 termék');
 });
+
+it('offers the filter sidebar without the category filter, counted within the category', function (): void {
+    $seals = Category::query()->create(['name' => 'TÖMÍTÉSEK', 'slug' => 'tomitesek']);
+    $bearings = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    $seals->products()->attach(Product::factory()->count(2)->create(['name' => 'SKF simmering, NBR', 'size' => '25X47X8']));
+    $bearings->products()->attach(Product::factory()->create(['name' => 'KOYO golyóscsapágy', 'size' => '30X62X16']));
+
+    $component = Livewire::test(Show::class, ['category' => $seals]);
+    $filters = collect($component->instance()->filters);
+
+    expect($filters->pluck('key')->all())->toBe(['stock', 'group', 'dimensions', 'size', 'brand', 'material'])
+        ->and($filters->firstWhere('key', 'brand')['items'])->toBe([['name' => 'SKF', 'value' => 'SKF', 'count' => 2]])
+        ->and($filters->firstWhere('key', 'dimensions')['ranges'][0])->toMatchArray(['min' => 25.0, 'max' => 25.0]);
+    $component->assertSee(['Márka', 'Anyag', 'Méretek (mm)'])
+        ->assertSeeHtml('wire:model.live="selectedFilters.brand"');
+});
+
+it('narrows the category products by brand, material and dimension range', function (string $property, mixed $value): void {
+    $seals = Category::query()->create(['name' => 'TÖMÍTÉSEK', 'slug' => 'tomitesek']);
+    $seals->products()->attach($match = Product::factory()->create(['name' => 'SKF simmering, NBR', 'size' => '25X47X8']));
+    $seals->products()->attach(Product::factory()->create(['name' => 'CORTECO simmering, VITON', 'size' => '40X62X10']));
+    Product::factory()->create(['name' => 'SKF simmering, NBR', 'size' => '25X47X8']);
+
+    $component = Livewire::test(Show::class, ['category' => $seals])->set($property, $value);
+
+    expect($component->instance()->products->pluck('id')->all())->toBe([$match->id]);
+})->with([
+    'brand' => ['selectedFilters.brand', ['SKF']],
+    'material' => ['selectedFilters.material', ['NBR']],
+    'range' => ['dimensionRanges.inner_diameter', ['min' => '20', 'max' => '30']],
+]);
+
+it('shows the active filter chips and a way out when the filters match nothing', function (): void {
+    $seals = Category::query()->create(['name' => 'TÖMÍTÉSEK', 'slug' => 'tomitesek']);
+    $seals->products()->attach(Product::factory()->create(['name' => 'SKF simmering, NBR', 'size' => '25X47X8']));
+
+    Livewire::test(Show::class, ['category' => $seals])
+        ->set('selectedFilters.brand', ['SKF'])
+        ->set('dimensionRanges.width.min', '50')
+        ->assertSeeHtml('wire:key="chip-brand-SKF"')
+        ->assertSee('Szélesség: 50 mm-től')
+        ->assertSee('A megadott szűrőkkel nem található termék.')
+        ->assertDontSee('Nincs termék ebben a kategóriában')
+        ->call('clearFilters')
+        ->assertSet('selectedFilters.brand', [])
+        ->assertSet('dimensionRanges.width', ['min' => null, 'max' => null])
+        ->assertSee('SKF simmering, NBR');
+});

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products\Categories;
 
+use App\Livewire\Concerns\FiltersProducts;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\CategoryTree;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Computed;
@@ -17,6 +19,7 @@ use Livewire\WithPagination;
 
 final class Show extends Component
 {
+    use FiltersProducts;
     use WithPagination;
 
     public Category $category;
@@ -24,6 +27,12 @@ final class Show extends Component
     public function mount(Category $category): void
     {
         $this->category = $category;
+    }
+
+    public function clearFilters(): void
+    {
+        $this->resetProductFilters();
+        $this->resetPage();
     }
 
     /**
@@ -64,18 +73,26 @@ final class Show extends Component
     }
 
     /**
-     * Products linked to this category or any of its descendants.
+     * Products linked to this category or any of its descendants, narrowed
+     * by the sidebar filters.
      */
     #[Computed]
     public function products(): LengthAwarePaginator
     {
-        $categoryIds = resolve(CategoryTree::class)->descendantIds($this->category);
+        $query = $this->filterableProducts();
+        $this->applySelectedFilters($query);
 
-        return Product::query()
-            ->webVisible()
-            ->whereHas('categories', fn ($query) => $query->whereIn('product_categories.id', $categoryIds))
-            ->orderBy('name')
-            ->paginate(24);
+        return $query->orderBy('name')->paginate(24);
+    }
+
+    /**
+     * Whether the category holds any web-visible product before filtering,
+     * which tells "empty category" from "no match for the filters".
+     */
+    #[Computed]
+    public function hasProducts(): bool
+    {
+        return $this->filterableProducts()->exists();
     }
 
     public function render(): Factory|View
@@ -84,6 +101,24 @@ final class Show extends Component
             'breadcrumbs' => $this->breadcrumbs,
             'subcategories' => $this->subcategories,
             'products' => $this->products,
+            'filters' => $this->filters,
         ]);
+    }
+
+    /**
+     * @return Builder<Product>
+     */
+    protected function filterableProducts(): Builder
+    {
+        $categoryIds = resolve(CategoryTree::class)->descendantIds($this->category);
+
+        return Product::query()
+            ->webVisible()
+            ->whereHas('categories', fn (Builder $query) => $query->whereIn('product_categories.id', $categoryIds));
+    }
+
+    protected function showsCategoryFilter(): bool
+    {
+        return false;
     }
 }

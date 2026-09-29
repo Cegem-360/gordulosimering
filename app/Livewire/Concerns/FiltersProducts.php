@@ -148,12 +148,12 @@ trait FiltersProducts
                     ['name' => 'Rendelésre', 'value' => 'out_of_stock', 'count' => $this->outOfStock($this->filterableProducts())->count()],
                 ],
             ],
-            [
+            ...($this->showsCategoryFilter() ? [[
                 'title' => 'Kategória',
                 'key' => 'category',
                 'visible' => 5,
                 'items' => $this->categoryOptions(),
-            ],
+            ]] : []),
             [
                 'title' => 'Termékcsoport',
                 'key' => 'group',
@@ -192,6 +192,14 @@ trait FiltersProducts
                 'items' => $this->columnOptions('material'),
             ],
         ];
+    }
+
+    /**
+     * A category page has its subcategory tiles instead of the category filter.
+     */
+    protected function showsCategoryFilter(): bool
+    {
+        return true;
     }
 
     protected function resetProductFilters(): void
