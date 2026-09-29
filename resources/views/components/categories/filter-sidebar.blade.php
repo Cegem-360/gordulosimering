@@ -19,6 +19,25 @@
                 </button>
             </h3>
             <div x-show="open" x-collapse class="space-y-2">
+                @if (($filter['type'] ?? null) === 'range')
+                    @foreach ($filter['ranges'] as $range)
+                        <div wire:key="range-{{ $range['key'] }}">
+                            <p class="text-sm text-gray-700 mb-1">{{ $range['label'] }}</p>
+                            <div class="flex items-center gap-2">
+                                @foreach (['min' => 'tól', 'max' => 'ig'] as $bound => $boundLabel)
+                                    @if (! $loop->first)
+                                        <span class="text-gray-400">–</span>
+                                    @endif
+                                    <input type="number" min="0" step="any" inputmode="decimal"
+                                        wire:model.live.debounce.500ms="dimensionRanges.{{ $range['key'] }}.{{ $bound }}"
+                                        placeholder="{{ $range[$bound] !== null ? Number::format($range[$bound], maxPrecision: 3, locale: 'hu') : $boundLabel }}"
+                                        aria-label="{{ $range['label'] }} {{ $boundLabel }}"
+                                        class="w-full min-w-0 px-3 py-1.5 rounded-md border border-gray-300 bg-white text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                @else
                 @isset($filter['search'])
                     <input type="search"
                         wire:model.live.debounce.300ms="{{ $filter['search']['model'] }}"
@@ -52,6 +71,7 @@
                     <button type="button" class="pt-1 text-sm text-blue-600 hover:underline" @click="expanded = !expanded">
                         <span x-text="expanded ? 'Kevesebb' : 'Összes mutatása ({{ $hiddenCount }})'">Összes mutatása ({{ $hiddenCount }})</span>
                     </button>
+                @endif
                 @endif
             </div>
         </div>

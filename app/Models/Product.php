@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Services\ProductAttributeExtractor;
 use Closure;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -58,6 +59,21 @@ final class Product extends Model
     public function hasDiscount(): bool
     {
         return $this->discount_percentage > 0;
+    }
+
+    /**
+     * Recalculates the filter attributes (ProductAttributeExtractor) on save
+     * when the name or size changed; a caller saving a partially selected
+     * product must load both `name` and `size`.
+     */
+    #[Override]
+    protected static function booted(): void
+    {
+        self::saving(function (Product $product): void {
+            if (! $product->exists || $product->isDirty(['name', 'size'])) {
+                $product->fill(resolve(ProductAttributeExtractor::class)->extract($product->name, $product->size));
+            }
+        });
     }
 
     /**
@@ -218,6 +234,9 @@ final class Product extends Model
             'is_web_visible' => 'boolean',
             'is_inactive' => 'boolean',
             'weight' => 'decimal:3',
+            'inner_diameter' => 'float',
+            'outer_diameter' => 'float',
+            'width' => 'float',
             'is_on_sale' => 'boolean',
             'is_featured' => 'boolean',
             'sale_percentage' => 'decimal:2',

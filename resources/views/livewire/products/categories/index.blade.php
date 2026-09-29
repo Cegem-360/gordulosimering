@@ -31,7 +31,7 @@
 
                         <!-- Active Filters -->
                         @php
-                            $hasActiveFilters = collect($selectedFilters)->flatten()->isNotEmpty();
+                            $hasActiveFilters = collect($selectedFilters)->flatten()->isNotEmpty() || $this->dimensionRangeChips !== [];
                         @endphp
                         @if ($hasActiveFilters)
                             <div class="flex flex-wrap gap-2">
@@ -50,6 +50,16 @@
                                             </button>
                                         </span>
                                     @endforeach
+                                @endforeach
+                                @foreach ($this->dimensionRangeChips as $chip)
+                                    <span wire:key="chip-dimension-{{ $chip['key'] }}"
+                                        class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                                        {{ $chip['label'] }}
+                                        <button type="button" wire:click="clearDimensionRange('{{ $chip['key'] }}')"
+                                            class="hover:text-blue-600">
+                                            <i class="fas fa-times text-xs"></i>
+                                        </button>
+                                    </span>
                                 @endforeach
                             </div>
                         @endif
