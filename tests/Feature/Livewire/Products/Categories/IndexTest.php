@@ -16,11 +16,11 @@ it('renders successfully', function (): void {
 
 it('offers the stock, category, group, size, brand and material filters but no quality filter', function (string $component): void {
     Livewire::test($component)
-        ->assertSee(['Készlet', 'Kategória', 'Termékcsoport', 'Méret', 'Márka', 'Anyag'])
+        ->assertSee(['Készlet', 'Kategória', 'Termékcsoport', 'Méretek (mm)', 'Méret', 'Márka', 'Anyag'])
         ->assertDontSee('Minőség');
 
     expect(collect(Livewire::test($component)->instance()->filters)->pluck('key')->all())
-        ->toBe(['stock', 'category', 'group', 'size', 'brand', 'material']);
+        ->toBe(['stock', 'category', 'group', 'dimensions', 'size', 'brand', 'material']);
 })->with([
     'category index' => [Index::class],
     'product list' => [ProductsIndex::class],
@@ -197,3 +197,82 @@ it('clears the new filters with "Szűrők törlése"', function (): void {
         ->material->toBe([])
         ->group->toBe([]);
 });
+
+it('filters by a dimension range, with either bound on its own', function (array $range, array $expectedSizes): void {
+    Product::factory()->create(['size' => '20X47X14']);
+    Product::factory()->create(['size' => '25X52X15']);
+    Product::factory()->create(['size' => '30X62X16']);
+    Product::factory()->create(['size' => 'A28,5']);
+
+    $component = Livewire::test(Index::class)->set('dimensionRanges.inner_diameter', $range);
+
+    expect($component->instance()->products->pluck('size')->sort()->values()->all())->toBe($expectedSizes);
+})->with([
+    'both bounds' => [['min' => '22', 'max' => '28'], ['25X52X15']],
+    'only the lower bound' => [['min' => '25', 'max' => ''], ['25X52X15', '30X62X16']],
+    'only the upper bound' => [['min' => null, 'max' => '25'], ['20X47X14', '25X52X15']],
+]);
+
+it('ignores invalid bounds and accepts a decimal comma', function (): void {
+    Product::factory()->create(['size' => '25,4X50,8X15']);
+    Product::factory()->create(['size' => '30X62X16']);
+
+    $component = Livewire::test(Index::class)->set('dimensionRanges.inner_diameter', ['min' => 'abc', 'max' => '25,4']);
+    expect($component->instance()->products->pluck('size')->all())->toBe(['25,4X50,8X15']);
+
+    $component->set('dimensionRanges.inner_diameter', ['min' => '-5', 'max' => 'xyz']);
+    expect($component->instance()->products)->toHaveCount(2);
+});
+
+it('swaps a reversed range', function (): void {
+    Product::factory()->create(['size' => '25X52X15']);
+    Product::factory()->create(['size' => '40X80X18']);
+
+    $component = Livewire::test(Index::class)->set('dimensionRanges.outer_diameter', ['min' => '60', 'max' => '50']);
+
+    expect($component->instance()->products->pluck('size')->all())->toBe(['25X52X15']);
+});
+
+it('goes back to the first page when a range changes', function (): void {
+    Product::factory()->count(30)->create(['size' => '25X52X15']);
+
+    Livewire::test(Index::class)
+        ->call('gotoPage', 2)
+        ->set('dimensionRanges.width.min', '10')
+        ->assertSet('paginators.page', 1);
+});
+
+it('shows the range bounds of the list as placeholders', function (): void {
+    Product::factory()->create(['size' => '20X47X14']);
+    Product::factory()->create(['size' => '25,5X52X15']);
+
+    $dimensions = collect(Livewire::test(Index::class)->instance()->filters)->firstWhere('key', 'dimensions');
+
+    expect($dimensions['ranges'][0])->toBe(['key' => 'inner_diameter', 'label' => 'Belső átmérő (d)', 'min' => 20.0, 'max' => 25.5])
+        ->and(Livewire::test(Index::class)->html())
+        ->toContain('wire:model.live.debounce.500ms="dimensionRanges.inner_diameter.min"')
+        ->toContain('placeholder="20"')
+        ->toContain('placeholder="25,5"');
+});
+
+it('shows a removable chip for each range and clears the ranges with "Szűrők törlése"', function (string $component): void {
+    $test = Livewire::test($component)
+        ->set('dimensionRanges.inner_diameter', ['min' => '20', 'max' => '30'])
+        ->set('dimensionRanges.width', ['min' => '10', 'max' => null])
+        ->set('dimensionRanges.outer_diameter', ['min' => null, 'max' => '62,5']);
+
+    expect($test->instance()->dimensionRangeChips)->toBe([
+        ['key' => 'inner_diameter', 'label' => 'Belső átmérő: 20–30 mm'],
+        ['key' => 'outer_diameter', 'label' => 'Külső átmérő: 62,5 mm-ig'],
+        ['key' => 'width', 'label' => 'Szélesség: 10 mm-től'],
+    ]);
+    $test->assertSee('Belső átmérő: 20–30 mm')->assertSeeHtml('wire:click="clearDimensionRange(\'width\')"');
+
+    $test->call('clearDimensionRange', 'width')
+        ->assertSet('dimensionRanges.width', ['min' => null, 'max' => null])
+        ->call('clearFilters')
+        ->assertSet('dimensionRanges.inner_diameter', ['min' => null, 'max' => null]);
+})->with([
+    'category index' => [Index::class],
+    'product list' => [ProductsIndex::class],
+]);
