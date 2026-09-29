@@ -182,3 +182,11 @@ it('serves the GÖRDÜLŐ-Simmering favicon set on the storefront and in the adm
     expect(getimagesize(public_path('apple-touch-icon.png')))->toMatchArray([0 => 180, 1 => 180])
         ->and(file_get_contents(public_path('favicon.svg')))->toContain('fill="#0F50A9"')->not->toContain('stroke=');
 });
+
+it('sizes the navbar logo to the width of the homepage search panel', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('contact'))->assertOk()
+        ->assertSeeHtml('width="280" height="59" class="h-12 w-auto lg:h-auto lg:w-[254px] xl:w-[309px] 2xl:w-[373px]"')
+        ->assertSeeHtml('alt="GÖRDÜLŐ-Simmering Kft. - SKF csapágyak és kapcsolódó termékek kereskedése"')
+        ->assertSeeHtml('class="scroll-pt-20 lg:scroll-pt-24 2xl:scroll-pt-28"');
+});

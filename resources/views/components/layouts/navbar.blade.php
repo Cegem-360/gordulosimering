@@ -8,14 +8,15 @@
 <!-- Main Navigation -->
 <div x-data="{ mobileMenuOpen: false, categoryMenuOpen: false }" class="sticky top-0 z-40 bg-white border-b">
     <div class="container mx-auto px-4">
-        <nav class="flex items-center justify-between h-16">
+        <nav class="flex items-center justify-between h-16 lg:h-20 2xl:h-24">
             <!-- Logo and Navigation -->
             <div class="flex items-center space-x-8">
                 <!-- Logo -->
                 <!-- Logo -->
                 <a href="/" class="shrink-0">
                     <img src="{{ Vite::asset('resources/images/GS-logo.webp') }}"
-                        alt="Gördülő Simering Kft - SKF csapágyak és kapcsolódó termékek kereskedése" class="h-12">
+                        alt="GÖRDÜLŐ-Simmering Kft. - SKF csapágyak és kapcsolódó termékek kereskedése"
+                        width="280" height="59" class="h-12 w-auto lg:h-auto lg:w-[254px] xl:w-[309px] 2xl:w-[373px]">
                 </a>
 
                 <!-- Desktop Navigation -->
@@ -141,7 +142,7 @@
 
             <!-- Search Bar (the homepage has its own, above the category list) -->
             @unless (request()->routeIs('index'))
-                <div class="hidden lg:flex flex-1 max-w-2xl mx-8">
+                <div class="hidden lg:flex flex-1 max-w-2xl mx-4 xl:mx-8">
                     <livewire:live-search />
                 </div>
             @endunless
@@ -154,7 +155,7 @@
                         <button @click="open = !open" @click.outside="open = false"
                             class="flex items-center space-x-2 text-gray-700 hover:text-blue-600">
                             <i class="fas fa-user-circle text-xl"></i>
-                            <span class="text-sm font-medium">{{ Auth::user()->name }}</span>
+                            <span class="text-sm font-medium sr-only xl:not-sr-only">{{ Auth::user()->name }}</span>
                             <i class="fas fa-chevron-down text-xs transition-transform"
                                 :class="{ 'rotate-180': open }"></i>
                         </button>
@@ -191,8 +192,8 @@
                     </div>
                 @else
                     <a href="{{ route('login') }}" class="hidden lg:flex items-center text-gray-700 hover:text-blue-600">
-                        <i class="fas fa-sign-in-alt mr-2"></i>
-                        <span class="text-sm font-medium">{{ __('Bejelentkezés') }}</span>
+                        <i class="fas fa-sign-in-alt xl:mr-2"></i>
+                        <span class="text-sm font-medium sr-only xl:not-sr-only">{{ __('Bejelentkezés') }}</span>
                     </a>
                 @endauth
 
