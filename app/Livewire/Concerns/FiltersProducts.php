@@ -16,13 +16,25 @@ use Livewire\Attributes\Computed;
 
 /**
  * The filter sidebar shared by the product list and the category index:
- * stock, the real top-level categories, product groups, sizes, brands and materials. The category filter covers
- * each category's whole subtree. Sizes run into the ten thousands, so the
- * sidebar lists the most common ones and a search field finds the rest.
+ * stock, the real top-level categories, product groups, sizes, brands and
+ * materials. The category filter covers each category's whole subtree. Sizes
+ * run into the ten thousands, so the sidebar lists the most common ones and a
+ * search field finds the rest.
  */
 trait FiltersProducts
 {
     private const int SIZE_OPTION_LIMIT = 30;
+
+    private const array EMPTY_FILTERS = [
+        'category' => [],
+        'group' => [],
+        'size' => [],
+        'brand' => [],
+        'material' => [],
+        'stock' => [],
+    ];
+
+    private const array EMPTY_RANGE = ['min' => null, 'max' => null];
 
     private const string DISCONTINUED_GROUP_NAME = 'Megszűnt termék';
 
@@ -38,14 +50,7 @@ trait FiltersProducts
     ];
 
     /** @var array{category: array<int, string>, group: array<int, string>, size: array<int, string>, brand: array<int, string>, material: array<int, string>, stock: array<int, string>} */
-    public array $selectedFilters = [
-        'category' => [],
-        'group' => [],
-        'size' => [],
-        'brand' => [],
-        'material' => [],
-        'stock' => [],
-    ];
+    public array $selectedFilters = self::EMPTY_FILTERS;
 
     public string $sizeSearch = '';
 
@@ -56,9 +61,9 @@ trait FiltersProducts
      * @var array<string, array{min: mixed, max: mixed}>
      */
     public array $dimensionRanges = [
-        'inner_diameter' => ['min' => null, 'max' => null],
-        'outer_diameter' => ['min' => null, 'max' => null],
-        'width' => ['min' => null, 'max' => null],
+        'inner_diameter' => self::EMPTY_RANGE,
+        'outer_diameter' => self::EMPTY_RANGE,
+        'width' => self::EMPTY_RANGE,
     ];
 
     /**
@@ -68,13 +73,24 @@ trait FiltersProducts
      */
     abstract protected function filterableProducts(): Builder;
 
+    /**
+     * A page opened before a deploy may send back filter state without the
+     * newer keys; fill them in so the filters never read a missing key.
+     */
+    public function hydrateFiltersProducts(): void
+    {
+        $this->normaliseFilterState();
+    }
+
     public function updatedSelectedFilters(): void
     {
+        $this->normaliseFilterState();
         $this->resetPage();
     }
 
     public function updatedDimensionRanges(): void
     {
+        $this->normaliseFilterState();
         $this->resetPage();
     }
 
@@ -84,7 +100,7 @@ trait FiltersProducts
             return;
         }
 
-        $this->dimensionRanges[$dimension] = ['min' => null, 'max' => null];
+        $this->dimensionRanges[$dimension] = self::EMPTY_RANGE;
         $this->resetPage();
     }
 
@@ -180,9 +196,9 @@ trait FiltersProducts
 
     protected function resetProductFilters(): void
     {
-        $this->selectedFilters = ['category' => [], 'group' => [], 'size' => [], 'brand' => [], 'material' => [], 'stock' => []];
+        $this->selectedFilters = self::EMPTY_FILTERS;
         $this->sizeSearch = '';
-        $this->dimensionRanges = array_map(fn (): array => ['min' => null, 'max' => null], self::DIMENSIONS);
+        $this->dimensionRanges = array_map(fn (): array => self::EMPTY_RANGE, self::DIMENSIONS);
     }
 
     /**
@@ -229,6 +245,25 @@ trait FiltersProducts
                 $this->outOfStock($query);
             }
         }
+    }
+
+    private function normaliseFilterState(): void
+    {
+        $selected = array_merge(self::EMPTY_FILTERS, $this->selectedFilters);
+
+        foreach (self::EMPTY_FILTERS as $key => $empty) {
+            $selected[$key] = is_array($selected[$key]) ? $selected[$key] : $empty;
+        }
+
+        $this->selectedFilters = $selected;
+
+        $this->dimensionRanges = array_map(
+            fn (string $column): array => array_merge(
+                self::EMPTY_RANGE,
+                is_array($this->dimensionRanges[$column] ?? null) ? $this->dimensionRanges[$column] : [],
+            ),
+            array_combine(array_keys(self::DIMENSIONS), array_keys(self::DIMENSIONS)),
+        );
     }
 
     /**

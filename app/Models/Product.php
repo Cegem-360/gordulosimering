@@ -61,6 +61,11 @@ final class Product extends Model
         return $this->discount_percentage > 0;
     }
 
+    /**
+     * Recalculates the filter attributes (ProductAttributeExtractor) on save
+     * when the name or size changed; a caller saving a partially selected
+     * product must load both `name` and `size`.
+     */
     #[Override]
     protected static function booted(): void
     {

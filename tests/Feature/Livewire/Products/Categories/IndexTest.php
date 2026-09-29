@@ -100,7 +100,7 @@ it('keeps a ticked size in the list when the size search no longer matches it', 
     expect(array_column($sizes, 'value'))->toBe(['25X52X15', '100X150X12']);
 });
 
-it('clears the category, size and stock filters and the size search', function (): void {
+it('clears every filter and the size search', function (): void {
     Livewire::test(Index::class)
         ->set('selectedFilters.category', ['1'])
         ->set('selectedFilters.size', ['25X52X15'])
@@ -138,16 +138,18 @@ it('lists the brands and materials by how many products have them', function ():
     ]);
 });
 
-it('filters by brand and by material', function (string $key, string $value): void {
+it('filters by brand and by material', function (string $component, string $key, string $value): void {
     $skfNbr = Product::factory()->create(['name' => 'SKF simmering, NBR']);
     Product::factory()->create(['name' => 'KOYO simmering, VITON']);
 
-    $component = Livewire::test(Index::class)->set("selectedFilters.{$key}", [$value]);
+    $component = Livewire::test($component)->set("selectedFilters.{$key}", [$value]);
 
     expect($component->instance()->products->pluck('id')->all())->toBe([$skfNbr->id]);
 })->with([
-    'brand' => ['brand', 'SKF'],
-    'material' => ['material', 'NBR'],
+    'category index brand' => [Index::class, 'brand', 'SKF'],
+    'category index material' => [Index::class, 'material', 'NBR'],
+    'product list brand' => [ProductsIndex::class, 'brand', 'SKF'],
+    'product list material' => [ProductsIndex::class, 'material', 'NBR'],
 ]);
 
 it('merges the product groups that share a name and leaves out the discontinued and unnamed ones', function (): void {
@@ -171,7 +173,7 @@ it('merges the product groups that share a name and leaves out the discontinued 
     ]);
 });
 
-it('filters by a product group name across all of its codes and labels the chip with it', function (): void {
+it('filters by a product group name across all of its codes and labels the chip with it', function (string $component): void {
     DiscountGroup::factory()->create(['code' => 'S2', 'name' => 'SKF csapágy']);
     DiscountGroup::factory()->create(['code' => 'S5', 'name' => 'SKF csapágy']);
     DiscountGroup::factory()->create(['code' => 'CT', 'name' => 'Tőkés (minőségi) csapágy']);
@@ -179,11 +181,14 @@ it('filters by a product group name across all of its codes and labels the chip 
     $s5 = Product::factory()->create(['group_code' => 'S5', 'name' => 'B']);
     Product::factory()->create(['group_code' => 'CT']);
 
-    $component = Livewire::test(Index::class)->set('selectedFilters.group', ['SKF csapágy']);
+    $test = Livewire::test($component)->set('selectedFilters.group', ['SKF csapágy']);
 
-    expect($component->instance()->products->pluck('id')->sort()->values()->all())->toBe([$s2->id, $s5->id])
-        ->and($component->html())->toContain('wire:key="chip-group-SKF csapágy"');
-});
+    expect($test->instance()->products->pluck('id')->sort()->values()->all())->toBe([$s2->id, $s5->id])
+        ->and($test->html())->toContain('wire:key="chip-group-SKF csapágy"');
+})->with([
+    'category index' => [Index::class],
+    'product list' => [ProductsIndex::class],
+]);
 
 it('clears the new filters with "Szűrők törlése"', function (): void {
     $component = Livewire::test(Index::class)
@@ -198,19 +203,21 @@ it('clears the new filters with "Szűrők törlése"', function (): void {
         ->group->toBe([]);
 });
 
-it('filters by a dimension range, with either bound on its own', function (array $range, array $expectedSizes): void {
+it('filters by a dimension range, with either bound on its own', function (string $component, array $range, array $expectedSizes): void {
     Product::factory()->create(['size' => '20X47X14']);
     Product::factory()->create(['size' => '25X52X15']);
     Product::factory()->create(['size' => '30X62X16']);
     Product::factory()->create(['size' => 'A28,5']);
 
-    $component = Livewire::test(Index::class)->set('dimensionRanges.inner_diameter', $range);
+    $component = Livewire::test($component)->set('dimensionRanges.inner_diameter', $range);
 
     expect($component->instance()->products->pluck('size')->sort()->values()->all())->toBe($expectedSizes);
 })->with([
-    'both bounds' => [['min' => '22', 'max' => '28'], ['25X52X15']],
-    'only the lower bound' => [['min' => '25', 'max' => ''], ['25X52X15', '30X62X16']],
-    'only the upper bound' => [['min' => null, 'max' => '25'], ['20X47X14', '25X52X15']],
+    'both bounds' => [Index::class, ['min' => '22', 'max' => '28'], ['25X52X15']],
+    'only the lower bound' => [Index::class, ['min' => '25', 'max' => ''], ['25X52X15', '30X62X16']],
+    'only the upper bound' => [Index::class, ['min' => null, 'max' => '25'], ['20X47X14', '25X52X15']],
+    'product list both bounds' => [ProductsIndex::class, ['min' => '22', 'max' => '28'], ['25X52X15']],
+    'product list only the lower bound' => [ProductsIndex::class, ['min' => '25', 'max' => ''], ['25X52X15', '30X62X16']],
 ]);
 
 it('ignores invalid bounds and accepts a decimal comma', function (): void {
@@ -272,6 +279,23 @@ it('shows a removable chip for each range and clears the ranges with "Szűrők t
         ->assertSet('dimensionRanges.width', ['min' => null, 'max' => null])
         ->call('clearFilters')
         ->assertSet('dimensionRanges.inner_diameter', ['min' => null, 'max' => null]);
+})->with([
+    'category index' => [Index::class],
+    'product list' => [ProductsIndex::class],
+]);
+
+it('keeps working with the filter state of a page opened before the attribute filters existed', function (string $component): void {
+    $skf = Product::factory()->create(['name' => 'SKF simmering, NBR']);
+    Product::factory()->create(['name' => 'KOYO simmering, VITON']);
+
+    $test = Livewire::test($component)
+        ->set('selectedFilters', ['category' => [], 'size' => [], 'stock' => []])
+        ->set('dimensionRanges', [])
+        ->set('selectedFilters.brand', ['SKF']);
+
+    expect($test->instance()->products->pluck('id')->all())->toBe([$skf->id]);
+
+    $test->set('dimensionRanges.width.min', '5')->assertOk();
 })->with([
     'category index' => [Index::class],
     'product list' => [ProductsIndex::class],

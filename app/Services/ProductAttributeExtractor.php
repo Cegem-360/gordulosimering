@@ -82,7 +82,7 @@ final class ProductAttributeExtractor
     private function material(?string $name): ?string
     {
         foreach (self::MATERIALS as $pattern => $material) {
-            if (preg_match("/(?<![\\p{L}\\d])(?:{$pattern})(?![\\p{L}\\d])/iu", (string) $name) === 1) {
+            if (preg_match("/(?<![\\p{L}\\d])(?:{$pattern})(?!\\p{L})/iu", (string) $name) === 1) {
                 return $material;
             }
         }
