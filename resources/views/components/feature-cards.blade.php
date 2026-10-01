@@ -44,8 +44,8 @@
             <a href="{{ route('contact') }}" class="group block">
                 <div
                     class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <img src="{{ Vite::asset('resources/images/stores/korosi.jpg') }}" alt="Üzleteink"
-                        class="w-full h-64 object-cover">
+                    <img src="{{ Vite::asset('resources/images/stores/korosi-csoma.webp') }}" alt="Üzleteink"
+                        class="w-full h-64 object-cover object-[center_30%]">
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 to-transparent p-6">
                         <h3 class="text-white text-xl font-semibold flex items-center gap-2">
                             Üzleteink

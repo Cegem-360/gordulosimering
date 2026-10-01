@@ -16,8 +16,8 @@
             <!-- X. kerület -->
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
                 <div class="aspect-w-16 aspect-h-9">
-                    <img src="{{ Vite::asset('resources/images/stores/korosi.jpg') }}" alt="X. kerületi üzlet"
-                        class="rounded-t-lg object-cover w-full h-48">
+                    <img src="{{ Vite::asset('resources/images/stores/korosi-csoma.webp') }}" alt="A Kőrösi Csoma S. úti SKF csapágyszaküzletünk"
+                        class="rounded-t-lg object-cover object-[center_30%] w-full h-48">
                 </div>
                 <div class="p-5">
                     <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">X. kerület</h3>

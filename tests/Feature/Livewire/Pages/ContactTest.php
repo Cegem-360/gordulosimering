@@ -110,3 +110,10 @@ it('no longer lists the closing XIV. district store', function (): void {
         ->assertDontSee('XIV. kerület')
         ->assertDontSee('Nagy Lajos kir. útja');
 });
+
+it('shows the client\'s new photo of the Kőrösi Csoma store', function (): void {
+    $this->get(route('contact'))->assertOk()
+        ->assertSeeHtml(Vite::asset('resources/images/stores/korosi-csoma.webp'))
+        ->assertSeeHtml('alt="A Kőrösi Csoma S. úti SKF csapágyszaküzletünk"')
+        ->assertDontSeeHtml('stores/korosi.jpg');
+});
