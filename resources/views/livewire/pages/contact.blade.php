@@ -16,7 +16,7 @@
             <!-- X. kerület -->
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
                 <img src="{{ Vite::asset('resources/images/stores/korosi-csoma.webp') }}" alt="A Kőrösi Csoma S. úti SKF csapágyszaküzletünk"
-                    class="rounded-t-lg object-cover object-[center_30%] w-full aspect-video">
+                    class="rounded-t-lg object-cover object-[center_75%] w-full aspect-video">
                 <div class="p-5">
                     <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">X. kerület</h3>
                     <p class="text-gray-700 mb-3">1102 Budapest, Kőrösi Csoma S. út 18-20.</p>
