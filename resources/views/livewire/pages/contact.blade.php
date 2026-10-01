@@ -15,10 +15,8 @@
         <div class="grid md:grid-cols-2 gap-8 mb-16">
             <!-- X. kerület -->
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
-                <div class="aspect-w-16 aspect-h-9">
-                    <img src="{{ Vite::asset('resources/images/stores/korosi-csoma.webp') }}" alt="A Kőrösi Csoma S. úti SKF csapágyszaküzletünk"
-                        class="rounded-t-lg object-cover object-[center_30%] w-full h-48">
-                </div>
+                <img src="{{ Vite::asset('resources/images/stores/korosi-csoma.webp') }}" alt="A Kőrösi Csoma S. úti SKF csapágyszaküzletünk"
+                    class="rounded-t-lg object-cover object-[center_30%] w-full aspect-video">
                 <div class="p-5">
                     <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">X. kerület</h3>
                     <p class="text-gray-700 mb-3">1102 Budapest, Kőrösi Csoma S. út 18-20.</p>
@@ -57,10 +55,8 @@
 
             <!-- XVII. kerület -->
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
-                <div class="aspect-w-16 aspect-h-9">
-                    <img src="{{ Vite::asset('resources/images/stores/ff1.jpg') }}" alt="XVII. kerületi üzlet"
-                        class="rounded-t-lg object-cover w-full h-48">
-                </div>
+                <img src="{{ Vite::asset('resources/images/stores/ff1.jpg') }}" alt="XVII. kerületi üzlet"
+                    class="rounded-t-lg object-cover w-full aspect-video">
                 <div class="p-5">
                     <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">XVII. kerület</h3>
                     <p class="text-gray-700 mb-3">1173 Budapest, Pesti út 203.</p>
