@@ -50,6 +50,7 @@ final class ManageShopSettings extends Page implements HasSchemas
             'track_inventory' => $settings->track_inventory,
             'currency' => $settings->currency,
             'default_vat_rate' => $settings->default_vat_rate,
+            'show_product_images' => $settings->show_product_images,
         ]);
     }
 
@@ -80,6 +81,12 @@ final class ManageShopSettings extends Page implements HasSchemas
                         Toggle::make('track_inventory')
                             ->label('Készletkövetés bekapcsolva'),
                     ]),
+                Section::make('Termékképek')
+                    ->schema([
+                        Toggle::make('show_product_images')
+                            ->label('Termékképek megjelenítése a webshopban')
+                            ->helperText('Kikapcsolva minden termék a helyőrző képet mutatja (a kategória-csempék a feltöltött kategóriaképet). Az adminban a képek ilyenkor is látszanak, így javíthatók.'),
+                    ]),
             ])
             ->statePath('data');
     }
@@ -93,6 +100,7 @@ final class ManageShopSettings extends Page implements HasSchemas
         $settings->track_inventory = (bool) $data['track_inventory'];
         $settings->currency = $data['currency'];
         $settings->default_vat_rate = $data['default_vat_rate'];
+        $settings->show_product_images = (bool) $data['show_product_images'];
 
         $settings->save();
 

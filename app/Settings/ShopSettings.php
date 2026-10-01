@@ -16,6 +16,12 @@ final class ShopSettings extends Settings
 
     public string $default_vat_rate;
 
+    /**
+     * Whether the storefront shows product photos; off shows the placeholder
+     * on every product. The admin always shows the real images.
+     */
+    public bool $show_product_images;
+
     public static function group(): string
     {
         return 'shop';

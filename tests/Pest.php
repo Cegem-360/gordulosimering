@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Settings\ShopSettings;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -47,4 +48,16 @@ expect()->extend('toBeOne', fn () => $this->toBe(1));
 function something(): void
 {
     // ..
+}
+
+/**
+ * Turns the storefront's product photos on or off (Beállítások > Webshop).
+ * They are off by default since 2026-10-01, so tests about product photos
+ * switch them on first.
+ */
+function showProductImages(bool $show = true): void
+{
+    $settings = resolve(ShopSettings::class);
+    $settings->show_product_images = $show;
+    $settings->save();
 }

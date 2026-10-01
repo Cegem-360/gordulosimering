@@ -28,6 +28,8 @@ it('treats a category as stocked when a web-visible product sits anywhere below 
 });
 
 it('uses the uploaded category photo, then the first product picture below, then nothing', function (): void {
+    showProductImages();
+
     Storage::fake('public');
     $withPhoto = Category::query()->create(['name' => 'A', 'slug' => 'a', 'image' => 'categories/a.jpg']);
     $root = Category::query()->create(['name' => 'B', 'slug' => 'b']);

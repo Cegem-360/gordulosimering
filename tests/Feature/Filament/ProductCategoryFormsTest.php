@@ -47,6 +47,8 @@ it('persists product image, document and category assignments', function (): voi
 });
 
 it('resolves the featured image as the primary image and gallery', function (): void {
+    showProductImages();
+
     $product = Product::factory()->create([
         'featured_image' => 'products/featured/main.jpg',
         'images' => ['products/images/extra.jpg'],

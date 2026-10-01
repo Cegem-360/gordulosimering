@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Services\ProductAttributeExtractor;
+use App\Settings\ShopSettings;
 use Closure;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -148,7 +149,7 @@ final class Product extends Model
      */
     protected function imageUrl(): Attribute
     {
-        return Attribute::get(fn (): ?string => $this->resolveImageUrl($this->image));
+        return Attribute::get(fn (): ?string => self::showsImages() ? $this->resolveImageUrl($this->image) : null);
     }
 
     /**
@@ -217,6 +218,10 @@ final class Product extends Model
     protected function galleryUrls(): Attribute
     {
         return Attribute::get(function (): array {
+            if (! self::showsImages()) {
+                return [];
+            }
+
             $paths = array_values(array_filter([
                 $this->featured_image,
                 ...($this->images ?? []),
@@ -259,6 +264,17 @@ final class Product extends Model
     private static function normalizeDecimalSeparator(string $term): string
     {
         return str_replace(',', '.', mb_trim($term));
+    }
+
+    /**
+     * Whether the storefront shows product photos (admin: Beállítások >
+     * Webshop). Turned off on 2026-10-01 while the client sorts out which
+     * photo belongs to which product; the views then fall back to the
+     * placeholder. The admin reads the raw columns, so it is unaffected.
+     */
+    private static function showsImages(): bool
+    {
+        return resolve(ShopSettings::class)->show_product_images;
     }
 
     private function resolveImageUrl(?string $path): ?string

@@ -78,6 +78,8 @@ it('treats a decimal comma and a decimal point as the same', function (string $q
 ]);
 
 it('shows the stored featured image of a result instead of the raw path', function (): void {
+    showProductImages();
+
     Product::factory()->create([
         'name' => 'Képes termék',
         'product_code' => 'KEP-001',

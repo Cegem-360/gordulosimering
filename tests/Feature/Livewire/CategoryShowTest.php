@@ -45,6 +45,8 @@ it('resolves the full page route with the slug binding', function (): void {
 });
 
 it('shows only subcategories with products, in menu order, as photo tiles', function (): void {
+    showProductImages();
+
     Storage::fake('public');
     $root = Category::query()->create(['name' => 'BILINCSEK', 'slug' => 'bilincsek']);
     $second = Category::query()->create(['name' => 'NORMA SZORÍTÓBILINCS', 'slug' => 'szorito', 'category_id' => $root->id, 'sort_order' => 2]);
