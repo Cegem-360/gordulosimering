@@ -49,6 +49,33 @@ final class Product extends Model
         return $this->stock_quantity > 0;
     }
 
+    /**
+     * The step orderable quantities go up in: the order unit ("Rendelési
+     * egység", e.g. 10 for batteries sold in tens), or 1 when it is not set.
+     */
+    public function orderQuantityStep(): int
+    {
+        return max(1, (int) $this->order_unit);
+    }
+
+    /**
+     * The smallest orderable quantity: the minimum ("Min. rendelhető"), at
+     * least 1, rounded up to a whole order unit.
+     */
+    public function minimumOrderQuantity(): int
+    {
+        return $this->roundUpToOrderUnit(max(1, (int) $this->min_order_quantity));
+    }
+
+    /**
+     * The nearest orderable quantity at or above the requested one: never
+     * below the minimum, and always a whole number of order units.
+     */
+    public function orderableQuantity(int $quantity): int
+    {
+        return max($this->minimumOrderQuantity(), $this->roundUpToOrderUnit($quantity));
+    }
+
     public function isOnSale(): bool
     {
         return (bool) $this->is_on_sale;
@@ -275,6 +302,13 @@ final class Product extends Model
     private static function showsImages(): bool
     {
         return resolve(ShopSettings::class)->show_product_images;
+    }
+
+    private function roundUpToOrderUnit(int $quantity): int
+    {
+        $step = $this->orderQuantityStep();
+
+        return (int) (ceil(max(1, $quantity) / $step) * $step);
     }
 
     private function resolveImageUrl(?string $path): ?string

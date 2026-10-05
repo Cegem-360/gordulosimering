@@ -223,17 +223,27 @@
                                     class="w-12 h-12 rounded-l-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
                                     <i class="fas fa-minus text-sm"></i>
                                 </button>
-                                <input type="number" wire:model.live="quantity" name="quantity"
-                                    min="{{ $product->min_order_quantity ?? 1 }}" max="9999" step="1"
+                                <input type="number" wire:model.live.blur="quantity" name="quantity"
+                                    min="{{ $product->minimumOrderQuantity() }}" max="9999" step="{{ $product->orderQuantityStep() }}"
                                     class="w-20 h-12 text-center text-lg font-semibold border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                                 <button type="button" wire:click="increment"
                                     class="w-12 h-12 rounded-r-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
                                     <i class="fas fa-plus text-sm"></i>
                                 </button>
                             </div>
-                            @if (($product->min_order_quantity ?? 1) > 1)
+                            @php
+                                $step = $product->orderQuantityStep();
+                                $minimum = $product->minimumOrderQuantity();
+                                $unit = mb_trim((string) $product->quantity_unit) ?: 'db';
+                            @endphp
+                            @if ($step > 1)
                                 <p class="text-xs text-gray-500 mt-2">
-                                    Min. rendelési mennyiség: {{ $product->min_order_quantity }}
+                                    Rendelési egység: {{ $step }} {{ $unit }}. Csak ennek többszöröse rendelhető
+                                    ({{ $minimum }}, {{ $minimum + $step }}, {{ $minimum + 2 * $step }} …).
+                                </p>
+                            @elseif ($minimum > 1)
+                                <p class="text-xs text-gray-500 mt-2">
+                                    Min. rendelési mennyiség: {{ $minimum }} {{ $unit }}
                                 </p>
                             @endif
                         </div>

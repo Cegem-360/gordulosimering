@@ -35,37 +35,29 @@ final class Show extends Component
     {
         abort_unless($product->is_web_visible === true, 404);
 
-        $this->quantity = $product->min_order_quantity <= 1 ? 1 : $product->min_order_quantity;
+        $this->quantity = $product->minimumOrderQuantity();
     }
 
     public function increment(): void
     {
-        $this->quantity++;
+        $this->quantity = $this->product->orderableQuantity($this->quantity + $this->product->orderQuantityStep());
     }
 
     public function decrement(): void
     {
-        $min = $this->product->min_order_quantity >= 1 ? $this->product->min_order_quantity : 1;
+        $lower = $this->quantity - $this->product->orderQuantityStep();
 
-        if ($this->quantity > $min) {
-            $this->quantity--;
-        }
+        $this->quantity = $this->product->orderableQuantity(max($lower, $this->product->minimumOrderQuantity()));
     }
 
     public function updatedQuantity(): void
     {
-        $min = $this->product->min_order_quantity >= 1 ? $this->product->min_order_quantity : 1;
-
-        if ($this->quantity < $min) {
-            $this->quantity = $min;
-        }
+        $this->quantity = $this->product->orderableQuantity($this->quantity);
     }
 
     public function render(): Factory|View
     {
-        if ($this->quantity < $this->product->min_order_quantity) {
-            $this->quantity = $this->product->min_order_quantity;
-        }
+        $this->quantity = $this->product->orderableQuantity($this->quantity);
 
         return view('livewire.products.show');
     }

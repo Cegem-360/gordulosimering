@@ -24,24 +24,30 @@ final class CartItem extends Component
 
     public function decreaseQuantity(CartService $cartService): void
     {
-        $minQuantity = $this->product->min_order_quantity ?: 1;
+        $lower = $this->quantity - $this->product->orderQuantityStep();
 
-        if ($this->quantity > $minQuantity) {
-            $this->quantity--;
-            $cartService->updateItem($this->product->id, $this->quantity);
-            $this->dispatch('cartUpdated');
+        if ($lower >= $this->product->minimumOrderQuantity()) {
+            $this->saveQuantity($cartService, $lower);
         }
     }
 
     public function increaseQuantity(CartService $cartService): void
     {
         $maxQuantity = $this->product->maximum_stock ?: 9999;
+        $higher = $this->quantity + $this->product->orderQuantityStep();
 
-        if ($this->quantity < $maxQuantity) {
-            $this->quantity++;
-            $cartService->updateItem($this->product->id, $this->quantity);
-            $this->dispatch('cartUpdated');
+        if ($higher <= $maxQuantity) {
+            $this->saveQuantity($cartService, $higher);
         }
+    }
+
+    /**
+     * A quantity typed into the cart is rounded up to the next orderable one
+     * (a whole number of order units, at least the minimum).
+     */
+    public function updatedQuantity(CartService $cartService): void
+    {
+        $this->saveQuantity($cartService, $this->quantity);
     }
 
     public function removeProduct(CartService $cartService): void
@@ -53,5 +59,12 @@ final class CartItem extends Component
     public function render(): Factory|View
     {
         return view('livewire.cart-item');
+    }
+
+    private function saveQuantity(CartService $cartService, int $quantity): void
+    {
+        $this->quantity = $this->product->orderableQuantity($quantity);
+        $cartService->updateItem($this->product->id, $this->quantity);
+        $this->dispatch('cartUpdated');
     }
 }

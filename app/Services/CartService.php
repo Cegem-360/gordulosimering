@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +19,10 @@ final readonly class CartService
         $this->cart = Cart::query()->firstOrCreate(['user_id' => Auth::id()]);
     }
 
+    /**
+     * Quantities are rounded up to an orderable amount here too, so the
+     * minimum and the order unit hold whatever the page sent.
+     */
     public function addItem($productId, $quantity): void
     {
         $cartItem = $this->cart->cartItems()->where('product_id', $productId)->first();
@@ -25,9 +30,11 @@ final readonly class CartService
         if ($cartItem) {
             $this->updateItem($productId, $cartItem->quantity + $quantity);
         } else {
+            $product = Product::query()->find($productId);
+
             $this->cart->cartItems()->create([
                 'product_id' => $productId,
-                'quantity' => $quantity,
+                'quantity' => $product?->orderableQuantity((int) $quantity) ?? $quantity,
             ]);
         }
     }
@@ -37,6 +44,7 @@ final readonly class CartService
         $cartItem = $this->cart->cartItems()->where('product_id', $productId)->first();
 
         if ($cartItem) {
+            $quantity = $cartItem->product->orderableQuantity((int) $quantity);
             $maxStock = $cartItem->product->maximum_stock ?: 9999;
 
             if ($quantity <= $maxStock) {

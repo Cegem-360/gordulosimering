@@ -46,7 +46,8 @@
                              class="w-10 h-10 rounded-l-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
                              <i class="fas fa-minus text-xs"></i>
                          </button>
-                         <input type="number" wire:model.live="quantity"
+                         <input type="number" wire:model.live.blur="quantity"
+                             min="{{ $product->minimumOrderQuantity() }}" step="{{ $product->orderQuantityStep() }}"
                              class="w-16 h-10 text-center font-semibold border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                          <button type="button" wire:click="increaseQuantity()"
                              class="w-10 h-10 rounded-r-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">

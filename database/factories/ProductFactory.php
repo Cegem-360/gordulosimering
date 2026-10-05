@@ -62,7 +62,7 @@ final class ProductFactory extends Factory
             'maximum_stock' => fake()->numberBetween(50, 500),
             'buffer_stock' => fake()->numberBetween(5, 20),
             'stock_quantity' => fake()->numberBetween(0, 100),
-            'order_unit' => fake()->numberBetween(1, 10),
+            'order_unit' => 1,
 
             // Official codes
             'ksh_prefix' => fake()->optional()->bothify('VTSZ'),
@@ -78,7 +78,7 @@ final class ProductFactory extends Factory
             'ean_code' => fake()->optional()->ean13(),
 
             // Order quantities
-            'min_order_quantity' => fake()->numberBetween(1, 5),
+            'min_order_quantity' => 1,
             'trade_quantity' => fake()->optional()->numberBetween(10, 100),
             'pallet_quantity' => fake()->optional()->numberBetween(50, 500),
 
