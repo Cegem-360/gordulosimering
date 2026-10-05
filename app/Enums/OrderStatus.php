@@ -22,6 +22,24 @@ enum OrderStatus: string implements HasLabel
         return array_column(self::cases(), 'value');
     }
 
+    /**
+     * What the customer is told when an order moves to this status, or null
+     * for the internal statuses (back to pending, moved to trash), which send
+     * the customer nothing.
+     */
+    public function customerMessage(): ?string
+    {
+        return match ($this) {
+            self::PROCESSING => 'Rendelését feldolgozzuk. Hamarosan értesítjük a teljesítésről.',
+            self::ONHOLD => 'Rendelését átmenetileg várakoztatjuk. Kollégánk hamarosan felveszi Önnel a kapcsolatot.',
+            self::COMPLETED => 'Rendelését teljesítettük. Köszönjük, hogy minket választott!',
+            self::CANCELLED => 'Rendelését töröltük. Ha kérdése van, kérjük, keressen minket.',
+            self::REFUNDED => 'Rendelésének összegét visszatérítettük.',
+            self::FAILED => 'Rendelését sajnos nem sikerült teljesíteni. Kérjük, vegye fel velünk a kapcsolatot.',
+            self::PENDING, self::TRASH => null,
+        };
+    }
+
     public function getLabel(): string
     {
         return match ($this) {

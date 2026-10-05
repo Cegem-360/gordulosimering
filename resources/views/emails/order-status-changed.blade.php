@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rendelés visszaigazolás</title>
+    <title>Rendelése: {{ $status->getLabel() }}</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f5f5f5;">
@@ -14,7 +14,7 @@
                     <tr>
                         <td style="background-color: #2271B3; padding: 30px; text-align: center;">
                             <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">
-                                Köszönjük a rendelését!
+                                Rendelése: {{ $status->getLabel() }}
                             </h1>
                         </td>
                     </tr>
@@ -26,7 +26,7 @@
                                 Kedves <strong>{{ $order->billing_name }}</strong>,
                             </p>
                             <p style="margin: 0 0 20px; color: #293133; font-size: 16px; line-height: 1.6;">
-                                Megkaptuk rendelését, és hamarosan feldolgozzuk. Az alábbiakban találja a rendelés részleteit.
+                                {{ $status->customerMessage() }}
                             </p>
 
                             <!-- Order Info Box -->
@@ -40,7 +40,7 @@
                                             <strong style="color: #293133;">Rendelés dátuma:</strong> {{ $order->created_at->format('Y. m. d.') }}
                                         </p>
                                         <p style="margin: 0; color: #666; font-size: 14px;">
-                                            <strong style="color: #293133;">Fizetési mód:</strong> {{ $order->payment_method_title }}
+                                            <strong style="color: #293133;">Állapot:</strong> {{ $status->getLabel() }}
                                         </p>
                                     </td>
                                 </tr>
@@ -48,22 +48,9 @@
 
                             @include('emails.partials.order-items')
 
-                            <!-- Shipping Address -->
-                            <h2 style="margin: 30px 0 15px; color: #293133; font-size: 18px; font-weight: 600; border-bottom: 2px solid #2271B3; padding-bottom: 10px;">
-                                Szállítási cím
-                            </h2>
-                            <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.8;">
-                                {{ $order->shipping_name }}<br>
-                                {{ $order->shipping_postcode }} {{ $order->shipping_city }}<br>
-                                {{ $order->shipping_address_1 }}
-                                @if($order->shipping_address_2)
-                                    <br>{{ $order->shipping_address_2 }}
-                                @endif
-                            </p>
-
-                            <!-- CTA -->
                             <p style="margin: 30px 0 0; color: #293133; font-size: 16px; line-height: 1.6;">
-                                Ha kérdése van rendelésével kapcsolatban, kérjük vegye fel velünk a kapcsolatot.
+                                Kérdése van? Válaszoljon erre a levélre, vagy írjon a
+                                <a href="mailto:{{ config('shop.admin_email') }}" style="color: #2271B3;">{{ config('shop.admin_email') }}</a> címre.
                             </p>
                         </td>
                     </tr>
@@ -75,7 +62,7 @@
                                 {{ config('app.name') }}
                             </p>
                             <p style="margin: 10px 0 0; color: #aaa; font-size: 12px;">
-                                Ez egy automatikus üzenet, kérjük ne válaszoljon rá.
+                                Erre a levélre válaszolva ügyfélszolgálatunkat éri el.
                             </p>
                         </td>
                     </tr>

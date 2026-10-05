@@ -58,6 +58,11 @@ final class OrderForm
                     ->options(OrderStatus::class)
                     ->default('pending')
                     ->required(),
+                Toggle::make('notify_customer')
+                    ->label('Értesítés küldése a vevőnek')
+                    ->helperText('Státuszváltozáskor e-mailt kap a vevő és a gs@ cím. Kikapcsolva (pl. javításnál) csak a gs@ cím kap értesítést.')
+                    ->default(true)
+                    ->visibleOn('edit'),
                 TextInput::make('order_currency')
                     ->required()
                     ->default('HUF'),

@@ -9,14 +9,17 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\OrderStatus;
+use App\Observers\OrderObserver;
 use Illuminate\Database\Eloquent\Attributes\DateFormat;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Override;
 
+#[ObservedBy(OrderObserver::class)]
 #[DateFormat('Y-m-d')]
 #[Fillable([
     'id',
@@ -53,6 +56,13 @@ use Override;
 final class Order extends Model
 {
     use HasFactory;
+
+    /**
+     * Whether the next save emails the customer about a status change; the
+     * admin can untick "Értesítés küldése a vevőnek" for a correction. Not a
+     * column: it lives for one save only. gs@ is told either way.
+     */
+    public bool $sendsCustomerStatusEmail = true;
 
     protected $casts = [
         'set_paid' => 'bool',
