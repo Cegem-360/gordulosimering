@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use App\Models\Product;
+use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 final class ProductForm
 {
@@ -145,41 +149,64 @@ final class ProductForm
                     ]),
 
                 Section::make('Egyéb adatok és kódok')
+                    ->description('A kapcsolóval a mező termékoldali megjelenítése kapcsolható ki ennél a terméknél.')
                     ->columns(2)
                     ->collapsed()
                     ->schema([
-                        TextInput::make('rating')
-                            ->label('Minősítés'),
-                        TextInput::make('quality')
-                            ->label('Minőség'),
-                        TextInput::make('product_variety')
-                            ->label('Termékféleség'),
+                        self::withVisibilityToggle(TextInput::make('rating')
+                            ->label('Minősítés')),
+                        self::withVisibilityToggle(TextInput::make('quality')
+                            ->label('Minőség')),
+                        self::withVisibilityToggle(TextInput::make('product_variety')
+                            ->label('Termékféleség')),
                         TextInput::make('trade_type')
                             ->label('Ker. típus'),
                         TextInput::make('usage_type')
                             ->label('Felh. típus'),
                         TextInput::make('currency_settlement')
                             ->label('Deviza elsz.'),
-                        TextInput::make('supplier')
-                            ->label('Beszállító'),
-                        TextInput::make('barcode')
-                            ->label('Vonalkód'),
-                        TextInput::make('ean_code')
-                            ->label('EAN kód'),
-                        TextInput::make('ksh_prefix')
-                            ->label('KSH előtag'),
-                        TextInput::make('ksh_number')
-                            ->label('KSZ szám'),
-                        TextInput::make('short_note')
+                        self::withVisibilityToggle(TextInput::make('supplier')
+                            ->label('Beszállító')),
+                        self::withVisibilityToggle(TextInput::make('barcode')
+                            ->label('Vonalkód')),
+                        self::withVisibilityToggle(TextInput::make('ean_code')
+                            ->label('EAN kód')),
+                        self::withVisibilityToggle(TextInput::make('ksh_prefix')
+                            ->label('KSH előtag')),
+                        self::withVisibilityToggle(TextInput::make('ksh_number')
+                            ->label('KSZ szám')),
+                        self::withVisibilityToggle(TextInput::make('short_note')
                             ->label('Rövid megjegyzés')
-                            ->columnSpanFull(),
-                        Textarea::make('description')
+                            ->columnSpanFull()),
+                        self::withVisibilityToggle(Textarea::make('description')
                             ->label('Hosszú megjegyzés')
-                            ->columnSpanFull(),
-                        KeyValue::make('custom_fields')
+                            ->columnSpanFull()),
+                        self::withVisibilityToggle(KeyValue::make('custom_fields')
                             ->label('Egyéni mezők')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()),
                     ]),
             ]);
+    }
+
+    /**
+     * Puts a "Látható" switch beside the field. It is stored per product in
+     * `field_visibility` and is on unless switched off, so existing
+     * products keep showing everything.
+     */
+    private static function withVisibilityToggle(Field $field): Flex
+    {
+        return Flex::make([
+            $field,
+            Toggle::make('field_visibility.' . $field->getName())
+                ->label('Látható')
+                ->inline(false)
+                ->onIcon(Heroicon::Eye)
+                ->offIcon(Heroicon::EyeSlash)
+                ->default(true)
+                ->afterStateHydrated(fn (Toggle $component, ?Product $record) => $component->state(
+                    $record?->showsField($field->getName()) ?? true,
+                ))
+                ->grow(false),
+        ])->columnSpan($field->getColumnSpan());
     }
 }

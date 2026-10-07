@@ -76,6 +76,24 @@ final class Product extends Model
         return max($this->minimumOrderQuantity(), $this->roundUpToOrderUnit($quantity));
     }
 
+    /**
+     * Whether the product page shows this field ("Egyéb adatok és kódok" in
+     * the admin). Every field shows unless the admin switched it off for
+     * this product.
+     */
+    public function showsField(string $field): bool
+    {
+        return ($this->field_visibility[$field] ?? true) !== false;
+    }
+
+    /**
+     * The field's value for the product page, or null when it is hidden.
+     */
+    public function visibleField(string $field): mixed
+    {
+        return $this->showsField($field) ? $this->{$field} : null;
+    }
+
     public function isOnSale(): bool
     {
         return (bool) $this->is_on_sale;
@@ -283,6 +301,7 @@ final class Product extends Model
             'trade_quantity' => 'integer',
             'pallet_quantity' => 'integer',
             'custom_fields' => 'array',
+            'field_visibility' => 'array',
             'images' => 'json',
             'documents' => 'json',
         ];

@@ -9,10 +9,10 @@
                     <a href="{{ route('index') }}" class="text-blue-600 hover:underline">Kezdőlap</a>
                     <span class="text-gray-500">&gt;</span>
                     <a href="{{ route('categories.index') }}" class="text-blue-600 hover:underline">Termékkategóriák</a>
-                    @if ($product->product_variety)
+                    @if ($product->visibleField('product_variety'))
                         <span class="text-gray-500">&gt;</span>
                         <a href="{{ route('categories.index') }}"
-                            class="text-blue-600 hover:underline">{{ $product->product_variety }}</a>
+                            class="text-blue-600 hover:underline">{{ $product->visibleField('product_variety') }}</a>
                     @endif
                     <span class="text-gray-500">&gt;</span>
                     <span class="text-gray-700">{{ $product->name ?? $product->product_code }}</span>
@@ -103,9 +103,9 @@
                                 <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-mono">
                                     {{ $product->product_code }}
                                 </span>
-                                @if ($product->supplier)
+                                @if ($product->visibleField('supplier'))
                                     <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-                                        {{ $product->supplier }}
+                                        {{ $product->visibleField('supplier') }}
                                     </span>
                                 @endif
                             </div>
@@ -120,11 +120,11 @@
                                     <span class="text-gray-700 font-medium">{{ $product->catalog_number }}</span>
                                 </div>
                             @endif
-                            @if ($product->product_variety)
+                            @if ($product->visibleField('product_variety'))
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-folder text-gray-400 w-4"></i>
                                     <span class="text-gray-500">Kategória:</span>
-                                    <span class="text-gray-700 font-medium">{{ $product->product_variety }}</span>
+                                    <span class="text-gray-700 font-medium">{{ $product->visibleField('product_variety') }}</span>
                                 </div>
                             @endif
                             @if ($product->type)
@@ -141,11 +141,11 @@
                                     <span class="text-gray-700 font-medium">{{ $product->size }}</span>
                                 </div>
                             @endif
-                            @if ($product->quality)
+                            @if ($product->visibleField('quality'))
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-star text-gray-400 w-4"></i>
                                     <span class="text-gray-500">Minőség:</span>
-                                    <span class="text-gray-700 font-medium">{{ $product->quality }}</span>
+                                    <span class="text-gray-700 font-medium">{{ $product->visibleField('quality') }}</span>
                                 </div>
                             @endif
                             @if ($product->weight)
@@ -296,10 +296,10 @@
                                     <dd class="font-medium text-right">{{ $product->catalog_number }}</dd>
                                 </div>
                             @endif
-                            @if ($product->product_variety)
+                            @if ($product->visibleField('product_variety'))
                                 <div class="flex justify-between">
                                     <dt class="text-gray-600">Termék kategória</dt>
-                                    <dd class="font-medium text-right">{{ $product->product_variety }}</dd>
+                                    <dd class="font-medium text-right">{{ $product->visibleField('product_variety') }}</dd>
                                 </div>
                             @endif
                             @if ($product->type)
@@ -417,79 +417,81 @@
                         </dl>
                     </div>
 
-                    <!-- Azonosítók és kódok -->
-                    <div class="bg-white rounded-lg border p-6">
-                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
-                            <i class="fas fa-barcode text-gray-500"></i>
-                            Azonosítók és kódok
-                        </h3>
-                        <dl class="space-y-3">
-                            @if ($product->barcode)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Vonalkód</dt>
-                                    <dd class="font-medium text-right font-mono text-sm">
-                                        {{ str_replace(['*', '!'], ['', ' '], $product->barcode) }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->ean_code)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">EAN kód</dt>
-                                    <dd class="font-medium text-right font-mono">{{ $product->ean_code }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->ksh_prefix || $product->ksh_number)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">KSH/VTSZ szám</dt>
-                                    <dd class="font-medium text-right">{{ $product->ksh_prefix }}
-                                        {{ $product->ksh_number }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->supplier)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Beszállító</dt>
-                                    <dd class="font-medium text-right">{{ $product->supplier }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->quality)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Minőség</dt>
-                                    <dd class="font-medium text-right">{{ $product->quality }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->rating)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Minősítés</dt>
-                                    <dd class="font-medium text-right">{{ $product->rating }}</dd>
-                                </div>
-                            @endif
-                        </dl>
-                    </div>
+                    {{-- Azonosítók és kódok --}}
+                    @if (collect(['barcode', 'ean_code', 'ksh_prefix', 'ksh_number', 'supplier', 'quality', 'rating'])->contains(fn (string $field) => filled($product->visibleField($field))))
+                        <div class="bg-white rounded-lg border p-6">
+                            <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
+                                <i class="fas fa-barcode text-gray-500"></i>
+                                Azonosítók és kódok
+                            </h3>
+                            <dl class="space-y-3">
+                                @if ($product->visibleField('barcode'))
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-600">Vonalkód</dt>
+                                        <dd class="font-medium text-right font-mono text-sm">
+                                            {{ str_replace(['*', '!'], ['', ' '], $product->visibleField('barcode')) }}</dd>
+                                    </div>
+                                @endif
+                                @if ($product->visibleField('ean_code'))
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-600">EAN kód</dt>
+                                        <dd class="font-medium text-right font-mono">{{ $product->visibleField('ean_code') }}</dd>
+                                    </div>
+                                @endif
+                                @if ($product->visibleField('ksh_prefix') || $product->visibleField('ksh_number'))
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-600">KSH/VTSZ szám</dt>
+                                        <dd class="font-medium text-right">{{ $product->visibleField('ksh_prefix') }}
+                                            {{ $product->visibleField('ksh_number') }}</dd>
+                                    </div>
+                                @endif
+                                @if ($product->visibleField('supplier'))
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-600">Beszállító</dt>
+                                        <dd class="font-medium text-right">{{ $product->visibleField('supplier') }}</dd>
+                                    </div>
+                                @endif
+                                @if ($product->visibleField('quality'))
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-600">Minőség</dt>
+                                        <dd class="font-medium text-right">{{ $product->visibleField('quality') }}</dd>
+                                    </div>
+                                @endif
+                                @if ($product->visibleField('rating'))
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-600">Minősítés</dt>
+                                        <dd class="font-medium text-right">{{ $product->visibleField('rating') }}</dd>
+                                    </div>
+                                @endif
+                            </dl>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Leírás -->
-                @if ($product->description)
+                @if ($product->visibleField('description'))
                     <div class="bg-white rounded-lg border p-6">
                         <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
                             <i class="fas fa-align-left text-gray-600"></i>
                             Leírás
                         </h3>
-                        <p class="text-gray-700 leading-relaxed">{{ $product->description }}</p>
+                        <p class="text-gray-700 leading-relaxed">{{ $product->visibleField('description') }}</p>
                     </div>
                 @endif
 
-                <!-- Megjegyzés -->
-                @if ($product->short_note)
+                {{-- Megjegyzés --}}
+                @if ($product->visibleField('short_note'))
                     <div class="bg-yellow-50 rounded-lg border border-yellow-200 p-6">
                         <h3 class="text-lg font-semibold mb-4 pb-2 border-b border-yellow-200 flex items-center gap-2">
                             <i class="fas fa-sticky-note text-gray-500"></i>
                             Megjegyzés
                         </h3>
-                        <p class="text-gray-700">{{ $product->short_note }}</p>
+                        <p class="text-gray-700">{{ $product->visibleField('short_note') }}</p>
                     </div>
                 @endif
 
                 <!-- Egyedi mezők -->
-                @if (($product->custom_fields ?? false) && count($product->custom_fields) > 0)
+                @if (filled($product->visibleField('custom_fields')))
                     <div class="bg-white rounded-lg border p-6">
                         <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
                             <i class="fas fa-cog text-gray-600"></i>
