@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Products\Tables;
 
+use App\Models\Product;
+use App\Services\ProductCsvExporter;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 final class ProductsTable
 {
@@ -135,6 +141,14 @@ final class ProductsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
+                    BulkAction::make('export')
+                        ->label('Kijelöltek exportálása (CSV)')
+                        ->icon(Heroicon::OutlinedArrowDownTray)
+                        ->deselectRecordsAfterCompletion()
+                        ->action(fn (Collection $records, ProductCsvExporter $exporter): StreamedResponse => $exporter->download(
+                            Product::query()->whereKey($records->modelKeys()),
+                            'termekek-kijeloltek-' . now()->format('Y-m-d') . '.csv',
+                        )),
                     DeleteBulkAction::make(),
                 ]),
             ]);
