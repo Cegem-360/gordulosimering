@@ -80,6 +80,7 @@ return [
                 'label' => 'Összes kijelölése',
             ],
         ],
+        'required_description' => 'Válasszon legalább egy lehetőséget.',
     ],
     'file_upload' => [
         'editor' => [
@@ -532,6 +533,7 @@ return [
             'true' => 'Igen',
             'false' => 'Nem',
         ],
+        'required_description' => 'Válasszon legalább egy lehetőséget.',
     ],
     'wizard' => [
         'actions' => [
