@@ -24,7 +24,7 @@ final class NewOrderNotificationMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Új rendelés érkezett - #' . $this->order->id,
+            subject: '#' . $this->order->id . ' – Új rendelés érkezett',
         );
     }
 

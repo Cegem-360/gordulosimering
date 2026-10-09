@@ -24,7 +24,7 @@ final class OrderConfirmationMail extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Rendelés visszaigazolás - #' . $this->order->id,
+            subject: '#' . $this->order->id . ' – Rendelés visszaigazolás',
         );
     }
 

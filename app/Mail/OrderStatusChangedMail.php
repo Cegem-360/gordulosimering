@@ -32,7 +32,7 @@ final class OrderStatusChangedMail extends Mailable implements ShouldQueue
 
         return new Envelope(
             replyTo: filled($replyTo) ? [new Address($replyTo)] : [],
-            subject: 'Rendelése: ' . $this->order->order_status->getLabel() . ' – #' . $this->order->id,
+            subject: '#' . $this->order->id . ' – Rendelése: ' . $this->order->order_status->getLabel(),
         );
     }
 
