@@ -107,3 +107,11 @@ it('shows a single price on a regular product', function (): void {
         ->assertSee(Number::currency(1000, 'HUF', 'hu', 0))
         ->assertDontSeeHtml('line-through');
 });
+
+it('offers a quote request next to the call button when out of stock', function (): void {
+    $product = Product::factory()->create(['name' => 'TENTE befeszítőcsap', 'product_code' => 'TE CSAP R47', 'stock_quantity' => 0]);
+
+    Livewire::test(ProductCard::class, ['product' => $product])
+        ->assertSee(['Hívjon', 'Ajánlatkérés'])
+        ->assertSeeHtml('href="mailto:gs@gordulo-simmering.hu?subject=' . rawurlencode('Ajánlatkérés: TENTE befeszítőcsap – TE CSAP R47'));
+});

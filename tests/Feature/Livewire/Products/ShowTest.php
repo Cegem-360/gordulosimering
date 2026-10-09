@@ -58,3 +58,11 @@ it('links the call prompt to the shop phone number', function (): void {
         ->assertSeeHtml('href="tel:+3612611566"')
         ->assertSee('Kérdése van? Hívjon minket!');
 });
+
+it('offers a quote request next to the call prompt', function (): void {
+    $product = Product::factory()->create(['name' => 'TENTE befeszítőcsap']);
+
+    Livewire::test(Show::class, ['product' => $product])
+        ->assertSee('Ajánlatkérés')
+        ->assertSeeHtml('href="mailto:gs@gordulo-simmering.hu?subject=' . rawurlencode('Ajánlatkérés: TENTE befeszítőcsap'));
+});

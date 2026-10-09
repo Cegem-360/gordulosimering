@@ -255,12 +255,14 @@
                         </button>
 
                         <!-- Contact Option -->
-                        <div class="mt-3">
+                        <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
                             <a href="tel:+3612611566"
                                 class="text-md text-gray-500 hover:text-blue-600 inline-flex items-center gap-1">
                                 <i class="fas fa-phone text-xs"></i>
                                 Kérdése van? Hívjon minket!
                             </a>
+                            <x-quote-request-button :product="$product"
+                                class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 font-semibold" />
                         </div>
                     </div>
                 </div>
