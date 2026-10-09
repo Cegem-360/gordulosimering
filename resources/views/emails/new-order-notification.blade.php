@@ -119,7 +119,11 @@
                                 <tr>
                                     <td style="padding: 12px 15px; border-top: 1px solid #eee; font-size: 14px; color: #293133;">
                                         {{ $item->product->name }}
-                                        <br><span style="color: #999; font-size: 12px;">SKU: {{ $item->product->sku ?? 'N/A' }}</span>
+                                        <br><span style="color: #999; font-size: 12px;">Cikkszám: {{ $item->product->product_code ?? '–' }}</span>
+                                        @if ($item->hasDiscount())
+                                            <br><span style="color: #999; font-size: 12px;">Nettó listaár: <s>{{ Number::currency($item->regular_price, in: 'HUF', locale: 'hu', precision: 0) }}</s> → {{ Number::currency($item->total, in: 'HUF', locale: 'hu', precision: 0) }} / db</span>
+                                            <span style="color: #1e7e34; font-size: 12px; font-weight: 700;"> (−{{ Number::percentage((float) $item->discount_percentage, maxPrecision: 2, locale: 'hu') }})</span>
+                                        @endif
                                     </td>
                                     <td style="padding: 12px 15px; border-top: 1px solid #eee; font-size: 14px; color: #293133; text-align: center;">
                                         {{ $item->quantity }}
@@ -129,6 +133,26 @@
                                     </td>
                                 </tr>
                                 @endforeach
+                                <tr>
+                                    <td colspan="2" style="padding: 10px 15px; border-top: 1px solid #ddd; font-size: 13px; color: #666;">Termékek (nettó)</td>
+                                    <td style="padding: 10px 15px; border-top: 1px solid #ddd; font-size: 13px; color: #293133; text-align: right;">
+                                        {{ Number::currency($order->orderTotal(), in: 'HUF', locale: 'hu', precision: 0) }}
+                                    </td>
+                                </tr>
+                                @if ($order->savings() > 0)
+                                <tr>
+                                    <td colspan="2" style="padding: 10px 15px; border-top: 1px solid #eee; font-size: 13px; color: #1e7e34;">Megtakarítás (kedvezmény)</td>
+                                    <td style="padding: 10px 15px; border-top: 1px solid #eee; font-size: 13px; color: #1e7e34; text-align: right;">
+                                        −{{ Number::currency($order->savings(), in: 'HUF', locale: 'hu', precision: 0) }}
+                                    </td>
+                                </tr>
+                                @endif
+                                <tr>
+                                    <td colspan="2" style="padding: 10px 15px; border-top: 1px solid #eee; font-size: 13px; color: #666;">ÁFA (27%)</td>
+                                    <td style="padding: 10px 15px; border-top: 1px solid #eee; font-size: 13px; color: #293133; text-align: right;">
+                                        {{ Number::currency($order->vatAmount(), in: 'HUF', locale: 'hu', precision: 0) }}
+                                    </td>
+                                </tr>
                                 <tr style="background-color: #f8f9fa;">
                                     <td colspan="2" style="padding: 10px 15px; border-top: 1px solid #ddd; font-size: 13px; color: #666;">Szállítási költség</td>
                                     <td style="padding: 10px 15px; border-top: 1px solid #ddd; font-size: 13px; color: #293133; text-align: right;">
@@ -138,7 +162,7 @@
                                 <tr style="background-color: #293133;">
                                     <td colspan="2" style="padding: 15px; font-size: 16px; color: #ffffff; font-weight: 700;">ÖSSZESEN (ÁFÁ-val)</td>
                                     <td style="padding: 15px; font-size: 18px; color: #2271B3; text-align: right; font-weight: 700;">
-                                        {{ Number::currency($order->orderTotal() * 1.27 + $order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}
+                                        {{ Number::currency($order->grossTotal(), in: 'HUF', locale: 'hu', precision: 0) }}
                                     </td>
                                 </tr>
                             </table>

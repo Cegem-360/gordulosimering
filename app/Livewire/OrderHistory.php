@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire;
 
 use App\Enums\OrderStatus;
+use App\Models\Order;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
@@ -52,7 +53,7 @@ final class OrderHistory extends Component
             ->orders()
             ->where('order_status', OrderStatus::COMPLETED)
             ->get()
-            ->sum(fn ($order): float|int|array => $order->orderTotal() + $order->shipping_cost);
+            ->sum(fn (Order $order): float => $order->grossTotal());
     }
 
     public function getStatusLabel(OrderStatus $status): string

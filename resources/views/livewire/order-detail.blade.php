@@ -124,7 +124,14 @@
                                                     <p class="text-sm font-medium text-gray-500">Törölt termék</p>
                                                 @endif
                                                 <p class="text-sm text-gray-500 mt-1">
-                                                    {{ $item->quantity }} db × {{ Number::currency($item->total, in: 'HUF', locale: 'hu', precision: 0) }}
+                                                    {{ $item->quantity }} db ×
+                                                    @if ($item->hasDiscount())
+                                                        <span class="line-through text-gray-400">{{ Number::currency($item->regular_price, in: 'HUF', locale: 'hu', precision: 0) }}</span>
+                                                    @endif
+                                                    {{ Number::currency($item->total, in: 'HUF', locale: 'hu', precision: 0) }}
+                                                    @if ($item->hasDiscount())
+                                                        <span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-xs font-semibold">−{{ Number::percentage((float) $item->discount_percentage, maxPrecision: 2, locale: 'hu') }}</span>
+                                                    @endif
                                                 </p>
                                             </div>
                                             <div class="text-right shrink-0">
@@ -257,8 +264,18 @@
                             <div class="p-5">
                                 <div class="space-y-3">
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600">Termékek:</span>
+                                        <span class="text-gray-600">Termékek (nettó):</span>
                                         <span class="font-medium text-gray-900">{{ Number::currency($order->orderTotal(), in: 'HUF', locale: 'hu', precision: 0) }}</span>
+                                    </div>
+                                    @if ($order->savings() > 0)
+                                        <div class="flex justify-between text-sm text-green-700">
+                                            <span>Megtakarítás:</span>
+                                            <span class="font-medium">−{{ Number::currency($order->savings(), in: 'HUF', locale: 'hu', precision: 0) }}</span>
+                                        </div>
+                                    @endif
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-gray-600">ÁFA (27%):</span>
+                                        <span class="font-medium text-gray-900">{{ Number::currency($order->vatAmount(), in: 'HUF', locale: 'hu', precision: 0) }}</span>
                                     </div>
                                     <div class="flex justify-between text-sm">
                                         <span class="text-gray-600">Szállítás:</span>
@@ -271,7 +288,7 @@
                                     <div class="pt-3 border-t border-gray-200">
                                         <div class="flex justify-between">
                                             <span class="font-semibold text-gray-900">Végösszeg:</span>
-                                            <span class="text-xl font-bold text-blue-600">{{ Number::currency($order->orderTotal() + $order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}</span>
+                                            <span class="text-xl font-bold text-blue-600">{{ Number::currency($order->grossTotal(), in: 'HUF', locale: 'hu', precision: 0) }}</span>
                                         </div>
                                     </div>
                                 </div>
