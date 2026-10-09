@@ -113,8 +113,7 @@
                                             </p>
                                         </div>
                                         <p class="font-medium text-gray-900 ml-2 whitespace-nowrap">
-                                            {{ number_format($item->product->unit_price * $item->quantity, 0, ',', ' ') }}
-                                            Ft
+                                            {{ Number::currency($item->product->unit_price * $item->quantity, in: 'HUF', locale: 'hu', precision: 0) }}
                                         </p>
                                     </div>
                                 @endforeach
@@ -123,13 +122,13 @@
                             <dl class="space-y-2 text-sm">
                                 <div class="flex justify-between py-2 border-b border-gray-100">
                                     <dt class="text-gray-600">Részösszeg</dt>
-                                    <dd class="font-medium">{{ number_format($this->subtotal, 0, ',', ' ') }} Ft</dd>
+                                    <dd class="font-medium">{{ Number::currency($this->subtotal, in: 'HUF', locale: 'hu', precision: 0) }}</dd>
                                 </div>
 
                                 @if ($this->savings > 0)
                                     <div class="flex justify-between py-2 border-b border-gray-100 text-green-700">
                                         <dt>Megtakarítás</dt>
-                                        <dd class="font-medium">−{{ number_format($this->savings, 0, ',', ' ') }} Ft</dd>
+                                        <dd class="font-medium">−{{ Number::currency($this->savings, in: 'HUF', locale: 'hu', precision: 0) }}</dd>
                                     </div>
                                 @endif
 
@@ -139,7 +138,7 @@
                                         @if ($this->selectedShipping)
                                             {{ $this->selectedShipping->title }}
                                             @if ($this->shippingCost > 0)
-                                                - {{ number_format($this->shippingCost, 0, ',', ' ') }} Ft
+                                                - {{ Number::currency($this->shippingCost, in: 'HUF', locale: 'hu', precision: 0) }}
                                             @else
                                                 - <span class="text-green-600">Ingyenes</span>
                                             @endif
@@ -151,13 +150,13 @@
 
                                 <div class="flex justify-between py-2 border-b border-gray-100">
                                     <dt class="text-gray-500">ÁFA (27%)</dt>
-                                    <dd class="text-gray-500">{{ number_format($this->vatAmount, 0, ',', ' ') }} Ft</dd>
+                                    <dd class="text-gray-500">{{ Number::currency($this->vatAmount, in: 'HUF', locale: 'hu', precision: 0) }}</dd>
                                 </div>
 
                                 <div class="flex justify-between py-3 text-base">
                                     <dt class="font-bold">Összeg</dt>
                                     <dd class="font-bold text-xl">
-                                        {{ number_format($this->total, 0, ',', ' ') }} Ft
+                                        {{ Number::currency($this->total, in: 'HUF', locale: 'hu', precision: 0) }}
                                     </dd>
                                 </div>
                             </dl>
@@ -185,7 +184,7 @@
                                         <div class="flex-1 min-w-0">
                                             <span class="text-sm font-medium text-gray-900">{{ $method->title }}</span>
                                             @if ($methodCost === null)
-                                                <p class="text-xs text-red-600">{{ number_format($method->maxWeight(), 0, ',', ' ') }} kg feletti rendelésnél nem választható.</p>
+                                                <p class="text-xs text-red-600">{{ Number::format($method->maxWeight(), locale: 'hu') }} kg feletti rendelésnél nem választható.</p>
                                             @elseif ($method->description)
                                                 <p class="text-xs text-gray-500 truncate">{{ $method->description }}</p>
                                             @endif
@@ -194,7 +193,7 @@
                                             @if ($methodCost === null)
                                                 &ndash;
                                             @elseif ($methodCost > 0)
-                                                {{ number_format($methodCost, 0, ',', ' ') }} Ft
+                                                {{ Number::currency($methodCost, in: 'HUF', locale: 'hu', precision: 0) }}
                                             @else
                                                 Ingyenes
                                             @endif

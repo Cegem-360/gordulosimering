@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Livewire\Cart;
 use App\Models\Product;
 use App\Services\CartService;
+use Illuminate\Support\Number;
 use Livewire\Livewire;
 
 it('renders the cart with an empty basket', function (): void {
@@ -22,9 +23,9 @@ it('sums the cart totals from the line items', function (): void {
     Livewire::test(Cart::class)
         ->assertSuccessful()
         ->assertSee('5 termék')
-        ->assertSee('3 500 Ft')  // subtotal: 3 x 1000 + 2 x 250
-        ->assertSee('945 Ft')    // 27% VAT on the subtotal
-        ->assertSee('4 445 Ft'); // total
+        ->assertSee(Number::currency(3_500, in: 'HUF', locale: 'hu', precision: 0))  // subtotal: 3 x 1000 + 2 x 250
+        ->assertSee(Number::currency(945, in: 'HUF', locale: 'hu', precision: 0))    // 27% VAT on the subtotal
+        ->assertSee(Number::currency(4_445, in: 'HUF', locale: 'hu', precision: 0)); // total
 });
 
 /*
@@ -43,8 +44,8 @@ it('recomputes the totals after a line item is removed', function (): void {
     Livewire::test(Cart::class)
         ->call('removeItem', $seal->id)
         ->assertSee('1 termék')
-        ->assertSee('1 000 Ft')
-        ->assertDontSee('1 250 Ft');
+        ->assertSee(Number::currency(1_000, in: 'HUF', locale: 'hu', precision: 0))
+        ->assertDontSee(Number::currency(1_250, in: 'HUF', locale: 'hu', precision: 0));
 });
 
 it('charges sale products at their sale price and shows the saving', function (): void {
@@ -60,9 +61,9 @@ it('charges sale products at their sale price and shows the saving', function ()
     expect($component->instance()->subtotal)->toBe(1900.0); // 2 × 700 + 2 × 250
 
     $component
-        ->assertSee('1 900 Ft')
+        ->assertSee(Number::currency(1_900, in: 'HUF', locale: 'hu', precision: 0))
         ->assertSee('Megtakarítás')
-        ->assertSee('600 Ft');            // 2 × (1000 − 700)
+        ->assertSee(Number::currency(600, in: 'HUF', locale: 'hu', precision: 0));            // 2 × (1000 − 700)
 });
 
 it('hides the saving row when nothing in the cart is on sale', function (): void {

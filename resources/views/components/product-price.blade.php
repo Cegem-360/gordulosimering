@@ -17,7 +17,7 @@
             {{ Number::currency($product->unit_price * $quantity, 'HUF', 'hu', 0) }}
         </span>
         <span class="{{ $sizes['badge'] }} rounded bg-red-600 py-0.5 font-bold text-white">
-            -{{ rtrim(rtrim(number_format($product->discount_percentage, 2, ',', ''), '0'), ',') }}%
+            -{{ Number::percentage($product->discount_percentage, maxPrecision: 2, locale: 'hu') }}
         </span>
     @else
         <span class="{{ $sizes['main'] }} text-blue-600">

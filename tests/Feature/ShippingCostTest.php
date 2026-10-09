@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ShippingMethod;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Number;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 
@@ -100,6 +101,7 @@ it('counts products without a weight as 0 kg and follows the payment method', fu
         ->set('selectedShippingMethod', $gls->id)
         ->assertSet('cartWeight', 2.5)
         ->assertSet('shippingCost', 3239)
+        ->assertSee(Number::currency(3239, in: 'HUF', locale: 'hu', precision: 0))
         ->set('selectedPaymentMethod', 'cod')
         ->assertSet('shippingCost', 4509)
         ->call('create');

@@ -125,20 +125,20 @@
                                         {{ $item->quantity }}
                                     </td>
                                     <td style="padding: 12px 15px; border-top: 1px solid #eee; font-size: 14px; color: #293133; text-align: right; font-weight: 600;">
-                                        {{ number_format($item->subtotal, 0, ',', ' ') }} Ft
+                                        {{ Number::currency($item->subtotal, in: 'HUF', locale: 'hu', precision: 0) }}
                                     </td>
                                 </tr>
                                 @endforeach
                                 <tr style="background-color: #f8f9fa;">
                                     <td colspan="2" style="padding: 10px 15px; border-top: 1px solid #ddd; font-size: 13px; color: #666;">Szállítási költség</td>
                                     <td style="padding: 10px 15px; border-top: 1px solid #ddd; font-size: 13px; color: #293133; text-align: right;">
-                                        {{ number_format($order->shipping_cost, 0, ',', ' ') }} Ft
+                                        {{ Number::currency($order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}
                                     </td>
                                 </tr>
                                 <tr style="background-color: #293133;">
                                     <td colspan="2" style="padding: 15px; font-size: 16px; color: #ffffff; font-weight: 700;">ÖSSZESEN (ÁFÁ-val)</td>
                                     <td style="padding: 15px; font-size: 18px; color: #2271B3; text-align: right; font-weight: 700;">
-                                        {{ number_format($order->orderTotal() * 1.27 + $order->shipping_cost, 0, ',', ' ') }} Ft
+                                        {{ Number::currency($order->orderTotal() * 1.27 + $order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}
                                     </td>
                                 </tr>
                             </table>

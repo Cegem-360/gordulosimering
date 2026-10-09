@@ -51,26 +51,26 @@
                         <dl class="space-y-3">
                             <div class="flex justify-between">
                                 <dt class="text-gray-600">Termékek ({{ $this->itemCount }} db)</dt>
-                                <dd class="font-medium">{{ number_format($this->subtotal, 0, ',', ' ') }} Ft</dd>
+                                <dd class="font-medium">{{ Number::currency($this->subtotal, in: 'HUF', locale: 'hu', precision: 0) }}</dd>
                             </div>
                             @if ($this->savings > 0)
                                 <div class="flex justify-between text-green-700">
                                     <dt>Megtakarítás</dt>
-                                    <dd class="font-medium">−{{ number_format($this->savings, 0, ',', ' ') }} Ft</dd>
+                                    <dd class="font-medium">−{{ Number::currency($this->savings, in: 'HUF', locale: 'hu', precision: 0) }}</dd>
                                 </div>
                             @endif
                             <div class="flex justify-between">
                                 <dt class="text-gray-600">Nettó összesen</dt>
-                                <dd class="font-semibold">{{ number_format($this->subtotal, 0, ',', ' ') }} Ft</dd>
+                                <dd class="font-semibold">{{ Number::currency($this->subtotal, in: 'HUF', locale: 'hu', precision: 0) }}</dd>
                             </div>
                             <div class="flex justify-between text-sm">
                                 <dt class="text-gray-500">ÁFA (27%)</dt>
-                                <dd class="text-gray-500">{{ number_format($this->vatAmount, 0, ',', ' ') }} Ft</dd>
+                                <dd class="text-gray-500">{{ Number::currency($this->vatAmount, in: 'HUF', locale: 'hu', precision: 0) }}</dd>
                             </div>
                             <div class="flex justify-between pt-3 border-t">
                                 <dt class="text-lg font-bold">Bruttó összesen</dt>
                                 <dd class="text-2xl font-bold text-blue-600">
-                                    {{ number_format($this->total, 0, ',', ' ') }} Ft</dd>
+                                    {{ Number::currency($this->total, in: 'HUF', locale: 'hu', precision: 0) }}</dd>
                             </div>
                         </dl>
 

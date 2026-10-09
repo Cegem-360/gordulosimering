@@ -9,7 +9,7 @@
     </div>
     @if ($total > 0)
         <span class="hidden md:inline text-sm font-medium">
-            {{ number_format($total, 0, ',', ' ') }} Ft
+            {{ Number::currency($total, in: 'HUF', locale: 'hu', precision: 0) }}
         </span>
     @endif
 </a>

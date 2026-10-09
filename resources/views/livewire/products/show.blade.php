@@ -356,7 +356,7 @@
                                 <dd class="font-medium text-right">
                                     @if ($product->is_on_sale)
                                         <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-sm">Igen -
-                                            {{ rtrim(rtrim(number_format($product->effective_sale_percentage, 2, ',', ''), '0'), ',') }}%</span>
+                                            {{ Number::percentage($product->effective_sale_percentage, maxPrecision: 2, locale: 'hu') }}</span>
                                     @else
                                         <span class="text-gray-500">Nem</span>
                                     @endif

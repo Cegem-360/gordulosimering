@@ -12,7 +12,7 @@
                                     </td>
                                     <td style="padding: 12px 0; border-bottom: 1px solid #eee; text-align: right;">
                                         <span style="color: #293133; font-size: 14px; font-weight: 600;">
-                                            {{ number_format($item->subtotal, 0, ',', ' ') }} Ft
+                                            {{ Number::currency($item->subtotal, in: 'HUF', locale: 'hu', precision: 0) }}
                                         </span>
                                     </td>
                                 </tr>
@@ -23,7 +23,7 @@
                                     </td>
                                     <td style="padding: 12px 0; border-bottom: 1px solid #eee; text-align: right;">
                                         <span style="color: #293133; font-size: 14px;">
-                                            {{ number_format($order->shipping_cost, 0, ',', ' ') }} Ft
+                                            {{ Number::currency($order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}
                                         </span>
                                     </td>
                                 </tr>
@@ -33,7 +33,7 @@
                                     </td>
                                     <td style="padding: 15px 0; text-align: right;">
                                         <span style="color: #2271B3; font-size: 18px; font-weight: 700;">
-                                            {{ number_format($order->orderTotal() * 1.27 + $order->shipping_cost, 0, ',', ' ') }} Ft
+                                            {{ Number::currency($order->orderTotal() * 1.27 + $order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}
                                         </span>
                                     </td>
                                 </tr>
