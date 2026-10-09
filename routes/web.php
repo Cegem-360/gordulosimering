@@ -11,6 +11,7 @@ use App\Livewire\Pages\Contact;
 use App\Livewire\Pages\DeliveryFramework;
 use App\Livewire\Pages\Documents;
 use App\Livewire\Pages\PrivacyPolicy;
+use App\Livewire\Pages\RequestQuote;
 use App\Livewire\Pages\Services;
 use App\Livewire\Pages\Team;
 use App\Livewire\Pages\TermsAndConditions;
@@ -52,6 +53,7 @@ Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function (): v
     Route::get('/szolgaltatasaink', Services::class)->name('services');
     Route::get('/munkatarsaink', Team::class)->name('team');
     Route::get('/kapcsolat', Contact::class)->name('contact');
+    Route::get('/ajanlatkeres', RequestQuote::class)->name('quote-request');
     Route::get('/cegadatok', CompanyData::class)->name('company-data');
     Route::get('/dokumentumok', Documents::class)->name('documents');
     Route::get('/altalanos-szerzodesi-feltetelek', TermsAndConditions::class)->name('terms-and-conditions');

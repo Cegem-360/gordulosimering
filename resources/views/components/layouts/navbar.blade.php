@@ -197,6 +197,9 @@
                     </a>
                 @endauth
 
+                <!-- Quote request -->
+                <livewire:quote-list-icon />
+
                 <!-- Cart -->
                 <livewire:cart-icon />
 

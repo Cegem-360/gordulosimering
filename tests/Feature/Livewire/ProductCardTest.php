@@ -113,7 +113,7 @@ it('offers a quote request next to the call button when out of stock', function 
 
     Livewire::test(ProductCard::class, ['product' => $product])
         ->assertSee(['Hívjon', 'Ajánlatkérés'])
-        ->assertSeeHtml('href="mailto:gs@gordulo-simmering.hu?subject=' . rawurlencode('Ajánlatkérés: TENTE befeszítőcsap – TE CSAP R47'));
+        ->assertSeeHtml('wire:click="addToQuote"');
 });
 
 it('does not put an out-of-stock product in the cart', function (): void {

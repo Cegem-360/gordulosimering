@@ -262,7 +262,7 @@
                                     <i class="fas fa-phone text-xs"></i>
                                     Kérdése van? Hívjon minket!
                                 </a>
-                                <x-quote-request-button :product="$product"
+                                <x-quote-request-button :in-list="$this->isInQuoteList"
                                     class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 font-semibold" />
                             </div>
                         @else
@@ -272,7 +272,7 @@
                                     class="bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 flex items-center justify-center gap-2 font-semibold text-lg transition-colors">
                                     <i class="fa fa-phone"></i> Hívjon
                                 </a>
-                                <x-quote-request-button :product="$product"
+                                <x-quote-request-button :in-list="$this->isInQuoteList"
                                     class="bg-white text-blue-600 border border-blue-600 py-3 rounded-lg hover:bg-blue-50 font-semibold text-lg" />
                             </div>
                         @endif

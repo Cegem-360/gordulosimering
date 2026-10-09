@@ -64,7 +64,7 @@ it('offers a quote request next to the call prompt', function (): void {
 
     Livewire::test(Show::class, ['product' => $product])
         ->assertSee('Ajánlatkérés')
-        ->assertSeeHtml('href="mailto:gs@gordulo-simmering.hu?subject=' . rawurlencode('Ajánlatkérés: TENTE befeszítőcsap'));
+        ->assertSeeHtml('wire:click="addToQuote"');
 });
 
 it('offers only a call and a quote request for an out-of-stock product', function (): void {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Products;
 
+use App\Livewire\Concerns\AddsToQuoteList;
 use App\Models\Product;
 use App\Services\CartService;
 use Filament\Notifications\Notification;
@@ -14,6 +15,8 @@ use Livewire\Component;
 
 final class Show extends Component
 {
+    use AddsToQuoteList;
+
     #[Locked]
     public Product $product;
 
