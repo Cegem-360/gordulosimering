@@ -221,7 +221,7 @@
                                                     <span class="text-green-600 font-medium">Ingyenes</span>
                                                 @endif
                                             </div>
-                                            @if ($order->shipping_tracking_number)
+                                            @if ($order->hasTrackingNumber())
                                                 <div class="flex items-center gap-2 text-gray-600">
                                                     <i class="fas fa-barcode text-gray-400"></i>
                                                     <span class="font-mono text-xs bg-gray-200 px-2 py-0.5 rounded">{{ $order->shipping_tracking_number }}</span>

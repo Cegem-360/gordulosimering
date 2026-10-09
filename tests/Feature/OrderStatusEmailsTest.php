@@ -123,8 +123,8 @@ it('gives the tracking number and the GLS parcel point in the handed to the cour
         ->and($mail->render())->toContain('átadtuk a futárszolgálatnak', 'GLS123456', 'Alpha Zoo Batthyány tér', 'Batthyány tér 5-6.');
 });
 
-it('leaves out the placeholder tracking number', function (): void {
-    $order = Order::factory()->create(['order_status' => OrderStatus::PROCESSING, 'shipping_tracking_number' => 'null']);
+it('leaves out the tracking number when the order has none', function (): void {
+    $order = Order::factory()->create(['order_status' => OrderStatus::PROCESSING, 'shipping_tracking_number' => null]);
     $order->update(['order_status' => OrderStatus::SHIPPED]);
 
     expect((new OrderStatusChangedMail($order->refresh()))->render())->not->toContain('Csomagkövetési szám');

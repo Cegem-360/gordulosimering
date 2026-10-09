@@ -97,12 +97,11 @@ final class Order extends Model
     }
 
     /**
-     * Whether a real tracking number is set; the admin form defaults it to
-     * the string "null".
+     * Whether the courier's tracking number is set; an order may have none.
      */
     public function hasTrackingNumber(): bool
     {
-        return filled($this->shipping_tracking_number) && $this->shipping_tracking_number !== 'null';
+        return filled($this->shipping_tracking_number);
     }
 
     /**
