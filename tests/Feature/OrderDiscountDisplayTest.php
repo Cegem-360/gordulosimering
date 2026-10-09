@@ -128,3 +128,45 @@ it('labels the unit and line prices the right way round and shows the gross line
         ->assertSeeInOrder(['Nettó listaár', 'Kedvezmény', 'Nettó egységár', 'Nettó összesen', 'ÁFA (27%)', 'Bruttó összesen'])
         ->assertSee('−10%');
 });
+
+it('works out the line total, the VAT and the VAT class of an item on save', function (): void {
+    $order = Order::factory()->create();
+
+    $item = $order->orderItems()->create([
+        'product_id' => Product::factory()->create()->id,
+        'quantity' => 3,
+        'total' => 1000,
+    ]);
+
+    expect($item->refresh())
+        ->subtotal->toBe('3000.00')
+        ->total_tax->toBe('270.00')
+        ->subtotal_tax->toBe('810.00')
+        ->tax_class->toBe('27%');
+
+    $item->update(['quantity' => 1, 'total' => 500, 'subtotal' => '99999', 'total_tax' => 0]);
+
+    expect($item->refresh())
+        ->subtotal->toBe('500.00')
+        ->total_tax->toBe('135.00')
+        ->subtotal_tax->toBe('135.00');
+});
+
+it('lets the admin add an item with only the product and the quantity, the rest worked out', function (): void {
+    $this->actingAs(User::factory()->admin()->create());
+    $order = Order::factory()->create();
+    $product = Product::factory()->create(['net_selling_price' => 1200]);
+
+    Livewire::test(OrderItemsRelationManager::class, ['ownerRecord' => $order, 'pageClass' => EditOrder::class])
+        ->mountTableAction('create')
+        ->setTableActionData(['product_id' => $product->id, 'quantity' => 2])
+        ->assertTableActionDataSet(['total' => 1200])
+        ->callMountedTableAction()
+        ->assertHasNoTableActionErrors();
+
+    expect($order->orderItems()->sole())
+        ->total->toBe('1200.00')
+        ->subtotal->toBe('2400.00')
+        ->subtotal_tax->toBe('648.00')
+        ->tax_class->toBe('27%');
+});

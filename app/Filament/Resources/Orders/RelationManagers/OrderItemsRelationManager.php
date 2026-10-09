@@ -14,6 +14,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -38,14 +39,12 @@ final class OrderItemsRelationManager extends RelationManager
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->reactive()
-                    ->afterStateUpdated(function ($state, callable $set): void {
-                        if ($state) {
-                            $product = Product::query()->find($state);
-                            if ($product) {
-                                $set('subtotal', $product->net_selling_price);
-                                $set('total', $product->net_selling_price);
-                            }
+                    ->live()
+                    ->afterStateUpdated(function (mixed $state, Set $set): void {
+                        $product = filled($state) ? Product::query()->find($state) : null;
+
+                        if ($product !== null) {
+                            $set('total', $product->net_selling_price);
                         }
                     }),
                 TextInput::make('quantity')
@@ -59,24 +58,23 @@ final class OrderItemsRelationManager extends RelationManager
                     ->numeric()
                     ->prefix('Ft')
                     ->required(),
-                TextInput::make('total_tax')
-                    ->label('ÁFA egységár')
-                    ->numeric()
-                    ->prefix('Ft')
-                    ->default(0),
                 TextInput::make('subtotal')
                     ->label('Nettó összesen')
-                    ->numeric()
                     ->prefix('Ft')
-                    ->required(),
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->helperText('Mentéskor számolódik: egységár × mennyiség.'),
+                TextInput::make('total_tax')
+                    ->label('ÁFA egységár')
+                    ->prefix('Ft')
+                    ->disabled()
+                    ->dehydrated(false),
                 TextInput::make('subtotal_tax')
                     ->label('ÁFA összesen')
-                    ->numeric()
                     ->prefix('Ft')
-                    ->default(0),
-                TextInput::make('tax_class')
-                    ->label('Adóosztály')
-                    ->default('27%'),
+                    ->disabled()
+                    ->dehydrated(false)
+                    ->helperText('Mentéskor számolódik, 27%.'),
             ]);
     }
 
