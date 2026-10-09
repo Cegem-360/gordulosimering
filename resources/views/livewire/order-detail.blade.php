@@ -60,6 +60,8 @@
                                     'pending' => 1,
                                     'processing' => 2,
                                     'on-hold' => 2,
+                                    'shipped' => 3,
+                                    'ready-for-pickup' => 3,
                                     'completed' => 4,
                                     'cancelled' => 0,
                                     'refunded' => 0,
@@ -157,7 +159,15 @@
                                         <p>{{ $order->shipping_country }}</p>
                                     </div>
 
-                                    @if ($order->shipping_tracking_number)
+                                    @if ($order->hasParcelPoint())
+                                        <div class="mt-4 pt-4 border-t border-gray-100 space-y-1 text-sm text-gray-600">
+                                            <p class="text-xs text-gray-500 mb-1">GLS átvevőhely:</p>
+                                            <p class="font-medium text-gray-900">{{ $order->parcel_point_name }}</p>
+                                            <p>{{ $order->parcel_point_address }}</p>
+                                        </div>
+                                    @endif
+
+                                    @if ($order->hasTrackingNumber())
                                         <div class="mt-4 pt-4 border-t border-gray-100">
                                             <p class="text-xs text-gray-500 mb-1">Csomagkövetési szám:</p>
                                             <p class="font-mono text-xs bg-gray-100 px-2 py-1 rounded inline-block">

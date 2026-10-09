@@ -32,7 +32,7 @@ final class OrderHistory extends Component
     {
         return Auth::user()
             ->orders()
-            ->whereIn('order_status', [OrderStatus::PENDING, OrderStatus::PROCESSING, OrderStatus::ONHOLD])
+            ->whereIn('order_status', [OrderStatus::PENDING, OrderStatus::PROCESSING, OrderStatus::ONHOLD, OrderStatus::SHIPPED, OrderStatus::READY_FOR_PICKUP])
             ->count();
     }
 
@@ -61,6 +61,8 @@ final class OrderHistory extends Component
             OrderStatus::PENDING => 'Függőben',
             OrderStatus::PROCESSING => 'Feldolgozás alatt',
             OrderStatus::ONHOLD => 'Várakozik',
+            OrderStatus::SHIPPED => 'Futárszolgálatnak átadva',
+            OrderStatus::READY_FOR_PICKUP => 'Átvehető üzletünkben',
             OrderStatus::COMPLETED => 'Teljesítve',
             OrderStatus::CANCELLED => 'Törölve',
             OrderStatus::REFUNDED => 'Visszatérítve',
@@ -75,6 +77,7 @@ final class OrderHistory extends Component
             OrderStatus::PENDING => 'bg-yellow-100 text-yellow-800',
             OrderStatus::PROCESSING => 'bg-blue-100 text-blue-800',
             OrderStatus::ONHOLD => 'bg-gray-100 text-gray-800',
+            OrderStatus::SHIPPED, OrderStatus::READY_FOR_PICKUP => 'bg-indigo-100 text-indigo-800',
             OrderStatus::COMPLETED => 'bg-green-100 text-green-800',
             OrderStatus::CANCELLED, OrderStatus::TRASH => 'bg-red-100 text-red-800',
             OrderStatus::REFUNDED => 'bg-purple-100 text-purple-800',
@@ -88,6 +91,8 @@ final class OrderHistory extends Component
             OrderStatus::PENDING => 'fas fa-clock',
             OrderStatus::PROCESSING => 'fas fa-cog fa-spin',
             OrderStatus::ONHOLD => 'fas fa-pause-circle',
+            OrderStatus::SHIPPED => 'fas fa-truck',
+            OrderStatus::READY_FOR_PICKUP => 'fas fa-store',
             OrderStatus::COMPLETED => 'fas fa-check-circle',
             OrderStatus::CANCELLED, OrderStatus::TRASH => 'fas fa-times-circle',
             OrderStatus::REFUNDED => 'fas fa-undo',

@@ -95,3 +95,47 @@ it('has a customer message for every status except the internal ones', function 
         expect($status->customerMessage() === null)->toBe(in_array($status, [OrderStatus::PENDING, OrderStatus::TRASH], true));
     }
 });
+
+it('emails the customer when the order is handed to the courier or ready for pickup', function (OrderStatus $status): void {
+    $order = Order::factory()->create(['order_status' => OrderStatus::PROCESSING, 'billing_email' => 'vevo@example.com']);
+
+    $order->update(['order_status' => $status]);
+
+    Mail::assertQueued(OrderStatusChangedMail::class, fn (OrderStatusChangedMail $mail): bool => $mail->hasTo('vevo@example.com'));
+})->with([
+    'handed to the courier' => [OrderStatus::SHIPPED],
+    'ready for pickup' => [OrderStatus::READY_FOR_PICKUP],
+]);
+
+it('gives the tracking number and the GLS parcel point in the handed to the courier email', function (): void {
+    $order = Order::factory()->create([
+        'order_status' => OrderStatus::PROCESSING,
+        'shipping_tracking_number' => 'GLS123456',
+        'parcel_point_id' => '1011-ALPHAZOOKF',
+        'parcel_point_name' => 'Alpha Zoo Batthyány tér',
+        'parcel_point_address' => '1011 Budapest I. kerület, Batthyány tér 5-6.',
+    ]);
+    $order->update(['order_status' => OrderStatus::SHIPPED]);
+
+    $mail = new OrderStatusChangedMail($order->refresh());
+
+    expect($mail->envelope()->subject)->toBe('Rendelése: Futárszolgálatnak átadva – #' . $order->id)
+        ->and($mail->render())->toContain('átadtuk a futárszolgálatnak', 'GLS123456', 'Alpha Zoo Batthyány tér', 'Batthyány tér 5-6.');
+});
+
+it('leaves out the placeholder tracking number', function (): void {
+    $order = Order::factory()->create(['order_status' => OrderStatus::PROCESSING, 'shipping_tracking_number' => 'null']);
+    $order->update(['order_status' => OrderStatus::SHIPPED]);
+
+    expect((new OrderStatusChangedMail($order->refresh()))->render())->not->toContain('Csomagkövetési szám');
+});
+
+it('gives the store address and opening hours in the ready for pickup email', function (): void {
+    $order = Order::factory()->create(['order_status' => OrderStatus::PROCESSING]);
+    $order->update(['order_status' => OrderStatus::READY_FOR_PICKUP]);
+
+    $mail = new OrderStatusChangedMail($order->refresh());
+
+    expect($mail->envelope()->subject)->toBe('Rendelése: Személyesen átvehető üzletünkben – #' . $order->id)
+        ->and($mail->render())->toContain('átvehető üzletünkben', '1102 Budapest, Kőrösi Csoma S. út 18-20.', 'szombat 8:30–12:30');
+});

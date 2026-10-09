@@ -64,6 +64,13 @@
                                 @endif
                                 <p>{{ $order->shipping_country }}</p>
                             </div>
+                            @if ($order->hasParcelPoint())
+                                <h3 class="font-semibold text-gray-900 mt-4 mb-2">GLS átvevőhely</h3>
+                                <div class="text-gray-600 text-sm space-y-1">
+                                    <p class="font-medium text-gray-900">{{ $order->parcel_point_name }}</p>
+                                    <p>{{ $order->parcel_point_address }}</p>
+                                </div>
+                            @endif
                         </div>
                     </div>
 

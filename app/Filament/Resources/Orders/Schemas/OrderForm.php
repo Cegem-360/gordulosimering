@@ -53,6 +53,9 @@ final class OrderForm
                 TextInput::make('shipping_tracking_number')
                     ->required()
                     ->default('null'),
+                TextInput::make('parcel_point_name'),
+                TextInput::make('parcel_point_address'),
+                TextInput::make('parcel_point_id'),
                 TextInput::make('order_key'),
                 Select::make('order_status')
                     ->options(OrderStatus::class)

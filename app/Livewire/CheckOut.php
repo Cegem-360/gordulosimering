@@ -49,6 +49,14 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
     public bool $createAccount = false;
 
+    /**
+     * The GLS parcel shop or locker picked on the map, for the methods that
+     * deliver to one.
+     *
+     * @var array{id: string, name: string, address: string}|null
+     */
+    public ?array $parcelPoint = null;
+
     public function mount(CartService $cartService): void
     {
         $this->cartItems = $cartService->getCartItems();
@@ -87,10 +95,9 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             ]);
         }
 
-        $firstShipping = ShippingMethod::query()->first();
-        if ($firstShipping) {
-            $this->selectedShippingMethod = $firstShipping->id;
-        }
+        $this->selectedShippingMethod = $this->shippingMethods
+            ->first(fn (ShippingMethod $method): bool => $this->shippingCosts[$method->id] !== null)
+            ?->id;
     }
 
     #[Computed]
@@ -109,10 +116,63 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         return ShippingMethod::query()->find($this->selectedShippingMethod);
     }
 
+    /**
+     * The cart's weight in kg; products without a weight count as 0 kg.
+     */
+    #[Computed]
+    public function cartWeight(): float
+    {
+        return $this->cartItems->sum(fn ($item): float => (float) ($item->product->weight ?? 0) * $item->quantity);
+    }
+
+    /**
+     * Each shipping method's cost for this cart and payment method, or null
+     * when the cart is too heavy for it.
+     *
+     * @return array<int, int|null>
+     */
+    #[Computed]
+    public function shippingCosts(): array
+    {
+        return $this->shippingMethods
+            ->mapWithKeys(fn (ShippingMethod $method): array => [$method->id => $method->costFor($this->cartWeight, $this->selectedPaymentMethod)])
+            ->all();
+    }
+
     #[Computed]
     public function shippingCost(): float
     {
-        return $this->selectedShipping?->cost ?? 0;
+        return $this->shippingCosts[$this->selectedShippingMethod] ?? 0;
+    }
+
+    /**
+     * Stores the delivery point picked on the GLS map (the widget's change
+     * event detail).
+     *
+     * @param  array{id?: mixed, name?: mixed, contact?: array{postalCode?: mixed, city?: mixed, address?: mixed}}  $point
+     */
+    public function selectParcelPoint(array $point): void
+    {
+        $validated = validator($point, [
+            'id' => ['required', 'string', 'max:100'],
+            'name' => ['required', 'string', 'max:255'],
+            'contact.postalCode' => ['nullable', 'string', 'max:20'],
+            'contact.city' => ['nullable', 'string', 'max:100'],
+            'contact.address' => ['nullable', 'string', 'max:255'],
+        ])->validate();
+
+        $this->parcelPoint = [
+            'id' => $validated['id'],
+            'name' => $validated['name'],
+            'address' => mb_trim(sprintf(
+                '%s %s, %s',
+                $validated['contact']['postalCode'] ?? '',
+                $validated['contact']['city'] ?? '',
+                $validated['contact']['address'] ?? '',
+            ), ' ,'),
+        ];
+
+        $this->resetErrorBag('parcelPoint');
     }
 
     public function form(Schema $schema): Schema
@@ -235,6 +295,18 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
         $this->validate($validationRules, $validationMessages);
 
+        if ($this->shippingCosts[$this->selectedShippingMethod] === null) {
+            $this->addError('selectedShippingMethod', 'A kosár súlya miatt ez a szállítási mód nem választható.');
+
+            return;
+        }
+
+        if ($this->selectedShipping->requires_parcel_point && $this->parcelPoint === null) {
+            $this->addError('parcelPoint', 'Kérjük, válasszon GLS csomagpontot vagy csomagautomatát.');
+
+            return;
+        }
+
         $data = $this->form->getState();
 
         $userId = Auth::id();
@@ -275,6 +347,12 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         $data['set_paid'] = false;
         $data['shipping_tracking_number'] = '';
         $data['shipping_cost'] = $this->shippingCost;
+
+        if ($this->selectedShipping->requires_parcel_point) {
+            $data['parcel_point_id'] = $this->parcelPoint['id'];
+            $data['parcel_point_name'] = $this->parcelPoint['name'];
+            $data['parcel_point_address'] = $this->parcelPoint['address'];
+        }
 
         if ($this->shipToDifferentAddress) {
             $data['shipping_name'] = $this->data['shipping_name'] ?? '';

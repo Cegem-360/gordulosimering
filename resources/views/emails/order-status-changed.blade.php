@@ -46,6 +46,41 @@
                                 </tr>
                             </table>
 
+                            @if ($status === \App\Enums\OrderStatus::SHIPPED && ($order->hasTrackingNumber() || $order->hasParcelPoint()))
+                                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #e7f3ff; border-radius: 6px; margin: 0 0 25px;">
+                                    <tr>
+                                        <td style="padding: 20px;">
+                                            @if ($order->hasTrackingNumber())
+                                                <p style="margin: 0 0 10px; color: #666; font-size: 14px;">
+                                                    <strong style="color: #293133;">Csomagkövetési szám:</strong> {{ $order->shipping_tracking_number }}
+                                                </p>
+                                            @endif
+                                            @if ($order->hasParcelPoint())
+                                                <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
+                                                    <strong style="color: #293133;">Átvevőhely:</strong> {{ $order->parcel_point_name }}<br>
+                                                    {{ $order->parcel_point_address }}
+                                                </p>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                </table>
+                            @endif
+
+                            @if ($status === \App\Enums\OrderStatus::READY_FOR_PICKUP)
+                                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #e7f3ff; border-radius: 6px; margin: 0 0 25px;">
+                                    <tr>
+                                        <td style="padding: 20px;">
+                                            <p style="margin: 0 0 10px; color: #666; font-size: 14px;">
+                                                <strong style="color: #293133;">Átvétel helye:</strong> {{ config('shop.pickup_store.address') }}
+                                            </p>
+                                            <p style="margin: 0; color: #666; font-size: 14px;">
+                                                <strong style="color: #293133;">Nyitvatartás:</strong> {{ config('shop.pickup_store.opening_hours') }}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            @endif
+
                             @include('emails.partials.order-items')
 
                             <p style="margin: 30px 0 0; color: #293133; font-size: 16px; line-height: 1.6;">

@@ -27,4 +27,28 @@ final class ShippingMethodFactory extends Factory
             'cost' => fake()->numberBetween(500, 3000),
         ];
     }
+
+    /**
+     * The GLS net rates by weight band.
+     */
+    public function glsRates(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'rates' => [
+                ['max_weight' => 3, 'bank_transfer' => 2550, 'cash_on_delivery' => 3550],
+                ['max_weight' => 15, 'bank_transfer' => 2950, 'cash_on_delivery' => 3950],
+                ['max_weight' => 30, 'bank_transfer' => 3750, 'cash_on_delivery' => 4750],
+            ],
+        ]);
+    }
+
+    /**
+     * Delivered to a GLS parcel shop or locker picked on the map.
+     */
+    public function parcelPoint(): static
+    {
+        return $this->glsRates()->state(fn (array $attributes): array => [
+            'requires_parcel_point' => true,
+        ]);
+    }
 }

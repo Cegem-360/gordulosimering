@@ -83,6 +83,9 @@ return [
     'order_currency' => 'Pénznem',
     'shipping_cost' => 'Szállítási költség',
     'shipping_tracking_number' => 'Csomagkövetési szám',
+    'parcel_point_id' => 'GLS átvevőhely azonosító',
+    'parcel_point_name' => 'GLS átvevőhely',
+    'parcel_point_address' => 'GLS átvevőhely címe',
 
     'billing_name' => 'Számlázási név',
     'billing_company_name' => 'Cégnév',
@@ -126,6 +129,11 @@ return [
     'user_discounts_count' => 'Vevők',
 
     'cost' => 'Szállítási költség',
+    'requires_parcel_point' => 'GLS csomagpont választás',
+    'rates' => 'Súlysávos díjak',
+    'max_weight' => 'Súlyhatár (-ig)',
+    'bank_transfer' => 'Átutalással',
+    'cash_on_delivery' => 'Utánvéttel',
 
     'excerpt' => 'Kivonat',
     'content' => 'Tartalom',

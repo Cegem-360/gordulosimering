@@ -61,6 +61,16 @@
                                 @endif
                             </p>
 
+                            @if ($order->hasParcelPoint())
+                                <h2 style="margin: 30px 0 15px; color: #293133; font-size: 18px; font-weight: 600; border-bottom: 2px solid #2271B3; padding-bottom: 10px;">
+                                    GLS átvevőhely
+                                </h2>
+                                <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.8;">
+                                    <strong style="color: #293133;">{{ $order->parcel_point_name }}</strong><br>
+                                    {{ $order->parcel_point_address }}
+                                </p>
+                            @endif
+
                             <!-- CTA -->
                             <p style="margin: 30px 0 0; color: #293133; font-size: 16px; line-height: 1.6;">
                                 Ha kérdése van rendelésével kapcsolatban, kérjük vegye fel velünk a kapcsolatot.

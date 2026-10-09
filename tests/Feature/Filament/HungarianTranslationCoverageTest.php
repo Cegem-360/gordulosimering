@@ -119,6 +119,8 @@ it('labels the order statuses in Hungarian', function (OrderStatus $status, stri
     [OrderStatus::PENDING, 'Feldolgozásra vár'],
     [OrderStatus::PROCESSING, 'Feldolgozás alatt'],
     [OrderStatus::ONHOLD, 'Várakoztatva'],
+    [OrderStatus::SHIPPED, 'Futárszolgálatnak átadva'],
+    [OrderStatus::READY_FOR_PICKUP, 'Személyesen átvehető üzletünkben'],
     [OrderStatus::COMPLETED, 'Teljesítve'],
     [OrderStatus::CANCELLED, 'Törölve'],
     [OrderStatus::REFUNDED, 'Visszatérítve'],

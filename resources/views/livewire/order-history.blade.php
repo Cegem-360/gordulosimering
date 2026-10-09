@@ -124,6 +124,8 @@
                                         'pending' => 1,
                                         'processing' => 2,
                                         'on-hold' => 2,
+                                        'shipped' => 3,
+                                        'ready-for-pickup' => 3,
                                         'completed' => 4,
                                         'cancelled' => 0,
                                         'refunded' => 0,

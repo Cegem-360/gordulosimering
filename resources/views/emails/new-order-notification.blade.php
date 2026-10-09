@@ -73,6 +73,16 @@
                                                 <br>{{ $order->shipping_address_2 }}
                                             @endif
                                         </p>
+                                        @if ($order->hasParcelPoint())
+                                            <h3 style="margin: 15px 0 10px; color: #293133; font-size: 14px; font-weight: 700; text-transform: uppercase;">
+                                                GLS átvevőhely
+                                            </h3>
+                                            <p style="margin: 0; color: #666; font-size: 13px; line-height: 1.6;">
+                                                <strong style="color: #293133;">{{ $order->parcel_point_name }}</strong><br>
+                                                {{ $order->parcel_point_address }}<br>
+                                                Azonosító: {{ $order->parcel_point_id }}
+                                            </p>
+                                        @endif
                                     </td>
                                 </tr>
                             </table>

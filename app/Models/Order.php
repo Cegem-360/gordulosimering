@@ -48,6 +48,9 @@ use Override;
     'shipping_postcode',
     'shipping_country',
     'shipping_tracking_number',
+    'parcel_point_id',
+    'parcel_point_name',
+    'parcel_point_address',
     'order_key',
     'order_status',
     'order_currency',
@@ -82,6 +85,23 @@ final class Order extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Whether the order goes to a GLS parcel shop or locker.
+     */
+    public function hasParcelPoint(): bool
+    {
+        return filled($this->parcel_point_id);
+    }
+
+    /**
+     * Whether a real tracking number is set; the admin form defaults it to
+     * the string "null".
+     */
+    public function hasTrackingNumber(): bool
+    {
+        return filled($this->shipping_tracking_number) && $this->shipping_tracking_number !== 'null';
     }
 
     public function orderTotal(): int|float

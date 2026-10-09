@@ -11,6 +11,8 @@ enum OrderStatus: string implements HasLabel
     case PENDING = 'pending';
     case PROCESSING = 'processing';
     case ONHOLD = 'on-hold';
+    case SHIPPED = 'shipped';
+    case READY_FOR_PICKUP = 'ready-for-pickup';
     case COMPLETED = 'completed';
     case CANCELLED = 'cancelled';
     case REFUNDED = 'refunded';
@@ -32,6 +34,8 @@ enum OrderStatus: string implements HasLabel
         return match ($this) {
             self::PROCESSING => 'Rendelését feldolgozzuk. Hamarosan értesítjük a teljesítésről.',
             self::ONHOLD => 'Rendelését átmenetileg várakoztatjuk. Kollégánk hamarosan felveszi Önnel a kapcsolatot.',
+            self::SHIPPED => 'Rendelését átadtuk a futárszolgálatnak, a csomag hamarosan úton lesz Önhöz.',
+            self::READY_FOR_PICKUP => 'Rendelése átvehető üzletünkben. Átvételkor kérjük, hivatkozzon a rendelés számára.',
             self::COMPLETED => 'Rendelését teljesítettük. Köszönjük, hogy minket választott!',
             self::CANCELLED => 'Rendelését töröltük. Ha kérdése van, kérjük, keressen minket.',
             self::REFUNDED => 'Rendelésének összegét visszatérítettük.',
@@ -46,6 +50,8 @@ enum OrderStatus: string implements HasLabel
             self::PENDING => 'Feldolgozásra vár',
             self::PROCESSING => 'Feldolgozás alatt',
             self::ONHOLD => 'Várakoztatva',
+            self::SHIPPED => 'Futárszolgálatnak átadva',
+            self::READY_FOR_PICKUP => 'Személyesen átvehető üzletünkben',
             self::COMPLETED => 'Teljesítve',
             self::CANCELLED => 'Törölve',
             self::REFUNDED => 'Visszatérítve',

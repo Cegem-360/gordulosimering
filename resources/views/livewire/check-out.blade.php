@@ -175,20 +175,26 @@
                             <h3 class="text-sm font-bold mb-3 uppercase tracking-wide text-gray-700">Szállítási mód</h3>
                             <div class="space-y-2">
                                 @foreach ($this->shippingMethods as $method)
+                                    @php($methodCost = $this->shippingCosts[$method->id])
                                     <label wire:key="shipping-{{ $method->id }}"
-                                        class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-all {{ $selectedShippingMethod == $method->id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300' }}">
+                                        class="flex items-center gap-3 p-3 border rounded-lg transition-all {{ $methodCost === null ? 'cursor-not-allowed opacity-60 border-gray-200' : 'cursor-pointer' }} {{ $methodCost !== null && $selectedShippingMethod == $method->id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300' }}">
                                         <input type="radio" name="shipping_method"
                                             wire:model.live="selectedShippingMethod" value="{{ $method->id }}"
+                                            @disabled($methodCost === null)
                                             class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
                                         <div class="flex-1 min-w-0">
                                             <span class="text-sm font-medium text-gray-900">{{ $method->title }}</span>
-                                            @if ($method->description)
+                                            @if ($methodCost === null)
+                                                <p class="text-xs text-red-600">{{ number_format($method->maxWeight(), 0, ',', ' ') }} kg feletti rendelésnél nem választható.</p>
+                                            @elseif ($method->description)
                                                 <p class="text-xs text-gray-500 truncate">{{ $method->description }}</p>
                                             @endif
                                         </div>
                                         <span class="text-sm font-semibold text-gray-900 whitespace-nowrap">
-                                            @if ($method->cost > 0)
-                                                {{ number_format($method->cost, 0, ',', ' ') }} Ft
+                                            @if ($methodCost === null)
+                                                &ndash;
+                                            @elseif ($methodCost > 0)
+                                                {{ number_format($methodCost, 0, ',', ' ') }} Ft
                                             @else
                                                 Ingyenes
                                             @endif
@@ -199,6 +205,34 @@
                             @error('selectedShippingMethod')
                                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                             @enderror
+
+                            @if ($this->selectedShipping?->requires_parcel_point)
+                                <div class="mt-4 p-3 rounded-lg border border-gray-200 bg-gray-50">
+                                    @if ($parcelPoint)
+                                        <p class="text-xs font-medium uppercase tracking-wide text-gray-500">Kiválasztott átvevőhely</p>
+                                        <p class="mt-1 text-sm font-semibold text-gray-900">{{ $parcelPoint['name'] }}</p>
+                                        <p class="text-xs text-gray-600">{{ $parcelPoint['address'] }}</p>
+                                    @else
+                                        <p class="text-sm text-gray-600">Válassza ki, melyik GLS csomagponton vagy csomagautomatában veszi át a csomagot.</p>
+                                    @endif
+                                    <button type="button"
+                                        x-on:click="document.getElementById('gls-parcel-point-map').showModal()"
+                                        class="mt-3 inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        {{ $parcelPoint ? 'Másik átvevőhely' : 'Átvevőhely kiválasztása' }}
+                                    </button>
+                                    @error('parcelPoint')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            @endif
+
+                            <div wire:ignore
+                                x-data
+                                x-init="$refs.map.addEventListener('change', (event) => $wire.selectParcelPoint(event.detail))">
+                                <gls-dpm-dialog id="gls-parcel-point-map" country="hu" language="hu" x-ref="map"></gls-dpm-dialog>
+                                <script type="module" src="https://map.gls-hungary.com/widget/gls-dpm.js"></script>
+                            </div>
                         </div>
                     @endif
 
