@@ -30,7 +30,8 @@ it('shows out of stock badge when product has no stock', function (): void {
 
     Livewire::test(ProductCard::class, ['product' => $product])
         ->assertStatus(200)
-        ->assertSee('Rendelésre');
+        ->assertSee('Rendelésre')
+        ->assertSeeHtml('href="tel:+3612611566"');
 });
 
 it('can add product to cart when in stock', function (): void {

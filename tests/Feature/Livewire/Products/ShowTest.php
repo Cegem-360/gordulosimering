@@ -52,3 +52,9 @@ it('still shows the gross price of a regular product on the product page', funct
     Livewire::test(Show::class, ['product' => $product])
         ->assertSee(Number::currency(1269, 'HUF', 'hu', 0));
 });
+
+it('links the call prompt to the shop phone number', function (): void {
+    Livewire::test(Show::class, ['product' => Product::factory()->create()])
+        ->assertSeeHtml('href="tel:+3612611566"')
+        ->assertSee('Kérdése van? Hívjon minket!');
+});

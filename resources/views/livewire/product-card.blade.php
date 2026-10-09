@@ -44,9 +44,9 @@
             <span wire:loading wire:target="addToCart">Hozzáadás...</span>
         </button>
     @else
-        <button type="button"
+        <a href="tel:+3612611566" title="Hívjon: +36 1 261 1566"
             class="w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600 flex items-center justify-center gap-2">
             <i class="fa fa-phone"></i> Hívjon
-        </button>
+        </a>
     @endif
 </div>

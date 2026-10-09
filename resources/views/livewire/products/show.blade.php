@@ -256,7 +256,7 @@
 
                         <!-- Contact Option -->
                         <div class="mt-3">
-                            <a href="#"
+                            <a href="tel:+3612611566"
                                 class="text-md text-gray-500 hover:text-blue-600 inline-flex items-center gap-1">
                                 <i class="fas fa-phone text-xs"></i>
                                 Kérdése van? Hívjon minket!
