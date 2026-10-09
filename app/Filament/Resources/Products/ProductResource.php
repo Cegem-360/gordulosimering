@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use MadBox99\FilamentTranslatableModelLabels\Concerns\TranslatesFilamentModelLabels;
 use Override;
 use UnitEnum;
@@ -35,6 +36,26 @@ final class ProductResource extends Resource
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    /**
+     * @return array<int, string>
+     */
+    #[Override]
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'product_code'];
+    }
+
+    /**
+     * @return array<string, ?string>
+     */
+    #[Override]
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Cikkszám' => $record->product_code,
+        ];
+    }
 
     #[Override]
     public static function form(Schema $schema): Schema
