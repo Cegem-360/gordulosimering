@@ -8,14 +8,19 @@ use App\Models\Product;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Arr;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 final class ProductForm
 {
@@ -83,13 +88,32 @@ final class ProductForm
                             ->disk('public')
                             ->directory('products/images')
                             ->columnSpanFull(),
-                        FileUpload::make('documents')
+                        Repeater::make('document_rows')
                             ->label('Dokumentumok')
-                            ->multiple()
-                            ->disk('public')
-                            ->directory('products/documents')
-                            ->storeFileNamesIn('document_names')
-                            ->downloadable()
+                            ->helperText('A termékoldalon a megjelenített név lesz a link szövege.')
+                            ->schema([
+                                FileUpload::make('file')
+                                    ->label('Fájl')
+                                    ->required()
+                                    ->disk('public')
+                                    ->directory('products/documents')
+                                    ->downloadable()
+                                    ->live()
+                                    ->afterStateUpdated(function (mixed $state, Get $get, Set $set): void {
+                                        $upload = collect(Arr::wrap($state))->first();
+
+                                        if ($upload instanceof TemporaryUploadedFile && blank($get('name'))) {
+                                            $set('name', pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME));
+                                        }
+                                    }),
+                                TextInput::make('name')
+                                    ->label('Megjelenített név')
+                                    ->placeholder('pl. SKF 6204 műszaki adatlap')
+                                    ->maxLength(255),
+                            ])
+                            ->defaultItems(0)
+                            ->addActionLabel('Dokumentum hozzáadása')
+                            ->reorderable()
                             ->columnSpanFull(),
                     ]),
 
@@ -187,6 +211,50 @@ final class ProductForm
                             ->columnSpanFull()),
                     ]),
             ]);
+    }
+
+    /**
+     * The "Dokumentumok" rows for the form, from the stored paths and their
+     * display names.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public static function fillDocumentRows(array $data): array
+    {
+        $names = $data['document_names'] ?? [];
+
+        $data['document_rows'] = collect($data['documents'] ?? [])
+            ->filter(fn (mixed $path): bool => is_string($path) && $path !== '')
+            ->map(fn (string $path): array => ['file' => $path, 'name' => $names[$path] ?? null])
+            ->values()
+            ->all();
+
+        return $data;
+    }
+
+    /**
+     * Turns the "Dokumentumok" rows back into the stored paths (`documents`)
+     * and display names (`document_names`, path => name).
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    public static function saveDocumentRows(array $data): array
+    {
+        if (! array_key_exists('document_rows', $data)) {
+            return $data;
+        }
+
+        $rows = collect($data['document_rows'] ?? [])
+            ->map(fn (array $row): array => ['file' => collect(Arr::wrap($row['file'] ?? null))->first(), 'name' => mb_trim((string) ($row['name'] ?? ''))])
+            ->filter(fn (array $row): bool => is_string($row['file']) && $row['file'] !== '');
+
+        $data['documents'] = $rows->pluck('file')->values()->all();
+        $data['document_names'] = $rows->filter(fn (array $row): bool => $row['name'] !== '')->pluck('name', 'file')->all() ?: null;
+        unset($data['document_rows']);
+
+        return $data;
     }
 
     /**

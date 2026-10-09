@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Products\Pages;
 
 use App\Filament\Resources\Products\ProductResource;
+use App\Filament\Resources\Products\Schemas\ProductForm;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
@@ -21,5 +22,25 @@ final class EditProduct extends EditRecord
             ViewAction::make(),
             DeleteAction::make(),
         ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    #[Override]
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        return ProductForm::fillDocumentRows($data);
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    #[Override]
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return ProductForm::saveDocumentRows($data);
     }
 }
