@@ -88,6 +88,7 @@ final class ProductForm
                             ->multiple()
                             ->disk('public')
                             ->directory('products/documents')
+                            ->storeFileNamesIn('document_names')
                             ->downloadable()
                             ->columnSpanFull(),
                     ]),

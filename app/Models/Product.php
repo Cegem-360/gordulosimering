@@ -66,6 +66,28 @@ final class Product extends Model
     }
 
     /**
+     * The uploaded documents for the product page, with the name the file
+     * was uploaded under. Uploads from before the names were kept are
+     * stored under random names, so they are numbered instead.
+     *
+     * @return list<array{url: string, name: string}>
+     */
+    public function documentLinks(): array
+    {
+        $names = $this->document_names ?? [];
+
+        return collect($this->documents ?? [])
+            ->filter(fn (mixed $path): bool => is_string($path) && $path !== '')
+            ->values()
+            ->map(fn (string $path, int $index): array => [
+                'url' => Storage::disk('public')->url($path),
+                'name' => $names[$path] ?? 'Dokumentum ' . ($index + 1),
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
      * The rough stock level the product cards show instead of the count.
      * Exactly 10 still counts as "fewer than 10" and exactly 50 as "more
      * than 10", as the client asked; null when nothing is in stock.
@@ -346,6 +368,7 @@ final class Product extends Model
             'field_visibility' => 'array',
             'images' => 'json',
             'documents' => 'json',
+            'document_names' => 'array',
         ];
     }
 

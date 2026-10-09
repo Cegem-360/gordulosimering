@@ -483,6 +483,27 @@
                     @endif
                 </div>
 
+                {{-- Dokumentumok --}}
+                @if ($documents = $product->documentLinks())
+                    <div class="bg-white rounded-lg border p-6">
+                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
+                            <i class="fas fa-file-pdf text-gray-600"></i>
+                            Dokumentumok
+                        </h3>
+                        <ul class="space-y-2">
+                            @foreach ($documents as $document)
+                                <li>
+                                    <a href="{{ $document['url'] }}" target="_blank" rel="noopener"
+                                        class="inline-flex items-center gap-2 text-blue-600 hover:underline break-all">
+                                        <i class="fas fa-file-arrow-down text-sm"></i>
+                                        {{ $document['name'] }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <!-- Leírás -->
                 @if ($product->visibleField('description'))
                     <div class="bg-white rounded-lg border p-6">

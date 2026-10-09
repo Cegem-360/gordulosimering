@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Livewire\Products\Show;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
 use Livewire\Livewire;
 
@@ -89,4 +90,21 @@ it('shows the exact stock count with its unit on the product page', function ():
 
     Livewire::test(Show::class, ['product' => Product::factory()->create(['stock_quantity' => 0])])
         ->assertDontSee('Raktáron:');
+});
+
+it('links the uploaded documents under their original names', function (): void {
+    $product = Product::factory()->create([
+        'documents' => ['products/documents/01ABC.pdf', 'products/documents/02DEF.pdf'],
+        'document_names' => ['products/documents/01ABC.pdf' => 'SKF katalógus.pdf'],
+    ]);
+
+    Livewire::test(Show::class, ['product' => $product])
+        ->assertSee(['Dokumentumok', 'SKF katalógus.pdf', 'Dokumentum 2'])
+        ->assertDontSeeText('02DEF.pdf')
+        ->assertSeeHtml('href="' . Storage::disk('public')->url('products/documents/01ABC.pdf') . '"');
+});
+
+it('shows no documents card without uploads', function (): void {
+    Livewire::test(Show::class, ['product' => Product::factory()->create(['documents' => null])])
+        ->assertDontSee('Dokumentumok');
 });
