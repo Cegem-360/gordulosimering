@@ -1,9 +1,9 @@
-@props(['filters' => [], 'selected' => [], 'rangeChips' => []])
+@props(['filters' => [], 'selected' => [], 'dimensionChips' => []])
 
-{{-- The removable chips of the ticked filters and the dimension ranges. The
+{{-- The removable chips of the ticked filters and the dimension sizes. The
      slot holds page-specific chips shown first, like the search term. --}}
 @php
-    $hasActiveFilters = collect($selected)->flatten()->isNotEmpty() || $rangeChips !== [] || $slot->hasActualContent();
+    $hasActiveFilters = collect($selected)->flatten()->isNotEmpty() || $dimensionChips !== [] || $slot->hasActualContent();
     $filterLabels = collect($filters)->mapWithKeys(fn ($filter) => [$filter['key'] => collect($filter['items'])->pluck('name', 'value')]);
 @endphp
 
@@ -23,11 +23,11 @@
                 </span>
             @endforeach
         @endforeach
-        @foreach ($rangeChips as $chip)
+        @foreach ($dimensionChips as $chip)
             <span wire:key="chip-dimension-{{ $chip['key'] }}"
                 class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                 {{ $chip['label'] }}
-                <button type="button" wire:click="clearDimensionRange('{{ $chip['key'] }}')"
+                <button type="button" wire:click="clearDimension('{{ $chip['key'] }}')"
                     class="hover:text-blue-600">
                     <i class="fas fa-times text-xs"></i>
                 </button>

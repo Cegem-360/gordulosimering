@@ -38,7 +38,7 @@
                         </div>
 
                         <!-- Active Filters -->
-                        <x-categories.active-filters :filters="$filters" :selected="$selectedFilters" :range-chips="$this->dimensionRangeChips">
+                        <x-categories.active-filters :filters="$filters" :selected="$selectedFilters" :dimension-chips="$this->dimensionChips">
                             @if ($search)
                                 <span
                                     class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">

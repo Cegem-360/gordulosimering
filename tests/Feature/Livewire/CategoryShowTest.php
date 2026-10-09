@@ -111,12 +111,12 @@ it('offers the filter sidebar without the category filter, counted within the ca
 
     expect($filters->pluck('key')->all())->toBe(['stock', 'group', 'dimensions', 'size', 'brand', 'material'])
         ->and($filters->firstWhere('key', 'brand')['items'])->toBe([['name' => 'SKF', 'value' => 'SKF', 'count' => 2]])
-        ->and($filters->firstWhere('key', 'dimensions')['ranges'][0])->toMatchArray(['min' => 25.0, 'max' => 25.0]);
+        ->and($filters->firstWhere('key', 'dimensions')['fields'][0])->toBe(['key' => 'inner_diameter', 'label' => 'Belső átmérő (d)']);
     $component->assertSee(['Márka', 'Anyag', 'Méretek (mm)'])
         ->assertSeeHtml('wire:model.live="selectedFilters.brand"');
 });
 
-it('narrows the category products by brand, material and dimension range', function (string $property, mixed $value): void {
+it('narrows the category products by brand, material and size', function (string $property, mixed $value): void {
     $seals = Category::query()->create(['name' => 'TÖMÍTÉSEK', 'slug' => 'tomitesek']);
     $seals->products()->attach($match = Product::factory()->create(['name' => 'SKF simmering, NBR', 'size' => '25X47X8']));
     $seals->products()->attach(Product::factory()->create(['name' => 'CORTECO simmering, VITON', 'size' => '40X62X10']));
@@ -128,7 +128,7 @@ it('narrows the category products by brand, material and dimension range', funct
 })->with([
     'brand' => ['selectedFilters.brand', ['SKF']],
     'material' => ['selectedFilters.material', ['NBR']],
-    'range' => ['dimensionRanges.inner_diameter', ['min' => '20', 'max' => '30']],
+    'size' => ['dimensions.inner_diameter', '25'],
 ]);
 
 it('shows the active filter chips and a way out when the filters match nothing', function (): void {
@@ -137,13 +137,13 @@ it('shows the active filter chips and a way out when the filters match nothing',
 
     Livewire::test(Show::class, ['category' => $seals])
         ->set('selectedFilters.brand', ['SKF'])
-        ->set('dimensionRanges.width.min', '50')
+        ->set('dimensions.width', '50')
         ->assertSeeHtml('wire:key="chip-brand-SKF"')
-        ->assertSee('Szélesség: 50 mm-től')
+        ->assertSee('Szélesség: 50 mm')
         ->assertSee('A megadott szűrőkkel nem található termék.')
         ->assertDontSee('Nincs termék ebben a kategóriában')
         ->call('clearFilters')
         ->assertSet('selectedFilters.brand', [])
-        ->assertSet('dimensionRanges.width', ['min' => null, 'max' => null])
+        ->assertSet('dimensions.width', null)
         ->assertSee('SKF simmering, NBR');
 });

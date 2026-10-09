@@ -30,7 +30,7 @@
                         </div>
 
                         <!-- Active Filters -->
-                        <x-categories.active-filters :filters="$filters" :selected="$selectedFilters" :range-chips="$this->dimensionRangeChips" />
+                        <x-categories.active-filters :filters="$filters" :selected="$selectedFilters" :dimension-chips="$this->dimensionChips" />
                     </div>
 
                     <!-- Products Grid -->

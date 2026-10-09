@@ -34,7 +34,17 @@ trait FiltersProducts
         'stock' => [],
     ];
 
-    private const array EMPTY_RANGE = ['min' => null, 'max' => null];
+    private const array EMPTY_DIMENSIONS = [
+        'inner_diameter' => null,
+        'outer_diameter' => null,
+        'width' => null,
+    ];
+
+    /**
+     * Two sizes count as the same within this tolerance (mm); the columns
+     * keep three decimals.
+     */
+    private const float DIMENSION_TOLERANCE = 0.0005;
 
     private const string DISCONTINUED_GROUP_NAME = 'Megszűnt termék';
 
@@ -55,16 +65,12 @@ trait FiltersProducts
     public string $sizeSearch = '';
 
     /**
-     * The "from" and "to" of each dimension in mm, as the inputs send them;
-     * dimensionBounds() reads them.
+     * The exact size wanted for each dimension in mm, as the inputs send it;
+     * dimensionValue() reads it.
      *
-     * @var array<string, array{min: mixed, max: mixed}>
+     * @var array<string, mixed>
      */
-    public array $dimensionRanges = [
-        'inner_diameter' => self::EMPTY_RANGE,
-        'outer_diameter' => self::EMPTY_RANGE,
-        'width' => self::EMPTY_RANGE,
-    ];
+    public array $dimensions = self::EMPTY_DIMENSIONS;
 
     /**
      * The web-visible products the filters narrow down, before any filter.
@@ -88,19 +94,19 @@ trait FiltersProducts
         $this->resetPage();
     }
 
-    public function updatedDimensionRanges(): void
+    public function updatedDimensions(): void
     {
         $this->normaliseFilterState();
         $this->resetPage();
     }
 
-    public function clearDimensionRange(string $dimension): void
+    public function clearDimension(string $dimension): void
     {
         if (! array_key_exists($dimension, self::DIMENSIONS)) {
             return;
         }
 
-        $this->dimensionRanges[$dimension] = self::EMPTY_RANGE;
+        $this->dimensions[$dimension] = null;
         $this->resetPage();
     }
 
@@ -108,22 +114,15 @@ trait FiltersProducts
      * @return array<int, array{key: string, label: string}>
      */
     #[Computed]
-    public function dimensionRangeChips(): array
+    public function dimensionChips(): array
     {
         $chips = [];
 
         foreach (self::DIMENSIONS as $column => $labels) {
-            [$min, $max] = $this->dimensionBounds($column);
+            $value = $this->dimensionValue($column);
 
-            $text = match (true) {
-                $min !== null && $max !== null => $this->formatMillimetres($min) . '–' . $this->formatMillimetres($max) . ' mm',
-                $min !== null => $this->formatMillimetres($min) . ' mm-től',
-                $max !== null => $this->formatMillimetres($max) . ' mm-ig',
-                default => null,
-            };
-
-            if ($text !== null) {
-                $chips[] = ['key' => $column, 'label' => "{$labels['chip']}: {$text}"];
+            if ($value !== null) {
+                $chips[] = ['key' => $column, 'label' => "{$labels['chip']}: {$this->formatMillimetres($value)} mm"];
             }
         }
 
@@ -131,7 +130,7 @@ trait FiltersProducts
     }
 
     /**
-     * @return array<int, array{title: string, key: string, visible: int, items: array<int, array{name: string, value: string, count: int}>, type?: 'range', ranges?: array<int, array{key: string, label: string, min: ?float, max: ?float}>, search?: array{model: string, placeholder: string, empty: ?string}}>
+     * @return array<int, array{title: string, key: string, visible: int, items: array<int, array{name: string, value: string, count: int}>, type?: 'dimensions', fields?: array<int, array{key: string, label: string}>, search?: array{model: string, placeholder: string, empty: ?string}}>
      */
     #[Computed]
     public function filters(): array
@@ -163,10 +162,13 @@ trait FiltersProducts
             [
                 'title' => 'Méretek (mm)',
                 'key' => 'dimensions',
-                'type' => 'range',
+                'type' => 'dimensions',
                 'visible' => 0,
                 'items' => [],
-                'ranges' => $this->dimensionRangeOptions(),
+                'fields' => collect(self::DIMENSIONS)
+                    ->map(fn (array $labels, string $column): array => ['key' => $column, 'label' => $labels['sidebar']])
+                    ->values()
+                    ->all(),
             ],
             [
                 'title' => 'Méret',
@@ -206,7 +208,7 @@ trait FiltersProducts
     {
         $this->selectedFilters = self::EMPTY_FILTERS;
         $this->sizeSearch = '';
-        $this->dimensionRanges = array_map(fn (): array => self::EMPTY_RANGE, self::DIMENSIONS);
+        $this->dimensions = self::EMPTY_DIMENSIONS;
     }
 
     /**
@@ -233,14 +235,10 @@ trait FiltersProducts
         }
 
         foreach (array_keys(self::DIMENSIONS) as $column) {
-            [$min, $max] = $this->dimensionBounds($column);
+            $value = $this->dimensionValue($column);
 
-            if ($min !== null) {
-                $query->where($column, '>=', $min);
-            }
-
-            if ($max !== null) {
-                $query->where($column, '<=', $max);
+            if ($value !== null) {
+                $query->whereBetween($column, [$value - self::DIMENSION_TOLERANCE, $value + self::DIMENSION_TOLERANCE]);
             }
         }
 
@@ -265,12 +263,9 @@ trait FiltersProducts
 
         $this->selectedFilters = $selected;
 
-        $this->dimensionRanges = array_map(
-            fn (string $column): array => array_merge(
-                self::EMPTY_RANGE,
-                is_array($this->dimensionRanges[$column] ?? null) ? $this->dimensionRanges[$column] : [],
-            ),
-            array_combine(array_keys(self::DIMENSIONS), array_keys(self::DIMENSIONS)),
+        $this->dimensions = array_merge(
+            self::EMPTY_DIMENSIONS,
+            array_intersect_key(is_array($this->dimensions) ? $this->dimensions : [], self::EMPTY_DIMENSIONS),
         );
     }
 
@@ -419,46 +414,12 @@ trait FiltersProducts
     }
 
     /**
-     * The smallest and largest value of each dimension in the unfiltered list.
-     *
-     * @return array<int, array{key: string, label: string, min: ?float, max: ?float}>
+     * The size given for a dimension, or null when it is not a non-negative
+     * number; a decimal comma is fine.
      */
-    private function dimensionRangeOptions(): array
+    private function dimensionValue(string $column): ?float
     {
-        $limits = $this->filterableProducts()
-            ->selectRaw(collect(array_keys(self::DIMENSIONS))
-                ->map(fn (string $column): string => "min({$column}) as {$column}_min, max({$column}) as {$column}_max")
-                ->implode(', '))
-            ->toBase()
-            ->first();
-
-        return collect(self::DIMENSIONS)
-            ->map(fn (array $labels, string $column): array => [
-                'key' => $column,
-                'label' => $labels['sidebar'],
-                'min' => $limits?->{"{$column}_min"} === null ? null : (float) $limits->{"{$column}_min"},
-                'max' => $limits?->{"{$column}_max"} === null ? null : (float) $limits->{"{$column}_max"},
-            ])
-            ->values()
-            ->all();
-    }
-
-    /**
-     * The valid bounds of a dimension, the lower one first. A bound that is
-     * not a non-negative number counts as not given; a decimal comma is fine.
-     *
-     * @return array{0: ?float, 1: ?float}
-     */
-    private function dimensionBounds(string $column): array
-    {
-        $min = $this->millimetres($this->dimensionRanges[$column]['min'] ?? null);
-        $max = $this->millimetres($this->dimensionRanges[$column]['max'] ?? null);
-
-        if ($min !== null && $max !== null && $min > $max) {
-            return [$max, $min];
-        }
-
-        return [$min, $max];
+        return $this->millimetres($this->dimensions[$column] ?? null);
     }
 
     private function millimetres(mixed $value): ?float

@@ -19,23 +19,15 @@
                 </button>
             </h3>
             <div x-show="open" x-collapse class="space-y-2">
-                @if (($filter['type'] ?? null) === 'range')
-                    @foreach ($filter['ranges'] as $range)
-                        <div wire:key="range-{{ $range['key'] }}">
-                            <p class="text-sm text-gray-700 mb-1">{{ $range['label'] }}</p>
-                            <div class="flex items-center gap-2">
-                                @foreach (['min' => 'tól', 'max' => 'ig'] as $bound => $boundLabel)
-                                    @if (! $loop->first)
-                                        <span class="text-gray-400">–</span>
-                                    @endif
-                                    <input type="text" inputmode="decimal" autocomplete="off"
-                                        wire:model.live.debounce.500ms="dimensionRanges.{{ $range['key'] }}.{{ $bound }}"
-                                        placeholder="{{ $range[$bound] !== null ? Number::format($range[$bound], maxPrecision: 3, locale: 'hu') : $boundLabel }}"
-                                        aria-label="{{ $range['label'] }} {{ $boundLabel }}"
-                                        class="w-full min-w-0 px-3 py-1.5 rounded-md border border-gray-300 bg-white text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                                @endforeach
-                            </div>
-                        </div>
+                @if (($filter['type'] ?? null) === 'dimensions')
+                    @foreach ($filter['fields'] as $field)
+                        <label wire:key="dimension-{{ $field['key'] }}" class="flex items-center justify-between gap-3">
+                            <span class="text-sm text-gray-700">{{ $field['label'] }}</span>
+                            <input type="text" inputmode="decimal" autocomplete="off"
+                                wire:model.live.debounce.500ms="dimensions.{{ $field['key'] }}"
+                                placeholder="mm"
+                                class="w-24 shrink-0 px-3 py-1.5 rounded-md border border-gray-300 bg-white text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        </label>
                     @endforeach
                 @else
                 @isset($filter['search'])

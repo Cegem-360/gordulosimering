@@ -203,101 +203,96 @@ it('clears the new filters with "Szűrők törlése"', function (): void {
         ->group->toBe([]);
 });
 
-it('filters by a dimension range, with either bound on its own', function (string $component, array $range, array $expectedSizes): void {
+it('filters by the exact size of each dimension', function (string $component, string $dimension, string $value, array $expectedSizes): void {
     Product::factory()->create(['size' => '20X47X14']);
     Product::factory()->create(['size' => '25X52X15']);
-    Product::factory()->create(['size' => '30X62X16']);
+    Product::factory()->create(['size' => '25X62X17']);
     Product::factory()->create(['size' => 'A28,5']);
 
-    $component = Livewire::test($component)->set('dimensionRanges.inner_diameter', $range);
+    $component = Livewire::test($component)->set("dimensions.{$dimension}", $value);
 
     expect($component->instance()->products->pluck('size')->sort()->values()->all())->toBe($expectedSizes);
 })->with([
-    'both bounds' => [Index::class, ['min' => '22', 'max' => '28'], ['25X52X15']],
-    'only the lower bound' => [Index::class, ['min' => '25', 'max' => ''], ['25X52X15', '30X62X16']],
-    'only the upper bound' => [Index::class, ['min' => null, 'max' => '25'], ['20X47X14', '25X52X15']],
-    'product list both bounds' => [ProductsIndex::class, ['min' => '22', 'max' => '28'], ['25X52X15']],
-    'product list only the lower bound' => [ProductsIndex::class, ['min' => '25', 'max' => ''], ['25X52X15', '30X62X16']],
+    'inner diameter' => [Index::class, 'inner_diameter', '25', ['25X52X15', '25X62X17']],
+    'outer diameter' => [Index::class, 'outer_diameter', '52', ['25X52X15']],
+    'width' => [Index::class, 'width', '17', ['25X62X17']],
+    'no match' => [Index::class, 'inner_diameter', '24', []],
+    'product list' => [ProductsIndex::class, 'inner_diameter', '20', ['20X47X14']],
 ]);
 
-it('ignores invalid bounds and accepts a decimal comma', function (): void {
-    Product::factory()->create(['size' => '25,4X50,8X15']);
-    Product::factory()->create(['size' => '30X62X16']);
-
-    $component = Livewire::test(Index::class)->set('dimensionRanges.inner_diameter', ['min' => 'abc', 'max' => '25,4']);
-    expect($component->instance()->products->pluck('size')->all())->toBe(['25,4X50,8X15']);
-
-    $component->set('dimensionRanges.inner_diameter', ['min' => '-5', 'max' => 'xyz']);
-    expect($component->instance()->products)->toHaveCount(2);
-});
-
-it('narrows to a decimal range given with a comma or a point', function (string $max): void {
-    Product::factory()->create(['size' => '16X28X7']);
-    Product::factory()->create(['size' => '17,5X40X12']);
-    Product::factory()->create(['size' => '17,9X40X12']);
-    Product::factory()->create(['size' => '20X47X14']);
-
-    $component = Livewire::test(Index::class)->set('dimensionRanges.inner_diameter', ['min' => '16', 'max' => $max]);
-
-    expect($component->instance()->products->pluck('size')->sort()->values()->all())->toBe(['16X28X7', '17,5X40X12']);
-})->with(['decimal comma' => '17,87', 'decimal point' => '17.87']);
-
-it('takes the range bounds as text so a decimal comma reaches the server in every browser', function (): void {
-    Product::factory()->create(['size' => '20X47X14']);
-
-    expect(Livewire::test(Index::class)->html())
-        ->toContain('type="text" inputmode="decimal" autocomplete="off"')
-        ->not->toContain('type="number"');
-});
-
-it('swaps a reversed range', function (): void {
+it('combines the three sizes', function (): void {
     Product::factory()->create(['size' => '25X52X15']);
-    Product::factory()->create(['size' => '40X80X18']);
+    Product::factory()->create(['size' => '25X52X18']);
+    Product::factory()->create(['size' => '25X62X15']);
 
-    $component = Livewire::test(Index::class)->set('dimensionRanges.outer_diameter', ['min' => '60', 'max' => '50']);
+    $component = Livewire::test(Index::class)
+        ->set('dimensions.inner_diameter', '25')
+        ->set('dimensions.outer_diameter', '52')
+        ->set('dimensions.width', '15');
 
     expect($component->instance()->products->pluck('size')->all())->toBe(['25X52X15']);
 });
 
-it('goes back to the first page when a range changes', function (): void {
+it('matches a decimal size given with a comma or a point, and only that size', function (string $value): void {
+    Product::factory()->create(['size' => '17X40X12']);
+    Product::factory()->create(['size' => '17,5X40X12']);
+    Product::factory()->create(['size' => '17,55X40X12']);
+
+    $component = Livewire::test(Index::class)->set('dimensions.inner_diameter', $value);
+
+    expect($component->instance()->products->pluck('size')->all())->toBe(['17,5X40X12']);
+})->with(['decimal comma' => '17,5', 'decimal point' => '17.5', 'trailing zero' => '17,50']);
+
+it('ignores a size that is not a non-negative number', function (string $value): void {
+    Product::factory()->count(2)->create(['size' => '25X52X15']);
+
+    expect(Livewire::test(Index::class)->set('dimensions.inner_diameter', $value)->instance()->products)->toHaveCount(2);
+})->with(['text' => 'abc', 'negative' => '-5', 'empty' => '']);
+
+it('offers one text field per dimension so a decimal comma reaches the server in every browser', function (): void {
+    Product::factory()->create(['size' => '20X47X14']);
+
+    $component = Livewire::test(Index::class);
+    $dimensions = collect($component->instance()->filters)->firstWhere('key', 'dimensions');
+
+    expect($dimensions['fields'])->toBe([
+        ['key' => 'inner_diameter', 'label' => 'Belső átmérő (d)'],
+        ['key' => 'outer_diameter', 'label' => 'Külső átmérő (D)'],
+        ['key' => 'width', 'label' => 'Szélesség (B)'],
+    ])
+        ->and(mb_substr_count($component->html(), 'type="text" inputmode="decimal"'))->toBe(3)
+        ->and($component->html())
+        ->toContain('wire:model.live.debounce.500ms="dimensions.inner_diameter"')
+        ->not->toContain('type="number"')
+        ->not->toContain('dimensions.inner_diameter.min');
+});
+
+it('goes back to the first page when a size changes', function (): void {
     Product::factory()->count(30)->create(['size' => '25X52X15']);
 
     Livewire::test(Index::class)
         ->call('gotoPage', 2)
-        ->set('dimensionRanges.width.min', '10')
+        ->set('dimensions.width', '15')
         ->assertSet('paginators.page', 1);
 });
 
-it('shows the range bounds of the list as placeholders', function (): void {
-    Product::factory()->create(['size' => '20X47X14']);
-    Product::factory()->create(['size' => '25,5X52X15']);
-
-    $dimensions = collect(Livewire::test(Index::class)->instance()->filters)->firstWhere('key', 'dimensions');
-
-    expect($dimensions['ranges'][0])->toBe(['key' => 'inner_diameter', 'label' => 'Belső átmérő (d)', 'min' => 20.0, 'max' => 25.5])
-        ->and(Livewire::test(Index::class)->html())
-        ->toContain('wire:model.live.debounce.500ms="dimensionRanges.inner_diameter.min"')
-        ->toContain('placeholder="20"')
-        ->toContain('placeholder="25,5"');
-});
-
-it('shows a removable chip for each range and clears the ranges with "Szűrők törlése"', function (string $component): void {
+it('shows a removable chip for each size and clears the sizes with "Szűrők törlése"', function (string $component): void {
     $test = Livewire::test($component)
-        ->set('dimensionRanges.inner_diameter', ['min' => '20', 'max' => '30'])
-        ->set('dimensionRanges.width', ['min' => '10', 'max' => null])
-        ->set('dimensionRanges.outer_diameter', ['min' => null, 'max' => '62,5']);
+        ->set('dimensions.inner_diameter', '20')
+        ->set('dimensions.outer_diameter', '62,5')
+        ->set('dimensions.width', '10');
 
-    expect($test->instance()->dimensionRangeChips)->toBe([
-        ['key' => 'inner_diameter', 'label' => 'Belső átmérő: 20–30 mm'],
-        ['key' => 'outer_diameter', 'label' => 'Külső átmérő: 62,5 mm-ig'],
-        ['key' => 'width', 'label' => 'Szélesség: 10 mm-től'],
+    expect($test->instance()->dimensionChips)->toBe([
+        ['key' => 'inner_diameter', 'label' => 'Belső átmérő: 20 mm'],
+        ['key' => 'outer_diameter', 'label' => 'Külső átmérő: 62,5 mm'],
+        ['key' => 'width', 'label' => 'Szélesség: 10 mm'],
     ]);
-    $test->assertSee('Belső átmérő: 20–30 mm')->assertSeeHtml('wire:click="clearDimensionRange(\'width\')"');
+    $test->assertSee('Belső átmérő: 20 mm')->assertSeeHtml('wire:click="clearDimension(\'width\')"');
 
-    $test->call('clearDimensionRange', 'width')
-        ->assertSet('dimensionRanges.width', ['min' => null, 'max' => null])
+    $test->call('clearDimension', 'width')
+        ->assertSet('dimensions.width', null)
         ->call('clearFilters')
-        ->assertSet('dimensionRanges.inner_diameter', ['min' => null, 'max' => null]);
+        ->assertSet('dimensions', ['inner_diameter' => null, 'outer_diameter' => null, 'width' => null]);
 })->with([
     'category index' => [Index::class],
     'product list' => [ProductsIndex::class],
@@ -309,12 +304,12 @@ it('keeps working with the filter state of a page opened before the attribute fi
 
     $test = Livewire::test($component)
         ->set('selectedFilters', ['category' => [], 'size' => [], 'stock' => []])
-        ->set('dimensionRanges', [])
+        ->set('dimensions', [])
         ->set('selectedFilters.brand', ['SKF']);
 
     expect($test->instance()->products->pluck('id')->all())->toBe([$skf->id]);
 
-    $test->set('dimensionRanges.width.min', '5')->assertOk();
+    $test->set('dimensions.width', '5')->assertOk();
 })->with([
     'category index' => [Index::class],
     'product list' => [ProductsIndex::class],

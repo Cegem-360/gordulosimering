@@ -54,7 +54,7 @@
                     <div>
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
                             <h2 class="text-lg font-semibold text-gray-800">Termékek</h2>
-                            <x-categories.active-filters :filters="$filters" :selected="$selectedFilters" :range-chips="$this->dimensionRangeChips" />
+                            <x-categories.active-filters :filters="$filters" :selected="$selectedFilters" :dimension-chips="$this->dimensionChips" />
                         </div>
 
                         @if ($products->count() > 0)
