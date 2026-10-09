@@ -63,13 +63,14 @@
             <a href="{{ route('brands') }}" class="group block">
                 <div
                     class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200 h-64">
-                    <div class="grid grid-cols-3 gap-x-4 gap-y-5 items-center justify-items-center px-6 pt-8">
-                        @foreach (collect(config('brands'))->take(6) as $brand)
+                    {{-- Wide logos only: the square ones (INA, BAHCO) and TENTE's long slogan shrink to nothing in a cell. --}}
+                    <div class="absolute inset-x-0 top-0 bottom-16 grid grid-cols-3 grid-rows-3 gap-x-5 gap-y-2 items-center justify-items-center px-5 pt-4">
+                        @foreach (collect(config('brands'))->whereIn('name', ['SKF', 'FAG', 'TIMKEN', 'ZKL/ZVL', 'LOCTITE', 'SEEGER', 'NORMA', 'BETA', 'DURACELL']) as $brand)
                             <img src="{{ Vite::asset('resources/images/brands/' . $brand['logo']) }}" alt="{{ $brand['name'] }}"
-                                @class(['max-h-9 w-auto max-w-full', 'invert' => $brand['invert'] ?? false])>
+                                @class(['max-h-11 w-auto max-w-full object-contain', 'invert' => $brand['invert'] ?? false])>
                         @endforeach
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 to-transparent p-6">
+                    <div class="absolute bottom-0 left-0 right-0 bg-gray-900/85 px-6 py-4">
                         <h3 class="text-white text-xl font-semibold flex items-center gap-2">
                             Márkák
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
