@@ -167,6 +167,17 @@ final class Product extends Model
     }
 
     /**
+     * A készleten lévő termékek kerülnek előre, utánuk a rendelhetők.
+     *
+     * @param  Builder<Product>  $query
+     */
+    #[Scope]
+    protected function inStockFirst(Builder $query): void
+    {
+        $query->orderByRaw('CASE WHEN stock_quantity > 0 THEN 0 ELSE 1 END');
+    }
+
+    /**
      * A termékkóddal kezdődő találatok kerülnek előre.
      *
      * @param  Builder<Product>  $query

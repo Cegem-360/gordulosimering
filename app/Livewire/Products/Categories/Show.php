@@ -82,7 +82,7 @@ final class Show extends Component
         $query = $this->filterableProducts();
         $this->applySelectedFilters($query);
 
-        return $query->orderBy('name')->paginate(24);
+        return $query->inStockFirst()->orderBy('name')->paginate(24);
     }
 
     /**

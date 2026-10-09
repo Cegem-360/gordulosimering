@@ -42,6 +42,7 @@ final class Index extends Component
     {
         $query = $this->filterableProducts();
         $this->applySelectedFilters($query);
+        $query->inStockFirst();
 
         if (mb_strlen($this->search) >= 2) {
             $query->orderBySearchRelevance($this->search);

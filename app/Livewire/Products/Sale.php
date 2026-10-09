@@ -41,7 +41,7 @@ final class Sale extends Component
         $this->applySelectedFilters($query);
 
         return $query
-            ->orderByRaw('CASE WHEN stock_quantity > 0 THEN 0 ELSE 1 END')
+            ->inStockFirst()
             ->orderByRaw('CASE WHEN featured_image IS NULL THEN 1 ELSE 0 END')
             ->orderByDesc('sale_percentage')
             ->orderBy('name')

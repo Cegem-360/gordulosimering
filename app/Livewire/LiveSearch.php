@@ -27,6 +27,7 @@ final class LiveSearch extends Component
             ->webVisible()
             ->select(['id', 'name', 'slug', 'product_code', 'net_selling_price', 'group_code', 'is_on_sale', 'sale_percentage', 'featured_image', 'images', 'stock_quantity'])
             ->matchingSearch($this->query)
+            ->inStockFirst()
             ->orderBySearchRelevance($this->query)
             ->limit(8)
             ->get();

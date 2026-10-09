@@ -34,7 +34,7 @@ final class Index extends Component
         $query = $this->filterableProducts();
         $this->applySelectedFilters($query);
 
-        return $query->paginate(24);
+        return $query->inStockFirst()->paginate(24);
     }
 
     public function render(): Factory|View

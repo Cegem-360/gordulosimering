@@ -4,7 +4,7 @@
      Hidden until at least one is ticked. It used to list ten random products
      as "Legkeresettebb termékeink", which nothing measured. --}}
 @php
-    $products = Product::query()->webVisible()->featured()->orderBy('name')->limit(10)->get();
+    $products = Product::query()->webVisible()->featured()->inStockFirst()->orderBy('name')->limit(10)->get();
 @endphp
 
 @if ($products->isNotEmpty())
