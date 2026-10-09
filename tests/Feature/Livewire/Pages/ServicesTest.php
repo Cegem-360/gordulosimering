@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\ShippingMethod;
+use Illuminate\Support\Number;
 use Tests\TestCase;
 
 it('shows the on-call rates, the delivery terms and the other services', function (): void {
@@ -25,4 +27,18 @@ it('gives gs@gordulo-simmering.hu as the email address', function (string $route
 it('links the homepage on-call card to the on-call section', function (): void {
     /** @var TestCase $this */
     $this->get('/')->assertOk()->assertSeeHtml('<a href="' . route('services') . '#ugyelet" class="group block">');
+});
+
+it('lists the GLS rates by weight under home delivery', function (): void {
+    /** @var TestCase $this */
+    ShippingMethod::factory()->glsRates()->create(['name' => 'gls']);
+
+    $this->get(route('services'))->assertOk()
+        ->assertSee(['GLS futárszolgálat országosan', '3 kg-ig', '15 kg-ig', '30 kg-ig'])
+        ->assertSeeInOrder(['Házhozszállítás', ...array_map(fn (int $net): string => Number::currency($net, 'HUF', 'hu', 0) . ' + ÁFA', [2550, 3550, 3750, 4750])]);
+});
+
+it('leaves the GLS table out without GLS rates', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('services'))->assertOk()->assertDontSee('GLS futárszolgálat országosan');
 });

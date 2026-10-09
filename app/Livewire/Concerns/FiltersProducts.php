@@ -80,6 +80,19 @@ trait FiltersProducts
     abstract protected function filterableProducts(): Builder;
 
     /**
+     * A link from the Márkáink page opens the list filtered by its brand
+     * (?marka=SKF).
+     */
+    public function mountFiltersProducts(): void
+    {
+        $brand = request()->query('marka');
+
+        if (is_string($brand) && $brand !== '') {
+            $this->selectedFilters['brand'] = [$brand];
+        }
+    }
+
+    /**
      * A page opened before a deploy may send back filter state without the
      * newer keys; fill them in so the filters never read a missing key.
      */

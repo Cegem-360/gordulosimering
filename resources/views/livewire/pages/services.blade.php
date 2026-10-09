@@ -120,6 +120,37 @@
                         kiszállítással.</p>
                 </div>
             </div>
+
+            @if ($glsRates !== [])
+                <div id="gls" class="mt-8 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                    <div class="flex items-center gap-3 p-5 border-b bg-gray-50">
+                        <i class="fas fa-box text-blue-600 text-xl"></i>
+                        <h3 class="text-xl font-bold text-gray-900">GLS futárszolgálat országosan</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="text-sm text-gray-500">
+                                <tr class="border-b">
+                                    <th class="p-5 font-medium">Csomag súlya</th>
+                                    <th class="p-5 font-medium">Előre utalással</th>
+                                    <th class="p-5 font-medium">Utánvéttel</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y">
+                                @foreach ($glsRates as $rate)
+                                    <tr>
+                                        <td class="p-5 font-bold text-blue-700 whitespace-nowrap">{{ Number::format((float) $rate['max_weight'], locale: 'hu') }} kg-ig</td>
+                                        <td class="p-5 text-gray-700 whitespace-nowrap">{{ Number::currency($rate['bank_transfer'], 'HUF', 'hu', 0) }} + ÁFA</td>
+                                        <td class="p-5 text-gray-700 whitespace-nowrap">{{ Number::currency($rate['cash_on_delivery'], 'HUF', 'hu', 0) }} + ÁFA</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="px-5 pb-5 pt-3 text-sm text-gray-500">Házhoz vagy GLS csomagpontba, csomagautomatába,
+                        általában 1–2 munkanapon belül. A szállítási díjat a webáruház a kosár súlya alapján számolja.</p>
+                </div>
+            @endif
         </section>
 
         <!-- SKF Quality -->

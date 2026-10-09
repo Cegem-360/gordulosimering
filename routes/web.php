@@ -6,6 +6,8 @@ use App\Livewire\Cart;
 use App\Livewire\CheckOut;
 use App\Livewire\OrderDetail;
 use App\Livewire\OrderHistory;
+use App\Livewire\Pages\Brands;
+use App\Livewire\Pages\Catalogs;
 use App\Livewire\Pages\CompanyData;
 use App\Livewire\Pages\Contact;
 use App\Livewire\Pages\DeliveryFramework;
@@ -51,6 +53,8 @@ Route::middleware(['throttle:global', 'EnsureCartExists'])->group(function (): v
     Route::get('/kosar', Cart::class)->name('cart');
     Route::get('/koszonjuk', ThankYou::class)->name('thank-you');
     Route::get('/szolgaltatasaink', Services::class)->name('services');
+    Route::get('/markaink', Brands::class)->name('brands');
+    Route::get('/katalogusok', Catalogs::class)->name('catalogs');
     Route::get('/munkatarsaink', Team::class)->name('team');
     Route::get('/kapcsolat', Contact::class)->name('contact');
     Route::get('/ajanlatkeres', RequestQuote::class)->name('quote-request');
