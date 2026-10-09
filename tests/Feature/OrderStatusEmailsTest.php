@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\Pages\EditOrder;
+use App\Mail\NewOrderNotificationMail;
+use App\Mail\OrderConfirmationMail;
 use App\Mail\OrderStatusChangedMail;
 use App\Mail\OrderStatusChangedNotificationMail;
 use App\Models\Order;
@@ -84,9 +86,9 @@ it('writes the status emails in Hungarian with the order details', function (): 
     $customer = new OrderStatusChangedMail($order->refresh());
     $shop = new OrderStatusChangedNotificationMail($order, OrderStatus::PENDING, true);
 
-    expect($customer->envelope()->subject)->toBe('Rendelése: Törölve – #' . $order->id)
+    expect($customer->envelope()->subject)->toBe('#' . $order->id . ' – Rendelése: Törölve')
         ->and($customer->render())->toContain('Kedves <strong>Teszt Elek</strong>', 'Rendelését töröltük.', 'Rendelt termékek')
-        ->and($shop->envelope()->subject)->toBe('Rendelés #' . $order->id . ' státusza: Feldolgozásra vár → Törölve')
+        ->and($shop->envelope()->subject)->toBe('#' . $order->id . ' – Rendelés státusza: Feldolgozásra vár → Törölve')
         ->and($shop->render())->toContain('korábban: Feldolgozásra vár', 'A vevő értesítést kapott:', route('filament.admin.resources.orders.edit', $order));
 });
 
@@ -119,12 +121,12 @@ it('gives the tracking number and the GLS parcel point in the handed to the cour
 
     $mail = new OrderStatusChangedMail($order->refresh());
 
-    expect($mail->envelope()->subject)->toBe('Rendelése: Futárszolgálatnak átadva – #' . $order->id)
+    expect($mail->envelope()->subject)->toBe('#' . $order->id . ' – Rendelése: Futárszolgálatnak átadva')
         ->and($mail->render())->toContain('átadtuk a futárszolgálatnak', 'GLS123456', 'Alpha Zoo Batthyány tér', 'Batthyány tér 5-6.');
 });
 
-it('leaves out the placeholder tracking number', function (): void {
-    $order = Order::factory()->create(['order_status' => OrderStatus::PROCESSING, 'shipping_tracking_number' => 'null']);
+it('leaves out the tracking number when the order has none', function (): void {
+    $order = Order::factory()->create(['order_status' => OrderStatus::PROCESSING, 'shipping_tracking_number' => null]);
     $order->update(['order_status' => OrderStatus::SHIPPED]);
 
     expect((new OrderStatusChangedMail($order->refresh()))->render())->not->toContain('Csomagkövetési szám');
@@ -136,6 +138,13 @@ it('gives the store address and opening hours in the ready for pickup email', fu
 
     $mail = new OrderStatusChangedMail($order->refresh());
 
-    expect($mail->envelope()->subject)->toBe('Rendelése: Személyesen átvehető üzletünkben – #' . $order->id)
+    expect($mail->envelope()->subject)->toBe('#' . $order->id . ' – Rendelése: Személyesen átvehető üzletünkben')
         ->and($mail->render())->toContain('átvehető üzletünkben', '1102 Budapest, Kőrösi Csoma S. út 18-20.', 'szombat 8:30–12:30');
+});
+
+it('puts the order number first in the order email subjects', function (): void {
+    $order = Order::factory()->create();
+
+    expect((new OrderConfirmationMail($order))->envelope()->subject)->toBe('#' . $order->id . ' – Rendelés visszaigazolás')
+        ->and((new NewOrderNotificationMail($order))->envelope()->subject)->toBe('#' . $order->id . ' – Új rendelés érkezett');
 });

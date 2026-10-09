@@ -51,8 +51,7 @@ final class OrderForm
                 TextInput::make('shipping_postcode'),
                 TextInput::make('shipping_country'),
                 TextInput::make('shipping_tracking_number')
-                    ->required()
-                    ->default('null'),
+                    ->helperText('A futárszolgálattól kapott szám; ha még nincs, maradhat üresen.'),
                 TextInput::make('parcel_point_name'),
                 TextInput::make('parcel_point_address'),
                 TextInput::make('parcel_point_id'),

@@ -31,7 +31,7 @@ final class OrderStatusChangedNotificationMail extends Mailable implements Shoul
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Rendelés #' . $this->order->id . ' státusza: ' . $this->previousStatus->getLabel() . ' → ' . $this->order->order_status->getLabel(),
+            subject: '#' . $this->order->id . ' – Rendelés státusza: ' . $this->previousStatus->getLabel() . ' → ' . $this->order->order_status->getLabel(),
         );
     }
 

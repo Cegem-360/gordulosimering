@@ -380,7 +380,6 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         $data['order_currency'] = 'HUF';
         $data['payment_method_title'] = $this->paymentMethods[$this->selectedPaymentMethod]['title'];
         $data['set_paid'] = false;
-        $data['shipping_tracking_number'] = '';
         $data['shipping_cost'] = $this->shippingCost;
 
         if ($this->selectedShipping->requires_parcel_point) {

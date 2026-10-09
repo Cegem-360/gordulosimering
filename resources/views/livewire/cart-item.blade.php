@@ -58,9 +58,18 @@
 
                  <!-- Price -->
                  <div class="text-right">
-                     <p class="text-sm text-gray-500">Egységár (nettó)</p>
-                     <x-product-price :product="$product" size="sm" class="justify-end" />
-                     <x-product-price :product="$product" :quantity="$quantity" class="justify-end mt-1" />
+                     <p class="text-xs text-gray-500">Nettó egységár</p>
+                     <div class="flex items-baseline justify-end gap-1">
+                         <x-product-price :product="$product" size="sm" class="justify-end" />
+                         <span class="text-xs text-gray-500">+ÁFA</span>
+                     </div>
+                     <p class="text-xs text-gray-500">Bruttó: {{ Number::currency($product->gross_unit_price, 'HUF', 'hu', 0) }}</p>
+                     <p class="text-xs text-gray-500 mt-2">Nettó összesen</p>
+                     <div class="flex items-baseline justify-end gap-1">
+                         <x-product-price :product="$product" :quantity="$quantity" class="justify-end" />
+                         <span class="text-sm font-light text-blue-600">+ÁFA</span>
+                     </div>
+                     <p class="text-sm text-gray-600">Bruttó összesen: {{ Number::currency($product->gross_unit_price * $quantity, 'HUF', 'hu', 0) }}</p>
                  </div>
              </div>
 
