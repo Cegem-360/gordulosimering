@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Enums\CustomerType;
 use App\Enums\OrderStatus;
 use App\Mail\NewOrderNotificationMail;
 use App\Mail\OrderConfirmationMail;
@@ -13,9 +14,11 @@ use App\Models\User;
 use App\Services\CartService;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
@@ -65,6 +68,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         $user = Auth::user();
         if ($user) {
             $this->form->fill([
+                'customer_type' => filled($user->billing_company_name) ? CustomerType::Company : CustomerType::Private,
                 'billing_name' => $user->billing_name ?? $user->name,
                 'billing_email' => $user->email,
                 'billing_phone' => $user->phone ?? '',
@@ -91,6 +95,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         } else {
             // Guest checkout - set defaults
             $this->form->fill([
+                'customer_type' => CustomerType::Private,
                 'billing_country' => 'Magyarország',
             ]);
         }
@@ -184,6 +189,16 @@ final class CheckOut extends Component implements HasActions, HasSchemas
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
+                        Radio::make('customer_type')
+                            ->label('Vásárló')
+                            ->options(CustomerType::class)
+                            ->enum(CustomerType::class)
+                            ->default(CustomerType::Private)
+                            ->required()
+                            ->inline()
+                            ->live()
+                            ->dehydrated(false)
+                            ->columnSpanFull(),
                         TextInput::make('billing_name')
                             ->label('Név')
                             ->required(),
@@ -196,9 +211,13 @@ final class CheckOut extends Component implements HasActions, HasSchemas
                             ->tel()
                             ->required(),
                         TextInput::make('billing_company_name')
-                            ->label('Cégnév'),
+                            ->label('Cégnév')
+                            ->visible(fn (Get $get): bool => $get->enum('customer_type', CustomerType::class) === CustomerType::Company)
+                            ->required(),
                         TextInput::make('billing_vat_number')
-                            ->label('Adószám'),
+                            ->label('Adószám')
+                            ->visible(fn (Get $get): bool => $get->enum('customer_type', CustomerType::class) === CustomerType::Company)
+                            ->required(),
                     ]),
                 Section::make('Számlázási cím')
                     ->columnSpanFull()
@@ -395,8 +414,8 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             $user->update([
                 'phone' => $data['billing_phone'] ?? $user->phone,
                 'billing_name' => $data['billing_name'] ?? $user->billing_name,
-                'billing_company_name' => $data['billing_company_name'] ?? $user->billing_company_name,
-                'billing_vat_number' => $data['billing_vat_number'] ?? $user->billing_vat_number,
+                'billing_company_name' => $data['billing_company_name'] ?? null,
+                'billing_vat_number' => $data['billing_vat_number'] ?? null,
                 'billing_postcode' => $data['billing_postcode'] ?? $user->billing_postcode,
                 'billing_city' => $data['billing_city'] ?? $user->billing_city,
                 'billing_address_1' => $data['billing_address_1'] ?? $user->billing_address_1,

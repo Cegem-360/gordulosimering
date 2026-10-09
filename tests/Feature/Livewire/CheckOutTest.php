@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\CustomerType;
 use App\Enums\OrderStatus;
 use App\Livewire\CheckOut;
 use App\Mail\NewOrderNotificationMail;
@@ -13,6 +14,7 @@ use App\Models\Product;
 use App\Models\ShippingMethod;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 
 it('renders successfully', function (): void {
@@ -181,6 +183,7 @@ it('saves billing and shipping data to user after successful order when checkbox
         ->set('data.billing_name', 'New Billing Name')
         ->set('data.billing_email', 'test@example.com')
         ->set('data.billing_phone', '+36309876543')
+        ->set('data.customer_type', CustomerType::Company->value)
         ->set('data.billing_company_name', 'New Company')
         ->set('data.billing_vat_number', '87654321-2-21')
         ->set('data.billing_postcode', '2222')
@@ -506,4 +509,103 @@ it('does not ask for the company registration number at checkout', function (): 
         ->test(CheckOut::class)
         ->assertDontSee('Cégjegyzékszám')
         ->assertFormFieldDoesNotExist('billing_company_office');
+});
+
+/**
+ * A logged-in checkout with one product in the cart and the billing address
+ * filled in, but no customer type picked yet.
+ */
+function checkoutWithBillingAddress(?User $user = null): Testable
+{
+    $user ??= User::factory()->create();
+    $cart = Cart::factory()->create(['user_id' => $user->id, 'session_id' => session()->getId()]);
+    CartItem::factory()->create(['cart_id' => $cart->id, 'product_id' => Product::factory()->create()->id, 'quantity' => 1]);
+
+    return Livewire::actingAs($user)
+        ->test(CheckOut::class)
+        ->set('data.billing_name', 'Teszt Elek')
+        ->set('data.billing_email', 'vevo@example.com')
+        ->set('data.billing_phone', '+36301234567')
+        ->set('data.billing_postcode', '1234')
+        ->set('data.billing_city', 'Budapest')
+        ->set('data.billing_address_1', 'Teszt utca 1.')
+        ->set('selectedShippingMethod', ShippingMethod::factory()->create(['cost' => 0])->id)
+        ->set('acceptTerms', true);
+}
+
+it('asks private person or company first, with private person picked', function (): void {
+    Mail::fake();
+
+    $component = checkoutWithBillingAddress()
+        ->assertFormSet(['customer_type' => CustomerType::Private])
+        ->assertFormFieldVisible('customer_type')
+        ->assertFormFieldHidden('billing_company_name')
+        ->assertFormFieldHidden('billing_vat_number');
+
+    expect(mb_strpos($component->html(), 'Magánszemély'))->toBeLessThan(mb_strpos($component->html(), 'Cég'))
+        ->and(mb_strpos($component->html(), 'Vásárló'))->toBeLessThan(mb_strpos($component->html(), 'Név'));
+});
+
+it('places a private order without company name or VAT number', function (): void {
+    Mail::fake();
+
+    checkoutWithBillingAddress()
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    expect(Order::query()->sole())
+        ->billing_company_name->toBeNull()
+        ->billing_vat_number->toBeNull();
+});
+
+it('requires the company name and VAT number from a company', function (): void {
+    Mail::fake();
+
+    checkoutWithBillingAddress()
+        ->fillForm(['customer_type' => CustomerType::Company])
+        ->assertFormFieldVisible('billing_company_name')
+        ->assertFormFieldVisible('billing_vat_number')
+        ->call('create')
+        ->assertHasFormErrors(['billing_company_name' => 'required', 'billing_vat_number' => 'required']);
+
+    expect(Order::query()->count())->toBe(0);
+});
+
+it('places a company order with the company name and VAT number', function (): void {
+    Mail::fake();
+
+    checkoutWithBillingAddress()
+        ->fillForm([
+            'customer_type' => CustomerType::Company,
+            'billing_company_name' => 'Teszt Kft.',
+            'billing_vat_number' => '12345678-2-42',
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    expect(Order::query()->sole())
+        ->billing_company_name->toBe('Teszt Kft.')
+        ->billing_vat_number->toBe('12345678-2-42');
+});
+
+it('picks company for a customer who saved a company name', function (): void {
+    $user = User::factory()->create(['billing_company_name' => 'Mentett Kft.', 'billing_vat_number' => '87654321-2-13']);
+
+    checkoutWithBillingAddress($user)
+        ->assertFormSet(['customer_type' => CustomerType::Company, 'billing_company_name' => 'Mentett Kft.']);
+});
+
+it('drops the saved company data when a private person saves their details', function (): void {
+    Mail::fake();
+    $user = User::factory()->create(['billing_company_name' => 'Régi Kft.', 'billing_vat_number' => '87654321-2-13']);
+
+    checkoutWithBillingAddress($user)
+        ->fillForm(['customer_type' => CustomerType::Private])
+        ->set('saveDataForFuture', true)
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    expect($user->refresh())
+        ->billing_company_name->toBeNull()
+        ->billing_vat_number->toBeNull();
 });
