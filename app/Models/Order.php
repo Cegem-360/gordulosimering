@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\OrderStatus;
+use App\Enums\VatRate;
 use App\Observers\OrderObserver;
 use Illuminate\Database\Eloquent\Attributes\DateFormat;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -102,6 +103,31 @@ final class Order extends Model
     public function hasTrackingNumber(): bool
     {
         return filled($this->shipping_tracking_number) && $this->shipping_tracking_number !== 'null';
+    }
+
+    /**
+     * The net amount the discounts took off the order.
+     */
+    public function savings(): float
+    {
+        return $this->orderItems->sum(fn (OrderItem $item): float => $item->lineSavings());
+    }
+
+    /**
+     * The 27% VAT on the net product total.
+     */
+    public function vatAmount(): float
+    {
+        return $this->orderTotal() * VatRate::Standard->percentage() / 100;
+    }
+
+    /**
+     * What the customer pays: the products with VAT and the shipping cost,
+     * as the checkout totals it.
+     */
+    public function grossTotal(): float
+    {
+        return $this->orderTotal() + $this->vatAmount() + $this->shipping_cost;
     }
 
     public function orderTotal(): int|float

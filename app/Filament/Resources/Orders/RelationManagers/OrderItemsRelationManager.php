@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Orders\RelationManagers;
 
+use App\Models\OrderItem;
 use App\Models\Product;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -16,6 +17,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Number;
 use Override;
 
 final class OrderItemsRelationManager extends RelationManager
@@ -52,22 +54,22 @@ final class OrderItemsRelationManager extends RelationManager
                     ->default(1)
                     ->minValue(1)
                     ->required(),
-                TextInput::make('subtotal')
+                TextInput::make('total')
                     ->label('Nettó egységár')
                     ->numeric()
                     ->prefix('Ft')
                     ->required(),
-                TextInput::make('subtotal_tax')
+                TextInput::make('total_tax')
                     ->label('ÁFA egységár')
                     ->numeric()
                     ->prefix('Ft')
                     ->default(0),
-                TextInput::make('total')
+                TextInput::make('subtotal')
                     ->label('Nettó összesen')
                     ->numeric()
                     ->prefix('Ft')
                     ->required(),
-                TextInput::make('total_tax')
+                TextInput::make('subtotal_tax')
                     ->label('ÁFA összesen')
                     ->numeric()
                     ->prefix('Ft')
@@ -94,18 +96,33 @@ final class OrderItemsRelationManager extends RelationManager
                 TextColumn::make('quantity')
                     ->label('Mennyiség')
                     ->sortable(),
-                TextColumn::make('subtotal')
-                    ->label('Nettó egységár')
-                    ->money('HUF')
-                    ->sortable(),
+                TextColumn::make('regular_price')
+                    ->label('Nettó listaár')
+                    ->money('HUF', locale: 'hu')
+                    ->placeholder('-'),
+                TextColumn::make('discount_percentage')
+                    ->label('Kedvezmény')
+                    ->formatStateUsing(fn (OrderItem $record): ?string => $record->hasDiscount()
+                        ? '−' . Number::percentage((float) $record->discount_percentage, maxPrecision: 2, locale: 'hu')
+                        : null)
+                    ->badge()
+                    ->color('success')
+                    ->placeholder('-'),
                 TextColumn::make('total')
+                    ->label('Nettó egységár')
+                    ->money('HUF', locale: 'hu')
+                    ->sortable(),
+                TextColumn::make('subtotal')
                     ->label('Nettó összesen')
-                    ->money('HUF')
+                    ->money('HUF', locale: 'hu')
                     ->sortable(),
-                TextColumn::make('total_tax')
-                    ->label('ÁFA')
-                    ->money('HUF')
-                    ->sortable(),
+                TextColumn::make('subtotal_tax')
+                    ->label('ÁFA (27%)')
+                    ->money('HUF', locale: 'hu'),
+                TextColumn::make('gross_line_total')
+                    ->label('Bruttó összesen')
+                    ->state(fn (OrderItem $record): float => $record->grossLineTotal())
+                    ->money('HUF', locale: 'hu'),
             ])
             ->filters([
                 //

@@ -106,7 +106,7 @@
                                             <div class="text-right">
                                                 <p class="text-sm text-gray-500">Végösszeg</p>
                                                 <p class="text-xl font-bold text-gray-900">
-                                                    {{ Number::currency($order->orderTotal() + $order->shipping_cost, in: 'HUF', locale: 'hu', precision: 0) }}
+                                                    {{ Number::currency($order->grossTotal(), in: 'HUF', locale: 'hu', precision: 0) }}
                                                 </p>
                                             </div>
                                             <a href="{{ route('orders.show', $order) }}"
@@ -180,7 +180,14 @@
                                                         <p class="text-sm font-medium text-gray-500">Törölt termék</p>
                                                     @endif
                                                     <p class="text-sm text-gray-500 mt-0.5">
-                                                        {{ $item->quantity }} db × {{ Number::currency($item->total, in: 'HUF', locale: 'hu', precision: 0) }}
+                                                        {{ $item->quantity }} db ×
+                                                    @if ($item->hasDiscount())
+                                                        <span class="line-through text-gray-400">{{ Number::currency($item->regular_price, in: 'HUF', locale: 'hu', precision: 0) }}</span>
+                                                    @endif
+                                                    {{ Number::currency($item->total, in: 'HUF', locale: 'hu', precision: 0) }}
+                                                    @if ($item->hasDiscount())
+                                                        <span class="ml-1 px-1.5 py-0.5 rounded bg-green-100 text-green-800 text-xs font-semibold">−{{ Number::percentage((float) $item->discount_percentage, maxPrecision: 2, locale: 'hu') }}</span>
+                                                    @endif
                                                     </p>
                                                 </div>
                                                 <div class="text-right shrink-0">

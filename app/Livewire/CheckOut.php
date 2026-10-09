@@ -6,6 +6,7 @@ namespace App\Livewire;
 
 use App\Enums\CustomerType;
 use App\Enums\OrderStatus;
+use App\Enums\VatRate;
 use App\Mail\NewOrderNotificationMail;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
@@ -411,14 +412,20 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
         // Save cart items as order items
         foreach ($this->cartItems as $cartItem) {
+            $unitPrice = $cartItem->product->unit_price;
+            $lineTotal = $unitPrice * $cartItem->quantity;
+            $vatRate = VatRate::Standard->percentage() / 100;
+
             $record->orderItems()->create([
                 'product_id' => $cartItem->product_id,
                 'quantity' => $cartItem->quantity,
-                'total' => number_format($cartItem->product->unit_price, 2, '.', ''),
-                'subtotal' => number_format($cartItem->product->unit_price * $cartItem->quantity, 2, '.', ''),
-                'subtotal_tax' => 0,
-                'total_tax' => 0,
-                'tax_class' => '',
+                'total' => number_format($unitPrice, 2, '.', ''),
+                'subtotal' => number_format($lineTotal, 2, '.', ''),
+                'total_tax' => number_format($unitPrice * $vatRate, 2, '.', ''),
+                'subtotal_tax' => number_format($lineTotal * $vatRate, 2, '.', ''),
+                'tax_class' => VatRate::Standard->label(),
+                'regular_price' => $cartItem->product->net_selling_price,
+                'discount_percentage' => $cartItem->product->discount_percentage,
             ]);
         }
 

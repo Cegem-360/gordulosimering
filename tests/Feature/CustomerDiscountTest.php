@@ -135,6 +135,14 @@ it('stores the customer discounted price on the order items', function (): void 
     expect($items->firstWhere('product_id', $grouped->id)->total)->toBe('750.00')
         ->and($items->firstWhere('product_id', $grouped->id)->subtotal)->toBe('1500.00')
         ->and($items->firstWhere('product_id', $other->id)->total)->toBe('1800.00');
+
+    expect($items->firstWhere('product_id', $grouped->id))
+        ->regular_price->toBe('1000.00')
+        ->discount_percentage->toBe('25.00')
+        ->total_tax->toBe('202.50')
+        ->subtotal_tax->toBe('405.00')
+        ->tax_class->toBe('27%')
+        ->and($items->firstWhere('product_id', $other->id)->discount_percentage)->toBe('10.00');
 });
 
 it('shows the struck-through price and the discount on the product page', function (): void {
