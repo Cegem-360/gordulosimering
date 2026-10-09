@@ -31,14 +31,13 @@
     @if (filled($product->product_code))
         <div class="text-sm font-medium mb-2 text-gray-600">{{ $product->product_code }}</div>
     @endif
-    @if ($inStock)
-        <div class="text-sm font-medium mb-2 text-green-700">{{ $product->stockLevelLabel() }}</div>
-    @endif
     <div class="mb-4 flex flex-wrap items-baseline gap-x-2">
         <x-product-price :product="$product" />
         <span class="text-xl font-light text-blue-600">+ÁFA</span>
     </div>
     @if ($inStock)
+        {{-- Közvetlenül a gomb fölött, hogy minden kártyán egy vonalban legyen. --}}
+        <div class="text-sm font-medium mb-2 text-green-700">{{ $product->stockLevelLabel() }}</div>
         <button type="button" wire:click="addToCart"
             class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex items-center justify-center gap-2">
             <i class="fa fa-cart-plus" wire:loading.remove wire:target="addToCart"></i>
