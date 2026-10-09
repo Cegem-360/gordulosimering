@@ -53,7 +53,7 @@ it('exports every product column with Hungarian labels and the category names', 
     $rows = parseProductCsv(exportProductsToString());
 
     expect($rows)->toHaveCount(1)
-        ->and($rows[0])->toHaveKeys(['id', 'Termékkód (product_code)', 'Név (name)', 'Kategóriák (categories)', 'brand', 'material'])
+        ->and($rows[0])->toHaveKeys(['id', 'Termékkód (product_code)', 'Név (name)', 'Kategóriák (categories)', 'Márka (brand)', 'Anyag (material)', 'Belső átmérő (d) (inner_diameter)'])
         ->and($rows[0]['Termékkód (product_code)'])->toBe('TESZT-6204')
         ->and($rows[0]['Név (name)'])->toBe('Csapágy 6204 "2RS"')
         ->and($rows[0]['További képek (images)'])->toBe('["products\/images\/a.jpg"]')

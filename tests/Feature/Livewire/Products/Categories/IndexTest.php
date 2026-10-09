@@ -231,6 +231,25 @@ it('ignores invalid bounds and accepts a decimal comma', function (): void {
     expect($component->instance()->products)->toHaveCount(2);
 });
 
+it('narrows to a decimal range given with a comma or a point', function (string $max): void {
+    Product::factory()->create(['size' => '16X28X7']);
+    Product::factory()->create(['size' => '17,5X40X12']);
+    Product::factory()->create(['size' => '17,9X40X12']);
+    Product::factory()->create(['size' => '20X47X14']);
+
+    $component = Livewire::test(Index::class)->set('dimensionRanges.inner_diameter', ['min' => '16', 'max' => $max]);
+
+    expect($component->instance()->products->pluck('size')->sort()->values()->all())->toBe(['16X28X7', '17,5X40X12']);
+})->with(['decimal comma' => '17,87', 'decimal point' => '17.87']);
+
+it('takes the range bounds as text so a decimal comma reaches the server in every browser', function (): void {
+    Product::factory()->create(['size' => '20X47X14']);
+
+    expect(Livewire::test(Index::class)->html())
+        ->toContain('type="text" inputmode="decimal" autocomplete="off"')
+        ->not->toContain('type="number"');
+});
+
 it('swaps a reversed range', function (): void {
     Product::factory()->create(['size' => '25X52X15']);
     Product::factory()->create(['size' => '40X80X18']);

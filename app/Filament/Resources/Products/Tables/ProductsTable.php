@@ -53,6 +53,24 @@ final class ProductsTable
                     ->searchable(),
                 TextColumn::make('size')
                     ->searchable(),
+                TextColumn::make('inner_diameter')
+                    ->numeric(maxDecimalPlaces: 3)
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('outer_diameter')
+                    ->numeric(maxDecimalPlaces: 3)
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('width')
+                    ->numeric(maxDecimalPlaces: 3)
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('brand')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('material')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('weight')
                     ->numeric()
                     ->sortable(),

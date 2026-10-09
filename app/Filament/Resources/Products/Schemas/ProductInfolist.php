@@ -43,6 +43,23 @@ final class ProductInfolist
                     ->placeholder('-'),
                 TextEntry::make('size')
                     ->placeholder('-'),
+                TextEntry::make('inner_diameter')
+                    ->numeric(maxDecimalPlaces: 3)
+                    ->suffix(' mm')
+                    ->helperText('A szűrőhöz a névből és a méretből számolva.')
+                    ->placeholder('-'),
+                TextEntry::make('outer_diameter')
+                    ->numeric(maxDecimalPlaces: 3)
+                    ->suffix(' mm')
+                    ->placeholder('-'),
+                TextEntry::make('width')
+                    ->numeric(maxDecimalPlaces: 3)
+                    ->suffix(' mm')
+                    ->placeholder('-'),
+                TextEntry::make('brand')
+                    ->placeholder('-'),
+                TextEntry::make('material')
+                    ->placeholder('-'),
                 TextEntry::make('weight')
                     ->numeric()
                     ->placeholder('-'),

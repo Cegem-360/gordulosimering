@@ -28,7 +28,7 @@
                                     @if (! $loop->first)
                                         <span class="text-gray-400">–</span>
                                     @endif
-                                    <input type="number" min="0" step="any" inputmode="decimal"
+                                    <input type="text" inputmode="decimal" autocomplete="off"
                                         wire:model.live.debounce.500ms="dimensionRanges.{{ $range['key'] }}.{{ $bound }}"
                                         placeholder="{{ $range[$bound] !== null ? Number::format($range[$bound], maxPrecision: 3, locale: 'hu') : $boundLabel }}"
                                         aria-label="{{ $range['label'] }} {{ $boundLabel }}"
