@@ -127,3 +127,19 @@ it('does not put an out-of-stock product in the cart', function (): void {
 
     expect(Cart::query()->where('user_id', $user->id)->first()?->items ?? collect())->toBeEmpty();
 });
+
+it('shows the stock level as a range on the card', function (float $stock, string $label): void {
+    Livewire::test(ProductCard::class, ['product' => Product::factory()->create(['stock_quantity' => $stock])])
+        ->assertSee($label);
+})->with([
+    'a few' => [3, '10-nél kevesebb van raktáron'],
+    'exactly 10' => [10, '10-nél kevesebb van raktáron'],
+    'eleven' => [11, '10-nél több van raktáron'],
+    'exactly 50' => [50, '10-nél több van raktáron'],
+    'more than 50' => [51, '50-nél több van raktáron'],
+]);
+
+it('shows no stock level for an out-of-stock product', function (): void {
+    Livewire::test(ProductCard::class, ['product' => Product::factory()->create(['stock_quantity' => 0])])
+        ->assertDontSee('van raktáron');
+});

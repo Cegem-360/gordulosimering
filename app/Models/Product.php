@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Number;
 use Override;
 
 #[Unguarded]
@@ -47,6 +48,36 @@ final class Product extends Model
     public function isInStock(): bool
     {
         return $this->stock_quantity > 0;
+    }
+
+    /**
+     * The stock on hand for the product page, e.g. "23 db" or "12,5 m";
+     * null when nothing is in stock.
+     */
+    public function stockQuantityLabel(): ?string
+    {
+        if (! $this->isInStock()) {
+            return null;
+        }
+
+        $unit = mb_trim((string) $this->quantity_unit) ?: 'db';
+
+        return Number::format((float) $this->stock_quantity, maxPrecision: 2, locale: 'hu') . ' ' . $unit;
+    }
+
+    /**
+     * The rough stock level the product cards show instead of the count.
+     * Exactly 10 still counts as "fewer than 10" and exactly 50 as "more
+     * than 10", as the client asked; null when nothing is in stock.
+     */
+    public function stockLevelLabel(): ?string
+    {
+        return match (true) {
+            ! $this->isInStock() => null,
+            $this->stock_quantity > 50 => '50-nél több van raktáron',
+            $this->stock_quantity > 10 => '10-nél több van raktáron',
+            default => '10-nél kevesebb van raktáron',
+        };
     }
 
     /**

@@ -178,8 +178,9 @@
                     <!-- Add to Cart Section -->
                     <div class="bg-white rounded-lg border-2 border-blue-100 p-5 shadow-sm">
                         <!-- Stock Badge -->
-                        <div class="flex justify-end mb-2">
+                        <div class="flex items-center justify-end gap-3 mb-2">
                             @if ($product->isInStock())
+                                <span class="text-sm text-gray-600">Raktáron: <strong class="text-gray-900">{{ $product->stockQuantityLabel() }}</strong></span>
                                 <span
                                     class="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold flex items-center gap-1">
                                     <i class="fa fa-cube"></i> Készleten

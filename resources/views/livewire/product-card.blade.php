@@ -31,6 +31,9 @@
     @if (filled($product->product_code))
         <div class="text-sm font-medium mb-2 text-gray-600">{{ $product->product_code }}</div>
     @endif
+    @if ($inStock)
+        <div class="text-sm font-medium mb-2 text-green-700">{{ $product->stockLevelLabel() }}</div>
+    @endif
     <div class="mb-4 flex flex-wrap items-baseline gap-x-2">
         <x-product-price :product="$product" />
         <span class="text-xl font-light text-blue-600">+ÁFA</span>

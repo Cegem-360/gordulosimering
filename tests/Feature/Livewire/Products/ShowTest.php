@@ -78,3 +78,15 @@ it('offers only a call and a quote request for an out-of-stock product', functio
         ->call('addToCart')
         ->assertNotDispatched('cartUpdated');
 });
+
+it('shows the exact stock count with its unit on the product page', function (): void {
+    Livewire::test(Show::class, ['product' => Product::factory()->create(['stock_quantity' => 23, 'quantity_unit' => 'db'])])
+        ->assertSee('Raktáron:')
+        ->assertSee('23 db');
+
+    Livewire::test(Show::class, ['product' => Product::factory()->create(['stock_quantity' => 12.5, 'quantity_unit' => 'm'])])
+        ->assertSee('12,5 m');
+
+    Livewire::test(Show::class, ['product' => Product::factory()->create(['stock_quantity' => 0])])
+        ->assertDontSee('Raktáron:');
+});
