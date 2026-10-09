@@ -19,6 +19,10 @@ final class ProductCard extends Component
 
     public function addToCart(CartService $cartService): void
     {
+        if (! $this->product->isInStock()) {
+            return;
+        }
+
         $cartService->addItem($this->product->id, $this->product->minimumOrderQuantity());
 
         $this->dispatch('cartUpdated');

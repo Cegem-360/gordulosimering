@@ -66,3 +66,15 @@ it('offers a quote request next to the call prompt', function (): void {
         ->assertSee('Ajánlatkérés')
         ->assertSeeHtml('href="mailto:gs@gordulo-simmering.hu?subject=' . rawurlencode('Ajánlatkérés: TENTE befeszítőcsap'));
 });
+
+it('offers only a call and a quote request for an out-of-stock product', function (): void {
+    $product = Product::factory()->create(['stock_quantity' => 0]);
+
+    Livewire::test(Show::class, ['product' => $product])
+        ->assertSee(['Hívjon', 'Ajánlatkérés'])
+        ->assertDontSee(['Kosárba', 'Kérdése van?'])
+        ->assertDontSeeHtml('wire:click="increment"')
+        ->assertSeeHtml('href="tel:+3612611566"')
+        ->call('addToCart')
+        ->assertNotDispatched('cartUpdated');
+});

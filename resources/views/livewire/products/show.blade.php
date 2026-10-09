@@ -215,55 +215,67 @@
                             @endif
                         </div>
 
-                        <!-- Quantity Selector -->
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Mennyiség</label>
-                            <div class="flex items-center gap-1">
-                                <button type="button" wire:click="decrement"
-                                    class="w-12 h-12 rounded-l-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
-                                    <i class="fas fa-minus text-sm"></i>
-                                </button>
-                                <input type="number" wire:model.live.blur="quantity" name="quantity"
-                                    min="{{ $product->minimumOrderQuantity() }}" max="9999" step="{{ $product->orderQuantityStep() }}"
-                                    class="w-20 h-12 text-center text-lg font-semibold border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                                <button type="button" wire:click="increment"
-                                    class="w-12 h-12 rounded-r-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
-                                    <i class="fas fa-plus text-sm"></i>
-                                </button>
+                        @if ($product->isInStock())
+                            <!-- Quantity Selector -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Mennyiség</label>
+                                <div class="flex items-center gap-1">
+                                    <button type="button" wire:click="decrement"
+                                        class="w-12 h-12 rounded-l-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
+                                        <i class="fas fa-minus text-sm"></i>
+                                    </button>
+                                    <input type="number" wire:model.live.blur="quantity" name="quantity"
+                                        min="{{ $product->minimumOrderQuantity() }}" max="9999" step="{{ $product->orderQuantityStep() }}"
+                                        class="w-20 h-12 text-center text-lg font-semibold border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                    <button type="button" wire:click="increment"
+                                        class="w-12 h-12 rounded-r-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
+                                        <i class="fas fa-plus text-sm"></i>
+                                    </button>
+                                </div>
+                                @php
+                                    $step = $product->orderQuantityStep();
+                                    $minimum = $product->minimumOrderQuantity();
+                                    $unit = mb_trim((string) $product->quantity_unit) ?: 'db';
+                                @endphp
+                                @if ($step > 1)
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        Rendelési egység: {{ $step }} {{ $unit }}. Csak ennek többszöröse rendelhető
+                                        ({{ $minimum }}, {{ $minimum + $step }}, {{ $minimum + 2 * $step }} …).
+                                    </p>
+                                @elseif ($minimum > 1)
+                                    <p class="text-xs text-gray-500 mt-2">
+                                        Min. rendelési mennyiség: {{ $minimum }} {{ $unit }}
+                                    </p>
+                                @endif
                             </div>
-                            @php
-                                $step = $product->orderQuantityStep();
-                                $minimum = $product->minimumOrderQuantity();
-                                $unit = mb_trim((string) $product->quantity_unit) ?: 'db';
-                            @endphp
-                            @if ($step > 1)
-                                <p class="text-xs text-gray-500 mt-2">
-                                    Rendelési egység: {{ $step }} {{ $unit }}. Csak ennek többszöröse rendelhető
-                                    ({{ $minimum }}, {{ $minimum + $step }}, {{ $minimum + 2 * $step }} …).
-                                </p>
-                            @elseif ($minimum > 1)
-                                <p class="text-xs text-gray-500 mt-2">
-                                    Min. rendelési mennyiség: {{ $minimum }} {{ $unit }}
-                                </p>
-                            @endif
-                        </div>
 
-                        <!-- Order Button -->
-                        <button type="button" wire:click="addToCart"
-                            class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 font-semibold text-lg transition-colors shadow-sm">
-                            <i class="fa fa-cart-plus"></i> Kosárba
-                        </button>
+                            <!-- Order Button -->
+                            <button type="button" wire:click="addToCart"
+                                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 font-semibold text-lg transition-colors shadow-sm">
+                                <i class="fa fa-cart-plus"></i> Kosárba
+                            </button>
 
-                        <!-- Contact Option -->
-                        <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
-                            <a href="tel:+3612611566"
-                                class="text-md text-gray-500 hover:text-blue-600 inline-flex items-center gap-1">
-                                <i class="fas fa-phone text-xs"></i>
-                                Kérdése van? Hívjon minket!
-                            </a>
-                            <x-quote-request-button :product="$product"
-                                class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 font-semibold" />
-                        </div>
+                            <!-- Contact Option -->
+                            <div class="mt-3 flex flex-wrap items-center justify-between gap-3">
+                                <a href="tel:+3612611566"
+                                    class="text-md text-gray-500 hover:text-blue-600 inline-flex items-center gap-1">
+                                    <i class="fas fa-phone text-xs"></i>
+                                    Kérdése van? Hívjon minket!
+                                </a>
+                                <x-quote-request-button :product="$product"
+                                    class="bg-white text-blue-600 border border-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 font-semibold" />
+                            </div>
+                        @else
+                            {{-- Rendelésre: nincs kosár, csak hívás vagy ajánlatkérés, mint a kártyán. --}}
+                            <div class="grid sm:grid-cols-2 gap-3">
+                                <a href="tel:+3612611566" title="Hívjon: +36 1 261 1566"
+                                    class="bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 flex items-center justify-center gap-2 font-semibold text-lg transition-colors">
+                                    <i class="fa fa-phone"></i> Hívjon
+                                </a>
+                                <x-quote-request-button :product="$product"
+                                    class="bg-white text-blue-600 border border-blue-600 py-3 rounded-lg hover:bg-blue-50 font-semibold text-lg" />
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

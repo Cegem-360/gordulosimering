@@ -21,6 +21,10 @@ final class Show extends Component
 
     public function addToCart(CartService $cartService): void
     {
+        if (! $this->product->isInStock()) {
+            return;
+        }
+
         $cartService->addItem($this->product->id, $this->quantity);
 
         $this->dispatch('cartUpdated');

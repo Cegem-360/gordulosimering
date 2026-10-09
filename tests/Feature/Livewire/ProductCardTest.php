@@ -115,3 +115,15 @@ it('offers a quote request next to the call button when out of stock', function 
         ->assertSee(['Hívjon', 'Ajánlatkérés'])
         ->assertSeeHtml('href="mailto:gs@gordulo-simmering.hu?subject=' . rawurlencode('Ajánlatkérés: TENTE befeszítőcsap – TE CSAP R47'));
 });
+
+it('does not put an out-of-stock product in the cart', function (): void {
+    $user = User::factory()->create();
+    $product = Product::factory()->create(['stock_quantity' => 0]);
+
+    Livewire::actingAs($user)
+        ->test(ProductCard::class, ['product' => $product])
+        ->call('addToCart')
+        ->assertNotDispatched('cartUpdated');
+
+    expect(Cart::query()->where('user_id', $user->id)->first()?->items ?? collect())->toBeEmpty();
+});
