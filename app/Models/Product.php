@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\VatRate;
 use App\Services\ProductAttributeExtractor;
 use App\Settings\ShopSettings;
 use Closure;
@@ -295,6 +296,16 @@ final class Product extends Model
     protected function unitPrice(): Attribute
     {
         return Attribute::get(fn (): float => (float) ($this->discounted_price ?? $this->net_selling_price));
+    }
+
+    /**
+     * A vevő által fizetendő bruttó egységár: a (kedvezményes) nettó
+     * egységár 27% ÁFÁ-val. Számolt érték, mert a vevő kedvezménye a
+     * bejelentkezett vevőtől függ, így adatbázisban nem tárolható.
+     */
+    protected function grossUnitPrice(): Attribute
+    {
+        return Attribute::get(fn (): float => $this->unit_price * (1 + VatRate::Standard->percentage() / 100));
     }
 
     /**
