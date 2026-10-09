@@ -117,6 +117,7 @@ it('stores the customer discounted price on the order items', function (): void 
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'Test User')
         ->set('data.billing_email', 'test@example.com')
         ->set('data.billing_phone', '+36301234567')

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\CustomerType;
 use App\Livewire\Profile;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -47,6 +48,7 @@ it('updates user profile data', function (): void {
 
     Livewire::actingAs($user)
         ->test(Profile::class)
+        ->set('data.customer_type', 'private')
         ->set('data.name', 'Updated Name')
         ->set('data.phone', '+36309876543')
         ->set('data.billing_name', 'New Billing Name')
@@ -68,6 +70,7 @@ it('updates shipping address data', function (): void {
 
     Livewire::actingAs($user)
         ->test(Profile::class)
+        ->set('data.customer_type', 'private')
         ->set('data.shipping_name', 'Shipping Name')
         ->set('data.shipping_city', 'Szeged')
         ->set('data.shipping_postcode', '6700')
@@ -141,4 +144,31 @@ it('clears password fields after successful password change', function (): void 
         ->assertSet('current_password', '')
         ->assertSet('new_password', '')
         ->assertSet('new_password_confirmation', '');
+});
+
+it('lets the customer change between private person and company, asking the company details only from a company', function (): void {
+    $user = User::factory()->create(['customer_type' => CustomerType::Company, 'billing_company_name' => 'Régi Kft.', 'billing_vat_number' => '87654321-2-13']);
+
+    Livewire::actingAs($user)
+        ->test(Profile::class)
+        ->assertFormSet(['customer_type' => CustomerType::Company])
+        ->assertFormFieldVisible('billing_company_name')
+        ->fillForm(['customer_type' => CustomerType::Private])
+        ->assertFormFieldHidden('billing_company_name')
+        ->call('updateProfile')
+        ->assertHasNoFormErrors();
+
+    expect($user->refresh())
+        ->customer_type->toBe(CustomerType::Private)
+        ->billing_company_name->toBeNull();
+});
+
+it('requires the company name and VAT number on a company profile', function (): void {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(Profile::class)
+        ->fillForm(['customer_type' => CustomerType::Company])
+        ->call('updateProfile')
+        ->assertHasFormErrors(['billing_company_name' => 'required', 'billing_vat_number' => 'required']);
 });

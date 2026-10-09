@@ -64,6 +64,7 @@ it('saves cart items as order items when order is created', function (): void {
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'Test User')
         ->set('data.billing_email', 'test@example.com')
         ->set('data.billing_phone', '+36301234567')
@@ -112,6 +113,7 @@ it('clears the cart after successful order', function (): void {
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'Test User')
         ->set('data.billing_email', 'test@example.com')
         ->set('data.billing_phone', '+36301234567')
@@ -180,6 +182,7 @@ it('saves billing and shipping data to user after successful order when checkbox
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'New Billing Name')
         ->set('data.billing_email', 'test@example.com')
         ->set('data.billing_phone', '+36309876543')
@@ -225,6 +228,7 @@ it('does not save billing data to user when checkbox is unchecked', function ():
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'New Billing Name')
         ->set('data.billing_email', 'test@example.com')
         ->set('data.billing_phone', '+36309876543')
@@ -260,6 +264,7 @@ it('allows guest checkout without login', function (): void {
     $shippingMethod = ShippingMethod::factory()->create();
 
     Livewire::test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'Guest User')
         ->set('data.billing_email', 'guest@example.com')
         ->set('data.billing_phone', '+36301234567')
@@ -294,6 +299,7 @@ it('creates account for guest when registration checkbox is checked', function (
     $shippingMethod = ShippingMethod::factory()->create();
 
     Livewire::test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'New User')
         ->set('data.billing_email', 'newuser@example.com')
         ->set('data.billing_phone', '+36301234567')
@@ -339,6 +345,7 @@ it('sends order confirmation email to customer after successful order', function
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'Test User')
         ->set('data.billing_email', 'customer@example.com')
         ->set('data.billing_phone', '+36301234567')
@@ -375,6 +382,7 @@ it('sends new order notification email to admin when admin email is configured',
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'Test User')
         ->set('data.billing_email', 'customer@example.com')
         ->set('data.billing_phone', '+36301234567')
@@ -411,6 +419,7 @@ it('does not send admin notification when admin email is default placeholder', f
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'Test User')
         ->set('data.billing_email', 'customer@example.com')
         ->set('data.billing_phone', '+36301234567')
@@ -438,6 +447,7 @@ it('saves the sale price on the order items', function (): void {
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->assertSee('Megtakarítás')
         ->set('data.billing_name', 'Test User')
         ->set('data.billing_email', 'test@example.com')
@@ -477,6 +487,7 @@ it('notifies the client\'s gs@ address about every new order by default', functi
 
     Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'Test User')
         ->set('data.billing_email', 'customer@example.com')
         ->set('data.billing_phone', '+36301234567')
@@ -513,7 +524,7 @@ it('does not ask for the company registration number at checkout', function (): 
 
 /**
  * A logged-in checkout with one product in the cart and the billing address
- * filled in, but no customer type picked yet.
+ * filled in, but no customer type picked yet unless the customer saved one.
  */
 function checkoutWithBillingAddress(?User $user = null): Testable
 {
@@ -533,29 +544,50 @@ function checkoutWithBillingAddress(?User $user = null): Testable
         ->set('acceptTerms', true);
 }
 
-it('asks private person or company first, with private person picked', function (): void {
-    Mail::fake();
-
+it('asks private person or company first and shows nothing else until then', function (): void {
     $component = checkoutWithBillingAddress()
-        ->assertFormSet(['customer_type' => CustomerType::Private])
+        ->assertFormSet(['customer_type' => null])
         ->assertFormFieldVisible('customer_type')
-        ->assertFormFieldHidden('billing_company_name')
-        ->assertFormFieldHidden('billing_vat_number');
+        ->assertFormFieldHidden('billing_name')
+        ->assertFormFieldHidden('billing_postcode')
+        ->assertDontSee('Szállítási mód')
+        ->assertDontSee('Szállítás másik címre?')
+        ->assertDontSeeHtml('type="submit"')
+        ->assertSee('először jelölje be, hogy magánszemélyként vagy cégként vásárol');
 
-    expect(mb_strpos($component->html(), 'Magánszemély'))->toBeLessThan(mb_strpos($component->html(), 'Cég'))
-        ->and(mb_strpos($component->html(), 'Vásárló'))->toBeLessThan(mb_strpos($component->html(), 'Név'));
+    expect(mb_strpos($component->html(), 'Magánszemély'))->toBeLessThan(mb_strpos($component->html(), 'Cég'));
+
+    $component->fillForm(['customer_type' => CustomerType::Private])
+        ->assertFormFieldVisible('billing_name')
+        ->assertFormFieldHidden('billing_company_name')
+        ->assertSee('Szállítási mód')
+        ->assertSeeHtml('type="submit"');
 });
 
-it('places a private order without company name or VAT number', function (): void {
+it('places no order until private person or company is picked', function (): void {
     Mail::fake();
 
     checkoutWithBillingAddress()
+        ->call('create')
+        ->assertHasFormErrors(['customer_type' => 'required']);
+
+    expect(Order::query()->count())->toBe(0);
+});
+
+it('places a private order without company name or VAT number and remembers the choice', function (): void {
+    Mail::fake();
+    $user = User::factory()->create();
+
+    checkoutWithBillingAddress($user)
+        ->fillForm(['customer_type' => CustomerType::Private])
+        ->set('saveDataForFuture', true)
         ->call('create')
         ->assertHasNoFormErrors();
 
     expect(Order::query()->sole())
         ->billing_company_name->toBeNull()
-        ->billing_vat_number->toBeNull();
+        ->billing_vat_number->toBeNull()
+        ->and($user->refresh()->customer_type)->toBe(CustomerType::Private);
 });
 
 it('requires the company name and VAT number from a company', function (): void {
@@ -588,16 +620,22 @@ it('places a company order with the company name and VAT number', function (): v
         ->billing_vat_number->toBe('12345678-2-42');
 });
 
-it('picks company for a customer who saved a company name', function (): void {
-    $user = User::factory()->create(['billing_company_name' => 'Mentett Kft.', 'billing_vat_number' => '87654321-2-13']);
+it('starts on the type the customer saved, so they need not pick it again', function (CustomerType $type): void {
+    $user = User::factory()->create(['customer_type' => $type, 'billing_company_name' => 'Mentett Kft.']);
 
     checkoutWithBillingAddress($user)
-        ->assertFormSet(['customer_type' => CustomerType::Company, 'billing_company_name' => 'Mentett Kft.']);
-});
+        ->assertFormSet(['customer_type' => $type])
+        ->assertFormFieldVisible('billing_name')
+        ->assertSee('Szállítási mód');
+})->with([CustomerType::Private, CustomerType::Company]);
 
-it('drops the saved company data when a private person saves their details', function (): void {
+it('drops the saved company data when a company customer switches to private and saves', function (): void {
     Mail::fake();
-    $user = User::factory()->create(['billing_company_name' => 'Régi Kft.', 'billing_vat_number' => '87654321-2-13']);
+    $user = User::factory()->create([
+        'customer_type' => CustomerType::Company,
+        'billing_company_name' => 'Régi Kft.',
+        'billing_vat_number' => '87654321-2-13',
+    ]);
 
     checkoutWithBillingAddress($user)
         ->fillForm(['customer_type' => CustomerType::Private])
@@ -606,6 +644,33 @@ it('drops the saved company data when a private person saves their details', fun
         ->assertHasNoFormErrors();
 
     expect($user->refresh())
+        ->customer_type->toBe(CustomerType::Private)
         ->billing_company_name->toBeNull()
         ->billing_vat_number->toBeNull();
+});
+
+it('remembers the type of a guest who creates an account at checkout', function (): void {
+    Mail::fake();
+    $cart = Cart::factory()->create(['session_id' => session()->getId()]);
+    CartItem::factory()->create(['cart_id' => $cart->id, 'product_id' => Product::factory()->create()->id, 'quantity' => 1]);
+
+    Livewire::test(CheckOut::class)
+        ->fillForm([
+            'customer_type' => CustomerType::Company,
+            'billing_name' => 'Új Vevő',
+            'billing_email' => 'uj@example.com',
+            'billing_phone' => '+36301234567',
+            'billing_company_name' => 'Új Kft.',
+            'billing_vat_number' => '11111111-2-11',
+            'billing_postcode' => '1234',
+            'billing_city' => 'Budapest',
+            'billing_address_1' => 'Teszt utca 1.',
+        ])
+        ->set('selectedShippingMethod', ShippingMethod::factory()->create(['cost' => 0])->id)
+        ->set('acceptTerms', true)
+        ->set('createAccount', true)
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    expect(User::query()->where('email', 'uj@example.com')->sole()->customer_type)->toBe(CustomerType::Company);
 });

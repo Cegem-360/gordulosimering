@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Enums\CustomerType;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
@@ -36,6 +39,7 @@ final class Profile extends Component implements HasSchemas
             'name' => $user->name,
             'email' => $user->email,
             'phone' => $user->phone ?? '',
+            'customer_type' => $user->customer_type,
             'billing_name' => $user->billing_name ?? '',
             'billing_company_name' => $user->billing_company_name ?? '',
             'billing_vat_number' => $user->billing_vat_number ?? '',
@@ -81,14 +85,27 @@ final class Profile extends Component implements HasSchemas
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
+                        Radio::make('customer_type')
+                            ->label('Vásárló')
+                            ->options(CustomerType::class)
+                            ->enum(CustomerType::class)
+                            ->required()
+                            ->inline()
+                            ->live()
+                            ->columnSpanFull(),
                         TextInput::make('billing_name')
                             ->label('Számlázási név'),
                         TextInput::make('billing_company_name')
-                            ->label('Cégnév'),
+                            ->label('Cégnév')
+                            ->visible(fn (Get $get): bool => $get->enum('customer_type', CustomerType::class) === CustomerType::Company)
+                            ->required(),
                         TextInput::make('billing_vat_number')
-                            ->label('Adószám'),
+                            ->label('Adószám')
+                            ->visible(fn (Get $get): bool => $get->enum('customer_type', CustomerType::class) === CustomerType::Company)
+                            ->required(),
                         TextInput::make('billing_company_office')
-                            ->label('Cégjegyzékszám'),
+                            ->label('Cégjegyzékszám')
+                            ->visible(fn (Get $get): bool => $get->enum('customer_type', CustomerType::class) === CustomerType::Company),
                     ]),
                 Section::make('Számlázási cím')
                     ->columnSpanFull()
@@ -144,10 +161,11 @@ final class Profile extends Component implements HasSchemas
         $user->update([
             'name' => $data['name'],
             'phone' => $data['phone'] ?: null,
+            'customer_type' => $data['customer_type'],
             'billing_name' => $data['billing_name'] ?: null,
-            'billing_company_name' => $data['billing_company_name'] ?: null,
-            'billing_vat_number' => $data['billing_vat_number'] ?: null,
-            'billing_company_office' => $data['billing_company_office'] ?: null,
+            'billing_company_name' => ($data['billing_company_name'] ?? null) ?: null,
+            'billing_vat_number' => ($data['billing_vat_number'] ?? null) ?: null,
+            'billing_company_office' => ($data['billing_company_office'] ?? null) ?: null,
             'billing_postcode' => $data['billing_postcode'] ?: null,
             'billing_city' => $data['billing_city'] ?: null,
             'billing_address_1' => $data['billing_address_1'] ?: null,

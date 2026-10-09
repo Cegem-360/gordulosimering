@@ -29,6 +29,7 @@ final class UserFactory extends Factory
             'base_discount_percentage' => 0,
             'remember_token' => Str::random(10),
             'phone' => null,
+            'customer_type' => null,
             'billing_name' => null,
             'billing_company_name' => null,
             'billing_vat_number' => null,

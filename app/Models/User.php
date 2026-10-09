@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\CustomerType;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -22,6 +23,7 @@ use Override;
     'is_admin',
     'base_discount_percentage',
     'phone',
+    'customer_type',
     'billing_name',
     'billing_company_name',
     'billing_vat_number',
@@ -86,6 +88,7 @@ final class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
             'is_admin' => 'boolean',
             'base_discount_percentage' => 'decimal:2',
+            'customer_type' => CustomerType::class,
         ];
     }
 }

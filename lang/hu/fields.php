@@ -123,6 +123,7 @@ return [
     'email_verified_at' => 'E-mail megerősítve',
     'password' => 'Jelszó',
     'phone' => 'Telefon',
+    'customer_type' => 'Vásárló típusa',
 
     'is_admin' => 'Admin',
     'base_discount_percentage' => 'Alap kedvezmény',

@@ -68,7 +68,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         $user = Auth::user();
         if ($user) {
             $this->form->fill([
-                'customer_type' => filled($user->billing_company_name) ? CustomerType::Company : CustomerType::Private,
+                'customer_type' => $user->customer_type,
                 'billing_name' => $user->billing_name ?? $user->name,
                 'billing_email' => $user->email,
                 'billing_phone' => $user->phone ?? '',
@@ -95,7 +95,6 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         } else {
             // Guest checkout - set defaults
             $this->form->fill([
-                'customer_type' => CustomerType::Private,
                 'billing_country' => 'Magyarország',
             ]);
         }
@@ -103,6 +102,15 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         $this->selectedShippingMethod = $this->shippingMethods
             ->first(fn (ShippingMethod $method): bool => $this->shippingCosts[$method->id] !== null)
             ?->id;
+    }
+
+    /**
+     * Whether the customer picked private person or company; the rest of
+     * the checkout shows only after that, so nobody goes on by mistake.
+     */
+    public function hasChosenCustomerType(): bool
+    {
+        return filled($this->data['customer_type'] ?? null);
     }
 
     #[Computed]
@@ -185,20 +193,24 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         return $schema
             ->columns(2)
             ->components([
+                Section::make('Vásárló')
+                    ->description('Kérjük, először válassza ki, hogy magánszemélyként vagy cégként vásárol.')
+                    ->columnSpanFull()
+                    ->schema([
+                        Radio::make('customer_type')
+                            ->hiddenLabel()
+                            ->options(CustomerType::class)
+                            ->enum(CustomerType::class)
+                            ->required()
+                            ->validationMessages(['required' => 'Kérjük, válassza ki, hogy magánszemélyként vagy cégként vásárol.'])
+                            ->inline()
+                            ->live(),
+                    ]),
                 Section::make('Számlázási adatok')
+                    ->visible(fn (): bool => $this->hasChosenCustomerType())
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
-                        Radio::make('customer_type')
-                            ->label('Vásárló')
-                            ->options(CustomerType::class)
-                            ->enum(CustomerType::class)
-                            ->default(CustomerType::Private)
-                            ->required()
-                            ->inline()
-                            ->live()
-                            ->dehydrated(false)
-                            ->columnSpanFull(),
                         TextInput::make('billing_name')
                             ->label('Név')
                             ->required(),
@@ -220,6 +232,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
                             ->required(),
                     ]),
                 Section::make('Számlázási cím')
+                    ->visible(fn (): bool => $this->hasChosenCustomerType())
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
@@ -327,6 +340,8 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         }
 
         $data = $this->form->getState();
+        $customerType = $data['customer_type'];
+        unset($data['customer_type']);
 
         $userId = Auth::id();
 
@@ -337,6 +352,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
                 'email' => $data['billing_email'],
                 'password' => Str::random(32), // Random password - user will set via reset link
                 'phone' => $data['billing_phone'] ?? null,
+                'customer_type' => $customerType,
                 'billing_name' => $data['billing_name'],
                 'billing_company_name' => $data['billing_company_name'] ?? null,
                 'billing_vat_number' => $data['billing_vat_number'] ?? null,
@@ -413,6 +429,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             $user = Auth::user();
             $user->update([
                 'phone' => $data['billing_phone'] ?? $user->phone,
+                'customer_type' => $customerType,
                 'billing_name' => $data['billing_name'] ?? $user->billing_name,
                 'billing_company_name' => $data['billing_company_name'] ?? null,
                 'billing_vat_number' => $data['billing_vat_number'] ?? null,

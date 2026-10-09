@@ -67,6 +67,7 @@ final class UserInfolist
                             ->schema([
                                 Section::make('Számlázási adatok')
                                     ->schema([
+                                        TextEntry::make('customer_type')->badge()->placeholder('Még nem választott'),
                                         TextEntry::make('billing_name')->placeholder('-'),
                                         TextEntry::make('billing_company_name')->placeholder('-'),
                                         TextEntry::make('billing_vat_number')->placeholder('-'),

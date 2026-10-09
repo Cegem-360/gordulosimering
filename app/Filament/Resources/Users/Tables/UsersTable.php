@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Enums\CustomerType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 final class UsersTable
@@ -44,6 +46,9 @@ final class UsersTable
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('phone')
                     ->searchable(),
+                TextColumn::make('customer_type')
+                    ->badge()
+                    ->placeholder('-'),
                 TextColumn::make('billing_name')
                     ->searchable(),
                 TextColumn::make('billing_company_name')
@@ -80,7 +85,8 @@ final class UsersTable
                     ->searchable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('customer_type')
+                    ->options(CustomerType::class),
             ])
             ->recordActions([
                 ViewAction::make(),

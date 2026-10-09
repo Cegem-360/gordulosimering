@@ -27,6 +27,7 @@
                         {{ $this->form }}
                     </div>
 
+                    @if ($this->hasChosenCustomerType())
                     <!-- Ship to Different Address -->
                     <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                         <label class="flex items-center gap-3 cursor-pointer">
@@ -78,6 +79,8 @@
                             </div>
                         @endif
                     </div>
+
+                    @endif
 
                     <!-- Back Button (mobile) -->
                     <div class="lg:hidden">
@@ -168,6 +171,7 @@
                         @endif
                     </div>
 
+                    @if ($this->hasChosenCustomerType())
                     <!-- Shipping Method Selection -->
                     @if ($this->shippingMethods->count() > 0)
                         <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
@@ -226,12 +230,6 @@
                                 </div>
                             @endif
 
-                            <div wire:ignore
-                                x-data
-                                x-init="$refs.map.addEventListener('change', (event) => $wire.selectParcelPoint(event.detail))">
-                                <gls-dpm-dialog id="gls-parcel-point-map" country="hu" language="hu" x-ref="map"></gls-dpm-dialog>
-                                <script type="module" src="https://map.gls-hungary.com/widget/gls-dpm.js"></script>
-                            </div>
                         </div>
                     @endif
 
@@ -312,6 +310,12 @@
                         Megrendelés
                     </button>
 
+                    @else
+                        <p class="text-sm text-gray-600 bg-blue-50 border border-blue-100 rounded-lg p-4">
+                            A szállítási és fizetési mód választásához először jelölje be, hogy magánszemélyként vagy cégként vásárol.
+                        </p>
+                    @endif
+
                     <!-- Privacy Note -->
                     <p class="text-xs text-gray-500 text-center">
                         A személyes adatokat a rendelés feldolgozásához, a weboldalon történő vásárlási élmény
@@ -328,6 +332,13 @@
                         </a>
                     </div>
                 </div>
+            </div>
+
+            <div wire:ignore
+                x-data
+                x-init="$refs.map.addEventListener('change', (event) => $wire.selectParcelPoint(event.detail))">
+                <gls-dpm-dialog id="gls-parcel-point-map" country="hu" language="hu" x-ref="map"></gls-dpm-dialog>
+                <script type="module" src="https://map.gls-hungary.com/widget/gls-dpm.js"></script>
             </div>
         </form>
     </div>

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Enums\CustomerType;
 use App\Models\DiscountGroup;
 use App\Models\User;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
@@ -72,6 +74,10 @@ final class UserForm
         return Section::make('Számlázási adatok')
             ->columns(2)
             ->schema([
+                Select::make('customer_type')
+                    ->options(CustomerType::class)
+                    ->enum(CustomerType::class)
+                    ->placeholder('Még nem választott'),
                 TextInput::make('billing_name'),
                 TextInput::make('billing_company_name'),
                 TextInput::make('billing_vat_number'),

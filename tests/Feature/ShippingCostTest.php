@@ -36,6 +36,7 @@ function checkoutWithWeights(array $weights): Testable
 
     return Livewire::actingAs($user)
         ->test(CheckOut::class)
+        ->set('data.customer_type', 'private')
         ->set('data.billing_name', 'Teszt Elek')
         ->set('data.billing_email', 'vevo@example.com')
         ->set('data.billing_phone', '+36301234567')
