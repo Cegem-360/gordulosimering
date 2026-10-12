@@ -5,8 +5,6 @@ declare(strict_types=1);
 use Madbox99\RectorFilament\Set\FilamentSetList;
 use Rector\Config\RectorConfig;
 use Rector\Privatization\Rector\ClassMethod\PrivatizeFinalClassMethodRector;
-use Rector\Set\ValueObject\SetList;
-use RectorLaravel\Set\LaravelSetList;
 
 return RectorConfig::configure()
     ->withImportNames()
@@ -14,16 +12,7 @@ return RectorConfig::configure()
     ->withComposerBased(laravel: true)
     ->withPhpSets(php84: true)
     ->withSets([
-        LaravelSetList::LARAVEL_ARRAYACCESS_TO_METHOD_CALL,
-        LaravelSetList::LARAVEL_ARRAY_STR_FUNCTION_TO_STATIC_CALL,
         FilamentSetList::LARAVEL_APP,
-        LaravelSetList::LARAVEL_CONTAINER_STRING_TO_FULLY_QUALIFIED_NAME,
-        LaravelSetList::LARAVEL_FACADE_ALIASES_TO_FULL_NAMES,
-        LaravelSetList::LARAVEL_FACTORIES,
-        LaravelSetList::LARAVEL_LEGACY_FACTORIES_TO_CLASSES,
-        SetList::DEAD_CODE,
-        SetList::CODE_QUALITY,
-        SetList::TYPE_DECLARATION,
     ])
     ->withPaths([
         __DIR__ . '/app',
