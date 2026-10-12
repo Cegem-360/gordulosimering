@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Container\Attributes\Scoped;
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 /**
@@ -109,7 +110,7 @@ final class CategoryTree
         $stocked = [];
 
         $directlyStocked = Category::query()
-            ->whereHas('products', fn ($query) => $query->webVisible())
+            ->whereHas('products', fn (Builder $query) => $query->webVisible())
             ->pluck('id');
 
         foreach ($directlyStocked as $id) {

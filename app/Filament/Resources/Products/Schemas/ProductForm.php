@@ -272,7 +272,7 @@ final class ProductForm
                 ->onIcon(Heroicon::Eye)
                 ->offIcon(Heroicon::EyeSlash)
                 ->default(true)
-                ->afterStateHydrated(fn (Toggle $component, ?Product $record) => $component->state(
+                ->afterStateHydrated(fn (Toggle $component, ?Product $record): Toggle => $component->state(
                     $record?->showsField($field->getName()) ?? true,
                 ))
                 ->grow(false),

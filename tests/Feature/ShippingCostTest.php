@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Number;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
+use Tests\TestCase;
 
 /**
  * A logged-in checkout with a cart of products of the given weights (kg, or
@@ -182,6 +183,7 @@ it('rejects a parcel point without an id or name', function (): void {
 });
 
 it('lets the admin edit the weight rates and the parcel point switch', function (): void {
+    /** @var TestCase $this */
     $this->actingAs(User::factory()->admin()->create());
     $method = ShippingMethod::factory()->create(['rates' => null]);
 

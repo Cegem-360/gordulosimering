@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Contracts\Database\Query\Builder;
 use RuntimeException;
 
 final class ProductImageImporter
@@ -91,7 +92,7 @@ final class ProductImageImporter
         $cleared = 0;
 
         Product::query()
-            ->where(fn ($query) => $query->whereNotNull('featured_image')->orWhereNotNull('images'))
+            ->where(fn (Builder $query) => $query->whereNotNull('featured_image')->orWhereNotNull('images'))
             ->select(['id', 'featured_image', 'images'])
             ->chunkById(500, function ($products) use (&$cleared): void {
                 foreach ($products as $product) {
@@ -197,6 +198,6 @@ final class ProductImageImporter
             return false;
         }
 
-        return ! (preg_match('/\p{L}/u', $last) && preg_match('/\p{L}/u', $next));
+        return ! preg_match('/\p{L}/u', $last) || ! preg_match('/\p{L}/u', $next);
     }
 }

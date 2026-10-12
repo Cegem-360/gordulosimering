@@ -76,9 +76,7 @@ it('calls the privacy notice Adatvédelmi nyilatkozat everywhere', function (): 
     /** @var TestCase $this */
     expect(route('privacy-policy', absolute: false))->toBe('/adatvedelmi-nyilatkozat');
 
-    $this->get(route('privacy-policy'))->assertOk()
-        ->assertSeeInOrder(['<h1', 'Adatvédelmi nyilatkozat'], false)
-        ->assertDontSee(['Adatkezelési tájékoztató', 'Adatvédelmi politika', 'GDPR</a>'], false);
+    $this->get(route('privacy-policy'))->assertOk()->assertSeeHtmlInOrder(['<h1', 'Adatvédelmi nyilatkozat'])->assertDontSeeHtml(['Adatkezelési tájékoztató', 'Adatvédelmi politika', 'GDPR</a>']);
 });
 
 it('sends the old privacy notice address to the new one', function (): void {

@@ -33,9 +33,7 @@ it('names an uploaded document after its file and links it on the product page',
     Storage::disk('public')->assertExists($path);
     expect($product->document_names)->toBe([$path => 'SKF 6204 adatlap']);
 
-    get(route('products.show', $product))->assertOk()
-        ->assertSee('SKF 6204 adatlap')
-        ->assertSee(Storage::disk('public')->url($path), false);
+    get(route('products.show', $product))->assertOk()->assertSee('SKF 6204 adatlap')->assertSeeHtml(Storage::disk('public')->url($path));
 });
 
 it('lets the admin rename and reorder documents', function (): void {

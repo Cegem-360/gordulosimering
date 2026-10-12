@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
 use Override;
@@ -41,6 +42,9 @@ final class Product extends Model
         self::$customerDiscountResolver = $resolver;
     }
 
+    /**
+     * @return BelongsToMany<Category, $this, Pivot>
+     */
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
@@ -182,7 +186,7 @@ final class Product extends Model
      * szándékosan nem használja, hogy a már kosárba tett vagy megrendelt
      * termék akkor is elérhető maradjon, ha időközben lekerült a webről.
      *
-     * @param  Builder<Product>  $query
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function webVisible(Builder $query): void
@@ -193,7 +197,7 @@ final class Product extends Model
     /**
      * Az adminban kiemeltnek jelölt termékek (főoldal, "Kiemelt termékeink").
      *
-     * @param  Builder<Product>  $query
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function featured(Builder $query): void
@@ -206,12 +210,12 @@ final class Product extends Model
      * a tizedespont egyenértékű: a "25,4x50,8" és a "25.4x50.8" ugyanazt adja,
      * mert a vevők és az ERP-export sem egységesen írják a méreteket.
      *
-     * @param  Builder<Product>  $query
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function matchingSearch(Builder $query, string $term): void
     {
-        $pattern = '%' . self::normalizeDecimalSeparator($term) . '%';
+        $pattern = '%' . $this->normalizeDecimalSeparator($term) . '%';
 
         $query->where(function (Builder $query) use ($pattern): void {
             foreach (['product_code', 'name', 'size'] as $column) {
@@ -223,7 +227,7 @@ final class Product extends Model
     /**
      * A készleten lévő termékek kerülnek előre, utánuk a rendelhetők.
      *
-     * @param  Builder<Product>  $query
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function inStockFirst(Builder $query): void
@@ -234,14 +238,14 @@ final class Product extends Model
     /**
      * A termékkóddal kezdődő találatok kerülnek előre.
      *
-     * @param  Builder<Product>  $query
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function orderBySearchRelevance(Builder $query, string $term): void
     {
         $query->orderByRaw(
             'CASE WHEN REPLACE(product_code, \',\', \'.\') LIKE ? THEN 0 ELSE 1 END',
-            [self::normalizeDecimalSeparator($term) . '%'],
+            [$this->normalizeDecimalSeparator($term) . '%'],
         );
     }
 
@@ -259,7 +263,7 @@ final class Product extends Model
      */
     protected function imageUrl(): Attribute
     {
-        return Attribute::get(fn (): ?string => self::showsImages() ? $this->resolveImageUrl($this->image) : null);
+        return Attribute::get(fn (): ?string => resolve(ShopSettings::class)->show_product_images ? $this->resolveImageUrl($this->image) : null);
     }
 
     /**
@@ -338,7 +342,7 @@ final class Product extends Model
     protected function galleryUrls(): Attribute
     {
         return Attribute::get(function (): array {
-            if (! self::showsImages()) {
+            if (! resolve(ShopSettings::class)->show_product_images) {
                 return [];
             }
 
@@ -383,7 +387,7 @@ final class Product extends Model
         ];
     }
 
-    private static function normalizeDecimalSeparator(string $term): string
+    private function normalizeDecimalSeparator(string $term): string
     {
         return str_replace(',', '.', mb_trim($term));
     }
@@ -394,7 +398,7 @@ final class Product extends Model
      * photo belongs to which product; the views then fall back to the
      * placeholder. The admin reads the raw columns, so it is unaffected.
      */
-    private static function showsImages(): bool
+    private function showsImages(): bool
     {
         return resolve(ShopSettings::class)->show_product_images;
     }

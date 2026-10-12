@@ -54,7 +54,7 @@ final class QuoteRequestResource extends Resource
     }
 
     #[Override]
-    public static function getNavigationBadgeColor(): ?string
+    public static function getNavigationBadgeColor(): string
     {
         return 'warning';
     }

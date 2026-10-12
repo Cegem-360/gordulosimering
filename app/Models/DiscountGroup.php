@@ -23,6 +23,9 @@ final class DiscountGroup extends Model
     /** @use HasFactory<DiscountGroupFactory> */
     use HasFactory;
 
+    /**
+     * @return HasMany<UserDiscount, $this>
+     */
     public function userDiscounts(): HasMany
     {
         return $this->hasMany(UserDiscount::class);

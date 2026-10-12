@@ -44,14 +44,14 @@ it('adds the smallest orderable quantity from a product card', function (): void
 
     Livewire::test(ProductCard::class, ['product' => $product])->call('addToCart');
 
-    expect(app(CartService::class)->getItem($product->id)?->quantity)->toBe(10);
+    expect(resolve(CartService::class)->getItem($product->id)?->quantity)->toBe(10);
 });
 
 it('keeps the cart quantity to whole order units', function (): void {
     $product = Product::factory()->create(['min_order_quantity' => 0, 'order_unit' => 10, 'maximum_stock' => null]);
-    app(CartService::class)->addItem($product->id, 9);
+    resolve(CartService::class)->addItem($product->id, 9);
 
-    expect(app(CartService::class)->getItem($product->id)?->quantity)->toBe(10);
+    expect(resolve(CartService::class)->getItem($product->id)?->quantity)->toBe(10);
 
     Livewire::test(CartItem::class, ['productId' => $product->id, 'quantity' => 10])
         ->call('increaseQuantity')->assertSet('quantity', 20)
@@ -59,5 +59,5 @@ it('keeps the cart quantity to whole order units', function (): void {
         ->call('decreaseQuantity')->assertSet('quantity', 10)
         ->set('quantity', 33)->assertSet('quantity', 40);
 
-    expect(app(CartService::class)->getItem($product->id)?->quantity)->toBe(40);
+    expect(resolve(CartService::class)->getItem($product->id)?->quantity)->toBe(40);
 });

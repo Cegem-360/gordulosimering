@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Product;
 use Illuminate\Support\Facades\Http;
+use Tests\TestCase;
 
 function writeCommandImageFixture(string $row): string
 {
@@ -14,11 +15,13 @@ function writeCommandImageFixture(string $row): string
 }
 
 it('fails when the given image TSV does not exist', function (): void {
+    /** @var TestCase $this */
     $this->artisan('app:import-product-images', ['--path' => '/nincs/ilyen.tsv'])
         ->assertFailed();
 });
 
 it('clears images of codes dropped from the sheet with --fresh', function (): void {
+    /** @var TestCase $this */
     $dropped = Product::factory()->create(['product_code' => 'KIKERULT/1', 'featured_image' => 'https://cdn.test/regi.jpg']);
     $listed = Product::factory()->create(['product_code' => 'LISTAN/1', 'featured_image' => null]);
 
@@ -32,6 +35,7 @@ it('clears images of codes dropped from the sheet with --fresh', function (): vo
 });
 
 it('leaves images of dropped codes alone without --fresh', function (): void {
+    /** @var TestCase $this */
     $dropped = Product::factory()->create(['product_code' => 'KIKERULT/1', 'featured_image' => 'https://cdn.test/regi.jpg']);
 
     $this->artisan('app:import-product-images', [
@@ -42,6 +46,7 @@ it('leaves images of dropped codes alone without --fresh', function (): void {
 });
 
 it('imports straight from the client\'s published sheet with --sheet', function (): void {
+    /** @var TestCase $this */
     config(['shop.product_images_sheet_url' => 'https://docs.test/kepek.tsv']);
     Http::fake(['docs.test/*' => Http::response("TERMOKKOD\tTERMEKNEV\tKEP 1\tKEP 2\r\nLISTAN/1\tListán\thttps://cdn.test/uj.jpg\t\r\n")]);
     $product = Product::factory()->create(['product_code' => 'LISTAN/1', 'featured_image' => null]);
@@ -52,6 +57,7 @@ it('imports straight from the client\'s published sheet with --sheet', function 
 });
 
 it('touches no image when the sheet cannot be downloaded', function (int $status, string $body): void {
+    /** @var TestCase $this */
     config(['shop.product_images_sheet_url' => 'https://docs.test/kepek.tsv']);
     Http::fake(['docs.test/*' => Http::response($body, $status)]);
     $product = Product::factory()->create(['product_code' => 'LISTAN/1', 'featured_image' => 'https://cdn.test/regi.jpg']);

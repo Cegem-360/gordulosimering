@@ -31,7 +31,7 @@ final class CategoryIcon extends Component
     public static function keyFor(string $name, ?string $parentName = null): ?string
     {
         if ($parentName === null) {
-            return config("category-icons.roots.{$name}") ?? config('category-icons.default');
+            return config("category-icons.roots.{$name}", config('category-icons.default'));
         }
 
         if (in_array($parentName, config('category-icons.children_without_icons', []), true)) {
@@ -56,7 +56,7 @@ final class CategoryIcon extends Component
      *
      * @return array<string, true>
      */
-    private static function symbols(): array
+    private function symbols(): array
     {
         if (self::$symbols === null) {
             preg_match_all('/<symbol id="([^"]+)"/', (string) file_get_contents(resource_path('images/category-icons.svg')), $matches);
@@ -70,6 +70,6 @@ final class CategoryIcon extends Component
     {
         $key = self::keyFor($this->name, $this->parentName);
 
-        return $key !== null && isset(self::symbols()[$key]) ? $key : null;
+        return $key !== null && isset($this->symbols()[$key]) ? $key : null;
     }
 }

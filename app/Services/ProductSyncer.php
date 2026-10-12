@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\DiscountGroup;
 use App\Models\Product;
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Str;
 use RuntimeException;
 
@@ -202,7 +203,7 @@ final class ProductSyncer
 
         Product::query()
             ->whereNotNull('product_code')
-            ->where(fn ($query) => $query->where('is_web_visible', true)->orWhere('is_inactive', false))
+            ->where(fn (Builder $query) => $query->where('is_web_visible', true)->orWhere('is_inactive', false))
             ->select(['id', 'product_code'])
             ->chunkById(self::BATCH_SIZE, function ($products) use ($seen, &$toDeactivate): void {
                 foreach ($products as $product) {

@@ -7,6 +7,7 @@ use App\Services\Integra7Syncer;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Tests\TestCase;
 
 it('fills the attributes when a product is created', function (): void {
     $product = Product::factory()->create(['name' => 'Gumiházas simmering, VITON', 'size' => '25X47X8']);
@@ -88,6 +89,7 @@ it('recalculates the attributes when the Integra7 sync changes the name or size'
 });
 
 it('backfills the attributes of existing products and leaves up-to-date ones alone', function (): void {
+    /** @var TestCase $this */
     $stale = Product::factory()->create(['name' => 'SKF golyóscsapágy', 'size' => '25X47X8']);
     Product::factory()->create(['name' => 'KOYO golyóscsapágy', 'size' => '30X62X16']);
     DB::table('products')->where('id', $stale->id)->update(['brand' => null, 'inner_diameter' => null]);

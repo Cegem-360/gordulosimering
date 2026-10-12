@@ -20,8 +20,7 @@ it('lists only the web-visible sale products: in stock with a photo first, then 
 
     expect($component->instance()->products->pluck('id')->all())->toBe([$big->id, $small->id, $noPhoto->id, $outOfStock->id]);
 
-    $this->get(route('sale'))->assertOk()
-        ->assertSeeInOrder(['<h1', 'Akciók'], false)
+    $this->get(route('sale'))->assertOk()->assertSeeHtmlInOrder(['<h1', 'Akciók'])
         ->assertSee('4 termék található');
 });
 

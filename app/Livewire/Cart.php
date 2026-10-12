@@ -45,7 +45,7 @@ final class Cart extends Component
     #[Computed]
     public function savings(): float
     {
-        return $this->cartItems->sum(fn ($item): int|float => ((float) $item->product->net_selling_price - $item->product->unit_price) * $item->quantity);
+        return $this->cartItems->sum(fn ($item): float => ((float) $item->product->net_selling_price - $item->product->unit_price) * $item->quantity);
     }
 
     #[Computed]

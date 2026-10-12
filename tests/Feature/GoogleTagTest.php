@@ -18,44 +18,35 @@ it('renders the Google Analytics tag when an ID is configured', function (): voi
     /** @var TestCase $this */
     configureGoogleTags('G-TEST12345', '');
 
-    $this->get(route('documents'))->assertOk()
-        ->assertSee('https://www.googletagmanager.com/gtag/js?id=G-TEST12345', false)
-        ->assertSee('gtag(\'config\', \'G-TEST12345\')', false)
-        ->assertDontSee('gtm.js', false);
+    $this->get(route('documents'))->assertOk()->assertSeeHtml('https://www.googletagmanager.com/gtag/js?id=G-TEST12345')->assertSeeHtml('gtag(\'config\', \'G-TEST12345\')')->assertDontSeeHtml('gtm.js');
 });
 
 it('renders the Google Tag Manager snippet when an ID is configured', function (): void {
     /** @var TestCase $this */
     configureGoogleTags('', 'GTM-TEST123');
 
-    $this->get(route('documents'))->assertOk()
-        ->assertSee('\'GTM-TEST123\'', false)
-        ->assertSee('gtm.js', false)
-        ->assertDontSee('gtag/js', false);
+    $this->get(route('documents'))->assertOk()->assertSeeHtml('\'GTM-TEST123\'')->assertSeeHtml('gtm.js')->assertDontSeeHtml('gtag/js');
 });
 
 it('renders no Google tag when no ID is configured', function (): void {
     /** @var TestCase $this */
     configureGoogleTags('', '  ');
 
-    $this->get(route('documents'))->assertOk()
-        ->assertDontSee('googletagmanager.com', false);
+    $this->get(route('documents'))->assertOk()->assertDontSeeHtml('googletagmanager.com');
 });
 
 it('renders the Search Console verification meta tag when a code is configured', function (): void {
     /** @var TestCase $this */
     configureSiteVerification(' MNkntRA_test ');
 
-    $this->get(route('documents'))->assertOk()
-        ->assertSee('<meta name="google-site-verification" content="MNkntRA_test" />', false);
+    $this->get(route('documents'))->assertOk()->assertSeeHtml('<meta name="google-site-verification" content="MNkntRA_test" />');
 });
 
 it('renders no Search Console verification meta tag without a code', function (): void {
     /** @var TestCase $this */
     configureSiteVerification('');
 
-    $this->get(route('documents'))->assertOk()
-        ->assertDontSee('google-site-verification', false);
+    $this->get(route('documents'))->assertOk()->assertDontSeeHtml('google-site-verification');
 });
 
 it('denies every Google consent type by default while the cookie banner is on', function (): void {
@@ -78,9 +69,7 @@ it('leaves out the consent defaults when the cookie banner is off', function ():
     configureGoogleTags('G-TEST12345', '');
     configureCookieBanner(false);
 
-    $this->get(route('documents'))->assertOk()
-        ->assertSee('gtag/js?id=G-TEST12345', false)
-        ->assertDontSee('gtag(\'consent\'', false);
+    $this->get(route('documents'))->assertOk()->assertSeeHtml('gtag/js?id=G-TEST12345')->assertDontSeeHtml('gtag(\'consent\'');
 });
 
 it('shows the cookie banner with the texts and categories from the admin', function (): void {
@@ -100,9 +89,7 @@ it('hides the cookie banner when it is switched off', function (): void {
     /** @var TestCase $this */
     configureCookieBanner(false);
 
-    $this->get(route('documents'))->assertOk()
-        ->assertDontSee('Süti-tájékoztató')
-        ->assertDontSee('cookie-consent-title', false);
+    $this->get(route('documents'))->assertOk()->assertDontSee('Süti-tájékoztató')->assertDontSeeHtml('cookie-consent-title');
 });
 
 function configureCookieBanner(bool $enabled): void

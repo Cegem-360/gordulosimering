@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -80,7 +81,7 @@ final class ProductImageLocalizer
         $urls = [];
 
         Product::query()
-            ->where(fn ($query) => $query->whereNotNull('featured_image')->orWhereNotNull('images'))
+            ->where(fn (Builder $query) => $query->whereNotNull('featured_image')->orWhereNotNull('images'))
             ->select(['id', 'featured_image', 'images'])
             ->chunkById(500, function ($products) use (&$urls): void {
                 foreach ($products as $product) {

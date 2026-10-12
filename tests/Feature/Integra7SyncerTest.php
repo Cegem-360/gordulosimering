@@ -8,6 +8,7 @@ use App\Services\Integra7Syncer;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Tests\TestCase;
 
 beforeEach(function (): void {
     config(['database.connections.integra7' => ['driver' => 'sqlite', 'database' => ':memory:', 'prefix' => '']]);
@@ -85,6 +86,7 @@ function seedIntegraQuantity(string $code, string $store, float $quantity, float
 }
 
 it('sums the free stock of every store onto the product', function (): void {
+    /** @var TestCase $this */
     $product = Product::factory()->create(['product_code' => '6204-2RS', 'stock_quantity' => 0]);
     seedIntegraProduct('6204-2RS');
     seedIntegraQuantity('6204-2RS', 'GORSIM01', 10, 2);

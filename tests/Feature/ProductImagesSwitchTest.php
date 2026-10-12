@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\CategoryTree;
 use App\Settings\ShopSettings;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Vite;
 use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
@@ -58,5 +59,5 @@ it('lets the admin switch the product photos on and off in the Webshop settings'
         ->call('save')
         ->assertHasNoFormErrors();
 
-    expect(app(ShopSettings::class)->refresh()->show_product_images)->toBeTrue();
+    expect(resolve(ShopSettings::class)->refresh()->show_product_images)->toBeTrue();
 });

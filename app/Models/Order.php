@@ -73,16 +73,25 @@ final class Order extends Model
         'created_at' => 'date',
     ];
 
+    /**
+     * @return BelongsTo<ShippingMethod, $this>
+     */
     public function shippingMethod(): BelongsTo
     {
         return $this->belongsTo(ShippingMethod::class);
     }
 
+    /**
+     * @return HasMany<OrderItem, $this>
+     */
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

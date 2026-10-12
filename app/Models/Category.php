@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Facades\Storage;
 use Override;
 
@@ -38,11 +39,17 @@ final class Category extends Model
      */
     public const string BRAND_ROOT_NAME = 'FORGALMAZOTT MÁRKÁINK';
 
+    /**
+     * @return BelongsToMany<Product, $this, Pivot>
+     */
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class);
     }
 
+    /**
+     * @return BelongsTo<Category, $this>
+     */
     public function parentCategory(): BelongsTo
     {
         return $this->belongsTo(self::class, 'category_id');
@@ -50,6 +57,8 @@ final class Category extends Model
 
     /**
      * Subcategories in menu order: see {@see self::ordered()}.
+     *
+     * @return HasMany<Category, $this>
      */
     public function children(): HasMany
     {
@@ -70,7 +79,7 @@ final class Category extends Model
     /**
      * Az adminban kiemeltnek jelölt kategóriák (főoldal, "Kiemelt kategóriáink").
      *
-     * @param  Builder<Category>  $query
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function featured(Builder $query): void
@@ -78,6 +87,9 @@ final class Category extends Model
         $query->where('is_featured', true);
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     #[Scope]
     protected function ordered(Builder $query): void
     {
@@ -89,7 +101,7 @@ final class Category extends Model
     /**
      * Top-level categories in menu order, with the brand list always last.
      *
-     * @param  Builder<Category>  $query
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function menuRoots(Builder $query): void

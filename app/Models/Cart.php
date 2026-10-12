@@ -21,17 +21,25 @@ final class Cart extends Model
 
     /**
      * Get the products associated with the cart.
+     *
+     * @return HasMany<CartItem, $this>
      */
     public function products(): HasMany
     {
         return $this->hasMany(CartItem::class);
     }
 
+    /**
+     * @return HasMany<CartItem, $this>
+     */
     public function cartItems(): HasMany
     {
         return $this->hasMany(CartItem::class);
     }
 
+    /**
+     * @return HasMany<CartItem, $this>
+     */
     public function items(): HasMany
     {
         return $this->hasMany(CartItem::class);
@@ -39,6 +47,8 @@ final class Cart extends Model
 
     /**
      * Get the user that owns the cart.
+     *
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {

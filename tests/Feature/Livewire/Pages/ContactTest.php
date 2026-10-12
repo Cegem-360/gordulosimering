@@ -5,7 +5,9 @@ declare(strict_types=1);
 use App\Livewire\Pages\Contact;
 use App\Mail\ContactFormMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Vite;
 use Livewire\Livewire;
+use Tests\TestCase;
 
 it('renders contact page successfully', function (): void {
     Livewire::test(Contact::class)
@@ -105,6 +107,7 @@ it('resets form after successful submission', function (): void {
 });
 
 it('no longer lists the closing XIV. district store', function (): void {
+    /** @var TestCase $this */
     $this->get(route('contact'))->assertOk()
         ->assertSee('X. kerület')
         ->assertDontSee('XIV. kerület')
@@ -112,6 +115,7 @@ it('no longer lists the closing XIV. district store', function (): void {
 });
 
 it('shows the client\'s new photo of the Kőrösi Csoma store', function (): void {
+    /** @var TestCase $this */
     $this->get(route('contact'))->assertOk()
         ->assertSeeHtml(Vite::asset('resources/images/stores/korosi-csoma.webp'))
         ->assertSeeHtml('alt="A Kőrösi Csoma S. úti SKF csapágyszaküzletünk"')

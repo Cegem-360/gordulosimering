@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Override;
@@ -12,11 +13,19 @@ use Override;
 #[Fillable(['quote_request_id', 'product_id', 'product_name', 'product_code', 'unit_price', 'quantity'])]
 final class QuoteRequestItem extends Model
 {
+    use HasFactory;
+
+    /**
+     * @return BelongsTo<QuoteRequest, $this>
+     */
     public function quoteRequest(): BelongsTo
     {
         return $this->belongsTo(QuoteRequest::class);
     }
 
+    /**
+     * @return BelongsTo<Product, $this>
+     */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

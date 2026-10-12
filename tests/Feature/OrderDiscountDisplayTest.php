@@ -15,6 +15,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Number;
 use Livewire\Livewire;
+use Tests\TestCase;
 
 function huf(float $amount): string
 {
@@ -81,6 +82,7 @@ it('shows no discount for an item ordered before the list price was kept', funct
 });
 
 it('shows the list price, the discount, the VAT and the gross total on the order page', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
     $order = discountedOrder($user);
 
@@ -93,6 +95,7 @@ it('shows the list price, the discount, the VAT and the gross total on the order
 });
 
 it('shows the discount and the gross total in the order history', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
     discountedOrder($user);
 
@@ -116,6 +119,7 @@ it('shows the product code, the discount and the totals in the gs@ email', funct
 });
 
 it('labels the unit and line prices the right way round and shows the gross line total in the admin', function (): void {
+    /** @var TestCase $this */
     $this->actingAs(User::factory()->admin()->create());
     $order = discountedOrder();
     $item = $order->orderItems->firstWhere('quantity', 2);
@@ -153,6 +157,7 @@ it('works out the line total, the VAT and the VAT class of an item on save', fun
 });
 
 it('lets the admin add an item with only the product and the quantity, the rest worked out', function (): void {
+    /** @var TestCase $this */
     $this->actingAs(User::factory()->admin()->create());
     $order = Order::factory()->create();
     $product = Product::factory()->create(['net_selling_price' => 1200]);

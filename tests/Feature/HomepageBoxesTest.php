@@ -16,21 +16,14 @@ use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
 it('links the new homepage boxes to Márkáink, Katalógusok and the delivery section', function (): void {
-    get(route('index'))->assertOk()
-        ->assertSee(['Márkák', 'Katalógusok', 'Szállítási költségek'])
-        ->assertSee('href="' . route('brands') . '"', false)
-        ->assertSee('href="' . route('catalogs') . '"', false)
-        ->assertSee('href="' . route('services') . '#hazhozszallitas"', false);
+    get(route('index'))->assertOk()->assertSee(['Márkák', 'Katalógusok', 'Szállítási költségek'])->assertSeeHtml('href="' . route('brands') . '"')->assertSeeHtml('href="' . route('catalogs') . '"')->assertSeeHtml('href="' . route('services') . '#hazhozszallitas"');
 });
 
 it('links each brand with products to the product list filtered by it', function (): void {
     $skf = Product::factory()->count(2)->create();
     $skf->each(fn (Product $product) => $product->forceFill(['brand' => 'SKF'])->saveQuietly());
 
-    get(route('brands'))->assertOk()
-        ->assertSee(['Márkáink', '2 termék'])
-        ->assertSee('href="' . route('categories.index', ['marka' => 'SKF']) . '"', false)
-        ->assertDontSee('href="' . route('categories.index', ['marka' => 'INA']) . '"', false)
+    get(route('brands'))->assertOk()->assertSee(['Márkáink', '2 termék'])->assertSeeHtml('href="' . route('categories.index', ['marka' => 'SKF']) . '"')->assertDontSeeHtml('href="' . route('categories.index', ['marka' => 'INA']) . '"')
         ->assertSee('Érdeklődjön üzleteinkben');
 });
 
@@ -53,9 +46,7 @@ it('lists the active catalogues in the admin order', function (): void {
     Catalog::factory()->create(['title' => 'Rejtett', 'is_active' => false]);
 
     get(route('catalogs'))->assertOk()
-        ->assertSeeInOrder(['Első', 'Második'])
-        ->assertDontSee('Rejtett')
-        ->assertSee(Storage::disk('public')->url(Catalog::query()->where('title', 'Első')->value('file')), false);
+        ->assertSeeInOrder(['Első', 'Második'])->assertDontSee('Rejtett')->assertSeeHtml(Storage::disk('public')->url(Catalog::query()->where('title', 'Első')->value('file')));
 });
 
 it('asks for catalogues by email while none are uploaded', function (): void {

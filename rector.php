@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Madbox99\RectorFilament\Set\FilamentSetList;
 use Rector\Config\RectorConfig;
+use Rector\Privatization\Rector\ClassMethod\PrivatizeFinalClassMethodRector;
 use Rector\Set\ValueObject\SetList;
 use RectorLaravel\Set\LaravelSetList;
 
@@ -17,7 +18,6 @@ return RectorConfig::configure()
         LaravelSetList::LARAVEL_ARRAY_STR_FUNCTION_TO_STATIC_CALL,
         FilamentSetList::LARAVEL_APP,
         LaravelSetList::LARAVEL_CONTAINER_STRING_TO_FULLY_QUALIFIED_NAME,
-        LaravelSetList::LARAVEL_ELOQUENT_MAGIC_METHOD_TO_QUERY_BUILDER,
         LaravelSetList::LARAVEL_FACADE_ALIASES_TO_FULL_NAMES,
         LaravelSetList::LARAVEL_FACTORIES,
         LaravelSetList::LARAVEL_LEGACY_FACTORIES_TO_CLASSES,
@@ -38,4 +38,9 @@ return RectorConfig::configure()
         codeQuality: true,
         typeDeclarations: true,
         privatization: true,
-    );
+    )
+    ->withSkip([
+        // Filament calls lifecycle hooks (afterCreate, afterSave, …) from its base classes,
+        // so they must stay protected even on final pages and resources.
+        PrivatizeFinalClassMethodRector::class => [__DIR__ . '/app/Filament'],
+    ]);

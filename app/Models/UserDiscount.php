@@ -24,11 +24,17 @@ final class UserDiscount extends Model
     /** @use HasFactory<UserDiscountFactory> */
     use HasFactory;
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return BelongsTo<DiscountGroup, $this>
+     */
     public function discountGroup(): BelongsTo
     {
         return $this->belongsTo(DiscountGroup::class);

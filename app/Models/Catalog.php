@@ -29,6 +29,8 @@ final class Catalog extends Model
 
     /**
      * The active catalogues in the admin's order.
+     *
+     * @param  Builder<self>  $query
      */
     #[Scope]
     protected function listed(Builder $query): void

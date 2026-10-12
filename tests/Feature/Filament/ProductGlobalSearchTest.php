@@ -10,6 +10,8 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
+use Tests\TestCase;
+
 beforeEach(function (): void {
     actingAs(User::factory()->admin()->create());
 });
@@ -32,6 +34,7 @@ it('still finds products by name in the admin global search', function (): void 
 });
 
 it('shows the dimensions, brand and material computed for the filters on the product page', function (): void {
+    /** @var TestCase $this */
     $product = Product::factory()->create(['name' => 'SKF egysorú mélyhornyú golyóscsapágy', 'size' => '17,5X40X12,25']);
 
     $this->get(ProductResource::getUrl('view', ['record' => $product]))

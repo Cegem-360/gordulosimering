@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Contracts\Database\Query\Builder;
 use RuntimeException;
 
 /**
@@ -41,8 +42,8 @@ final class ProductTypeImageImporter
             foreach ($chunk as $variety => $image) {
                 $query = Product::query()
                     ->where('product_variety', $variety)
-                    ->where(fn ($inner) => $inner->whereNull('featured_image')->orWhereIn('featured_image', $typeImages))
-                    ->where(fn ($inner) => $inner->whereNull('featured_image')->orWhere('featured_image', '!=', $image));
+                    ->where(fn (Builder $inner) => $inner->whereNull('featured_image')->orWhereIn('featured_image', $typeImages))
+                    ->where(fn (Builder $inner) => $inner->whereNull('featured_image')->orWhere('featured_image', '!=', $image));
 
                 $count = (clone $query)->count();
 

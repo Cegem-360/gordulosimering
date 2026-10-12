@@ -41,12 +41,18 @@ final class SeoPage extends Model
         ];
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     #[Scope]
     protected function published(Builder $query): void
     {
         $query->where('is_published', true);
     }
 
+    /**
+     * @param  Builder<self>  $query
+     */
     #[Scope]
     protected function featured(Builder $query): void
     {

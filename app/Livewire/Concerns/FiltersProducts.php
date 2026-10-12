@@ -257,7 +257,7 @@ trait FiltersProducts
 
         $stock = $this->selectedFilters['stock'];
 
-        if ($stock !== [] && ! (in_array('in_stock', $stock, true) && in_array('out_of_stock', $stock, true))) {
+        if ($stock !== [] && (! in_array('in_stock', $stock, true) || ! in_array('out_of_stock', $stock, true))) {
             if (in_array('in_stock', $stock, true)) {
                 $query->where('stock_quantity', '>', 0);
             } else {
@@ -287,7 +287,7 @@ trait FiltersProducts
      */
     private function categoryOptions(): array
     {
-        $tree = app(CategoryTree::class);
+        $tree = resolve(CategoryTree::class);
         $roots = Category::query()->menuRoots()->where('name', '!=', Category::BRAND_ROOT_NAME)->get();
 
         return $tree->stocked($roots)
@@ -406,7 +406,7 @@ trait FiltersProducts
      */
     private function selectedCategoryIds(): array
     {
-        $tree = app(CategoryTree::class);
+        $tree = resolve(CategoryTree::class);
 
         return Category::query()
             ->whereKey($this->selectedFilters['category'])

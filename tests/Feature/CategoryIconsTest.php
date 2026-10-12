@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Category;
 use App\Models\Product;
 use App\View\Components\CategoryIcon;
+use Illuminate\Support\Facades\Vite;
 use Tests\TestCase;
 
 it('draws every icon the config names as a line icon in the sprite', function (): void {
