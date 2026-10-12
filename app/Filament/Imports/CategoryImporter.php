@@ -68,9 +68,7 @@ final class CategoryImporter extends Importer
 
     protected function beforeSave(): void
     {
-        if ($this->record->exists && $this->record->category_id === $this->record->getKey()) {
-            throw new RowImportFailedException('A kategória nem lehet a saját szülője.');
-        }
+        throw_if($this->record->exists && $this->record->category_id === $this->record->getKey(), RowImportFailedException::class, 'A kategória nem lehet a saját szülője.');
 
         if (blank($this->record->slug)) {
             $this->record->slug = $this->uniqueSlug(Str::slug((string) $this->record->name) ?: 'kategoria');

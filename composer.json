@@ -85,8 +85,8 @@
             "@php vendor/bin/pint"
         ],
         "fix": [
-            "@pint",
-            "@rector"
+            "@rector",
+            "@pint"
         ]
     },
     "extra": {
