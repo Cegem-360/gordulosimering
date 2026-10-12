@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Products\Tables;
 
+use App\Filament\Support\CsvDelimiterSelect;
 use App\Models\Product;
 use App\Services\ProductCsvExporter;
 use Filament\Actions\BulkAction;
@@ -163,9 +164,12 @@ final class ProductsTable
                         ->label('Kijelöltek exportálása (CSV)')
                         ->icon(Heroicon::OutlinedArrowDownTray)
                         ->deselectRecordsAfterCompletion()
-                        ->action(fn (Collection $records, ProductCsvExporter $exporter): StreamedResponse => $exporter->download(
+                        ->schema([CsvDelimiterSelect::make()])
+                        ->modalSubmitActionLabel('Exportálás')
+                        ->action(fn (array $data, Collection $records, ProductCsvExporter $exporter): StreamedResponse => $exporter->download(
                             Product::query()->whereKey($records->modelKeys()),
-                            'termekek-kijeloltek-' . now()->format('Y-m-d') . '.csv',
+                            'termekek-kijeloltek-' . now()->format('Y-m-d'),
+                            $data['delimiter'],
                         )),
                     DeleteBulkAction::make(),
                 ]),

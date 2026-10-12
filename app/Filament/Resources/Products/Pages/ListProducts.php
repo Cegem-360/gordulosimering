@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Products\Pages;
 
+use App\Filament\Imports\ProductImporter;
 use App\Filament\Resources\Products\ProductResource;
+use App\Filament\Support\CsvDelimiterSelect;
+use App\Filament\Support\TabAwareImportAction;
 use App\Services\ProductCsvExporter;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
@@ -25,10 +28,17 @@ final class ListProducts extends ListRecords
                 ->label('Exportálás (CSV)')
                 ->icon(Heroicon::OutlinedArrowDownTray)
                 ->color('gray')
-                ->action(fn (ProductCsvExporter $exporter): StreamedResponse => $exporter->download(
+                ->schema([CsvDelimiterSelect::make()])
+                ->modalSubmitActionLabel('Exportálás')
+                ->action(fn (array $data, ProductCsvExporter $exporter): StreamedResponse => $exporter->download(
                     $this->getFilteredTableQuery(),
-                    'termekek-' . now()->format('Y-m-d') . '.csv',
+                    'termekek-' . now()->format('Y-m-d'),
+                    $data['delimiter'],
                 )),
+            TabAwareImportAction::make()
+                ->importer(ProductImporter::class)
+                ->label('Importálás (CSV)')
+                ->color('gray'),
             CreateAction::make(),
         ];
     }

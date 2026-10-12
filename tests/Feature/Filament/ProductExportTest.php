@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\CsvDelimiter;
 use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Models\Category;
 use App\Models\Product;
@@ -100,4 +101,25 @@ it('downloads all products and the selected products from the admin list', funct
     Livewire::test(ListProducts::class)
         ->callTableBulkAction('export', $products->take(2))
         ->assertFileDownloaded('termekek-kijeloltek-' . now()->format('Y-m-d') . '.csv');
+});
+
+it('exports with the chosen delimiter, tab-separated as a .txt file', function (): void {
+    actingAs(User::factory()->admin()->create());
+    Product::factory()->create(['product_code' => 'TAB-1']);
+
+    Livewire::test(ListProducts::class)
+        ->callAction('export', ['delimiter' => CsvDelimiter::Tab])
+        ->assertFileDownloaded('termekek-' . now()->format('Y-m-d') . '.txt');
+
+    Livewire::test(ListProducts::class)
+        ->callAction('export', ['delimiter' => CsvDelimiter::Comma])
+        ->assertFileDownloaded('termekek-' . now()->format('Y-m-d') . '.csv');
+
+    $handle = fopen('php://memory', 'w+b');
+    resolve(ProductCsvExporter::class)->write($handle, Product::query(), CsvDelimiter::Tab);
+    rewind($handle);
+    [$header, $row] = explode("\n", mb_substr(stream_get_contents($handle), 1));
+
+    expect(str_getcsv($header, "\t", escape: ''))->toContain('id', 'Termékkód (product_code)')
+        ->and(str_getcsv($row, "\t", escape: ''))->toContain('TAB-1');
 });
