@@ -5,17 +5,23 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\DiscountGroup;
+use App\Models\IntegraKnownProduct;
 use App\Models\Product;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 /**
  * Az Integra7-ből frissíti a webshop meglévő termékeit termékkód alapján: a szabad
  * készletet (az összes raktár készlete mínusz a foglalások, legalább nulla) és az
  * ERP-ben vezetett termékadatokat, köztük a termékcsoportot és a terméktípust. A
- * termékcsoportokat (DiscountGroup) is innen nevezi el. Új terméket nem hoz létre, mert az Integra nem
- * jelöli, mi szerepeljen a webáruházban; a webshopos adatokhoz (slug, képek,
- * kategóriák, láthatóság) nem nyúl.
+ * termékcsoportokat (DiscountGroup) is innen nevezi el. A webshopos adatokhoz
+ * (slug, képek, kategóriák, láthatóság) nem nyúl.
+ *
+ * Az Integra nem jelöli, mi szerepeljen a webáruházban, ezért csak az ERP-ben
+ * újonnan megjelenő, aktív kódokból hoz létre terméket, rejtve: az első futás
+ * csak megjegyzi a meglévő kódokat (IntegraKnownProduct), így a webshopból
+ * szándékosan kihagyott régi termékek nem jönnek be.
  */
 final class Integra7Syncer
 {
@@ -31,13 +37,21 @@ final class Integra7Syncer
     ];
 
     /**
-     * @return array{updated: int, unchanged: int, missing: int}
+     * Az ERP épp újratölti az Integra tábláit; ilyenkor félkész adatot olvasnánk.
+     */
+    public function isUploadInProgress(): bool
+    {
+        return (bool) DB::connection('integra7')->table('parameters')->value('upload_progress');
+    }
+
+    /**
+     * @return array{updated: int, unchanged: int, missing: int, created: int}
      */
     public function sync(bool $dryRun = false): array
     {
         $erpProducts = $this->erpProducts();
         $available = $this->availableQuantities();
-        $stats = ['updated' => 0, 'unchanged' => 0, 'missing' => 0];
+        $stats = ['updated' => 0, 'unchanged' => 0, 'missing' => 0, 'created' => 0];
 
         if (! $dryRun) {
             $this->syncProductGroups();
@@ -73,7 +87,68 @@ final class Integra7Syncer
                 }
             });
 
+        $stats['created'] = $this->createNewProducts($erpProducts, $available, $dryRun);
+
         return $stats;
+    }
+
+    /**
+     * Az Integrában először látott, aktív kódokból rejtett terméket hoz létre,
+     * majd az összes új kódot ismertnek jelöli. Ha még nincs ismert kód (első
+     * futás), csak megjegyzi őket.
+     *
+     * @param  Collection<string, object>  $erpProducts
+     * @param  Collection<string, float>  $available
+     * @return int A létrehozott (próbafuttatásnál a létrehozandó) termékek száma.
+     */
+    private function createNewProducts(Collection $erpProducts, Collection $available, bool $dryRun): int
+    {
+        $known = IntegraKnownProduct::query()->pluck('code')->flip();
+        $isFirstRun = $known->isEmpty();
+        $existing = Product::query()->whereNotNull('product_code')->pluck('product_code')
+            ->mapWithKeys(fn (string $code): array => [mb_trim($code) => true]);
+
+        $unseenCodes = $erpProducts->keys()->reject(fn (string $code): bool => $code === '' || $known->has($code));
+
+        $codesToCreate = $isFirstRun ? collect() : $unseenCodes->reject(
+            fn (string $code): bool => $existing->has($code) || (bool) $erpProducts->get($code)->inactive,
+        );
+
+        if ($dryRun) {
+            return $codesToCreate->count();
+        }
+
+        DB::transaction(function () use ($codesToCreate, $unseenCodes, $erpProducts, $available): void {
+            foreach ($codesToCreate as $code) {
+                Product::query()->create([
+                    ...$this->productAttributes($erpProducts->get($code)),
+                    'product_code' => $code,
+                    'slug' => $this->uniqueSlug($code),
+                    'stock_quantity' => max(0.0, $available->get($code, 0.0)),
+                    'is_web_visible' => false,
+                ]);
+            }
+
+            $unseenCodes->chunk(self::CHUNK_SIZE)->each(fn (Collection $codes): bool => IntegraKnownProduct::query()->insert(
+                $codes->map(fn (string $code): array => ['code' => $code, 'created_at' => now(), 'updated_at' => now()])->values()->all(),
+            ));
+        });
+
+        return $codesToCreate->count();
+    }
+
+    private function uniqueSlug(string $code): string
+    {
+        $base = Str::slug($code) ?: 'termek';
+        $slug = $base;
+        $suffix = 0;
+
+        while (Product::query()->where('slug', $slug)->exists()) {
+            $suffix++;
+            $slug = $base . '-' . $suffix;
+        }
+
+        return $slug;
     }
 
     /**

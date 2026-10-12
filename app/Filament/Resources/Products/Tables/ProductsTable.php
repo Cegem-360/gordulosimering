@@ -151,6 +151,7 @@ final class ProductsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                TernaryFilter::make('is_web_visible'),
                 TernaryFilter::make('is_featured')
                     ->label('Kiemelt'),
             ])

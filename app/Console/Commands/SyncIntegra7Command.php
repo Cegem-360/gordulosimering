@@ -22,12 +22,19 @@ final class SyncIntegra7Command extends Command
             $this->warn('Próbafuttatás – az adatbázis nem módosul.');
         }
 
+        if ($syncer->isUploadInProgress()) {
+            $this->warn('Az ERP épp feltölti az Integra7-et, a szinkron kimarad.');
+
+            return self::SUCCESS;
+        }
+
         $stats = $syncer->sync($dryRun);
 
         $this->table(['', 'Darab'], [
             ['Frissítve', $stats['updated']],
             ['Változatlan', $stats['unchanged']],
             ['Nincs az Integrában', $stats['missing']],
+            ['Új (rejtve létrehozva)', $stats['created']],
         ]);
 
         return self::SUCCESS;

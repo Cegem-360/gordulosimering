@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Models\DiscountGroup;
+use App\Models\IntegraKnownProduct;
 use App\Models\Product;
+use App\Models\User;
 use App\Services\Integra7Syncer;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 beforeEach(function (): void {
@@ -48,6 +52,12 @@ beforeEach(function (): void {
         $table->decimal('quantity', 10, 4);
         $table->decimal('reserved', 10, 4);
     });
+
+    Schema::connection('integra7')->create('parameters', function (Blueprint $table): void {
+        $table->id();
+        $table->boolean('upload_progress')->default(false);
+    });
+    DB::connection('integra7')->table('parameters')->insert(['upload_progress' => false]);
 });
 
 /**
@@ -160,15 +170,90 @@ it('zeroes the stock of products missing from Integra7 or oversold there, but ke
         ->stock_quantity->toBe(0.0)
         ->net_selling_price->toBe('700.00')
         ->and($oversold->fresh()->stock_quantity)->toBe(0.0)
-        ->and($stats)->toBe(['updated' => 2, 'unchanged' => 0, 'missing' => 1]);
+        ->and($stats)->toMatchArray(['updated' => 2, 'unchanged' => 0, 'missing' => 1]);
 });
 
-it('does not create products that are only in Integra7', function (): void {
-    seedIntegraProduct('ONLY-ERP');
+it('only remembers the Integra7 codes on the first run, without creating products', function (): void {
+    Product::factory()->create(['product_code' => 'IN-SHOP']);
+    seedIntegraProduct('IN-SHOP');
+    seedIntegraProduct('LEFT-OUT  ');
 
+    $stats = resolve(Integra7Syncer::class)->sync();
+
+    expect($stats['created'])->toBe(0)
+        ->and(Product::query()->where('product_code', 'LEFT-OUT')->exists())->toBeFalse()
+        ->and(IntegraKnownProduct::query()->pluck('code')->sort()->values()->all())->toBe(['IN-SHOP', 'LEFT-OUT']);
+});
+
+it('creates a hidden product from a code that is new in Integra7', function (): void {
+    seedIntegraProduct('OLD');
     resolve(Integra7Syncer::class)->sync();
 
-    expect(Product::query()->where('product_code', 'ONLY-ERP')->exists())->toBeFalse();
+    seedIntegraType('110', 'csapágy SKF');
+    seedIntegraProduct('UJ 6205 ', ['name' => 'SKF 6205 golyóscsapágy', 'size' => '25X52X15', 'nettoprice' => 2000, 'product_group_code' => 'S5', 'product_type_code' => '110']);
+    seedIntegraQuantity('UJ 6205 ', 'GORSIM01', 7, 2);
+
+    $stats = resolve(Integra7Syncer::class)->sync();
+
+    expect($stats['created'])->toBe(1)
+        ->and(Product::query()->where('product_code', 'UJ 6205')->sole())
+        ->name->toBe('SKF 6205 golyóscsapágy')
+        ->slug->toBe('uj-6205')
+        ->net_selling_price->toBe('2000.00')
+        ->gross_selling_price->toBe('2540.00')
+        ->group_code->toBe('S5')
+        ->product_variety->toBe('csapágy SKF')
+        ->stock_quantity->toBe(5.0)
+        ->inner_diameter->toBe(25.0)
+        ->is_web_visible->toBeFalse()
+        ->and(Product::query()->where('product_code', 'OLD')->exists())->toBeFalse();
+
+    expect(resolve(Integra7Syncer::class)->sync()['created'])->toBe(0)
+        ->and(Product::query()->where('product_code', 'UJ 6205')->count())->toBe(1);
+});
+
+it('skips new inactive codes and new codes already in the webshop, and gives clashing slugs a suffix', function (): void {
+    seedIntegraProduct('OLD');
+    resolve(Integra7Syncer::class)->sync();
+
+    Product::factory()->create(['product_code' => 'MANUAL', 'slug' => 'manual']);
+    Product::factory()->create(['product_code' => 'OTHER', 'slug' => 'clash']);
+    seedIntegraProduct('MANUAL');
+    seedIntegraProduct('KIVEZETETT', ['inactive' => true]);
+    seedIntegraProduct('CLASH');
+
+    $stats = resolve(Integra7Syncer::class)->sync();
+
+    expect($stats['created'])->toBe(1)
+        ->and(Product::query()->where('product_code', 'MANUAL')->count())->toBe(1)
+        ->and(Product::query()->where('product_code', 'KIVEZETETT')->exists())->toBeFalse()
+        ->and(Product::query()->where('product_code', 'CLASH')->value('slug'))->toBe('clash-1')
+        ->and(IntegraKnownProduct::query()->where('code', 'KIVEZETETT')->exists())->toBeTrue();
+});
+
+it('counts the new products on a dry run without creating or remembering them', function (): void {
+    seedIntegraProduct('OLD');
+    resolve(Integra7Syncer::class)->sync();
+    seedIntegraProduct('UJ');
+
+    $stats = resolve(Integra7Syncer::class)->sync(dryRun: true);
+
+    expect($stats['created'])->toBe(1)
+        ->and(Product::query()->where('product_code', 'UJ')->exists())->toBeFalse()
+        ->and(IntegraKnownProduct::query()->where('code', 'UJ')->exists())->toBeFalse();
+});
+
+it('skips the whole sync while the ERP is uploading to Integra7', function (): void {
+    /** @var TestCase $this */
+    $product = Product::factory()->create(['product_code' => 'HALF', 'stock_quantity' => 8]);
+    DB::connection('integra7')->table('parameters')->update(['upload_progress' => true]);
+
+    $this->artisan('app:sync-integra7')
+        ->expectsOutputToContain('a szinkron kimarad')
+        ->assertSuccessful();
+
+    expect($product->fresh()->stock_quantity)->toBe(8.0)
+        ->and(IntegraKnownProduct::query()->count())->toBe(0);
 });
 
 it('counts products already in sync as unchanged and writes nothing on a dry run', function (): void {
@@ -183,7 +268,7 @@ it('counts products already in sync as unchanged and writes nothing on a dry run
 
     $stats = resolve(Integra7Syncer::class)->sync(dryRun: true);
 
-    expect($stats)->toBe(['updated' => 1, 'unchanged' => 1, 'missing' => 0])
+    expect($stats)->toMatchArray(['updated' => 1, 'unchanged' => 1, 'missing' => 0])
         ->and($changed->fresh()->stock_quantity)->toBe(9.0);
 });
 
@@ -237,4 +322,16 @@ it('leaves the product groups alone on a dry run', function (): void {
     resolve(Integra7Syncer::class)->sync(dryRun: true);
 
     expect(DiscountGroup::query()->count())->toBe(0);
+});
+
+it('lets the admin list only the hidden products', function (): void {
+    /** @var TestCase $this */
+    $this->actingAs(User::factory()->admin()->create());
+    $visible = Product::factory()->create();
+    $hidden = Product::factory()->hidden()->create();
+
+    Livewire::test(ListProducts::class)
+        ->filterTable('is_web_visible', false)
+        ->assertCanSeeTableRecords([$hidden])
+        ->assertCanNotSeeTableRecords([$visible]);
 });
