@@ -71,7 +71,7 @@
                                 @class(['w-auto max-w-full object-contain', 'h-7' => ($brand['size'] ?? null) === 'box', 'h-5' => ($brand['size'] ?? null) !== 'box'])>
                         @endforeach
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/85 via-black/60 to-transparent pt-10 px-6 pb-5">
+                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/75 via-black/30 to-transparent pt-10 px-6 pb-5">
                         <h3 class="text-white text-lg font-semibold flex items-center gap-2 whitespace-nowrap">
                             Forgalmazott márkáink
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
@@ -118,7 +118,7 @@
                             </div>
                         @endforeach
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/90 via-black/65 to-transparent pt-16 p-6">
+                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 via-black/35 to-transparent pt-16 p-6">
                         <h3 class="text-white text-xl font-semibold flex items-center gap-2">
                             Katalógusok
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
