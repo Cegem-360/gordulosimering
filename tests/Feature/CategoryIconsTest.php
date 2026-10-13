@@ -48,6 +48,7 @@ it('shows the icons in the homepage menu and the first fly-out level only', func
     $html = (string) $this->blade('<x-category-selector />');
     $sprite = Vite::asset('resources/images/category-icons.svg');
 
-    expect($html)->toContain($sprite . '#seal', $sprite . '#o-ring', $sprite . '#brand-tag')
-        ->and(mb_substr_count($html, '<use href="'))->toBe(3);
+    expect($html)->toContain($sprite . '#seal', $sprite . '#o-ring')
+        ->not->toContain($sprite . '#brand-tag')
+        ->and(mb_substr_count($html, '<use href="'))->toBe(2);
 });

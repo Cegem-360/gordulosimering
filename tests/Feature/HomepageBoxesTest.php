@@ -6,6 +6,7 @@ use App\Filament\Resources\Catalogs\Pages\CreateCatalog;
 use App\Filament\Resources\Catalogs\Pages\ListCatalogs;
 use App\Livewire\Products\Categories\Index as CategoriesIndex;
 use App\Models\Catalog;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -16,7 +17,7 @@ use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
 it('links the new homepage boxes to Márkáink, Katalógusok and the delivery section', function (): void {
-    get(route('index'))->assertOk()->assertSee(['Márkák', 'Katalógusok', 'Szállítási költségek'])->assertSeeHtml('href="' . route('brands') . '"')->assertSeeHtml('href="' . route('catalogs') . '"')->assertSeeHtml('href="' . route('services') . '#hazhozszallitas"');
+    get(route('index'))->assertOk()->assertSee(['Forgalmazott márkáink', 'Katalógusok', 'Szállítási költségek'])->assertSeeHtml('href="' . route('brands') . '"')->assertSeeHtml('href="' . route('catalogs') . '"')->assertSeeHtml('href="' . route('services') . '#hazhozszallitas"');
 });
 
 it('links each brand with products to its products, by brand filter or name search', function (): void {
@@ -82,4 +83,26 @@ it('lets the admin upload a catalogue', function (): void {
     $catalog = Catalog::query()->sole();
     Storage::disk('public')->assertExists($catalog->file);
     expect($catalog->is_active)->toBeTrue();
+});
+
+it('fills the homepage brand box with 25 logos', function (): void {
+    $html = get(route('index'))->assertOk()->getContent();
+    $tile = mb_substr($html, mb_strpos($html, '<!-- Brands Card -->'), 20000);
+    $tile = mb_substr($tile, 0, mb_strpos($tile, '<!-- Catalogues Card -->'));
+
+    expect(mb_substr_count($tile, '<img'))->toBe(25)
+        ->and($tile)->not->toContain('alt="MEGADYNE"');
+});
+
+it('leaves the brand category out of the homepage category menu', function (): void {
+    $brands = Category::query()->create(['name' => Category::BRAND_ROOT_NAME, 'slug' => 'forgalmazott-markaink']);
+    $skf = Category::query()->create(['name' => 'SKF', 'slug' => 'skf', 'category_id' => $brands->id]);
+    $bearings = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    $skf->products()->attach(Product::factory()->create());
+    $bearings->products()->attach(Product::factory()->create());
+
+    $html = get(route('index'))->assertOk()->getContent();
+    $menu = mb_substr($html, mb_strpos($html, 'Termékeink</h2>'), 6000);
+
+    expect($menu)->toContain('CSAPÁGYAK')->not->toContain(Category::BRAND_ROOT_NAME);
 });

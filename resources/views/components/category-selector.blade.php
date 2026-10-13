@@ -1,9 +1,10 @@
 @use('App\Models\Category')
+{{-- The brands have their own homepage box (Forgalmazott márkáink) since 2026-10-13, so they stay out of this menu. --}}
 @inject('categoryTree', 'App\Services\CategoryTree')
 
 @php
     $categories = $categoryTree->stocked(
-        Category::query()->menuRoots()->with('children.children.children.children')->get(),
+        Category::query()->menuRoots()->where('name', '!=', Category::BRAND_ROOT_NAME)->with('children.children.children.children')->get(),
     );
 @endphp
 
