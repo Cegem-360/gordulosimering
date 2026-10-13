@@ -102,7 +102,7 @@
                     <div class="bg-white rounded-lg border p-5">
                         @if ($product->product_code)
                             <div class="mb-4">
-                                <span class="inline-block bg-blue-50 border border-blue-200 text-gray-900 px-3 py-1.5 rounded-md text-xl font-bold tracking-wide">
+                                <span class="inline-block bg-blue-50 border border-blue-200 text-gray-900 px-3 py-1.5 rounded-md text-xl font-mono font-bold">
                                     {{ $product->product_code }}
                                 </span>
                             </div>
