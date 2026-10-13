@@ -91,17 +91,17 @@
                          logo, drawn here because no neutral bookshelf photo was at hand (client, 2026-10-13). --}}
                     @php
                         $spines = [
-                            ['bg' => '#1f3a6e', 'h' => 74, 'w' => 20],
-                            ['bg' => '#f4efe4', 'h' => 92, 'w' => 30, 'logo' => 'skf.svg'],
-                            ['bg' => '#b8322a', 'h' => 68, 'w' => 16],
-                            ['bg' => '#2f6b4f', 'h' => 82, 'w' => 22],
-                            ['bg' => '#f4efe4', 'h' => 88, 'w' => 28, 'logo' => 'fag.webp'],
-                            ['bg' => '#d9a521', 'h' => 64, 'w' => 18],
-                            ['bg' => '#f4efe4', 'h' => 94, 'w' => 28, 'logo' => 'nsk.svg'],
-                            ['bg' => '#7a3b2e', 'h' => 72, 'w' => 20],
-                            ['bg' => '#1d5a8a', 'h' => 84, 'w' => 22],
-                            ['bg' => '#f4efe4', 'h' => 90, 'w' => 28, 'logo' => 'koyo.webp'],
-                            ['bg' => '#5b6b2f', 'h' => 70, 'w' => 16],
+                            ['bg' => '#34445e', 'h' => 74, 'w' => 20],
+                            ['bg' => '#eee9df', 'h' => 92, 'w' => 30, 'logo' => 'skf.svg'],
+                            ['bg' => '#9b524b', 'h' => 68, 'w' => 16],
+                            ['bg' => '#4a6458', 'h' => 82, 'w' => 22],
+                            ['bg' => '#eee9df', 'h' => 88, 'w' => 28, 'logo' => 'fag.webp'],
+                            ['bg' => '#b59a5a', 'h' => 64, 'w' => 18],
+                            ['bg' => '#eee9df', 'h' => 94, 'w' => 28, 'logo' => 'nsk.svg'],
+                            ['bg' => '#6f5048', 'h' => 72, 'w' => 20],
+                            ['bg' => '#466178', 'h' => 84, 'w' => 22],
+                            ['bg' => '#eee9df', 'h' => 90, 'w' => 28, 'logo' => 'koyo.webp'],
+                            ['bg' => '#626a4c', 'h' => 70, 'w' => 16],
                         ];
                     @endphp
                     <div class="h-64 bg-linear-to-b from-[#e9e1d3] to-[#cdbd9f] flex items-end justify-center gap-[3px] px-3 pt-5 border-b-[10px] border-[#6b4a2b]" aria-hidden="true">
@@ -117,7 +117,7 @@
                             </div>
                         @endforeach
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 to-transparent p-6">
+                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/90 via-black/65 to-transparent pt-16 p-6">
                         <h3 class="text-white text-xl font-semibold flex items-center gap-2">
                             Katalógusok
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
