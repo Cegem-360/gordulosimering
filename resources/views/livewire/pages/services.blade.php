@@ -1,17 +1,20 @@
 @php
-    /* Delivery figures from the client's old site, gordulo-simmering.hu/szolgaltatasaink (2026-09-25).
+    /* Delivery figures from the client's old site, gordulo-simmering.hu/szolgaltatasaink (2026-09-25),
+       updated by the client on 2026-10-13; town names stay in alphabetical order.
        The on-call section has a single option since 2026-09-29, at the client's request. */
     $freeDelivery = [
         ['threshold' => '80 000 Ft felett', 'area' => 'VIII., IX., X., XIII., XIV., XV., XVI., XVII., XVIII., XIX. és XX. kerület'],
         ['threshold' => '100 000 Ft felett', 'area' => 'IV., V., VI., VII., XXI. és XXIII. kerület'],
-        ['threshold' => '120 000 Ft felett', 'area' => 'I., II., III., XI., XII. és XXII. kerület, valamint Pécel, Gyál, Maglód, Csömör, Kistarcsa, Nagytarcsa, Ecser, Taksony, Vecsés és Dunaharaszti'],
+        ['threshold' => '120 000 Ft felett', 'area' => 'I., II., III., XI., XII. és XXII. kerület, valamint Csömör, Dunaharaszti, Ecser, Gyál, Gyömrő, Kistarcsa, Maglód, Nagytarcsa, Pécel, Taksony, Üllő és Vecsés'],
+        ['threshold' => '150 000 Ft felett', 'area' => 'Alsónémedi, Biatorbágy, Budakalász, Budakeszi, Diósd, Dorog, Dunakeszi, Érd, Fót, Gödöllő, Isaszeg, Mende, Mogyoród, Monor, Nagykovácsi, Ócsa, Páty, Pilisborosjenő, Pilisszentiván, Pilisvörösvár, Pomáz, Solymár, Tárnok, Telki, Törökbálint és Üröm'],
     ];
 
     $courierRates = [
         ['price' => '7 990 Ft + ÁFA', 'area' => 'VII., VIII., IX., X., XIII., XIV. és XIX. kerület'],
         ['price' => '8 990 Ft + ÁFA', 'area' => 'I., V., VI., XV., XVI., XVII., XVIII. és XX. kerület'],
         ['price' => '9 990 Ft + ÁFA', 'area' => 'II., III., IV., XI., XII., XXI., XXII. és XXIII. kerület'],
-        ['price' => '10 990 Ft + ÁFA', 'area' => 'Pécel, Gyál, Maglód, Csömör, Kistarcsa, Nagytarcsa, Ecser, Taksony, Vecsés és Dunaharaszti'],
+        ['price' => '10 990 Ft + ÁFA', 'area' => 'Csömör, Dunaharaszti, Ecser, Gyál, Kistarcsa, Maglód, Nagytarcsa, Pécel, Taksony és Vecsés'],
+        ['price' => '14 990 Ft + ÁFA', 'area' => 'Alsónémedi, Budaörs, Dorog, Dunakeszi, Érd, Fót, Gödöllő, Isaszeg, Mende, Mogyoród, Monor és Törökbálint'],
     ];
 
     $moreServices = [
@@ -22,7 +25,7 @@
         ['icon' => 'fa-chalkboard-teacher', 'title' => 'Oktatások szervezése', 'text' => 'Termék- és szerelési oktatásokat szervezünk partnereinknek.'],
         ['icon' => 'fa-box-open', 'title' => 'Mintadarabok bemutatása', 'text' => 'Üzleteinkben mintadarabokon mutatjuk be a termékeket.'],
         ['icon' => 'fa-credit-card', 'title' => 'Kártyaelfogadás', 'text' => 'Üzleteinkben bankkártyával is fizethet.'],
-        ['icon' => 'fa-shopping-cart', 'title' => 'Webáruház', 'text' => 'Online rendelés 0–24, minimum 20% kedvezménnyel a listaárakból. Üzleteink készlete is itt látható.'],
+        ['icon' => 'fa-shopping-cart', 'title' => 'Webáruház', 'text' => 'Online rendelés 0–24, jelentős kedvezménnyel a listaárakból. Üzletünk készlete is itt látható.'],
     ];
 @endphp
 
@@ -62,14 +65,15 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 p-4 bg-white rounded-xl border border-blue-100">
-                    <p class="grow font-semibold text-gray-900">Az üzlet nyitvatartásán túl üzletnyitás 2–3 órán belül.</p>
+                    <p class="grow font-semibold text-gray-900">Az üzlet nyitvatartásán túli üzletnyitás 2–3 órán belül.</p>
                     <p class="shrink-0 text-lg font-bold text-blue-700 whitespace-nowrap">25 000 Ft + ÁFA</p>
                 </div>
 
                 <p class="mt-6 flex gap-3 text-sm text-gray-700 bg-amber-50 border border-amber-200 rounded-lg p-4">
                     <i class="fas fa-info-circle text-amber-600 mt-0.5"></i>
-                    <span>Az ügyeleti szám csak sürgős, munkaidőn kívüli üzletnyitásra szolgál. Munkaidőben és ha
-                        csak információra van szüksége, kérjük, üzleteinket hívja.</span>
+                    <span>Az ügyeleti szám csak sürgős, munkaidőn kívüli üzletnyitásra szolgál. Munkaidőben és, ha
+                        csak információra van szüksége, kérjük, hívja üzletünket:
+                        <a href="tel:+3612611566" class="font-semibold text-blue-700 hover:underline whitespace-nowrap">+36 1 261 1566</a>.</span>
                 </p>
             </div>
             <div class="order-1 lg:order-2">
@@ -106,7 +110,7 @@
                 <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
                     <div class="flex items-center gap-3 p-5 border-b bg-gray-50">
                         <i class="fas fa-motorcycle text-blue-600 text-xl"></i>
-                        <h3 class="text-xl font-bold text-gray-900">Motoros futár értékhatár alatt</h3>
+                        <h3 class="text-xl font-bold text-gray-900">Motoros futárral, ha nem éri el az ingyenes szállítási értéket</h3>
                     </div>
                     <dl class="divide-y">
                         @foreach ($courierRates as $row)
