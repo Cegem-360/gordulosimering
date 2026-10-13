@@ -92,28 +92,26 @@
                          logo, drawn here because no neutral bookshelf photo was at hand (client, 2026-10-13). --}}
                     @php
                         $spines = [
-                            ['bg' => '#34445e', 'h' => 74, 'w' => 20],
-                            ['bg' => '#eee9df', 'h' => 92, 'w' => 30, 'logo' => 'skf.svg'],
-                            ['bg' => '#9b524b', 'h' => 68, 'w' => 16],
-                            ['bg' => '#4a6458', 'h' => 82, 'w' => 22],
-                            ['bg' => '#eee9df', 'h' => 88, 'w' => 28, 'logo' => 'fag.webp'],
-                            ['bg' => '#b59a5a', 'h' => 64, 'w' => 18],
-                            ['bg' => '#eee9df', 'h' => 94, 'w' => 28, 'logo' => 'nsk.svg'],
-                            ['bg' => '#6f5048', 'h' => 72, 'w' => 20],
-                            ['bg' => '#466178', 'h' => 84, 'w' => 22],
-                            ['bg' => '#eee9df', 'h' => 90, 'w' => 28, 'logo' => 'koyo.webp'],
-                            ['bg' => '#626a4c', 'h' => 70, 'w' => 16],
+                            ['bg' => '#eee9df', 'h' => 98, 'w' => 36, 'logo' => 'skf.svg'],
+                            ['bg' => '#9b524b', 'h' => 74, 'w' => 20],
+                            ['bg' => '#4a6458', 'h' => 90, 'w' => 27],
+                            ['bg' => '#eee9df', 'h' => 95, 'w' => 34, 'logo' => 'fag.webp'],
+                            ['bg' => '#b59a5a', 'h' => 70, 'w' => 22],
+                            ['bg' => '#eee9df', 'h' => 100, 'w' => 34, 'logo' => 'nsk.svg'],
+                            ['bg' => '#6f5048', 'h' => 80, 'w' => 24],
+                            ['bg' => '#466178', 'h' => 92, 'w' => 27],
+                            ['bg' => '#eee9df', 'h' => 97, 'w' => 34, 'logo' => 'koyo.webp'],
                         ];
                     @endphp
-                    <div class="h-64 bg-linear-to-b from-[#e9e1d3] to-[#cdbd9f] flex items-end justify-center gap-[3px] px-3 pt-5 border-b-[10px] border-[#6b4a2b]" aria-hidden="true">
+                    <div class="h-64 bg-linear-to-b from-[#e9e1d3] to-[#cdbd9f] flex items-end justify-center gap-1 pt-1 border-b-[12px] border-[#6b4a2b]" aria-hidden="true">
                         @foreach ($spines as $spine)
-                            <div class="relative shrink-0 rounded-[3px] shadow-[inset_-3px_0_4px_rgba(0,0,0,0.25)] overflow-hidden flex items-start justify-center pt-[38%]"
+                            <div class="relative shrink-0 rounded-[3px] shadow-[inset_-3px_0_4px_rgba(0,0,0,0.25)] overflow-hidden flex items-start justify-center pt-[28%]"
                                 style="background: {{ $spine['bg'] }}; height: {{ $spine['h'] }}%; width: {{ $spine['w'] }}px">
                                 <span class="absolute inset-x-0 top-[8%] h-[3px] bg-black/15"></span>
                                 <span class="absolute inset-x-0 bottom-[8%] h-[3px] bg-black/15"></span>
                                 @isset($spine['logo'])
                                     <img src="{{ Vite::asset('resources/images/brands/' . $spine['logo']) }}" alt=""
-                                        class="-rotate-90 max-w-none h-[18px] w-auto">
+                                        class="-rotate-90 max-w-none h-[22px] w-auto">
                                 @endisset
                             </div>
                         @endforeach
