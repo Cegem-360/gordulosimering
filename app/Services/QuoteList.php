@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Session;
 /**
  * The visitor's ajánlatkérés list: products collected from the cards and
  * product pages, sent as one request from the Ajánlatkérés page. Kept in
- * the session as productId => quantity; quantities follow the product's
- * minimum and order unit, like the cart.
+ * the session as productId => quantity. Any quantity from 1 up can be
+ * asked for, whatever the order unit (client, 2026-10-13).
  */
 final class QuoteList
 {
@@ -29,7 +29,7 @@ final class QuoteList
     public function add(Product $product): void
     {
         $items = $this->items();
-        $items[$product->id] = $product->orderableQuantity(($items[$product->id] ?? 0) + $product->minimumOrderQuantity());
+        $items[$product->id] = ($items[$product->id] ?? 0) + 1;
 
         $this->persist($items);
     }
@@ -37,7 +37,7 @@ final class QuoteList
     public function update(Product $product, int $quantity): void
     {
         $items = $this->items();
-        $items[$product->id] = $product->orderableQuantity($quantity);
+        $items[$product->id] = max(1, $quantity);
 
         $this->persist($items);
     }

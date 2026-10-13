@@ -243,10 +243,6 @@
                                         Rendelési egység: {{ $step }} {{ $unit }}. Csak ennek többszöröse rendelhető
                                         ({{ $minimum }}, {{ $minimum + $step }}, {{ $minimum + 2 * $step }} …).
                                     </p>
-                                @elseif ($minimum > 1)
-                                    <p class="text-xs text-gray-500 mt-2">
-                                        Min. rendelési mennyiség: {{ $minimum }} {{ $unit }}
-                                    </p>
                                 @endif
                             </div>
 

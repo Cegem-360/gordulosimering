@@ -55,13 +55,15 @@
 
                                     <div class="flex flex-none items-center gap-1">
                                         <button type="button" aria-label="Kevesebb"
-                                            wire:click="updateQuantity({{ $product->id }}, {{ max($product->minimumOrderQuantity(), $line['quantity'] - $product->orderQuantityStep()) }})"
+                                            wire:click="updateQuantity({{ $product->id }}, {{ max(1, $line['quantity'] - 1) }})"
                                             class="h-8 w-8 rounded border border-gray-300 bg-gray-100 hover:bg-gray-200 cursor-pointer">
                                             <i class="fas fa-minus text-xs"></i>
                                         </button>
-                                        <span class="w-12 text-center font-semibold">{{ $line['quantity'] }}</span>
+                                        <input type="number" min="1" max="99999" value="{{ $line['quantity'] }}" aria-label="Mennyiség"
+                                            wire:change="updateQuantity({{ $product->id }}, $event.target.value)"
+                                            class="w-16 h-8 rounded border border-gray-300 text-center font-semibold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                                         <button type="button" aria-label="Több"
-                                            wire:click="updateQuantity({{ $product->id }}, {{ $line['quantity'] + $product->orderQuantityStep() }})"
+                                            wire:click="updateQuantity({{ $product->id }}, {{ $line['quantity'] + 1 }})"
                                             class="h-8 w-8 rounded border border-gray-300 bg-gray-100 hover:bg-gray-200 cursor-pointer">
                                             <i class="fas fa-plus text-xs"></i>
                                         </button>

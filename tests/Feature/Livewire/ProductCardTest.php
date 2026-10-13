@@ -52,7 +52,7 @@ it('can add product to cart when in stock', function (): void {
     expect($cart->items->first()->product_id)->toBe($product->id);
 });
 
-it('adds minimum order quantity to cart', function (): void {
+it('adds one to the cart, ignoring the internal minimum order quantity', function (): void {
     $user = User::factory()->create();
     $product = Product::factory()->create([
         'stock_quantity' => 5,
@@ -65,7 +65,7 @@ it('adds minimum order quantity to cart', function (): void {
         ->assertDispatched('cartUpdated');
 
     $cart = Cart::query()->where('user_id', $user->id)->first();
-    expect($cart->items->first()->quantity)->toBe(5);
+    expect($cart->items->first()->quantity)->toBe(1);
 });
 
 it('shows the product code and the net price with a +ÁFA label, not the product variety', function (): void {

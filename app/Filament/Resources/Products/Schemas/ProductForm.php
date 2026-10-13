@@ -161,9 +161,11 @@ final class ProductForm
                             ->numeric(),
                         TextInput::make('order_unit')
                             ->label('Rendelési egység')
+                            ->helperText('A webáruházban csak ennek többszöröse rendelhető. Üresen vagy 1-gyel darabonként.')
                             ->numeric(),
                         TextInput::make('min_order_quantity')
                             ->label('Min. rendelhető')
+                            ->helperText('Belső adat, a webáruház nem használja.')
                             ->numeric(),
                         TextInput::make('trade_quantity')
                             ->label('Ker. mennyiség')

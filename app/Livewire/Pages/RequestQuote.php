@@ -88,8 +88,13 @@ final class RequestQuote extends Component implements HasSchemas
             ->statePath('data');
     }
 
-    public function updateQuantity(int $productId, int $quantity, QuoteList $quoteList): void
+    /**
+     * From the − / + buttons or the typed quantity (a string, possibly empty).
+     */
+    public function updateQuantity(int $productId, int|string $quantity, QuoteList $quoteList): void
     {
+        $quantity = (int) $quantity;
+
         $product = Product::query()->find($productId);
 
         if ($product === null || ! $quoteList->has($productId)) {

@@ -53,15 +53,15 @@ it('puts an out-of-stock product on the quote list from its card', function (): 
     Livewire::test(QuoteListIcon::class)->assertSet('itemCount', 1);
 });
 
-it('puts a product on the quote list from its page, starting at the minimum', function (): void {
+it('puts one of a product on the quote list from its page, whatever its order unit', function (): void {
     $product = Product::factory()->create(['stock_quantity' => 0, 'order_unit' => 10, 'min_order_quantity' => 10]);
 
     Livewire::test(Show::class, ['product' => $product])->call('addToQuote');
 
-    expect(resolve(QuoteList::class)->items())->toBe([$product->id => 10]);
+    expect(resolve(QuoteList::class)->items())->toBe([$product->id => 1]);
 });
 
-it('lists the collected products on the Ajánlatkérés page and keeps quantities in order units', function (): void {
+it('lists the collected products on the Ajánlatkérés page and takes any quantity', function (): void {
     $product = Product::factory()->create(['name' => 'SKF 6204-2RSH', 'order_unit' => 10, 'min_order_quantity' => 10]);
     resolve(QuoteList::class)->add($product);
 
@@ -70,7 +70,10 @@ it('lists the collected products on the Ajánlatkérés page and keeps quantitie
     Livewire::test(RequestQuote::class)
         ->call('updateQuantity', $product->id, 13)
         ->assertDispatched('quoteListUpdated');
-    expect(resolve(QuoteList::class)->items())->toBe([$product->id => 20]);
+    expect(resolve(QuoteList::class)->items())->toBe([$product->id => 13]);
+
+    Livewire::test(RequestQuote::class)->call('updateQuantity', $product->id, '');
+    expect(resolve(QuoteList::class)->items())->toBe([$product->id => 1]);
 
     Livewire::test(RequestQuote::class)->call('removeItem', $product->id);
     expect(resolve(QuoteList::class)->items())->toBe([]);

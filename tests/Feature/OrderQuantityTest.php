@@ -9,7 +9,7 @@ use App\Models\Product;
 use App\Services\CartService;
 use Livewire\Livewire;
 
-it('works out the orderable quantities from the minimum and the order unit', function (?int $minimum, ?int $unit, int $smallest, array $requested, array $orderable): void {
+it('works out the orderable quantities from the order unit, ignoring the internal minimum', function (?int $minimum, ?int $unit, int $smallest, array $requested, array $orderable): void {
     $product = Product::factory()->make(['min_order_quantity' => $minimum, 'order_unit' => $unit]);
 
     expect($product->minimumOrderQuantity())->toBe($smallest)
@@ -17,9 +17,9 @@ it('works out the orderable quantities from the minimum and the order unit', fun
 })->with([
     'nothing set' => [null, null, 1, [0, 1, 7], [1, 1, 7]],
     'zeros, as the old export left them' => [0, 0, 1, [3], [3]],
-    'minimum only' => [5, 0, 5, [1, 5, 6], [5, 5, 6]],
+    'internal minimum only' => [5, 0, 1, [1, 5, 6], [1, 5, 6]],
     'order unit only (batteries in tens)' => [0, 10, 10, [1, 9, 10, 11, 25], [10, 10, 10, 20, 30]],
-    'minimum not a multiple of the unit' => [15, 10, 20, [1, 21], [20, 30]],
+    'internal minimum and a unit' => [15, 10, 10, [1, 21], [10, 30]],
 ]);
 
 it('steps the product page quantity in order units and rounds typed amounts up', function (): void {
@@ -60,4 +60,13 @@ it('keeps the cart quantity to whole order units', function (): void {
         ->set('quantity', 33)->assertSet('quantity', 40);
 
     expect(resolve(CartService::class)->getItem($product->id)?->quantity)->toBe(40);
+});
+
+it('starts an in-stock product at 1 even with an internal minimum from the ERP', function (): void {
+    $product = Product::factory()->create(['stock_quantity' => 50, 'min_order_quantity' => 20, 'order_unit' => 0]);
+
+    Livewire::test(Show::class, ['product' => $product])
+        ->assertSet('quantity', 1)
+        ->call('increment')
+        ->assertSet('quantity', 2);
 });

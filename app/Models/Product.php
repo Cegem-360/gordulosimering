@@ -117,12 +117,14 @@ final class Product extends Model
     }
 
     /**
-     * The smallest orderable quantity: the minimum ("Min. rendelhető"), at
-     * least 1, rounded up to a whole order unit.
+     * The smallest orderable quantity: one order unit, so 1 unless the shop
+     * set a "Rendelési egység" by hand (e.g. batteries sold in tens). The
+     * ERP's "Min. rendelhető" is the shop's own purchasing minimum and does
+     * not apply to customers (client, 2026-10-13).
      */
     public function minimumOrderQuantity(): int
     {
-        return $this->roundUpToOrderUnit(max(1, (int) $this->min_order_quantity));
+        return $this->orderQuantityStep();
     }
 
     /**
