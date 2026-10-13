@@ -24,6 +24,9 @@ final class CategoryTree
     /** @var array<int, true>|null */
     private ?array $stockedIds = null;
 
+    /** @var array<int, int>|null */
+    private ?array $bearingIds = null;
+
     /**
      * The category id plus every descendant id.
      *
@@ -43,6 +46,23 @@ final class CategoryTree
         }
 
         return $ids;
+    }
+
+    /**
+     * The CSAPÁGYAK main category and everything beneath it; empty when the
+     * category does not exist.
+     *
+     * @return array<int, int>
+     */
+    public function bearingCategoryIds(): array
+    {
+        if ($this->bearingIds !== null) {
+            return $this->bearingIds;
+        }
+
+        $bearings = Category::query()->whereNull('category_id')->where('name', 'CSAPÁGYAK')->first();
+
+        return $this->bearingIds = $bearings === null ? [] : $this->descendantIds($bearings);
     }
 
     /**

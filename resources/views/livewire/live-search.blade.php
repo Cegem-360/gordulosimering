@@ -36,6 +36,9 @@
                                 <p class="text-sm font-medium text-gray-900 truncate">{{ $product->name }}</p>
                                 <p class="text-xs text-gray-500">
                                     <span class="font-mono">{{ $product->product_code }}</span>
+                                    @if (filled($product->size) && $product->isBearing())
+                                        <span class="ml-1">· {{ $product->size }}</span>
+                                    @endif
                                     @if ($product->isInStock())
                                         <span class="ml-2 text-green-600"><i class="fas fa-check-circle"></i>
                                             Készleten</span>

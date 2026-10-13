@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\VatRate;
+use App\Services\CategoryTree;
 use App\Services\ProductAttributeExtractor;
 use App\Settings\ShopSettings;
 use Closure;
@@ -53,6 +54,25 @@ final class Product extends Model
     public function isInStock(): bool
     {
         return $this->stock_quantity > 0;
+    }
+
+    /**
+     * Whether the product sits anywhere in the CSAPÁGYAK category tree;
+     * bearings show their size beside the product code in listings.
+     */
+    public function isBearing(): bool
+    {
+        $bearingIds = resolve(CategoryTree::class)->bearingCategoryIds();
+
+        if ($bearingIds === []) {
+            return false;
+        }
+
+        if ($this->relationLoaded('categories')) {
+            return $this->categories->contains(fn (Category $category): bool => in_array($category->id, $bearingIds, true));
+        }
+
+        return $this->categories()->whereIn('product_categories.id', $bearingIds)->exists();
     }
 
     /**
@@ -238,7 +258,8 @@ final class Product extends Model
     }
 
     /**
-     * A termékkóddal kezdődő találatok kerülnek előre.
+     * A termékkóddal kezdődő találatok kerülnek előre, azon belül az SKF
+     * termékek (az ügyfél kérése, 2026-10-13).
      *
      * @param  Builder<self>  $query
      */
@@ -248,7 +269,7 @@ final class Product extends Model
         $query->orderByRaw(
             'CASE WHEN REPLACE(product_code, \',\', \'.\') LIKE ? THEN 0 ELSE 1 END',
             [$this->normalizeDecimalSeparator($term) . '%'],
-        );
+        )->orderByRaw('CASE WHEN brand = \'SKF\' THEN 0 ELSE 1 END');
     }
 
     /**

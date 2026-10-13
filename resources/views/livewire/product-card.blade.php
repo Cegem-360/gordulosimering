@@ -29,7 +29,12 @@
     </a>
 
     @if (filled($product->product_code))
-        <div class="text-sm font-medium mb-2 text-gray-600">{{ $product->product_code }}</div>
+        <div class="text-sm font-medium mb-2 text-gray-600">
+            {{ $product->product_code }}
+            @if (filled($product->size) && $product->isBearing())
+                <span class="block text-gray-500">Méret: {{ $product->size }}</span>
+            @endif
+        </div>
     @endif
     <div class="mb-4 flex flex-wrap items-baseline gap-x-2">
         <x-product-price :product="$product" />
