@@ -183,10 +183,11 @@ it('serves the GÖRDÜLŐ-Simmering favicon set on the storefront and in the adm
         ->and(file_get_contents(public_path('favicon.svg')))->toContain('fill="#0F50A9"')->not->toContain('stroke=');
 });
 
-it('shows the navbar logo larger on desktop, close to its native 280 px', function (): void {
+it('shows the navbar logo as the text part and the sharp SKF partner badge, larger on desktop', function (): void {
     /** @var TestCase $this */
     $this->get(route('contact'))->assertOk()
-        ->assertSeeHtml('width="280" height="59" class="h-12 w-auto lg:h-auto lg:w-[230px] xl:w-[270px] 2xl:w-[300px]"')
-        ->assertSeeHtml('alt="GÖRDÜLŐ-Simmering Kft. - SKF csapágyak és kapcsolódó termékek kereskedése"')
+        ->assertSeeHtml('class="shrink-0 flex items-center gap-[2px] h-12 lg:h-[49px] xl:h-[57px] 2xl:h-[63px]"')
+        ->assertSeeHtml('alt="GÖRDÜLŐ-Simmering Kft. - Csapágyak és kapcsolódó termékek kereskedelme"')
+        ->assertSeeHtml('alt="SKF Szerződött Partner" width="189" height="189"')
         ->assertSeeHtml('class="scroll-pt-20 lg:scroll-pt-24"');
 });

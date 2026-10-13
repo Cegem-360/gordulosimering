@@ -12,11 +12,15 @@
             <!-- Logo and Navigation -->
             <div class="flex items-center space-x-8">
                 <!-- Logo -->
-                <!-- Logo -->
-                <a href="/" class="shrink-0">
-                    <img src="{{ Vite::asset('resources/images/GS-logo.webp') }}"
-                        alt="GÖRDÜLŐ-Simmering Kft. - SKF csapágyak és kapcsolódó termékek kereskedése"
-                        width="280" height="59" class="h-12 w-auto lg:h-auto lg:w-[230px] xl:w-[270px] 2xl:w-[300px]">
+                {{-- Two images, so the SKF Szerződött Partner badge can come from the client's sharp
+                     artwork (2026-10-13); the text part is cut from the old 280x59 GS-logo.webp.
+                     The heights keep the old logo's widths (230/270/300 px). --}}
+                <a href="/" class="shrink-0 flex items-center gap-[2px] h-12 lg:h-[49px] xl:h-[57px] 2xl:h-[63px]">
+                    <img src="{{ Vite::asset('resources/images/GS-logo-text.webp') }}"
+                        alt="GÖRDÜLŐ-Simmering Kft. - Csapágyak és kapcsolódó termékek kereskedelme"
+                        width="222" height="59" class="h-full w-auto">
+                    <img src="{{ Vite::asset('resources/images/skf-szerzodott-partner.webp') }}"
+                        alt="SKF Szerződött Partner" width="189" height="189" class="h-[95%] w-auto">
                 </a>
 
                 <!-- Desktop Navigation -->
