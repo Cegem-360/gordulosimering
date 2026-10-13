@@ -135,9 +135,10 @@
             <!-- Shipping Costs Card -->
             <a href="{{ route('services') }}#hazhozszallitas" class="group block">
                 <div
-                    class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-linear-to-br from-blue-900 to-blue-600 h-64">
-                    <i class="fas fa-truck-fast absolute top-10 left-1/2 -translate-x-1/2 text-white/25 text-8xl"></i>
-                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/50 to-transparent p-6">
+                    class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                    <img src="{{ Vite::asset('resources/images/delivery-courier.webp') }}" alt="Szállítási költségek"
+                        class="w-full h-64 object-cover">
+                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 to-transparent p-6">
                         <h3 class="text-white text-xl font-semibold flex items-center gap-2">
                             Szállítási költségek
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
