@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Livewire\Products\Show;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
@@ -15,20 +16,42 @@ it('renders successfully', function (): void {
         ->assertStatus(200);
 });
 
-it('leaves the internal ERP fields out of the product information', function (): void {
+it('shows only the product code, name, size, weight and quality of the ERP data', function (): void {
     $product = Product::factory()->create([
+        'product_code' => '6204-2RSH_S',
+        'name' => 'SKF mélyhornyú golyóscsapágy',
+        'size' => '20X47X14',
+        'weight' => 0.106,
+        'quality' => 'C3',
         'catalog_number' => 'CAT-1234',
-        'group_code' => '42',
-        'is_service' => false,
-        'discount_group' => 'B',
-        'quantity_unit' => 'db',
-        'secondary_unit' => 'raklap',
-        'minimum_stock' => 7,
+        'type' => 'GOLYÓS',
+        'product_variety' => 'csapágy mélyhornyú',
+        'supplier' => 'SKF Hungary',
+        'barcode' => '*BC-998877*',
+        'ean_code' => '5901234123457',
+        'ksh_number' => '84821010',
+        'rating' => 'A-minősítés',
+        'description' => 'Hosszú belső megjegyzés',
+        'short_note' => 'Rövid belső megjegyzés',
+        'custom_fields' => ['Polc' => 'B-12'],
+        'discount_group' => 'G02',
+        'vat_class' => 'AFA27',
     ]);
 
     Livewire::test(Show::class, ['product' => $product])
-        ->assertSee(['Alapadatok', 'Katalógus szám', 'Árazás', 'Készlet és rendelés', 'Mennyiségi egység'])
-        ->assertDontSee(['Csoport kód', 'Szolgáltatás', 'Kedvezmény csoport', 'Másodlagos egység', 'Minimum készlet', 'raklap']);
+        ->assertSee(['6204-2RSH_S', 'SKF mélyhornyú golyóscsapágy', '20X47X14', '0,106 kg', 'C3'])
+        ->assertDontSee(['CAT-1234', 'GOLYÓS', 'csapágy mélyhornyú', 'SKF Hungary', 'BC-998877', '5901234123457', '84821010',
+            'A-minősítés', 'Hosszú belső megjegyzés', 'Rövid belső megjegyzés', 'B-12', 'G02', 'AFA27', 'Termékinformációk']);
+});
+
+it('leads the breadcrumb through the product\'s shop category', function (): void {
+    $category = Category::query()->create(['name' => 'EGYSOROS MÉLYHORNYÚ GOLYÓSCSAPÁGY', 'slug' => 'egysoros']);
+    $product = Product::factory()->create(['product_variety' => 'csapágy mélyhornyú']);
+    $product->categories()->attach($category);
+
+    Livewire::test(Show::class, ['product' => $product])
+        ->assertSeeHtml('href="' . route('categories.show', $category) . '"')
+        ->assertSee('EGYSOROS MÉLYHORNYÚ GOLYÓSCSAPÁGY');
 });
 
 it('shows the sale price on the product page', function (): void {

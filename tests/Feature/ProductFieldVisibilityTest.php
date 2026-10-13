@@ -10,49 +10,27 @@ use Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
-it('shows every field on the product page until it is switched off', function (): void {
-    $product = Product::factory()->create(['supplier' => 'SKF Hungary', 'ean_code' => '5901234123457', 'short_note' => 'Raktárról azonnal']);
+it('shows the quality on the product page until it is switched off', function (): void {
+    $product = Product::factory()->create(['quality' => 'C3']);
 
-    expect($product->showsField('supplier'))->toBeTrue();
+    expect($product->showsField('quality'))->toBeTrue();
+    get(route('products.show', $product))->assertOk()->assertSee(['Minőség:', 'C3']);
 
-    get(route('products.show', $product))->assertOk()
-        ->assertSee(['SKF Hungary', '5901234123457', 'Raktárról azonnal']);
+    $product->update(['field_visibility' => ['quality' => false]]);
+    get(route('products.show', $product))->assertOk()->assertDontSee('Minőség:');
 });
 
-it('hides the switched-off fields on the product page only', function (): void {
-    $product = Product::factory()->create([
-        'supplier' => 'SKF Hungary',
-        'ean_code' => '5901234123457',
-        'short_note' => 'Raktárról azonnal',
-        'field_visibility' => ['supplier' => false, 'short_note' => false],
-    ]);
-
-    get(route('products.show', $product))->assertOk()
-        ->assertSee('5901234123457')
-        ->assertDontSee(['SKF Hungary', 'Raktárról azonnal', 'Megjegyzés']);
-});
-
-it('drops the codes card when nothing in it is visible', function (): void {
-    $product = Product::factory()->create([
-        'barcode' => '*BETA!1036*', 'ean_code' => null, 'ksh_prefix' => null, 'ksh_number' => null,
-        'supplier' => null, 'quality' => null, 'rating' => null,
-        'field_visibility' => ['barcode' => false],
-    ]);
-
-    get(route('products.show', $product))->assertOk()->assertDontSee('Azonosítók és kódok');
-});
-
-it('lets the admin switch a field off and on per product', function (): void {
+it('lets the admin switch the quality off per product and keeps the other fields internal', function (): void {
     actingAs(User::factory()->create(['is_admin' => true]));
-    $product = Product::factory()->create(['supplier' => 'SKF Hungary']);
+    $product = Product::factory()->create(['quality' => 'C3', 'supplier' => 'SKF Hungary']);
 
     Livewire::test(EditProduct::class, ['record' => $product->getRouteKey()])
-        ->assertSchemaStateSet(['field_visibility.supplier' => true, 'field_visibility.ean_code' => true])
-        ->fillForm(['field_visibility.supplier' => false])
+        ->assertSchemaStateSet(['field_visibility.quality' => true])
+        ->assertFormFieldDoesNotExist('field_visibility.supplier')
+        ->fillForm(['field_visibility.quality' => false])
         ->call('save')
         ->assertHasNoFormErrors();
 
-    expect($product->refresh()->showsField('supplier'))->toBeFalse()
-        ->and($product->showsField('ean_code'))->toBeTrue()
-        ->and($product->supplier)->toBe('SKF Hungary');
+    expect($product->refresh()->showsField('quality'))->toBeFalse()
+        ->and($product->quality)->toBe('C3');
 });

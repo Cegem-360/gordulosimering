@@ -176,41 +176,41 @@ final class ProductForm
                     ]),
 
                 Section::make('Egyéb adatok és kódok')
-                    ->description('A kapcsolóval a mező termékoldali megjelenítése kapcsolható ki ennél a terméknél.')
+                    ->description('A vevők a termékoldalon csak a termékkódot, a nevet, a méretet, a súlyt és a minőséget látják; a minőség termékenként elrejthető. A többi mező belső adat.')
                     ->columns(2)
                     ->collapsed()
                     ->schema([
-                        self::withVisibilityToggle(TextInput::make('rating')
-                            ->label('Minősítés')),
+                        TextInput::make('rating')
+                            ->label('Minősítés'),
                         self::withVisibilityToggle(TextInput::make('quality')
                             ->label('Minőség')),
-                        self::withVisibilityToggle(TextInput::make('product_variety')
-                            ->label('Termékféleség')),
+                        TextInput::make('product_variety')
+                            ->label('Termékféleség'),
                         TextInput::make('trade_type')
                             ->label('Ker. típus'),
                         TextInput::make('usage_type')
                             ->label('Felh. típus'),
                         TextInput::make('currency_settlement')
                             ->label('Deviza elsz.'),
-                        self::withVisibilityToggle(TextInput::make('supplier')
-                            ->label('Beszállító')),
-                        self::withVisibilityToggle(TextInput::make('barcode')
-                            ->label('Vonalkód')),
-                        self::withVisibilityToggle(TextInput::make('ean_code')
-                            ->label('EAN kód')),
-                        self::withVisibilityToggle(TextInput::make('ksh_prefix')
-                            ->label('KSH előtag')),
-                        self::withVisibilityToggle(TextInput::make('ksh_number')
-                            ->label('KSZ szám')),
-                        self::withVisibilityToggle(TextInput::make('short_note')
+                        TextInput::make('supplier')
+                            ->label('Beszállító'),
+                        TextInput::make('barcode')
+                            ->label('Vonalkód'),
+                        TextInput::make('ean_code')
+                            ->label('EAN kód'),
+                        TextInput::make('ksh_prefix')
+                            ->label('KSH előtag'),
+                        TextInput::make('ksh_number')
+                            ->label('KSZ szám'),
+                        TextInput::make('short_note')
                             ->label('Rövid megjegyzés')
-                            ->columnSpanFull()),
-                        self::withVisibilityToggle(Textarea::make('description')
+                            ->columnSpanFull(),
+                        Textarea::make('description')
                             ->label('Hosszú megjegyzés')
-                            ->columnSpanFull()),
-                        self::withVisibilityToggle(KeyValue::make('custom_fields')
+                            ->columnSpanFull(),
+                        KeyValue::make('custom_fields')
                             ->label('Egyéni mezők')
-                            ->columnSpanFull()),
+                            ->columnSpanFull(),
                     ]),
             ]);
     }

@@ -9,10 +9,10 @@
                     <a href="{{ route('index') }}" class="text-blue-600 hover:underline">Kezdőlap</a>
                     <span class="text-gray-500">&gt;</span>
                     <a href="{{ route('categories.index') }}" class="text-blue-600 hover:underline">Termékkategóriák</a>
-                    @if ($product->visibleField('product_variety'))
+                    @if ($category = $product->categories->first())
                         <span class="text-gray-500">&gt;</span>
-                        <a href="{{ route('categories.index') }}"
-                            class="text-blue-600 hover:underline">{{ $product->visibleField('product_variety') }}</a>
+                        <a href="{{ route('categories.show', $category) }}"
+                            class="text-blue-600 hover:underline">{{ $category->name }}</a>
                     @endif
                     <span class="text-gray-500">&gt;</span>
                     <span class="text-gray-700">{{ $product->name ?? $product->product_code }}</span>
@@ -95,84 +95,47 @@
 
                 <!-- Right Column: Product Info -->
                 <div class="space-y-6">
-                    <!-- Product Quick Info Card -->
+                    {{-- Csak az ügyfél által engedett adatok (2026-10-13): termékkód, név (a címben),
+                         méret, súly, minőség; mellette a mennyiségi egység. --}}
                     <div class="bg-white rounded-lg border p-5">
-                        <!-- Product Code Badge -->
                         @if ($product->product_code)
-                            <div class="flex items-center gap-2 mb-4">
+                            <div class="mb-4">
                                 <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-mono">
                                     {{ $product->product_code }}
                                 </span>
-                                @if ($product->visibleField('supplier'))
-                                    <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
-                                        {{ $product->visibleField('supplier') }}
-                                    </span>
-                                @endif
                             </div>
                         @endif
 
-                        <!-- Key Specs Grid -->
-                        <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
-                            @if ($product->catalog_number)
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-hashtag text-gray-400 w-4"></i>
-                                    <span class="text-gray-500">Katalógus:</span>
-                                    <span class="text-gray-700 font-medium">{{ $product->catalog_number }}</span>
-                                </div>
-                            @endif
-                            @if ($product->visibleField('product_variety'))
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-folder text-gray-400 w-4"></i>
-                                    <span class="text-gray-500">Kategória:</span>
-                                    <span class="text-gray-700 font-medium">{{ $product->visibleField('product_variety') }}</span>
-                                </div>
-                            @endif
-                            @if ($product->type)
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-cog text-gray-400 w-4"></i>
-                                    <span class="text-gray-500">Típus:</span>
-                                    <span class="text-gray-700 font-medium">{{ $product->type }}</span>
-                                </div>
-                            @endif
+                        <dl class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
                             @if ($product->size)
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-ruler text-gray-400 w-4"></i>
-                                    <span class="text-gray-500">Méret:</span>
-                                    <span class="text-gray-700 font-medium">{{ $product->size }}</span>
+                                    <dt class="text-gray-500">Méret:</dt>
+                                    <dd class="text-gray-700 font-medium">{{ $product->size }}</dd>
+                                </div>
+                            @endif
+                            @if ((float) $product->weight > 0)
+                                <div class="flex items-center gap-2">
+                                    <i class="fas fa-weight-hanging text-gray-400 w-4"></i>
+                                    <dt class="text-gray-500">Súly:</dt>
+                                    <dd class="text-gray-700 font-medium">{{ Number::format((float) $product->weight, maxPrecision: 3, locale: 'hu') }} kg</dd>
                                 </div>
                             @endif
                             @if ($product->visibleField('quality'))
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-star text-gray-400 w-4"></i>
-                                    <span class="text-gray-500">Minőség:</span>
-                                    <span class="text-gray-700 font-medium">{{ $product->visibleField('quality') }}</span>
-                                </div>
-                            @endif
-                            @if ($product->weight)
-                                <div class="flex items-center gap-2">
-                                    <i class="fas fa-weight-hanging text-gray-400 w-4"></i>
-                                    <span class="text-gray-500">Súly:</span>
-                                    <span class="text-gray-700 font-medium">{{ $product->weight }} kg</span>
+                                    <dt class="text-gray-500">Minőség:</dt>
+                                    <dd class="text-gray-700 font-medium">{{ $product->visibleField('quality') }}</dd>
                                 </div>
                             @endif
                             @if ($product->quantity_unit)
                                 <div class="flex items-center gap-2">
                                     <i class="fas fa-boxes text-gray-400 w-4"></i>
-                                    <span class="text-gray-500">Egység:</span>
-                                    <span class="text-gray-700 font-medium">{{ $product->quantity_unit }}</span>
+                                    <dt class="text-gray-500">Egység:</dt>
+                                    <dd class="text-gray-700 font-medium">{{ $product->quantity_unit }}</dd>
                                 </div>
                             @endif
-                        </div>
-
-                        <!-- View All Specs Link -->
-                        <div class="mt-4 pt-4 border-t">
-                            <a href="#specifications"
-                                class="text-blue-600 hover:underline inline-flex items-center gap-2 text-sm">
-                                <i class="fas fa-list-ul"></i>
-                                Összes specifikáció megtekintése
-                                <i class="fas fa-chevron-down text-xs"></i>
-                            </a>
-                        </div>
+                        </dl>
                     </div>
 
                     <!-- Add to Cart Section -->
@@ -296,250 +259,6 @@
                         </div>
                     @endif
                 </div>
-            </div>
-
-            <!-- Specifications Section -->
-            <div id="specifications" class="space-y-6">
-                <h2 class="text-2xl font-bold">Termékinformációk</h2>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Alapadatok -->
-                    <div class="bg-white rounded-lg border p-6">
-                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
-                            <i class="fas fa-box text-gray-500"></i>
-                            Alapadatok
-                        </h3>
-                        <dl class="space-y-3">
-                            @if ($product->product_code)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Termékkód</dt>
-                                    <dd class="font-medium text-right">{{ $product->product_code }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->name)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Megnevezés</dt>
-                                    <dd class="font-medium text-right max-w-[60%]">{{ $product->name }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->catalog_number)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Katalógus szám</dt>
-                                    <dd class="font-medium text-right">{{ $product->catalog_number }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->visibleField('product_variety'))
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Termék kategória</dt>
-                                    <dd class="font-medium text-right">{{ $product->visibleField('product_variety') }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->type)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Típus</dt>
-                                    <dd class="font-medium text-right">{{ $product->type }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->size)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Méret</dt>
-                                    <dd class="font-medium text-right">{{ $product->size }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->weight)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Súly</dt>
-                                    <dd class="font-medium text-right">{{ $product->weight }} kg</dd>
-                                </div>
-                            @endif
-                        </dl>
-                    </div>
-
-                    <!-- Árazás -->
-                    <div class="bg-white rounded-lg border p-6">
-                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
-                            <i class="fas fa-tags text-gray-500"></i>
-                            Árazás
-                        </h3>
-                        <dl class="space-y-3">
-                            @if ($product->net_selling_price && $product->net_selling_price > 0)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Nettó eladási ár</dt>
-                                    <dd>
-                                        <x-product-price :product="$product" size="sm" class="justify-end" />
-                                    </dd>
-                                </div>
-                            @endif
-                            @if ($product->gross_selling_price && $product->gross_selling_price > 0 && ! $product->hasDiscount())
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Bruttó eladási ár</dt>
-                                    <dd class="font-bold text-right">
-                                        {{ Number::currency($product->gross_selling_price, 'HUF', 'hu', 0) }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->vat_class)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">ÁFA osztály</dt>
-                                    <dd class="font-medium text-right">{{ $product->vat_class }}</dd>
-                                </div>
-                            @endif
-                            <div class="flex justify-between">
-                                <dt class="text-gray-600">Akciós</dt>
-                                <dd class="font-medium text-right">
-                                    @if ($product->is_on_sale)
-                                        <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-sm">Igen -
-                                            {{ Number::percentage($product->effective_sale_percentage, maxPrecision: 2, locale: 'hu') }}</span>
-                                    @else
-                                        <span class="text-gray-500">Nem</span>
-                                    @endif
-                                </dd>
-                            </div>
-                        </dl>
-                    </div>
-
-                    <!-- Készlet és rendelés -->
-                    <div class="bg-white rounded-lg border p-6">
-                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
-                            <i class="fas fa-warehouse text-gray-500"></i>
-                            Készlet és rendelés
-                        </h3>
-                        <dl class="space-y-3">
-                            @if ($product->quantity_unit)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Mennyiségi egység</dt>
-                                    <dd class="font-medium text-right">{{ $product->quantity_unit }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->maximum_stock !== null && $product->maximum_stock > 0)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Maximum készlet</dt>
-                                    <dd class="font-medium text-right">{{ $product->maximum_stock }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->buffer_stock !== null && $product->buffer_stock > 0)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Puffer készlet</dt>
-                                    <dd class="font-medium text-right">{{ $product->buffer_stock }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->min_order_quantity !== null && $product->min_order_quantity > 0)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Min. rendelési menny.</dt>
-                                    <dd class="font-medium text-right">{{ $product->min_order_quantity }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->order_unit !== null && $product->order_unit > 0)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Rendelési egység</dt>
-                                    <dd class="font-medium text-right">{{ $product->order_unit }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->trade_quantity !== null && $product->trade_quantity > 0)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Kereskedelmi menny.</dt>
-                                    <dd class="font-medium text-right">{{ $product->trade_quantity }}</dd>
-                                </div>
-                            @endif
-                            @if ($product->pallet_quantity !== null && $product->pallet_quantity > 0)
-                                <div class="flex justify-between">
-                                    <dt class="text-gray-600">Raklap mennyiség</dt>
-                                    <dd class="font-medium text-right">{{ $product->pallet_quantity }}</dd>
-                                </div>
-                            @endif
-                        </dl>
-                    </div>
-
-                    {{-- Azonosítók és kódok --}}
-                    @if (collect(['barcode', 'ean_code', 'ksh_prefix', 'ksh_number', 'supplier', 'quality', 'rating'])->contains(fn (string $field) => filled($product->visibleField($field))))
-                        <div class="bg-white rounded-lg border p-6">
-                            <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
-                                <i class="fas fa-barcode text-gray-500"></i>
-                                Azonosítók és kódok
-                            </h3>
-                            <dl class="space-y-3">
-                                @if ($product->visibleField('barcode'))
-                                    <div class="flex justify-between">
-                                        <dt class="text-gray-600">Vonalkód</dt>
-                                        <dd class="font-medium text-right font-mono text-sm">
-                                            {{ str_replace(['*', '!'], ['', ' '], $product->visibleField('barcode')) }}</dd>
-                                    </div>
-                                @endif
-                                @if ($product->visibleField('ean_code'))
-                                    <div class="flex justify-between">
-                                        <dt class="text-gray-600">EAN kód</dt>
-                                        <dd class="font-medium text-right font-mono">{{ $product->visibleField('ean_code') }}</dd>
-                                    </div>
-                                @endif
-                                @if ($product->visibleField('ksh_prefix') || $product->visibleField('ksh_number'))
-                                    <div class="flex justify-between">
-                                        <dt class="text-gray-600">KSH/VTSZ szám</dt>
-                                        <dd class="font-medium text-right">{{ $product->visibleField('ksh_prefix') }}
-                                            {{ $product->visibleField('ksh_number') }}</dd>
-                                    </div>
-                                @endif
-                                @if ($product->visibleField('supplier'))
-                                    <div class="flex justify-between">
-                                        <dt class="text-gray-600">Beszállító</dt>
-                                        <dd class="font-medium text-right">{{ $product->visibleField('supplier') }}</dd>
-                                    </div>
-                                @endif
-                                @if ($product->visibleField('quality'))
-                                    <div class="flex justify-between">
-                                        <dt class="text-gray-600">Minőség</dt>
-                                        <dd class="font-medium text-right">{{ $product->visibleField('quality') }}</dd>
-                                    </div>
-                                @endif
-                                @if ($product->visibleField('rating'))
-                                    <div class="flex justify-between">
-                                        <dt class="text-gray-600">Minősítés</dt>
-                                        <dd class="font-medium text-right">{{ $product->visibleField('rating') }}</dd>
-                                    </div>
-                                @endif
-                            </dl>
-                        </div>
-                    @endif
-                </div>
-
-                <!-- Leírás -->
-                @if ($product->visibleField('description'))
-                    <div class="bg-white rounded-lg border p-6">
-                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
-                            <i class="fas fa-align-left text-gray-600"></i>
-                            Leírás
-                        </h3>
-                        <p class="text-gray-700 leading-relaxed">{{ $product->visibleField('description') }}</p>
-                    </div>
-                @endif
-
-                {{-- Megjegyzés --}}
-                @if ($product->visibleField('short_note'))
-                    <div class="bg-yellow-50 rounded-lg border border-yellow-200 p-6">
-                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b border-yellow-200 flex items-center gap-2">
-                            <i class="fas fa-sticky-note text-gray-500"></i>
-                            Megjegyzés
-                        </h3>
-                        <p class="text-gray-700">{{ $product->visibleField('short_note') }}</p>
-                    </div>
-                @endif
-
-                <!-- Egyedi mezők -->
-                @if (filled($product->visibleField('custom_fields')))
-                    <div class="bg-white rounded-lg border p-6">
-                        <h3 class="text-lg font-semibold mb-4 pb-2 border-b flex items-center gap-2">
-                            <i class="fas fa-cog text-gray-600"></i>
-                            Egyedi mezők
-                        </h3>
-                        <dl class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            @foreach ($product->custom_fields as $key => $value)
-                                <div class="bg-gray-50 rounded p-3">
-                                    <dt class="text-gray-600 text-sm">{{ $key }}</dt>
-                                    <dd class="font-medium mt-1">{{ is_array($value) ? json_encode($value) : $value }}
-                                    </dd>
-                                </div>
-                            @endforeach
-                        </dl>
-                    </div>
-                @endif
             </div>
         </div>
     @else
