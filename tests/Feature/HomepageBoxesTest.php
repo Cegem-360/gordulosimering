@@ -32,12 +32,13 @@ it('links each brand with products to its products, by brand filter or name sear
         ->assertSee('Érdeklődjön üzleteinkben');
 });
 
-it('shows exactly the 31 brands the client listed, SKF first', function (): void {
+it('shows the 31 brands the client listed plus LOCTITE, SKF first', function (): void {
     $names = collect(config('brands'))->pluck('name');
 
-    expect($names)->toHaveCount(31)
+    expect($names)->toHaveCount(32)
         ->and($names->first())->toBe('SKF')
-        ->and($names)->not->toContain('LOCTITE', 'TIMKEN', 'DURACELL');
+        ->and($names)->toContain('LOCTITE')
+        ->and($names)->not->toContain('TIMKEN', 'DURACELL');
 
     foreach (config('brands') as $brand) {
         expect(resource_path('images/brands/' . $brand['logo']))->toBeFile();
