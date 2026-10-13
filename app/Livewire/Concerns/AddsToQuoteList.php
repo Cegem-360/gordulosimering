@@ -16,7 +16,7 @@ trait AddsToQuoteList
 {
     public function addToQuote(QuoteList $quoteList): void
     {
-        $quoteList->add($this->product);
+        $quoteList->add($this->product, $this->quoteQuantity());
         unset($this->isInQuoteList);
 
         $this->dispatch('quoteListUpdated');
@@ -32,5 +32,14 @@ trait AddsToQuoteList
     public function isInQuoteList(): bool
     {
         return resolve(QuoteList::class)->has($this->product->id);
+    }
+
+    /**
+     * How many to put on the list: one from a card; the product page sends
+     * the quantity set in its field.
+     */
+    protected function quoteQuantity(): int
+    {
+        return 1;
     }
 }

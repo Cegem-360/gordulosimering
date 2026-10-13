@@ -53,12 +53,12 @@ it('puts an out-of-stock product on the quote list from its card', function (): 
     Livewire::test(QuoteListIcon::class)->assertSet('itemCount', 1);
 });
 
-it('puts one of a product on the quote list from its page, whatever its order unit', function (): void {
-    $product = Product::factory()->create(['stock_quantity' => 0, 'order_unit' => 10, 'min_order_quantity' => 10]);
+it('puts the quantity field\'s default on the quote list, one order unit', function (): void {
+    $product = Product::factory()->create(['stock_quantity' => 0, 'order_unit' => 10, 'min_order_quantity' => 3]);
 
     Livewire::test(Show::class, ['product' => $product])->call('addToQuote');
 
-    expect(resolve(QuoteList::class)->items())->toBe([$product->id => 1]);
+    expect(resolve(QuoteList::class)->items())->toBe([$product->id => 10]);
 });
 
 it('lists the collected products on the Ajánlatkérés page and takes any quantity', function (): void {
@@ -182,3 +182,13 @@ it('lets the admin see and handle quote requests', function (): void {
     expect($quoteRequest->refresh()->status)->toBe(QuoteRequestStatus::Quoted)
         ->and(QuoteRequest::query()->open()->count())->toBe(0);
 });
+
+it('puts the quantity set on the product page on the quote list', function (bool $inStock): void {
+    $product = Product::factory()->create(['stock_quantity' => $inStock ? 50 : 0]);
+
+    Livewire::test(Show::class, ['product' => $product])
+        ->set('quantity', 7)
+        ->call('addToQuote');
+
+    expect(resolve(QuoteList::class)->items())->toBe([$product->id => 7]);
+})->with(['in stock' => true, 'out of stock' => false]);

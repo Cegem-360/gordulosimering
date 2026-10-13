@@ -68,4 +68,9 @@ final class Show extends Component
 
         return view('livewire.products.show');
     }
+
+    protected function quoteQuantity(): int
+    {
+        return max(1, $this->quantity);
+    }
 }

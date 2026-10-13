@@ -97,7 +97,7 @@ it('offers only a call and a quote request for an out-of-stock product', functio
     Livewire::test(Show::class, ['product' => $product])
         ->assertSee(['Hívjon', 'Ajánlatkérés'])
         ->assertDontSee(['Kosárba', 'Kérdése van?'])
-        ->assertDontSeeHtml('wire:click="increment"')
+        ->assertSee('Mennyiség')
         ->assertSeeHtml('href="tel:+3612611566"')
         ->call('addToCart')
         ->assertNotDispatched('cartUpdated');

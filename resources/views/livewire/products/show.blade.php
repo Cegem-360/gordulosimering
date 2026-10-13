@@ -20,13 +20,15 @@
             </div>
         </div>
 
-        <div class="container mx-auto px-4 py-8">
+        <div class="container mx-auto px-4 py-5">
             <!-- Product Title -->
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
                 {{ $product->name ?? 'Termék' }}
             </h1>
 
-            <div class="grid lg:grid-cols-2 gap-8 mb-8">
+            {{-- On wide screens the photo box takes the height of the boxes beside it, so the
+                 page fits a 100% zoom laptop screen without scrolling (client, 2026-10-13). --}}
+            <div class="grid lg:grid-cols-2 gap-6 mb-8">
                 <!-- Left Column: Images -->
                 @php
                     $productImages = $product->gallery_urls;
@@ -57,8 +59,8 @@
 
                     <!-- Main Image -->
                     <div class="flex-1">
-                        <div class="relative bg-white rounded-lg border p-4">
-                            <div class="aspect-square relative">
+                        <div class="relative bg-white rounded-lg border p-4 lg:h-full lg:min-h-80">
+                            <div class="aspect-square relative lg:aspect-auto lg:h-full">
                                 @if ($imageCount > 0)
                                     @foreach ($productImages as $index => $image)
                                         <div x-show="activeImage === {{ $index }}"
@@ -74,7 +76,7 @@
                                     @endforeach
                                 @else
                                     <img src="{{ Vite::asset('resources/images/product-placeholder.svg') }}"
-                                        alt="{{ $product->name }}" class="w-full h-full object-contain">
+                                        alt="{{ $product->name }}" class="absolute inset-0 w-full h-full object-contain">
                                 @endif
                             </div>
 
@@ -94,13 +96,13 @@
                 </div>
 
                 <!-- Right Column: Product Info -->
-                <div class="space-y-6">
+                <div class="space-y-4">
                     {{-- Csak az ügyfél által engedett adatok (2026-10-13): termékkód, név (a címben),
                          méret, súly, minőség; mellette a mennyiségi egység. --}}
                     <div class="bg-white rounded-lg border p-5">
                         @if ($product->product_code)
                             <div class="mb-4">
-                                <span class="bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-mono">
+                                <span class="inline-block bg-blue-50 border border-blue-200 text-gray-900 px-3 py-1.5 rounded-md text-xl font-bold tracking-wide">
                                     {{ $product->product_code }}
                                 </span>
                             </div>
@@ -157,7 +159,7 @@
                         </div>
 
                         <!-- Price Section -->
-                        <div class="mb-5">
+                        <div class="mb-3">
                             @if ($product->net_selling_price)
                                 <div class="flex flex-wrap items-baseline gap-x-2">
                                     <x-product-price :product="$product" size="lg" />
@@ -179,39 +181,39 @@
                             @endif
                         </div>
 
-                        @if ($product->isInStock())
-                            <!-- Quantity Selector -->
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Mennyiség</label>
-                                <div class="flex items-center gap-1">
-                                    <button type="button" wire:click="decrement"
-                                        class="w-12 h-12 rounded-l-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
-                                        <i class="fas fa-minus text-sm"></i>
-                                    </button>
-                                    <input type="number" wire:model.live.blur="quantity" name="quantity"
-                                        min="{{ $product->minimumOrderQuantity() }}" max="9999" step="{{ $product->orderQuantityStep() }}"
-                                        class="w-20 h-12 text-center text-lg font-semibold border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
-                                    <button type="button" wire:click="increment"
-                                        class="w-12 h-12 rounded-r-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
-                                        <i class="fas fa-plus text-sm"></i>
-                                    </button>
-                                </div>
-                                @php
-                                    $step = $product->orderQuantityStep();
-                                    $minimum = $product->minimumOrderQuantity();
-                                    $unit = mb_trim((string) $product->quantity_unit) ?: 'db';
-                                @endphp
-                                @if ($step > 1)
-                                    <p class="text-xs text-gray-500 mt-2">
-                                        Rendelési egység: {{ $step }} {{ $unit }}. Csak ennek többszöröse rendelhető
-                                        ({{ $minimum }}, {{ $minimum + $step }}, {{ $minimum + 2 * $step }} …).
-                                    </p>
-                                @endif
+                        {{-- Mennyiség: a kosárhoz és az ajánlatkéréshez is ez számít. --}}
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mennyiség</label>
+                            <div class="flex items-center gap-1">
+                                <button type="button" wire:click="decrement"
+                                    class="w-11 h-11 rounded-l-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
+                                    <i class="fas fa-minus text-sm"></i>
+                                </button>
+                                <input type="number" wire:model.live.blur="quantity" name="quantity"
+                                    min="{{ $product->minimumOrderQuantity() }}" max="9999" step="{{ $product->orderQuantityStep() }}"
+                                    class="w-20 h-11 text-center text-lg font-semibold border-y border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                <button type="button" wire:click="increment"
+                                    class="w-11 h-11 rounded-r-lg bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xl flex items-center justify-center transition-colors border border-gray-300 cursor-pointer">
+                                    <i class="fas fa-plus text-sm"></i>
+                                </button>
                             </div>
+                            @php
+                                $step = $product->orderQuantityStep();
+                                $minimum = $product->minimumOrderQuantity();
+                                $unit = mb_trim((string) $product->quantity_unit) ?: 'db';
+                            @endphp
+                            @if ($step > 1)
+                                <p class="text-xs text-gray-500 mt-2">
+                                    Rendelési egység: {{ $step }} {{ $unit }}. Csak ennek többszöröse rendelhető
+                                    ({{ $minimum }}, {{ $minimum + $step }}, {{ $minimum + 2 * $step }} …).
+                                </p>
+                            @endif
+                        </div>
 
+                        @if ($product->isInStock())
                             <!-- Order Button -->
                             <button type="button" wire:click="addToCart"
-                                class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 font-semibold text-lg transition-colors shadow-sm">
+                                class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 flex items-center justify-center gap-2 font-semibold text-lg transition-colors shadow-sm">
                                 <i class="fa fa-cart-plus"></i> Kosárba
                             </button>
 

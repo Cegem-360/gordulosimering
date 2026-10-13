@@ -26,10 +26,10 @@ final class QuoteList
         return Session::get(self::SESSION_KEY, []);
     }
 
-    public function add(Product $product): void
+    public function add(Product $product, int $quantity = 1): void
     {
         $items = $this->items();
-        $items[$product->id] = ($items[$product->id] ?? 0) + 1;
+        $items[$product->id] = ($items[$product->id] ?? 0) + max(1, $quantity);
 
         $this->persist($items);
     }
