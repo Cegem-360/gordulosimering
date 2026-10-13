@@ -85,12 +85,12 @@ it('lets the admin upload a catalogue', function (): void {
     expect($catalog->is_active)->toBeTrue();
 });
 
-it('fills the homepage brand box with 25 logos', function (): void {
+it('fills the homepage brand box with 30 logos', function (): void {
     $html = get(route('index'))->assertOk()->getContent();
     $tile = mb_substr($html, mb_strpos($html, '<!-- Brands Card -->'), 20000);
     $tile = mb_substr($tile, 0, mb_strpos($tile, '<!-- Catalogues Card -->'));
 
-    expect(mb_substr_count($tile, '<img'))->toBe(25)
+    expect(mb_substr_count($tile, '<img'))->toBe(30)
         ->and($tile)->not->toContain('alt="MEGADYNE"');
 });
 

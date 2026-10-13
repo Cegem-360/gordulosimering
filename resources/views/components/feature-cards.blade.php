@@ -63,14 +63,15 @@
             <a href="{{ route('brands') }}" class="group block">
                 <div
                     class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200 h-64">
-                    {{-- 25 logos: all but those marked 'tile' => false in config/brands.php, which get unreadable this small. --}}
-                    <div class="absolute inset-x-0 top-0 bottom-12 grid grid-cols-5 grid-rows-5 gap-x-2 gap-y-1 items-center justify-items-center px-3 pt-2 pb-1">
-                        @foreach (collect(config('brands'))->reject(fn (array $brand): bool => ($brand['tile'] ?? true) === false)->take(25) as $brand)
+                    {{-- 30 logos fill the box; the last row sits behind the title shading, as the photo
+                         tiles' pictures do. MEGADYNE ('tile' => false in config/brands.php) is left out. --}}
+                    <div class="absolute inset-0 grid grid-cols-5 grid-rows-6 gap-x-2 gap-y-1 items-center justify-items-center px-3 py-2">
+                        @foreach (collect(config('brands'))->reject(fn (array $brand): bool => ($brand['tile'] ?? true) === false)->take(30) as $brand)
                             <img src="{{ Vite::asset('resources/images/brands/' . $brand['logo']) }}" alt="{{ $brand['name'] }}"
                                 @class(['w-auto max-w-full object-contain', 'h-7' => ($brand['size'] ?? null) === 'box', 'h-5' => ($brand['size'] ?? null) !== 'box'])>
                         @endforeach
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 h-12 bg-gray-900/85 px-6 flex items-center">
+                    <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/85 via-black/60 to-transparent pt-10 px-6 pb-5">
                         <h3 class="text-white text-lg font-semibold flex items-center gap-2 whitespace-nowrap">
                             Forgalmazott márkáink
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"

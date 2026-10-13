@@ -13,19 +13,19 @@ declare(strict_types=1);
  * "search": a name search for brands the ERP data has no brand value for.
  * Neither, or no matching product: the logo is shown without a link.
  * "size": "box" for square or boxed logos, which need more height than the
- * wide wordmarks to look as big. "tile" => false: left out of the 25 logos
- * on the homepage Forgalmazott márkáink box (thin or two-line logos).
+ * wide wordmarks to look as big. "tile" => false: left out of the 30 logos
+ * on the homepage Forgalmazott márkáink box.
  */
 return [
     ['name' => 'SKF', 'logo' => 'skf.svg', 'filter' => 'SKF', 'size' => 'box'],
     ['name' => 'AMES', 'logo' => 'ames.webp', 'filter' => 'AMES', 'size' => 'box'],
-    ['name' => 'BECO', 'logo' => 'beco.svg', 'filter' => 'BECO', 'tile' => false],
+    ['name' => 'BECO', 'logo' => 'beco.svg', 'filter' => 'BECO'],
     ['name' => 'Beta', 'logo' => 'beta.webp', 'filter' => 'BETA'],
     ['name' => 'CERVA', 'logo' => 'cerva.svg', 'search' => 'CERVA', 'size' => 'box'],
-    ['name' => 'CFA', 'logo' => 'cfa.webp', 'size' => 'box', 'tile' => false],
-    ['name' => 'EURO ELZETT', 'logo' => 'euro-elzett.webp', 'search' => 'ELZETT', 'tile' => false],
+    ['name' => 'CFA', 'logo' => 'cfa.webp', 'size' => 'box'],
+    ['name' => 'EURO ELZETT', 'logo' => 'euro-elzett.webp', 'search' => 'ELZETT'],
     ['name' => 'EZO', 'logo' => 'ezo.webp', 'filter' => 'EZO', 'size' => 'box'],
-    ['name' => 'F.BS', 'logo' => 'f-bs.webp', 'search' => 'F.BS', 'tile' => false],
+    ['name' => 'F.BS', 'logo' => 'f-bs.webp', 'search' => 'F.BS'],
     ['name' => 'FAG', 'logo' => 'fag.webp', 'filter' => 'FAG'],
     ['name' => 'INA', 'logo' => 'ina.svg', 'filter' => 'INA', 'size' => 'box'],
     ['name' => 'JWIS', 'logo' => 'jwis.webp', 'search' => 'IWIS'],
@@ -40,7 +40,7 @@ return [
     ['name' => 'OKS', 'logo' => 'oks.webp', 'search' => 'OKS'],
     ['name' => 'optibelt', 'logo' => 'optibelt.svg', 'size' => 'box'],
     ['name' => 'Pattex', 'logo' => 'pattex.svg', 'search' => 'PATTEX', 'size' => 'box'],
-    ['name' => 'PERMAGLIDE', 'logo' => 'permaglide.webp', 'search' => 'PERMAGLIDE', 'tile' => false],
+    ['name' => 'PERMAGLIDE', 'logo' => 'permaglide.webp', 'search' => 'PERMAGLIDE'],
     ['name' => 'SNR', 'logo' => 'snr.webp', 'filter' => 'SNR', 'size' => 'box'],
     ['name' => 'sola', 'logo' => 'sola.svg', 'search' => 'SOLA'],
     ['name' => 'TENTE', 'logo' => 'tente.svg', 'filter' => 'TENTE'],
