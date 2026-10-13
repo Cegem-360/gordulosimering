@@ -9,7 +9,7 @@
                     @if ($brand['logo'])
                         <img src="{{ Vite::asset('resources/images/brands/' . $brand['logo']) }}"
                             alt="{{ $brand['name'] }}"
-                            class="{{ $brand['height'] }} w-auto {{ $brand['invert'] ?? false ? 'invert' : '' }} grayscale hover:grayscale-0 hover:invert-0 transition-all duration-300">
+                            @class(['w-auto grayscale hover:grayscale-0 transition-all duration-300', 'h-14' => ($brand['size'] ?? null) === 'box', 'h-8' => ($brand['size'] ?? null) !== 'box'])>
                     @else
                         <span
                             class="text-lg font-semibold text-gray-600 hover:text-blue-600 transition-colors duration-300">

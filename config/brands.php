@@ -3,29 +3,48 @@
 declare(strict_types=1);
 
 /*
- * The brands shown on the Márkáink page (and the x-brand-logos strip), in
- * this order. "logo" is a file in resources/images/brands/, "height" a
- * Tailwind height that balances the logos optically, "invert" is for white
- * logos. "filter" is the products.brand value the logo links to in the
- * product list (?marka=); brands without products of their own (sold under
- * other names in the ERP) have none and are shown without a link.
+ * The brands on the Márkáink page, as the client listed them on 2026-10-13
+ * (logó.docx): SKF first, the rest alphabetically. The logo files in
+ * resources/images/brands/ are built by __client/brand-logos-sources/build.py
+ * (official files where the brand's site has a good one, otherwise the
+ * client's own image; see SOURCES.md there).
+ *
+ * "filter": the products.brand value the logo links to (?marka=).
+ * "search": a name search for brands the ERP data has no brand value for.
+ * Neither, or no matching product: the logo is shown without a link.
+ * "size": "box" for square or boxed logos, which need more height than the
+ * wide wordmarks to look as big. "tile": shown on the homepage Márkák box.
  */
 return [
-    ['name' => 'SKF', 'logo' => 'skf.svg', 'height' => 'h-8', 'filter' => 'SKF'],
-    ['name' => 'INA', 'logo' => 'ina.svg', 'height' => 'h-20', 'filter' => 'INA'],
-    ['name' => 'FAG', 'logo' => 'fag.svg', 'height' => 'h-7', 'filter' => 'FAG'],
-    ['name' => 'TIMKEN', 'logo' => 'timken.png', 'height' => 'h-8', 'filter' => 'TIMKEN'],
-    ['name' => 'ZKL/ZVL', 'logo' => 'zkl.svg', 'height' => 'h-10', 'filter' => 'ZKL'],
-    ['name' => 'LOCTITE', 'logo' => 'loctite.png', 'height' => 'h-8', 'filter' => 'LOCTITE'],
-    ['name' => 'SEEGER', 'logo' => 'seeger.svg', 'height' => 'h-12', 'filter' => 'SEEGER'],
-    ['name' => 'NORMA', 'logo' => 'norma.svg', 'height' => 'h-12', 'filter' => 'NORMA'],
-    ['name' => 'TENTE', 'logo' => 'tente.png', 'height' => 'h-7', 'filter' => 'TENTE'],
-    ['name' => 'BETA', 'logo' => 'beta-logo.png', 'height' => 'h-8', 'filter' => 'BETA'],
-    ['name' => 'KS-TOOLS', 'logo' => 'ks-tools.svg', 'height' => 'h-10', 'filter' => 'KS'],
-    ['name' => 'BAHCO', 'logo' => 'bahco.svg', 'height' => 'h-24', 'filter' => 'BAHCO'],
-    ['name' => 'DURACELL', 'logo' => 'duracell.svg', 'height' => 'h-7', 'invert' => true, 'filter' => 'DURACELL'],
-    ['name' => 'ENERGIZER', 'logo' => 'energizer.png', 'height' => 'h-10', 'filter' => null],
-    ['name' => 'FABORY', 'logo' => 'fabory.svg', 'height' => 'h-7', 'filter' => null],
-    ['name' => 'NICRO', 'logo' => 'nicro-logo.png', 'height' => 'h-8', 'filter' => null],
-    ['name' => 'OKS', 'logo' => 'oks.png', 'height' => 'h-12', 'filter' => null],
+    ['name' => 'SKF', 'logo' => 'skf.svg', 'filter' => 'SKF', 'size' => 'box', 'tile' => true],
+    ['name' => 'AMES', 'logo' => 'ames.webp', 'filter' => 'AMES', 'size' => 'box'],
+    ['name' => 'BECO', 'logo' => 'beco.svg', 'filter' => 'BECO'],
+    ['name' => 'Beta', 'logo' => 'beta.webp', 'filter' => 'BETA', 'tile' => true],
+    ['name' => 'CERVA', 'logo' => 'cerva.svg', 'search' => 'CERVA', 'size' => 'box'],
+    ['name' => 'CFA', 'logo' => 'cfa.webp', 'size' => 'box'],
+    ['name' => 'EURO ELZETT', 'logo' => 'euro-elzett.webp', 'search' => 'ELZETT'],
+    ['name' => 'EZO', 'logo' => 'ezo.webp', 'filter' => 'EZO', 'size' => 'box'],
+    ['name' => 'F.BS', 'logo' => 'f-bs.webp', 'search' => 'F.BS'],
+    ['name' => 'FAG', 'logo' => 'fag.webp', 'filter' => 'FAG', 'tile' => true],
+    ['name' => 'INA', 'logo' => 'ina.svg', 'filter' => 'INA', 'size' => 'box'],
+    ['name' => 'JWIS', 'logo' => 'jwis.webp', 'search' => 'IWIS'],
+    ['name' => 'Koyo', 'logo' => 'koyo.webp', 'filter' => 'KOYO', 'tile' => true],
+    ['name' => 'MEGADYNE', 'logo' => 'megadyne.svg'],
+    ['name' => 'Milwaukee', 'logo' => 'milwaukee.svg', 'search' => 'MILWAUKEE', 'size' => 'box'],
+    ['name' => 'Mitutoyo', 'logo' => 'mitutoyo.svg', 'search' => 'MITUTOYO', 'tile' => true],
+    ['name' => 'MOTIP', 'logo' => 'motip.svg', 'search' => 'MOTIP'],
+    ['name' => 'NACHI', 'logo' => 'nachi.webp', 'filter' => 'NACHI', 'tile' => true],
+    ['name' => 'NSK', 'logo' => 'nsk.svg', 'filter' => 'NSK', 'tile' => true],
+    ['name' => 'NTN', 'logo' => 'ntn.svg', 'filter' => 'NTN', 'tile' => true],
+    ['name' => 'OKS', 'logo' => 'oks.webp', 'search' => 'OKS'],
+    ['name' => 'optibelt', 'logo' => 'optibelt.svg', 'size' => 'box'],
+    ['name' => 'Pattex', 'logo' => 'pattex.svg', 'search' => 'PATTEX', 'size' => 'box'],
+    ['name' => 'PERMAGLIDE', 'logo' => 'permaglide.webp', 'search' => 'PERMAGLIDE'],
+    ['name' => 'SNR', 'logo' => 'snr.webp', 'filter' => 'SNR', 'size' => 'box'],
+    ['name' => 'sola', 'logo' => 'sola.svg', 'search' => 'SOLA'],
+    ['name' => 'TENTE', 'logo' => 'tente.svg', 'filter' => 'TENTE', 'tile' => true],
+    ['name' => 'WD-40', 'logo' => 'wd-40.svg', 'search' => 'WD-40', 'size' => 'box'],
+    ['name' => 'WIPPERMANN', 'logo' => 'wippermann.svg', 'search' => 'WIPPERMANN'],
+    ['name' => 'YATO', 'logo' => 'yato.svg', 'search' => 'YATO'],
+    ['name' => 'ZVL SLOVAKIA', 'logo' => 'zvl.webp', 'search' => 'ZVL'],
 ];

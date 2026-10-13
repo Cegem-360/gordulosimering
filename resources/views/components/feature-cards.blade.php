@@ -65,9 +65,9 @@
                     class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200 h-64">
                     {{-- Wide logos only: the square ones (INA, BAHCO) and TENTE's long slogan shrink to nothing in a cell. --}}
                     <div class="absolute inset-x-0 top-0 bottom-16 grid grid-cols-3 grid-rows-3 gap-x-5 gap-y-2 items-center justify-items-center px-5 pt-4">
-                        @foreach (collect(config('brands'))->whereIn('name', ['SKF', 'FAG', 'TIMKEN', 'ZKL/ZVL', 'LOCTITE', 'SEEGER', 'NORMA', 'BETA', 'DURACELL']) as $brand)
+                        @foreach (collect(config('brands'))->where('tile', true)->take(9) as $brand)
                             <img src="{{ Vite::asset('resources/images/brands/' . $brand['logo']) }}" alt="{{ $brand['name'] }}"
-                                @class(['max-h-11 w-auto max-w-full object-contain', 'invert' => $brand['invert'] ?? false])>
+                                @class(['w-auto max-w-full object-contain', 'h-12' => ($brand['size'] ?? null) === 'box', 'h-9' => ($brand['size'] ?? null) !== 'box'])>
                         @endforeach
                     </div>
                     <div class="absolute bottom-0 left-0 right-0 bg-gray-900/85 px-6 py-4">

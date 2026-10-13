@@ -12,25 +12,28 @@
     <div class="container mx-auto px-4 py-16">
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             @foreach ($brands as $brand)
-                @php($linked = $brand['filter'] !== null && $brand['product_count'] > 0)
-                <{{ $linked ? 'a' : 'div' }}
-                    @if ($linked) href="{{ route('categories.index', ['marka' => $brand['filter']]) }}" @endif
+                <{{ $brand['url'] ? 'a' : 'div' }} wire:key="brand-{{ $loop->index }}"
+                    @if ($brand['url']) href="{{ $brand['url'] }}" @endif
                     @class([
                         'group bg-white border border-gray-300 rounded-lg shadow-sm p-5 flex flex-col items-center gap-4',
-                        'hover:shadow-lg hover:border-blue-400 transition' => $linked,
+                        'hover:shadow-lg hover:border-blue-400 transition' => $brand['url'],
                     ])>
-                    <div class="h-24 flex items-center justify-center">
+                    <div class="h-24 w-full flex items-center justify-center">
                         <img src="{{ Vite::asset('resources/images/brands/' . $brand['logo']) }}" alt="{{ $brand['name'] }}"
-                            @class([$brand['height'], 'w-auto max-w-full', 'invert' => $brand['invert'] ?? false])>
+                            @class([
+                                'w-auto max-w-[90%] object-contain',
+                                'h-20' => ($brand['size'] ?? null) === 'box',
+                                'h-12' => ($brand['size'] ?? null) !== 'box',
+                            ])>
                     </div>
-                    @if ($linked)
+                    @if ($brand['url'])
                         <span class="text-sm text-blue-600 group-hover:underline">
                             {{ Number::format($brand['product_count'], locale: 'hu') }} termék &rarr;
                         </span>
                     @else
                         <span class="text-sm text-gray-500">Érdeklődjön üzleteinkben</span>
                     @endif
-                </{{ $linked ? 'a' : 'div' }}>
+                </{{ $brand['url'] ? 'a' : 'div' }}>
             @endforeach
         </div>
     </div>

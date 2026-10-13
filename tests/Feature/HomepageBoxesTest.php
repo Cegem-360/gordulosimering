@@ -19,12 +19,28 @@ it('links the new homepage boxes to Márkáink, Katalógusok and the delivery se
     get(route('index'))->assertOk()->assertSee(['Márkák', 'Katalógusok', 'Szállítási költségek'])->assertSeeHtml('href="' . route('brands') . '"')->assertSeeHtml('href="' . route('catalogs') . '"')->assertSeeHtml('href="' . route('services') . '#hazhozszallitas"');
 });
 
-it('links each brand with products to the product list filtered by it', function (): void {
-    $skf = Product::factory()->count(2)->create();
-    $skf->each(fn (Product $product) => $product->forceFill(['brand' => 'SKF'])->saveQuietly());
+it('links each brand with products to its products, by brand filter or name search', function (): void {
+    Product::factory()->count(2)->create()->each(fn (Product $product) => $product->forceFill(['brand' => 'SKF'])->saveQuietly());
+    Product::factory()->create(['name' => 'YATO csigafúró készlet 19 részes']);
 
-    get(route('brands'))->assertOk()->assertSee(['Márkáink', '2 termék'])->assertSeeHtml('href="' . route('categories.index', ['marka' => 'SKF']) . '"')->assertDontSeeHtml('href="' . route('categories.index', ['marka' => 'INA']) . '"')
+    get(route('brands'))->assertOk()
+        ->assertSee(['Márkáink', '2 termék', '1 termék'])
+        ->assertSee('href="' . route('categories.index', ['marka' => 'SKF']) . '"', false)
+        ->assertSee('href="' . route('products.index', ['search' => 'YATO']) . '"', false)
+        ->assertDontSee('href="' . route('categories.index', ['marka' => 'INA']) . '"', false)
         ->assertSee('Érdeklődjön üzleteinkben');
+});
+
+it('shows exactly the 31 brands the client listed, SKF first', function (): void {
+    $names = collect(config('brands'))->pluck('name');
+
+    expect($names)->toHaveCount(31)
+        ->and($names->first())->toBe('SKF')
+        ->and($names)->not->toContain('LOCTITE', 'TIMKEN', 'DURACELL');
+
+    foreach (config('brands') as $brand) {
+        expect(resource_path('images/brands/' . $brand['logo']))->toBeFile();
+    }
 });
 
 it('opens the product list with the brand from the link selected', function (): void {
