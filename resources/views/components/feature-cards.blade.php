@@ -87,8 +87,36 @@
             <a href="{{ route('catalogs') }}" class="group block">
                 <div
                     class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                    <img src="{{ Vite::asset('resources/images/stainless-steel-thrust-ball-bearing-and-linear-bea-2025-01-29-04-41-07-utc.webp') }}" alt="Katalógusok"
-                        class="w-full h-64 object-cover">
+                    {{-- A shelf of catalogue spines in different colours and sizes, some with a brand
+                         logo, drawn here because no neutral bookshelf photo was at hand (client, 2026-10-13). --}}
+                    @php
+                        $spines = [
+                            ['bg' => '#1f3a6e', 'h' => 74, 'w' => 20],
+                            ['bg' => '#f4efe4', 'h' => 92, 'w' => 30, 'logo' => 'skf.svg'],
+                            ['bg' => '#b8322a', 'h' => 68, 'w' => 16],
+                            ['bg' => '#2f6b4f', 'h' => 82, 'w' => 22],
+                            ['bg' => '#f4efe4', 'h' => 88, 'w' => 28, 'logo' => 'fag.webp'],
+                            ['bg' => '#d9a521', 'h' => 64, 'w' => 18],
+                            ['bg' => '#f4efe4', 'h' => 94, 'w' => 28, 'logo' => 'nsk.svg'],
+                            ['bg' => '#7a3b2e', 'h' => 72, 'w' => 20],
+                            ['bg' => '#1d5a8a', 'h' => 84, 'w' => 22],
+                            ['bg' => '#f4efe4', 'h' => 90, 'w' => 28, 'logo' => 'koyo.webp'],
+                            ['bg' => '#5b6b2f', 'h' => 70, 'w' => 16],
+                        ];
+                    @endphp
+                    <div class="h-64 bg-linear-to-b from-[#e9e1d3] to-[#cdbd9f] flex items-end justify-center gap-[3px] px-3 pt-5 border-b-[10px] border-[#6b4a2b]" aria-hidden="true">
+                        @foreach ($spines as $spine)
+                            <div class="relative shrink-0 rounded-[3px] shadow-[inset_-3px_0_4px_rgba(0,0,0,0.25)] overflow-hidden flex items-start justify-center pt-[38%]"
+                                style="background: {{ $spine['bg'] }}; height: {{ $spine['h'] }}%; width: {{ $spine['w'] }}px">
+                                <span class="absolute inset-x-0 top-[8%] h-[3px] bg-black/15"></span>
+                                <span class="absolute inset-x-0 bottom-[8%] h-[3px] bg-black/15"></span>
+                                @isset($spine['logo'])
+                                    <img src="{{ Vite::asset('resources/images/brands/' . $spine['logo']) }}" alt=""
+                                        class="-rotate-90 max-w-none h-[18px] w-auto">
+                                @endisset
+                            </div>
+                        @endforeach
+                    </div>
                     <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 to-transparent p-6">
                         <h3 class="text-white text-xl font-semibold flex items-center gap-2">
                             Katalógusok
