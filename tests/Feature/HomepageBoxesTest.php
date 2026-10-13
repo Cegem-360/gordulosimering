@@ -107,3 +107,14 @@ it('leaves the brand category out of the homepage category menu', function (): v
 
     expect($menu)->toContain('CSAPÁGYAK')->not->toContain(Category::BRAND_ROOT_NAME);
 });
+
+it('counts the brands afresh when the brand list changes', function (): void {
+    Product::factory()->create()->forceFill(['brand' => 'SKF'])->saveQuietly();
+    get(route('brands'))->assertOk();
+
+    config(['brands' => [...config('brands'), ['name' => 'TIMKEN', 'logo' => 'skf.svg', 'filter' => 'TIMKEN']]]);
+    Product::factory()->create()->forceFill(['brand' => 'TIMKEN'])->saveQuietly();
+
+    get(route('brands'))->assertOk()
+        ->assertSee('href="' . route('categories.index', ['marka' => 'TIMKEN']) . '"', false);
+});

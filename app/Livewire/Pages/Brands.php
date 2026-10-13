@@ -40,13 +40,16 @@ final class Brands extends Component
 
     /**
      * Web-visible products per brand name. The name searches scan every
-     * product, so the counts are kept for an hour.
+     * product, so the counts are kept for an hour; the key follows the brand
+     * list, so a changed list is counted afresh.
      *
      * @return array<string, int>
      */
     private function productCounts(): array
     {
-        return Cache::remember('brands-page-product-counts', now()->addHour(), function (): array {
+        $key = 'brands-page-product-counts:' . md5(serialize(config('brands')));
+
+        return Cache::remember($key, now()->addHour(), function (): array {
             $brands = collect(config('brands'));
 
             $byBrand = Product::query()
