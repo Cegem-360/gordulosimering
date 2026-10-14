@@ -231,6 +231,22 @@ it('skips new inactive codes and new codes already in the webshop, and gives cla
         ->and(IntegraKnownProduct::query()->where('code', 'KIVEZETETT')->exists())->toBeTrue();
 });
 
+it('treats codes that differ only in case or accents as one code, like MySQL does', function (): void {
+    seedIntegraProduct('ÜRES');
+    seedIntegraProduct('ures');
+    resolve(Integra7Syncer::class)->sync();
+
+    seedIntegraProduct('Uj-1');
+    seedIntegraProduct('ÚJ-1');
+    $stats = resolve(Integra7Syncer::class)->sync();
+    $again = resolve(Integra7Syncer::class)->sync();
+
+    expect(IntegraKnownProduct::query()->count())->toBe(2)
+        ->and($stats['created'])->toBe(1)
+        ->and($again['created'])->toBe(0)
+        ->and(Product::query()->whereIn('product_code', ['Uj-1', 'ÚJ-1'])->count())->toBe(1);
+});
+
 it('counts the new products on a dry run without creating or remembering them', function (): void {
     seedIntegraProduct('OLD');
     resolve(Integra7Syncer::class)->sync();

@@ -103,15 +103,18 @@ final class Integra7Syncer
      */
     private function createNewProducts(Collection $erpProducts, Collection $available, bool $dryRun): int
     {
-        $known = IntegraKnownProduct::query()->pluck('code')->flip();
+        $known = IntegraKnownProduct::query()->pluck('code')->mapWithKeys(fn (string $code): array => [$this->codeKey($code) => true]);
         $isFirstRun = $known->isEmpty();
         $existing = Product::query()->whereNotNull('product_code')->pluck('product_code')
-            ->mapWithKeys(fn (string $code): array => [mb_trim($code) => true]);
+            ->mapWithKeys(fn (string $code): array => [$this->codeKey($code) => true]);
 
-        $unseenCodes = $erpProducts->keys()->reject(fn (string $code): bool => $code === '' || $known->has($code));
+        $unseenCodes = $erpProducts->keys()
+            ->reject(fn (string $code): bool => $code === '' || $known->has($this->codeKey($code)))
+            ->unique($this->codeKey(...))
+            ->values();
 
         $codesToCreate = $isFirstRun ? collect() : $unseenCodes->reject(
-            fn (string $code): bool => $existing->has($code) || (bool) $erpProducts->get($code)->inactive,
+            fn (string $code): bool => $existing->has($this->codeKey($code)) || (bool) $erpProducts->get($code)->inactive,
         );
 
         if ($dryRun) {
@@ -129,12 +132,21 @@ final class Integra7Syncer
                 ]);
             }
 
-            $unseenCodes->chunk(self::CHUNK_SIZE)->each(fn (Collection $codes): bool => IntegraKnownProduct::query()->insert(
+            $unseenCodes->chunk(self::CHUNK_SIZE)->each(fn (Collection $codes): int => IntegraKnownProduct::query()->insertOrIgnore(
                 $codes->map(fn (string $code): array => ['code' => $code, 'created_at' => now(), 'updated_at' => now()])->values()->all(),
             ));
         });
 
         return $codesToCreate->count();
+    }
+
+    /**
+     * A kód összevetési alakja: a MySQL kollációja a kis- és nagybetűt, valamint
+     * az ékezetet nem különbözteti meg („ÜRES” = „ures”), a PHP igen.
+     */
+    private function codeKey(string $code): string
+    {
+        return Str::lower(Str::ascii(mb_trim($code)));
     }
 
     private function uniqueSlug(string $code): string
