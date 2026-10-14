@@ -47,7 +47,7 @@ final class Brands extends Component
      */
     private function productCounts(): array
     {
-        $key = 'brands-page-product-counts:' . md5(serialize(config('brands')));
+        $key = 'brands-page-product-counts:' . hash('xxh128', serialize(config('brands')));
 
         return Cache::remember($key, now()->addHour(), function (): array {
             $brands = collect(config('brands'));
