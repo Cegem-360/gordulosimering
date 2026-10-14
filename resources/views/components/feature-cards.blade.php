@@ -64,9 +64,13 @@
                 <div
                     class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 bg-white border border-gray-200 h-64">
                     {{-- 30 logos fill the box; the last row sits behind the title shading, as the photo
-                         tiles' pictures do. MEGADYNE ('tile' => false in config/brands.php) is left out. --}}
+                         tiles' pictures do. There are more brands than places, so SKF comes first and the
+                         other 29 are drawn at random on each visit; 'tile' => false brands (no products) never. --}}
                     <div class="absolute inset-0 grid grid-cols-5 grid-rows-6 gap-x-2 gap-y-1 items-center justify-items-center px-3 py-2">
-                        @foreach (collect(config('brands'))->reject(fn (array $brand): bool => ($brand['tile'] ?? true) === false)->take(30) as $brand)
+                        @php
+                            $tileBrands = collect(config('brands'))->reject(fn (array $brand): bool => ($brand['tile'] ?? true) === false);
+                        @endphp
+                        @foreach ($tileBrands->take(1)->concat($tileBrands->skip(1)->shuffle()->take(29)) as $brand)
                             <img src="{{ Vite::asset('resources/images/brands/' . $brand['logo']) }}" alt="{{ $brand['name'] }}"
                                 @class(['w-auto max-w-full object-contain', 'h-7' => ($brand['size'] ?? null) === 'box', 'h-5' => ($brand['size'] ?? null) !== 'box'])>
                         @endforeach
@@ -89,18 +93,19 @@
                 <div
                     class="relative overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                     {{-- A shelf of catalogue spines in different colours and sizes, some with a brand
-                         logo, drawn here because no neutral bookshelf photo was at hand (client, 2026-10-13). --}}
+                         logo, drawn here because no neutral bookshelf photo was at hand (client, 2026-10-13);
+                         the logos are the client's choice of 2026-10-14. --}}
                     @php
                         $spines = [
                             ['bg' => '#eee9df', 'h' => 98, 'w' => 36, 'logo' => 'skf.svg'],
                             ['bg' => '#9b524b', 'h' => 74, 'w' => 20],
                             ['bg' => '#4a6458', 'h' => 90, 'w' => 27],
-                            ['bg' => '#eee9df', 'h' => 95, 'w' => 34, 'logo' => 'fag.webp'],
+                            ['bg' => '#eee9df', 'h' => 95, 'w' => 34, 'logo' => 'loctite.webp'],
                             ['bg' => '#b59a5a', 'h' => 70, 'w' => 22],
-                            ['bg' => '#eee9df', 'h' => 100, 'w' => 34, 'logo' => 'nsk.svg'],
+                            ['bg' => '#eee9df', 'h' => 100, 'w' => 34, 'logo' => 'fabory.webp'],
                             ['bg' => '#6f5048', 'h' => 80, 'w' => 24],
-                            ['bg' => '#466178', 'h' => 92, 'w' => 27],
-                            ['bg' => '#eee9df', 'h' => 97, 'w' => 34, 'logo' => 'koyo.webp'],
+                            ['bg' => '#eee9df', 'h' => 97, 'w' => 34, 'logo' => 'ks-tools.svg'],
+                            ['bg' => '#466178', 'h' => 88, 'w' => 27],
                         ];
                     @endphp
                     <div class="h-64 bg-linear-to-b from-[#e9e1d3] to-[#cdbd9f] flex items-end justify-center gap-1 pt-1 border-b-[12px] border-[#6b4a2b]" aria-hidden="true">

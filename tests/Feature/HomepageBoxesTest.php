@@ -32,12 +32,12 @@ it('links each brand with products to its products, by brand filter or name sear
         ->assertSee('Érdeklődjön üzleteinkben');
 });
 
-it('shows the 31 brands the client listed plus LOCTITE, SKF first', function (): void {
+it('shows the brands the client listed, LOCTITE and their last additions, SKF first', function (): void {
     $names = collect(config('brands'))->pluck('name');
 
-    expect($names)->toHaveCount(32)
+    expect($names)->toHaveCount(45)
         ->and($names->first())->toBe('SKF')
-        ->and($names)->toContain('LOCTITE')
+        ->and($names)->toContain('LOCTITE', 'KS TOOLS', 'FABORY', 'Rexroth', 'Robur')
         ->and($names)->not->toContain('TIMKEN', 'DURACELL');
 
     foreach (config('brands') as $brand) {
@@ -91,8 +91,11 @@ it('fills the homepage brand box with 30 logos', function (): void {
     $tile = mb_substr($html, mb_strpos($html, '<!-- Brands Card -->'), 20000);
     $tile = mb_substr($tile, 0, mb_strpos($tile, '<!-- Catalogues Card -->'));
 
+    preg_match('/alt="([^"]+)"/', $tile, $firstLogo);
+
     expect(mb_substr_count($tile, '<img'))->toBe(30)
-        ->and($tile)->not->toContain('alt="MEGADYNE"');
+        ->and($firstLogo[1])->toBe('SKF')
+        ->and($tile)->not->toContain('alt="MEGADYNE"', 'alt="FABORY"', 'alt="Robur"');
 });
 
 it('leaves the brand category out of the homepage category menu', function (): void {
