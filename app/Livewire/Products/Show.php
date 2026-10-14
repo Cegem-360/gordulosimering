@@ -7,9 +7,12 @@ namespace App\Livewire\Products;
 use App\Livewire\Concerns\AddsToQuoteList;
 use App\Models\Product;
 use App\Services\CartService;
+use App\Services\ProductRecommendations;
 use Filament\Notifications\Notification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -60,6 +63,17 @@ final class Show extends Component
     public function updatedQuantity(): void
     {
         $this->quantity = $this->product->orderableQuantity($this->quantity);
+    }
+
+    /**
+     * The "Gyakran együtt vásárolják" row.
+     *
+     * @return Collection<int, Product>
+     */
+    #[Computed]
+    public function recommendations(): Collection
+    {
+        return resolve(ProductRecommendations::class)->for($this->product);
     }
 
     public function render(): Factory|View

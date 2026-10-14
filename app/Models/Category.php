@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Database\Factories\CategoryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\Table;
@@ -31,6 +32,7 @@ use Override;
 #[Table(name: 'product_categories')]
 final class Category extends Model
 {
+    /** @use HasFactory<CategoryFactory> */
     use HasFactory;
 
     /**

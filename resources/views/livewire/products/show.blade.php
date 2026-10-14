@@ -262,6 +262,18 @@
                     @endif
                 </div>
             </div>
+
+            {{-- Gyakran együtt vásárolják: the admin's Ajánlások rules, a new pick every week. --}}
+            @if ($this->recommendations->isNotEmpty())
+                <section class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Gyakran együtt vásárolják</h2>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        @foreach ($this->recommendations as $recommended)
+                            <livewire:product-card :product="$recommended" :wire:key="'recommended-product-'.$recommended->id" />
+                        @endforeach
+                    </div>
+                </section>
+            @endif
         </div>
     @else
         <div class="container mx-auto px-4 py-8">
