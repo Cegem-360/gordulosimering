@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\CustomerType;
 use App\Enums\QuoteRequestStatus;
 use App\Models\QuoteRequest;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,10 +24,24 @@ final class QuoteRequestFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->safeEmail(),
             'phone' => '+36 30 ' . fake()->numerify('### ####'),
-            'company' => fake()->boolean(40) ? fake()->company() : null,
+            'customer_type' => CustomerType::Private,
+            'company' => null,
+            'postcode' => fake()->numerify('####'),
+            'city' => fake()->city(),
+            'address_1' => fake()->streetAddress(),
+            'country' => 'Magyarország',
             'message' => fake()->boolean(70) ? fake()->sentence(12) : null,
             'status' => QuoteRequestStatus::New,
         ];
+    }
+
+    public function company(): self
+    {
+        return $this->state(fn (): array => [
+            'customer_type' => CustomerType::Company,
+            'company' => fake()->company(),
+            'vat_number' => fake()->numerify('########-#-##'),
+        ]);
     }
 
     public function handled(): self

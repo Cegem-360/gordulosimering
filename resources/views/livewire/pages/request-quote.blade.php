@@ -81,15 +81,17 @@
                 </div>
 
                 <div class="bg-white border border-gray-300 rounded-lg shadow-sm p-5">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Elérhetőségei</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Adatai</h2>
                     <form wire:submit="submit">
                         {{ $this->form }}
 
-                        <button type="submit" wire:loading.attr="disabled" wire:target="submit"
-                            class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 disabled:opacity-60 cursor-pointer">
-                            <span wire:loading.remove wire:target="submit">Ajánlatkérés elküldése</span>
-                            <span wire:loading wire:target="submit">Küldés...</span>
-                        </button>
+                        @if ($this->hasChosenCustomerType())
+                            <button type="submit" wire:loading.attr="disabled" wire:target="submit"
+                                class="mt-6 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 disabled:opacity-60 cursor-pointer">
+                                <span wire:loading.remove wire:target="submit">Ajánlatkérés elküldése</span>
+                                <span wire:loading wire:target="submit">Küldés...</span>
+                            </button>
+                        @endif
                     </form>
                 </div>
             </div>

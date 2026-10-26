@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\CustomerType;
 use App\Enums\QuoteRequestStatus;
 use Database\Factories\QuoteRequestFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Override;
 
-#[Fillable(['reference', 'user_id', 'name', 'email', 'phone', 'company', 'message', 'status', 'admin_note', 'handled_at'])]
+#[Fillable(['reference', 'user_id', 'customer_type', 'name', 'email', 'phone', 'company', 'vat_number', 'postcode', 'city', 'address_1', 'address_2', 'country', 'state', 'message', 'status', 'admin_note', 'handled_at'])]
 final class QuoteRequest extends Model
 {
     /** @use HasFactory<QuoteRequestFactory> */
@@ -41,6 +42,25 @@ final class QuoteRequest extends Model
     public function items(): HasMany
     {
         return $this->hasMany(QuoteRequestItem::class);
+    }
+
+    /**
+     * The billing address on one line, or null for the requests sent before
+     * the page asked for it.
+     */
+    public function address(): ?string
+    {
+        if (blank($this->postcode) && blank($this->city) && blank($this->address_1)) {
+            return null;
+        }
+
+        return collect([
+            mb_trim("{$this->postcode} {$this->city}"),
+            $this->address_1,
+            $this->address_2,
+            $this->state,
+            $this->country,
+        ])->filter(fn (?string $part): bool => filled($part))->implode(', ');
     }
 
     /**
@@ -75,6 +95,7 @@ final class QuoteRequest extends Model
     protected function casts(): array
     {
         return [
+            'customer_type' => CustomerType::class,
             'status' => QuoteRequestStatus::class,
             'handled_at' => 'datetime',
         ];

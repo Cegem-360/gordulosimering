@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\CustomerType;
 use App\Enums\QuoteRequestStatus;
 use App\Filament\Resources\QuoteRequests\Pages\EditQuoteRequest;
 use App\Filament\Resources\QuoteRequests\Pages\ListQuoteRequests;
@@ -30,10 +31,16 @@ use function Pest\Laravel\get;
 function quoteFormData(array $overrides = []): array
 {
     return [
-        'name' => 'Kovács Péter',
-        'email' => 'peter@example.test',
-        'phone' => '+36 30 123 4567',
-        'company' => 'Példa Kft.',
+        'customer_type' => CustomerType::Company->value,
+        'billing_name' => 'Kovács Péter',
+        'billing_email' => 'peter@example.test',
+        'billing_phone' => '+36 30 123 4567',
+        'billing_company_name' => 'Példa Kft.',
+        'billing_vat_number' => '12345678-2-42',
+        'billing_postcode' => '1102',
+        'billing_city' => 'Budapest',
+        'billing_address_1' => 'Kőrösi Csoma S. út 18.',
+        'billing_country' => 'Magyarország',
         'message' => 'Sürgős lenne.',
         'privacy_accepted' => true,
         ...$overrides,
@@ -102,8 +109,11 @@ it('sends the quote request to the shop and confirms it to the visitor', functio
 
     $quoteRequest = QuoteRequest::query()->with('items')->sole();
     expect($quoteRequest)
+        ->customer_type->toBe(CustomerType::Company)
         ->name->toBe('Kovács Péter')
         ->company->toBe('Példa Kft.')
+        ->vat_number->toBe('12345678-2-42')
+        ->address()->toBe('1102 Budapest, Kőrösi Csoma S. út 18., Magyarország')
         ->status->toBe(QuoteRequestStatus::New)
         ->reference->toStartWith('AK-')
         ->and($quoteRequest->items->sole())
@@ -126,7 +136,7 @@ it('renders both emails with the requested products', function (): void {
         ->toContain('SKF 6204-2RSH', '10 db', 'Kérem a szállítási időt is.', $quoteRequest->reference)
         ->not->toContain('Listaáron');
     expect((new QuoteRequestSubmittedMail($quoteRequest))->render())
-        ->toContain('SKF 6204-2RSH', $quoteRequest->email, 'Listaáron összesen', Number::currency(15000, 'HUF', 'hu', 0));
+        ->toContain('SKF 6204-2RSH', $quoteRequest->email, 'Magánszemély', $quoteRequest->city, 'Listaáron összesen', Number::currency(15000, 'HUF', 'hu', 0));
 });
 
 it('accepts a request with only a message, but not an empty one', function (): void {
@@ -147,33 +157,89 @@ it('accepts a request with only a message, but not an empty one', function (): v
 
 it('requires the contact details and the privacy acceptance', function (): void {
     Livewire::test(RequestQuote::class)
-        ->fillForm(quoteFormData(['name' => '', 'email' => 'nem-email', 'phone' => '', 'privacy_accepted' => false]))
+        ->fillForm(quoteFormData(['billing_name' => '', 'billing_email' => 'nem-email', 'billing_phone' => '', 'billing_postcode' => '', 'privacy_accepted' => false]))
         ->call('submit')
-        ->assertHasFormErrors(['name' => 'required', 'email' => 'email', 'phone' => 'required', 'privacy_accepted' => 'accepted']);
+        ->assertHasFormErrors(['billing_name' => 'required', 'billing_email' => 'email', 'billing_phone' => 'required', 'billing_postcode' => 'required', 'privacy_accepted' => 'accepted']);
 });
 
 it('fills in a logged-in customer and links the request to them', function (): void {
     Mail::fake();
-    $user = User::factory()->create(['name' => 'Nagy Anna', 'phone' => '+36 1 234 5678', 'billing_company_name' => 'Anna Bt.']);
+    $user = User::factory()->create([
+        'name' => 'Nagy Anna',
+        'phone' => '+36 1 234 5678',
+        'customer_type' => CustomerType::Company,
+        'billing_company_name' => 'Anna Bt.',
+        'billing_vat_number' => '87654321-1-13',
+        'billing_postcode' => '6720',
+        'billing_city' => 'Szeged',
+        'billing_address_1' => 'Kárász u. 1.',
+        'billing_country' => 'Magyarország',
+    ]);
     actingAs($user);
 
     Livewire::test(RequestQuote::class)
-        ->assertSchemaStateSet(['name' => 'Nagy Anna', 'email' => $user->email, 'phone' => '+36 1 234 5678', 'company' => 'Anna Bt.'])
+        ->assertSchemaStateSet([
+            'customer_type' => CustomerType::Company,
+            'billing_name' => 'Nagy Anna',
+            'billing_email' => $user->email,
+            'billing_phone' => '+36 1 234 5678',
+            'billing_company_name' => 'Anna Bt.',
+            'billing_vat_number' => '87654321-1-13',
+            'billing_city' => 'Szeged',
+        ])
         ->fillForm(['message' => 'Ár kérése', 'privacy_accepted' => true])
-        ->call('submit');
+        ->call('submit')
+        ->assertHasNoFormErrors();
 
     expect(QuoteRequest::query()->sole()->user_id)->toBe($user->id);
 });
 
+it('asks private person or company first, and the details only after that', function (): void {
+    Livewire::test(RequestQuote::class)
+        ->assertSee(['Ajánlatkérő', 'Magánszemély', 'Cég'])
+        ->assertDontSee(['Számlázási adatok', 'Számlázási cím', 'Ajánlatkérés elküldése'])
+        ->set('data.customer_type', CustomerType::Private->value)
+        ->assertSee(['Számlázási adatok', 'Számlázási cím', 'Ajánlatkérés elküldése'])
+        ->assertDontSee('Adószám');
+});
+
+it('requires the company name and VAT number from a company only', function (): void {
+    Mail::fake();
+
+    Livewire::test(RequestQuote::class)
+        ->fillForm(quoteFormData(['billing_company_name' => '', 'billing_vat_number' => '']))
+        ->call('submit')
+        ->assertHasFormErrors(['billing_company_name' => 'required', 'billing_vat_number' => 'required']);
+
+    Livewire::test(RequestQuote::class)
+        ->fillForm(quoteFormData(['customer_type' => CustomerType::Private->value]))
+        ->call('submit')
+        ->assertHasNoFormErrors();
+
+    expect(QuoteRequest::query()->sole())
+        ->customer_type->toBe(CustomerType::Private)
+        ->company->toBeNull()
+        ->vat_number->toBeNull();
+});
+
+it('requires the choice of private person or company', function (): void {
+    Livewire::test(RequestQuote::class)
+        ->fillForm(quoteFormData(['customer_type' => null]))
+        ->call('submit')
+        ->assertHasFormErrors(['customer_type' => 'required']);
+
+    expect(QuoteRequest::query()->count())->toBe(0);
+});
+
 it('lets the admin see and handle quote requests', function (): void {
     actingAs(User::factory()->create(['is_admin' => true]));
-    $quoteRequest = QuoteRequest::factory()->create(['name' => 'Kovács Péter']);
+    $quoteRequest = QuoteRequest::factory()->company()->create(['name' => 'Kovács Péter', 'vat_number' => '12345678-2-42', 'city' => 'Budapest']);
     $quoteRequest->items()->create(['product_name' => 'SKF 6204-2RSH', 'quantity' => 10, 'unit_price' => 1500]);
     QuoteRequest::factory()->handled()->create();
 
     Livewire::test(ListQuoteRequests::class)->assertCanSeeTableRecords([$quoteRequest]);
     Livewire::test(ViewQuoteRequest::class, ['record' => $quoteRequest->getRouteKey()])
-        ->assertSee(['Kovács Péter', 'SKF 6204-2RSH', Number::currency(1500, 'HUF', 'hu', 0)]);
+        ->assertSee(['Kovács Péter', 'Cég', '12345678-2-42', 'Budapest', 'SKF 6204-2RSH', Number::currency(1500, 'HUF', 'hu', 0)]);
     Livewire::test(EditQuoteRequest::class, ['record' => $quoteRequest->getRouteKey()])
         ->fillForm(['status' => QuoteRequestStatus::Quoted->value, 'admin_note' => 'Elküldve e-mailben'])
         ->call('save')

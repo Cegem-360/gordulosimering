@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use App\Enums\CustomerType;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentMethod;
+use App\Livewire\Concerns\HasCustomerDetailsForm;
 use App\Mail\NewOrderNotificationMail;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
@@ -15,11 +15,7 @@ use App\Models\User;
 use App\Services\CartService;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
@@ -35,6 +31,7 @@ use Livewire\Component;
 
 final class CheckOut extends Component implements HasActions, HasSchemas
 {
+    use HasCustomerDetailsForm;
     use InteractsWithActions;
     use InteractsWithSchemas;
 
@@ -69,20 +66,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         // Pre-fill form with saved user data (if logged in)
         $user = Auth::user();
         if ($user) {
-            $this->form->fill([
-                'customer_type' => $user->customer_type,
-                'billing_name' => $user->billing_name ?? $user->name,
-                'billing_email' => $user->email,
-                'billing_phone' => $user->phone ?? '',
-                'billing_company_name' => $user->billing_company_name ?? '',
-                'billing_vat_number' => $user->billing_vat_number ?? '',
-                'billing_postcode' => $user->billing_postcode ?? '',
-                'billing_city' => $user->billing_city ?? '',
-                'billing_address_1' => $user->billing_address_1 ?? '',
-                'billing_address_2' => $user->billing_address_2 ?? '',
-                'billing_country' => $user->billing_country ?? 'Magyarország',
-                'billing_state' => $user->billing_state ?? '',
-            ]);
+            $this->form->fill($this->customerDetailsOf($user));
 
             // Pre-fill shipping data if exists
             if ($user->shipping_name) {
@@ -130,15 +114,6 @@ final class CheckOut extends Component implements HasActions, HasSchemas
             $method->isPaidInStore() => (bool) $this->selectedShipping?->isPersonalPickup(),
             default => true,
         };
-    }
-
-    /**
-     * Whether the customer picked private person or company; the rest of
-     * the checkout shows only after that, so nobody goes on by mistake.
-     */
-    public function hasChosenCustomerType(): bool
-    {
-        return filled($this->data['customer_type'] ?? null);
     }
 
     #[Computed]
@@ -220,71 +195,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
     {
         return $schema
             ->columns(2)
-            ->components([
-                Section::make('Vásárló')
-                    ->description('Kérjük, először válassza ki, hogy magánszemélyként vagy cégként vásárol.')
-                    ->columnSpanFull()
-                    ->schema([
-                        Radio::make('customer_type')
-                            ->hiddenLabel()
-                            ->options(CustomerType::class)
-                            ->enum(CustomerType::class)
-                            ->required()
-                            ->validationMessages(['required' => 'Kérjük, válassza ki, hogy magánszemélyként vagy cégként vásárol.'])
-                            ->inline()
-                            ->live(),
-                    ]),
-                Section::make('Számlázási adatok')
-                    ->visible(fn (): bool => $this->hasChosenCustomerType())
-                    ->columnSpanFull()
-                    ->columns(2)
-                    ->schema([
-                        TextInput::make('billing_name')
-                            ->label('Név')
-                            ->required(),
-                        TextInput::make('billing_email')
-                            ->label('Email cím')
-                            ->email()
-                            ->required(),
-                        TextInput::make('billing_phone')
-                            ->label('Telefonszám')
-                            ->tel()
-                            ->required(),
-                        TextInput::make('billing_company_name')
-                            ->label('Cégnév')
-                            ->visible(fn (Get $get): bool => $get->enum('customer_type', CustomerType::class) === CustomerType::Company)
-                            ->required(),
-                        TextInput::make('billing_vat_number')
-                            ->label('Adószám')
-                            ->visible(fn (Get $get): bool => $get->enum('customer_type', CustomerType::class) === CustomerType::Company)
-                            ->required(),
-                    ]),
-                Section::make('Számlázási cím')
-                    ->visible(fn (): bool => $this->hasChosenCustomerType())
-                    ->columnSpanFull()
-                    ->columns(2)
-                    ->schema([
-                        TextInput::make('billing_postcode')
-                            ->label('Irányítószám')
-                            ->required(),
-                        TextInput::make('billing_city')
-                            ->label('Város')
-                            ->required(),
-                        TextInput::make('billing_address_1')
-                            ->label('Utca, házszám')
-                            ->columnSpanFull()
-                            ->required(),
-                        TextInput::make('billing_address_2')
-                            ->label('Emelet, ajtó (opcionális)')
-                            ->columnSpanFull(),
-                        TextInput::make('billing_country')
-                            ->label('Ország')
-                            ->default('Magyarország')
-                            ->required(),
-                        TextInput::make('billing_state')
-                            ->label('Megye'),
-                    ]),
-            ])
+            ->components($this->customerDetailsSections('Vásárló', 'vásárol'))
             ->statePath('data')
             ->model(Order::class);
     }

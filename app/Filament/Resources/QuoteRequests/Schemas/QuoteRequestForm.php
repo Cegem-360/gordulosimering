@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\QuoteRequests\Schemas;
 
+use App\Enums\CustomerType;
 use App\Enums\QuoteRequestStatus;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -13,7 +14,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 /**
- * Handling an ajánlatkérés: status, internal note and the contact details
+ * Handling an ajánlatkérés: status, internal note and the customer's details
  * in case they need correcting. The products stay as they were sent.
  */
 final class QuoteRequestForm
@@ -42,10 +43,18 @@ final class QuoteRequestForm
                     ->columns(2)
                     ->columnSpanFull()
                     ->schema([
+                        Select::make('customer_type')->label('Ajánlatkérő típusa')->options(CustomerType::class)->enum(CustomerType::class),
                         TextInput::make('name')->label('Név')->required()->maxLength(255),
                         TextInput::make('company')->label('Cégnév')->maxLength(255),
+                        TextInput::make('vat_number')->label('Adószám')->maxLength(255),
                         TextInput::make('email')->label('E-mail')->email()->required()->maxLength(255),
                         TextInput::make('phone')->label('Telefon')->tel()->required()->maxLength(50),
+                        TextInput::make('postcode')->label('Irányítószám')->maxLength(255),
+                        TextInput::make('city')->label('Város')->maxLength(255),
+                        TextInput::make('address_1')->label('Utca, házszám')->maxLength(255),
+                        TextInput::make('address_2')->label('Emelet, ajtó')->maxLength(255),
+                        TextInput::make('country')->label('Ország')->maxLength(255),
+                        TextInput::make('state')->label('Megye')->maxLength(255),
                         Textarea::make('message')->label('Üzenet')->rows(4)->columnSpanFull(),
                     ]),
             ]);

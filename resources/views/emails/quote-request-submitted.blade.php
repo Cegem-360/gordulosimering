@@ -27,8 +27,17 @@
                                     <td style="padding: 20px; color: #666; font-size: 14px; line-height: 1.8;">
                                         <strong style="color: #293133;">Azonosító:</strong> {{ $quoteRequest->reference }}<br>
                                         <strong style="color: #293133;">Név:</strong> {{ $quoteRequest->name }}<br>
+                                        @if ($quoteRequest->customer_type)
+                                            <strong style="color: #293133;">Típus:</strong> {{ $quoteRequest->customer_type->getLabel() }}<br>
+                                        @endif
                                         @if ($quoteRequest->company)
                                             <strong style="color: #293133;">Cég:</strong> {{ $quoteRequest->company }}<br>
+                                        @endif
+                                        @if ($quoteRequest->vat_number)
+                                            <strong style="color: #293133;">Adószám:</strong> {{ $quoteRequest->vat_number }}<br>
+                                        @endif
+                                        @if ($quoteRequest->address())
+                                            <strong style="color: #293133;">Cím:</strong> {{ $quoteRequest->address() }}<br>
                                         @endif
                                         <strong style="color: #293133;">E-mail:</strong> {{ $quoteRequest->email }}<br>
                                         <strong style="color: #293133;">Telefon:</strong> {{ $quoteRequest->phone }}

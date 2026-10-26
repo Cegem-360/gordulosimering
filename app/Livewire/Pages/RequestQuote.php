@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Livewire\Pages;
 
+use App\Enums\CustomerType;
+use App\Livewire\Concerns\HasCustomerDetailsForm;
 use App\Mail\QuoteRequestReceivedMail;
 use App\Mail\QuoteRequestSubmittedMail;
 use App\Models\Product;
@@ -12,7 +14,6 @@ use App\Models\User;
 use App\Services\QuoteList;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
@@ -30,6 +31,7 @@ use Livewire\Component;
  */
 final class RequestQuote extends Component implements HasSchemas
 {
+    use HasCustomerDetailsForm;
     use InteractsWithSchemas;
 
     public ?array $data = [];
@@ -41,44 +43,23 @@ final class RequestQuote extends Component implements HasSchemas
         /** @var User|null $user */
         $user = auth()->user();
 
-        $this->form->fill([
-            'name' => $user?->name,
-            'email' => $user?->email,
-            'phone' => $user?->phone,
-            'company' => $user?->billing_company_name,
-        ]);
+        $this->form->fill($user ? $this->customerDetailsOf($user) : ['billing_country' => 'Magyarország']);
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->label('Név')
-                    ->required()
-                    ->minLength(3)
-                    ->maxLength(255),
-                TextInput::make('company')
-                    ->label('Cégnév')
-                    ->maxLength(255),
-                TextInput::make('email')
-                    ->label('E-mail cím')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('phone')
-                    ->label('Telefonszám')
-                    ->tel()
-                    ->required()
-                    ->minLength(6)
-                    ->maxLength(50),
+                ...$this->customerDetailsSections('Ajánlatkérő', 'kér ajánlatot'),
                 Textarea::make('message')
+                    ->visible(fn (): bool => $this->hasChosenCustomerType())
                     ->label('Üzenet')
                     ->helperText('Ha a keresett termék nincs a listán, írja le ide (típus, méret, mennyiség).')
                     ->maxLength(5000)
                     ->rows(5)
                     ->columnSpanFull(),
                 Checkbox::make('privacy_accepted')
+                    ->visible(fn (): bool => $this->hasChosenCustomerType())
                     ->label(new HtmlString('Elolvastam és elfogadom az <a href="' . route('privacy-policy') . '" target="_blank" class="text-blue-600 underline">Adatvédelmi nyilatkozatot</a>.'))
                     ->accepted()
                     ->validationMessages(['accepted' => 'Az ajánlatkéréshez el kell fogadnia az Adatvédelmi nyilatkozatot.'])
@@ -123,12 +104,22 @@ final class RequestQuote extends Component implements HasSchemas
         }
 
         $quoteRequest = DB::transaction(function () use ($data, $lines): QuoteRequest {
+            $isCompany = $data['customer_type'] === CustomerType::Company;
+
             $quoteRequest = QuoteRequest::query()->create([
                 'user_id' => auth()->id(),
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['phone'],
-                'company' => $data['company'] ?: null,
+                'customer_type' => $data['customer_type'],
+                'name' => $data['billing_name'],
+                'email' => $data['billing_email'],
+                'phone' => $data['billing_phone'],
+                'company' => $isCompany ? $data['billing_company_name'] : null,
+                'vat_number' => $isCompany ? $data['billing_vat_number'] : null,
+                'postcode' => $data['billing_postcode'],
+                'city' => $data['billing_city'],
+                'address_1' => $data['billing_address_1'],
+                'address_2' => $data['billing_address_2'] ?: null,
+                'country' => $data['billing_country'],
+                'state' => $data['billing_state'] ?: null,
                 'message' => $data['message'] ?: null,
             ]);
 

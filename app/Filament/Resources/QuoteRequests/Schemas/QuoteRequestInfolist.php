@@ -31,8 +31,14 @@ final class QuoteRequestInfolist
                         TextEntry::make('status')->label('Állapot')->badge(),
                         TextEntry::make('created_at')->label('Beérkezett')->dateTime('Y. m. d. H:i'),
                         TextEntry::make('name')->label('Név'),
-                        TextEntry::make('company')->label('Cégnév')->placeholder('—'),
+                        TextEntry::make('customer_type')->label('Ajánlatkérő típusa')->badge()->placeholder('—'),
                         TextEntry::make('user.email')->label('Regisztrált vevő')->placeholder('nem'),
+                        TextEntry::make('company')->label('Cégnév')->placeholder('—'),
+                        TextEntry::make('vat_number')->label('Adószám')->placeholder('—'),
+                        TextEntry::make('address')
+                            ->label('Számlázási cím')
+                            ->state(fn (QuoteRequest $record): ?string => $record->address())
+                            ->placeholder('—'),
                         TextEntry::make('email')
                             ->label('E-mail')
                             ->copyable()
