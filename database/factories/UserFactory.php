@@ -27,6 +27,7 @@ final class UserFactory extends Factory
             'password' => 'password', // Hashed by model's 'hashed' cast
             'is_admin' => false,
             'base_discount_percentage' => 0,
+            'has_transfer_contract' => false,
             'remember_token' => Str::random(10),
             'phone' => null,
             'customer_type' => null,
@@ -68,6 +69,16 @@ final class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes): array => [
             'base_discount_percentage' => $percentage,
+        ]);
+    }
+
+    /**
+     * Átutalásos szerződéssel rendelkező partner: fizethet banki átutalással.
+     */
+    public function withTransferContract(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'has_transfer_contract' => true,
         ]);
     }
 

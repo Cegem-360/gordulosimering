@@ -88,7 +88,7 @@
                 </div>
 
                 <!-- Payment Instructions (for bank transfer) -->
-                @if ($order->payment_method === 'bacs')
+                @if ($order->payment_method === App\Enums\PaymentMethod::BankTransfer)
                     <div class="bg-blue-50 rounded-lg border border-blue-200 p-6 mb-6">
                         <h3 class="font-semibold text-blue-900 mb-3 flex items-center gap-2">
                             <i class="fas fa-university"></i>

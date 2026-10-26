@@ -126,7 +126,7 @@ it('stores the customer discounted price on the order items', function (): void 
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', ShippingMethod::factory()->create()->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->call('create');
 

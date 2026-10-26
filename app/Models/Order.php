@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
 use App\Enums\VatRate;
 use App\Observers\OrderObserver;
 use Illuminate\Database\Eloquent\Attributes\DateFormat;
@@ -153,6 +154,7 @@ final class Order extends Model
     {
         return [
             'order_status' => OrderStatus::class,
+            'payment_method' => PaymentMethod::class,
         ];
     }
 }

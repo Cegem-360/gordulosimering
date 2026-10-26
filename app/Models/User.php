@@ -22,6 +22,7 @@ use Override;
     'password',
     'is_admin',
     'base_discount_percentage',
+    'has_transfer_contract',
     'phone',
     'customer_type',
     'billing_name',
@@ -60,6 +61,7 @@ final class User extends Authenticatable implements FilamentUser
     protected $attributes = [
         'is_admin' => false,
         'base_discount_percentage' => 10,
+        'has_transfer_contract' => false,
     ];
 
     /**
@@ -94,6 +96,7 @@ final class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
             'is_admin' => 'boolean',
             'base_discount_percentage' => 'decimal:2',
+            'has_transfer_contract' => 'boolean',
             'customer_type' => CustomerType::class,
         ];
     }

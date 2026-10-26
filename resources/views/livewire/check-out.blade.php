@@ -237,17 +237,28 @@
                     <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                         <h3 class="text-sm font-bold mb-3 uppercase tracking-wide text-gray-700">Fizetési mód</h3>
                         <div class="space-y-2">
-                            @foreach ($this->paymentMethods as $key => $method)
-                                <label wire:key="payment-{{ $key }}"
-                                    class="block p-3 border rounded-lg cursor-pointer transition-all {{ $selectedPaymentMethod == $key ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300' }}">
+                            @foreach ($this->paymentMethods as $method)
+                                @php($isAvailable = $this->canPayWith($method))
+                                <label wire:key="payment-{{ $method->value }}"
+                                    @class([
+                                        'block p-3 border rounded-lg transition-all',
+                                        'border-blue-500 bg-blue-50' => $selectedPaymentMethod === $method,
+                                        'border-gray-200 hover:border-gray-300 cursor-pointer' => $isAvailable && $selectedPaymentMethod !== $method,
+                                        'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed' => ! $isAvailable,
+                                    ])>
                                     <div class="flex items-center gap-3">
                                         <input type="radio" name="payment_method"
-                                            wire:model.live="selectedPaymentMethod" value="{{ $key }}"
+                                            wire:model.live="selectedPaymentMethod" value="{{ $method->value }}"
+                                            @disabled(! $isAvailable)
                                             class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
-                                        <span class="text-sm font-medium text-gray-900">{{ $method['title'] }}</span>
+                                        <i class="fas {{ $method->icon() }} w-4 text-center text-gray-400"></i>
+                                        <span class="text-sm font-medium text-gray-900">{{ $method->getLabel() }}</span>
                                     </div>
-                                    @if ($selectedPaymentMethod == $key)
-                                        <p class="text-xs text-gray-500 mt-2 ml-7">{{ $method['description'] }}</p>
+                                    @if ($method->restrictionNote())
+                                        <p class="text-xs text-gray-500 mt-1 ml-14">{{ $method->restrictionNote() }}</p>
+                                    @endif
+                                    @if ($selectedPaymentMethod === $method)
+                                        <p class="text-xs text-gray-500 mt-2 ml-14">{{ $method->description() }}</p>
                                     @endif
                                 </label>
                             @endforeach

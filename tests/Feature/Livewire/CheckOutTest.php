@@ -73,7 +73,7 @@ it('saves cart items as order items when order is created', function (): void {
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->call('create');
 
@@ -122,7 +122,7 @@ it('clears the cart after successful order', function (): void {
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->call('create');
 
@@ -194,7 +194,7 @@ it('saves billing and shipping data to user after successful order when checkbox
         ->set('data.billing_address_1', 'New Address 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->set('saveDataForFuture', true)
         ->call('create');
@@ -237,7 +237,7 @@ it('does not save billing data to user when checkbox is unchecked', function ():
         ->set('data.billing_address_1', 'New Address 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->set('saveDataForFuture', false)
         ->call('create');
@@ -273,7 +273,7 @@ it('allows guest checkout without login', function (): void {
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->call('create');
 
@@ -308,7 +308,7 @@ it('creates account for guest when registration checkbox is checked', function (
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->set('createAccount', true)
         ->call('create');
@@ -354,7 +354,7 @@ it('sends order confirmation email to customer after successful order', function
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->call('create');
 
@@ -391,7 +391,7 @@ it('sends new order notification email to admin when admin email is configured',
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->call('create');
 
@@ -428,7 +428,7 @@ it('does not send admin notification when admin email is default placeholder', f
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->call('create');
 
@@ -457,7 +457,7 @@ it('saves the sale price on the order items', function (): void {
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->call('create');
 
@@ -496,7 +496,7 @@ it('notifies the client\'s gs@ address about every new order by default', functi
         ->set('data.billing_address_1', 'Test Street 1')
         ->set('data.billing_country', 'Magyarország')
         ->set('selectedShippingMethod', $shippingMethod->id)
-        ->set('selectedPaymentMethod', 'bacs')
+        ->set('selectedPaymentMethod', 'cod')
         ->set('acceptTerms', true)
         ->call('create');
 

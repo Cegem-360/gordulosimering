@@ -12,6 +12,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 final class UsersTable
@@ -28,6 +29,9 @@ final class UsersTable
                     ->dateTime()
                     ->sortable(),
                 IconColumn::make('is_admin')
+                    ->boolean()
+                    ->sortable(),
+                IconColumn::make('has_transfer_contract')
                     ->boolean()
                     ->sortable(),
                 TextColumn::make('base_discount_percentage')
@@ -87,6 +91,7 @@ final class UsersTable
             ->filters([
                 SelectFilter::make('customer_type')
                     ->options(CustomerType::class),
+                TernaryFilter::make('has_transfer_contract'),
             ])
             ->recordActions([
                 ViewAction::make(),

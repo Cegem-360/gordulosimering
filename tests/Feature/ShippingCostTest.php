@@ -17,14 +17,14 @@ use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
- * A logged-in checkout with a cart of products of the given weights (kg, or
- * null for no weight), one of each.
+ * A logged-in checkout of a partner with a transfer contract, with a cart of
+ * products of the given weights (kg, or null for no weight), one of each.
  *
  * @param  array<int, float|null>  $weights
  */
 function checkoutWithWeights(array $weights): Testable
 {
-    $user = User::factory()->create();
+    $user = User::factory()->withTransferContract()->create();
     $cart = Cart::factory()->create(['user_id' => $user->id, 'session_id' => session()->getId()]);
 
     foreach ($weights as $weight) {

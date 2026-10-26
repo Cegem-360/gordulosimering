@@ -55,6 +55,10 @@ final class UserInfolist
                                     ->map(fn (UserDiscount $discount): string => $discount->discountGroup->code . ': ' . self::formatPercentage($discount->percentage) . '%')
                                     ->all(),
                             ]),
+                        TextEntry::make('has_transfer_contract')
+                            ->badge()
+                            ->formatStateUsing(fn (bool $state): string => $state ? 'Van' : 'Nincs')
+                            ->color(fn (bool $state): string => $state ? 'success' : 'gray'),
                         TextEntry::make('orders_count')
                             ->label('Rendelések száma')
                             ->state(fn (User $record): int => $record->orders()->count()),

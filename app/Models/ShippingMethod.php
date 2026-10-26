@@ -49,6 +49,15 @@ final class ShippingMethod extends Model
     }
 
     /**
+     * Personal pickup in the X. district shop, the only method the in-store
+     * payments go with.
+     */
+    public function isPersonalPickup(): bool
+    {
+        return $this->name === 'pickup';
+    }
+
+    /**
      * The heaviest cart this method takes, or null when it has no limit.
      */
     public function maxWeight(): ?float

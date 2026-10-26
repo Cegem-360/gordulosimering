@@ -126,6 +126,7 @@ return [
     'customer_type' => 'Vásárló típusa',
 
     'is_admin' => 'Admin',
+    'has_transfer_contract' => 'Átutalásos szerződés',
     'base_discount_percentage' => 'Alap kedvezmény',
     'discounts' => 'Csoportkedvezmények',
     'discounts_count' => 'Csoportkedvezmények',

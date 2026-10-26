@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -21,9 +22,11 @@ final class OrderForm
                 Select::make('shipping_method_id')
                     ->relationship('shippingMethod', 'name')
                     ->required(),
-                TextInput::make('payment_method')
+                Select::make('payment_method')
+                    ->options(PaymentMethod::class)
+                    ->enum(PaymentMethod::class)
                     ->required()
-                    ->default('bacs'),
+                    ->default(PaymentMethod::BankTransfer),
                 TextInput::make('payment_method_title')
                     ->required()
                     ->default('Bank Transfer'),

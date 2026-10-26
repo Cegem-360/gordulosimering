@@ -6,6 +6,7 @@ namespace App\Livewire;
 
 use App\Enums\CustomerType;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentMethod;
 use App\Mail\NewOrderNotificationMail;
 use App\Mail\OrderConfirmationMail;
 use App\Models\Order;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -42,7 +44,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
     public ?int $selectedShippingMethod = null;
 
-    public string $selectedPaymentMethod = 'bacs';
+    public ?PaymentMethod $selectedPaymentMethod = null;
 
     public bool $acceptTerms = false;
 
@@ -102,6 +104,32 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         $this->selectedShippingMethod = $this->shippingMethods
             ->first(fn (ShippingMethod $method): bool => $this->shippingCosts[$method->id] !== null)
             ?->id;
+
+        $this->selectFirstAvailablePaymentMethod();
+    }
+
+    /**
+     * The in-store payments go with personal pickup only, so another
+     * shipping method may take the chosen payment method away.
+     */
+    public function updatedSelectedShippingMethod(): void
+    {
+        if ($this->selectedPaymentMethod === null || ! $this->canPayWith($this->selectedPaymentMethod)) {
+            $this->selectFirstAvailablePaymentMethod();
+        }
+    }
+
+    /**
+     * Bank transfer is for partners with a transfer contract (ticked in the
+     * admin), the in-store payments for personal pickup.
+     */
+    public function canPayWith(PaymentMethod $method): bool
+    {
+        return match (true) {
+            $method === PaymentMethod::BankTransfer => (bool) Auth::user()?->has_transfer_contract,
+            $method->isPaidInStore() => (bool) $this->selectedShipping?->isPersonalPickup(),
+            default => true,
+        };
     }
 
     /**
@@ -148,7 +176,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
     public function shippingCosts(): array
     {
         return $this->shippingMethods
-            ->mapWithKeys(fn (ShippingMethod $method): array => [$method->id => $method->costFor($this->cartWeight, $this->selectedPaymentMethod)])
+            ->mapWithKeys(fn (ShippingMethod $method): array => [$method->id => $method->costFor($this->cartWeight, $this->selectedPaymentMethod?->value ?? '')])
             ->all();
     }
 
@@ -294,28 +322,20 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         return $this->cartItems->sum('quantity');
     }
 
+    /**
+     * @return array<int, PaymentMethod>
+     */
     #[Computed]
     public function paymentMethods(): array
     {
-        return [
-            'bacs' => [
-                'title' => 'Banki átutalás',
-                'description' => 'Fizetés közvetlenül a bankszámlánkra. A megjegyzés rovatban tüntesse fel a rendelésszámot. A kiszállítás az összeg beérkezését követően történik.',
-                'icon' => 'fa-university',
-            ],
-            'cod' => [
-                'title' => 'Utánvét',
-                'description' => 'Fizetés a csomag átvételekor készpénzben vagy bankkártyával a futárnak.',
-                'icon' => 'fa-money-bill-wave',
-            ],
-        ];
+        return PaymentMethod::cases();
     }
 
     public function create(CartService $cartService): void
     {
         $validationRules = [
             'selectedShippingMethod' => 'required|exists:shipping_methods,id',
-            'selectedPaymentMethod' => 'required|in:bacs,cod',
+            'selectedPaymentMethod' => ['required', Rule::enum(PaymentMethod::class)],
             'acceptTerms' => 'accepted',
         ];
 
@@ -326,6 +346,12 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         ];
 
         $this->validate($validationRules, $validationMessages);
+
+        if (! $this->canPayWith($this->selectedPaymentMethod)) {
+            $this->addError('selectedPaymentMethod', $this->selectedPaymentMethod->restrictionNote());
+
+            return;
+        }
 
         if ($this->shippingCosts[$this->selectedShippingMethod] === null) {
             $this->addError('selectedShippingMethod', 'A kosár súlya miatt ez a szállítási mód nem választható.');
@@ -378,7 +404,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
         $data['payment_method'] = $this->selectedPaymentMethod;
         $data['order_status'] = OrderStatus::PENDING->value;
         $data['order_currency'] = 'HUF';
-        $data['payment_method_title'] = $this->paymentMethods[$this->selectedPaymentMethod]['title'];
+        $data['payment_method_title'] = $this->selectedPaymentMethod->getLabel();
         $data['set_paid'] = false;
         $data['shipping_cost'] = $this->shippingCost;
 
@@ -469,5 +495,10 @@ final class CheckOut extends Component implements HasActions, HasSchemas
     public function render(): View
     {
         return view('livewire.check-out');
+    }
+
+    private function selectFirstAvailablePaymentMethod(): void
+    {
+        $this->selectedPaymentMethod = collect(PaymentMethod::cases())->first($this->canPayWith(...));
     }
 }

@@ -37,6 +37,7 @@ final class UserForm
                             ->columnSpan(1)
                             ->schema([
                                 self::accessSection(),
+                                self::paymentSection(),
                                 self::baseDiscountSection(),
                             ]),
                     ]),
@@ -133,6 +134,15 @@ final class UserForm
                     ->default(10)
                     ->required()
                     ->helperText('Minden termékre jár.'),
+            ]);
+    }
+
+    private static function paymentSection(): Section
+    {
+        return Section::make('Fizetés')
+            ->schema([
+                Toggle::make('has_transfer_contract')
+                    ->helperText('Banki átutalással csak szerződéses partner fizethet.'),
             ]);
     }
 

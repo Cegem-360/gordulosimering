@@ -306,13 +306,7 @@
                             <div class="p-5">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center shrink-0">
-                                        @if ($order->payment_method === 'bacs')
-                                            <i class="fas fa-university text-blue-600"></i>
-                                        @elseif ($order->payment_method === 'cod')
-                                            <i class="fas fa-money-bill-wave text-blue-600"></i>
-                                        @else
-                                            <i class="fas fa-credit-card text-blue-600"></i>
-                                        @endif
+                                        <i class="fas {{ $order->payment_method?->icon() ?? 'fa-credit-card' }} text-blue-600"></i>
                                     </div>
                                     <div>
                                         <p class="font-medium text-gray-900 text-sm">{{ $order->payment_method_title }}</p>
