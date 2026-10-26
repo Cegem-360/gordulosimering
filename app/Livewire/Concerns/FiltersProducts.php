@@ -210,6 +210,15 @@ trait FiltersProducts
     }
 
     /**
+     * A brand's products are listed by product code, the numbers first (the
+     * client's wish, 2026-10-26).
+     */
+    protected function isListingABrand(): bool
+    {
+        return $this->selectedFilters['brand'] !== [];
+    }
+
+    /**
      * A category page has its subcategory tiles instead of the category filter.
      */
     protected function showsCategoryFilter(): bool

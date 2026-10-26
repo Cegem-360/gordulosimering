@@ -247,6 +247,44 @@ final class Product extends Model
     }
 
     /**
+     * A Márkáink oldal egy márkájának (config/brands.php) termékei: a márka
+     * mező, a név egy egész szava vagy a termékkód egy része szerint.
+     *
+     * @param  Builder<self>  $query
+     * @param  array{filter?: string, name_word?: string, code_part?: string}  $brand
+     */
+    #[Scope]
+    protected function ofCatalogBrand(Builder $query, array $brand): void
+    {
+        match (true) {
+            isset($brand['filter']) => $query->where('brand', $brand['filter']),
+            isset($brand['name_word']) => $query->where(function (Builder $query) use ($brand): void {
+                $word = $this->escapeLike($brand['name_word']);
+
+                foreach (['', '% ', '%/', '%('] as $before) {
+                    foreach (['', ' %', '/%', ',%', ')%'] as $after) {
+                        $query->orWhereRaw('name LIKE ? ESCAPE \'!\'', [$before . $word . $after]);
+                    }
+                }
+            }),
+            isset($brand['code_part']) => $query->whereRaw('product_code LIKE ? ESCAPE \'!\'', ['%' . $this->escapeLike($brand['code_part']) . '%']),
+            default => $query->whereRaw('1 = 0'),
+        };
+    }
+
+    /**
+     * Cikkszám szerinti sorrend, a számmal kezdődők előbb (a márkák
+     * terméklistája, az ügyfél kérése, 2026-10-26).
+     *
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function orderByProductCode(Builder $query): void
+    {
+        $query->orderBy('product_code');
+    }
+
+    /**
      * A készleten lévő termékek kerülnek előre, utánuk a rendelhetők.
      *
      * @param  Builder<self>  $query
@@ -413,6 +451,14 @@ final class Product extends Model
     private function normalizeDecimalSeparator(string $term): string
     {
         return str_replace(',', '.', mb_trim($term));
+    }
+
+    /**
+     * Escapes the LIKE wildcards for an ESCAPE '!' clause.
+     */
+    private function escapeLike(string $value): string
+    {
+        return str_replace(['!', '%', '_'], ['!!', '!%', '!_'], $value);
     }
 
     /**

@@ -13,7 +13,7 @@ use Livewire\Component;
 /**
  * The Márkáink page: the brands the shop carries (config/brands.php), each
  * logo opening the products of that brand, by the brand filter or, where the
- * ERP data has no brand value, by a name search.
+ * ERP data has no brand value, on the product list narrowed to the brand.
  */
 final class Brands extends Component
 {
@@ -31,7 +31,7 @@ final class Brands extends Component
                     'url' => match (true) {
                         $count === 0 => null,
                         isset($brand['filter']) => route('categories.index', ['marka' => $brand['filter']]),
-                        default => route('products.index', ['search' => $brand['search']]),
+                        default => route('products.index', ['gyarto' => $brand['name']]),
                     },
                 ];
             })->all(),
@@ -39,8 +39,8 @@ final class Brands extends Component
     }
 
     /**
-     * Web-visible products per brand name. The name searches scan every
-     * product, so the counts are kept for an hour; the key follows the brand
+     * Web-visible products per brand name. The name and code matches scan
+     * every product, so the counts are kept for an hour; the key follows the brand
      * list, so a changed list is counted afresh.
      *
      * @return array<string, int>
@@ -61,7 +61,7 @@ final class Brands extends Component
 
             return $brands->mapWithKeys(fn (array $brand): array => [$brand['name'] => (int) match (true) {
                 isset($brand['filter']) => $byBrand[$brand['filter']] ?? 0,
-                isset($brand['search']) => Product::query()->webVisible()->matchingSearch($brand['search'])->count(),
+                isset($brand['name_word']), isset($brand['code_part']) => Product::query()->webVisible()->ofCatalogBrand($brand)->count(),
                 default => 0,
             }])->all();
         });

@@ -20,14 +20,14 @@ it('links the new homepage boxes to Márkáink, Katalógusok and the delivery se
     get(route('index'))->assertOk()->assertSee(['Forgalmazott márkáink', 'Katalógusok', 'Szállítási költségek'])->assertSeeHtml('href="' . route('brands') . '"')->assertSeeHtml('href="' . route('catalogs') . '"')->assertSeeHtml('href="' . route('services') . '#hazhozszallitas"');
 });
 
-it('links each brand with products to its products, by brand filter or name search', function (): void {
+it('links each brand with products to its products, by brand filter or the brand listing', function (): void {
     Product::factory()->count(2)->create()->each(fn (Product $product) => $product->forceFill(['brand' => 'SKF'])->saveQuietly());
     Product::factory()->create(['name' => 'YATO csigafúró készlet 19 részes']);
 
     get(route('brands'))->assertOk()
         ->assertSee(['Márkáink', '2 termék', '1 termék'])
         ->assertSee('href="' . route('categories.index', ['marka' => 'SKF']) . '"', false)
-        ->assertSee('href="' . route('products.index', ['search' => 'YATO']) . '"', false)
+        ->assertSee('href="' . route('products.index', ['gyarto' => 'YATO']) . '"', false)
         ->assertDontSee('href="' . route('categories.index', ['marka' => 'INA']) . '"', false)
         ->assertSee('Érdeklődjön üzleteinkben');
 });

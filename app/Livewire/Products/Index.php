@@ -22,7 +22,19 @@ final class Index extends Component
     #[Url(as: 'search')]
     public string $search = '';
 
+    /**
+     * A brand of the Márkáink page (config/brands.php) the ERP data has no
+     * brand value for, by its name; its logo links here.
+     */
+    #[Url(as: 'gyarto')]
+    public string $brandName = '';
+
     public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatedBrandName(): void
     {
         $this->resetPage();
     }
@@ -31,6 +43,7 @@ final class Index extends Component
     {
         $this->resetProductFilters();
         $this->search = '';
+        $this->brandName = '';
         $this->resetPage();
     }
 
@@ -42,6 +55,11 @@ final class Index extends Component
     {
         $query = $this->filterableProducts();
         $this->applySelectedFilters($query);
+
+        if ($this->catalogBrand !== null || $this->isListingABrand()) {
+            return $query->orderByProductCode()->paginate(24);
+        }
+
         $query->inStockFirst();
 
         if (mb_strlen($this->search) >= 2) {
@@ -49,6 +67,15 @@ final class Index extends Component
         }
 
         return $query->paginate(24);
+    }
+
+    /**
+     * @return array{name: string, logo: string, filter?: string, name_word?: string, code_part?: string}|null
+     */
+    #[Computed]
+    public function catalogBrand(): ?array
+    {
+        return $this->brandName === '' ? null : collect(config('brands'))->firstWhere('name', $this->brandName);
     }
 
     public function render(): View
@@ -60,8 +87,9 @@ final class Index extends Component
     }
 
     /**
-     * The web-visible products, narrowed by the search term once it has two
-     * characters. The filter counts follow the search too.
+     * The web-visible products, narrowed by the brand from the Márkáink page
+     * and by the search term once it has two characters. The filter counts
+     * follow them too.
      *
      * @return Builder<Product>
      */
@@ -69,6 +97,7 @@ final class Index extends Component
     {
         return Product::query()
             ->webVisible()
+            ->when($this->catalogBrand, fn (Builder $query, array $brand) => $query->ofCatalogBrand($brand))
             ->when(mb_strlen($this->search) >= 2, fn (Builder $query) => $query->matchingSearch($this->search));
     }
 }

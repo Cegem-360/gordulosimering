@@ -7,6 +7,12 @@
                     <a href="{{ route('index') }}" class="text-blue-600 hover:underline">Kezdőlap</a>
                     <span class="text-gray-500">&gt;</span>
                     <span class="text-gray-700">Termékek</span>
+                    @if ($this->catalogBrand)
+                        <span class="text-gray-500">&gt;</span>
+                        <a href="{{ route('brands') }}" class="text-blue-600 hover:underline">Márkáink</a>
+                        <span class="text-gray-500">&gt;</span>
+                        <span class="text-gray-700">{{ $this->catalogBrand['name'] }}</span>
+                    @endif
                     @if ($search)
                         <span class="text-gray-500">&gt;</span>
                         <span class="text-gray-700">Keresés: "{{ $search }}"</span>
@@ -29,6 +35,8 @@
                         <div>
                             @if ($search)
                                 <h1 class="text-2xl font-bold">Keresés: "{{ $search }}"</h1>
+                            @elseif ($this->catalogBrand)
+                                <h1 class="text-2xl font-bold">{{ $this->catalogBrand['name'] }}</h1>
                             @else
                                 <h1 class="text-2xl font-bold">Termékek</h1>
                             @endif
@@ -39,6 +47,16 @@
 
                         <!-- Active Filters -->
                         <x-categories.active-filters :filters="$filters" :selected="$selectedFilters" :dimension-chips="$this->dimensionChips">
+                            @if ($this->catalogBrand)
+                                <span
+                                    class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                                    {{ $this->catalogBrand['name'] }}
+                                    <button type="button" wire:click="$set('brandName', '')"
+                                        class="hover:text-blue-600">
+                                        <i class="fas fa-times text-xs"></i>
+                                    </button>
+                                </span>
+                            @endif
                             @if ($search)
                                 <span
                                     class="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
