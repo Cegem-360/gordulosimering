@@ -21,6 +21,13 @@ return [
             ],
         ],
     ],
+    'tabs' => [
+        'actions' => [
+            'more' => [
+                'label' => 'További fülek',
+            ],
+        ],
+    ],
     'wizard' => [
         'header' => [
             'step' => [

@@ -16,7 +16,6 @@ use App\Filament\Resources\SeoPages\SeoPageResource;
 use App\Filament\Resources\ShippingMethods\ShippingMethodResource;
 use App\Filament\Resources\Users\UserResource;
 use App\Models\User;
-use BackedEnum;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Columns\TextColumn;

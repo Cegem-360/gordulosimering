@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 return [
     'builder' => [
+        'reordering' => [
+            'item' => 'Blokk',
+            'position' => ':label, :position. pozíció a(z) :count közül',
+            'moved' => ':label áthelyezve a(z) :position. pozícióba a(z) :count közül',
+        ],
         'block_picker' => [
             'no_search_results_message' => 'Egyetlen blokk sem illeszkedik a keresésre.',
             'search_prompt' => 'Blokkok keresése',
@@ -83,6 +88,7 @@ return [
         'required_description' => 'Válasszon legalább egy lehetőséget.',
     ],
     'file_upload' => [
+        'placeholder' => 'Nincs feltöltött fájl',
         'editor' => [
             'actions' => [
                 'cancel' => [
@@ -183,7 +189,18 @@ return [
         ],
     ],
     'key_value' => [
+        'reordering' => [
+            'row' => 'Sor',
+            'position' => ':label, :position. pozíció a(z) :count közül',
+            'moved' => ':label áthelyezve a(z) :position. pozícióba a(z) :count közül',
+        ],
         'actions' => [
+            'move_down' => [
+                'label' => 'Mozgatás lejjebb',
+            ],
+            'move_up' => [
+                'label' => 'Mozgatás feljebb',
+            ],
             'add' => [
                 'label' => 'Sor hozzáadása',
             ],
@@ -237,6 +254,11 @@ return [
         ],
     ],
     'repeater' => [
+        'reordering' => [
+            'item' => 'Elem',
+            'position' => ':label, :position. pozíció a(z) :count közül',
+            'moved' => ':label áthelyezve a(z) :position. pozícióba a(z) :count közül',
+        ],
         'actions' => [
             'add' => [
                 'label' => 'Új :label',
@@ -503,6 +525,8 @@ return [
         'search_prompt' => 'Kezdj el írni a kereséshez...',
         'no_options_message' => 'Nincs elérhető lehetőség.',
         'search_label' => 'Keresés',
+        'error_message' => 'A lehetőségeket nem sikerült betölteni. Kérjük, próbálja újra.',
+        'required_description' => 'Válasszon egy lehetőséget.',
     ],
     'tags_input' => [
         'placeholder' => 'Címke hozzáadása',
