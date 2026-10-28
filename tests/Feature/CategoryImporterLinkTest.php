@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\CategoryImporter;
+use Illuminate\Support\Facades\File;
 
 /**
  * Writes a 5-column category fixture (rows of cells) to a temp TSV.
@@ -27,7 +28,7 @@ function writeCategoryFixture(array $rows): string
 
 afterEach(function (): void {
     foreach (glob(sys_get_temp_dir() . '/kat_*.tsv') ?: [] as $file) {
-        @unlink($file);
+        File::delete($file);
     }
 });
 

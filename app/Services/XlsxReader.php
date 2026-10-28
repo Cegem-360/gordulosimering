@@ -28,9 +28,7 @@ final class XlsxReader
     {
         $zip = new ZipArchive();
 
-        if ($zip->open($path) !== true) {
-            throw new RuntimeException('Az Excel-fájl nem nyitható meg.');
-        }
+        throw_if($zip->open($path) !== true, RuntimeException::class, 'Az Excel-fájl nem nyitható meg.');
 
         try {
             $sharedStrings = $this->sharedStrings($zip);
@@ -135,9 +133,7 @@ final class XlsxReader
     {
         $content = $zip->getFromName($name);
 
-        if ($content === false) {
-            throw new RuntimeException("Hiányzó rész az Excel-fájlban: {$name}");
-        }
+        throw_if($content === false, RuntimeException::class, "Hiányzó rész az Excel-fájlban: {$name}");
 
         return new SimpleXMLElement($content, LIBXML_NONET);
     }

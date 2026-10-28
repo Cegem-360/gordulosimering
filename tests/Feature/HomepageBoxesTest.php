@@ -24,11 +24,7 @@ it('links each brand with products to its products, by brand filter or the brand
     Product::factory()->count(2)->create()->each(fn (Product $product) => $product->forceFill(['brand' => 'SKF'])->saveQuietly());
     Product::factory()->create(['name' => 'YATO csigafúró készlet 19 részes']);
 
-    get(route('brands'))->assertOk()
-        ->assertSee(['Márkáink', '2 termék', '1 termék'])
-        ->assertSee('href="' . route('categories.index', ['marka' => 'SKF']) . '"', false)
-        ->assertSee('href="' . route('products.index', ['gyarto' => 'YATO']) . '"', false)
-        ->assertDontSee('href="' . route('categories.index', ['marka' => 'INA']) . '"', false)
+    get(route('brands'))->assertOk()->assertSee(['Márkáink', '2 termék', '1 termék'])->assertSeeHtml('href="' . route('categories.index', ['marka' => 'SKF']) . '"')->assertSeeHtml('href="' . route('products.index', ['gyarto' => 'YATO']) . '"')->assertDontSeeHtml('href="' . route('categories.index', ['marka' => 'INA']) . '"')
         ->assertSee('Érdeklődjön üzleteinkben');
 });
 
@@ -118,6 +114,5 @@ it('counts the brands afresh when the brand list changes', function (): void {
     config(['brands' => [...config('brands'), ['name' => 'TIMKEN', 'logo' => 'skf.svg', 'filter' => 'TIMKEN']]]);
     Product::factory()->create()->forceFill(['brand' => 'TIMKEN'])->saveQuietly();
 
-    get(route('brands'))->assertOk()
-        ->assertSee('href="' . route('categories.index', ['marka' => 'TIMKEN']) . '"', false);
+    get(route('brands'))->assertOk()->assertSeeHtml('href="' . route('categories.index', ['marka' => 'TIMKEN']) . '"');
 });

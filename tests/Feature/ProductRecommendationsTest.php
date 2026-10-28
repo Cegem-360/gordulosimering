@@ -18,6 +18,8 @@ use Livewire\Livewire;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
 
+use Tests\TestCase;
+
 /**
  * An .xlsx with the given rows on its first sheet, text cells via shared strings.
  *
@@ -168,6 +170,7 @@ it('gives every matching rule a place before a rule gets a second one', function
 });
 
 it('keeps the pick for the week and picks again when the rules change', function (): void {
+    /** @var TestCase $this */
     $categories = recommendationCategories();
     $bearing = productIn($categories['ballBearings']);
     $first = productIn($categories['cleaning']);

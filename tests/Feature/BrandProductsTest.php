@@ -49,8 +49,7 @@ it('links CFA from the Márkáink page to its own products', function (): void {
     brandProduct(['name' => 'CFA körömvirágos kézkrém']);
     brandProduct(['product_code' => 'UCFA 205_KBS', 'name' => 'KELETI Y csapágyegység']);
 
-    get(route('brands'))->assertOk()
-        ->assertSee('href="' . route('products.index', ['gyarto' => 'CFA']) . '"', false);
+    get(route('brands'))->assertOk()->assertSeeHtml('href="' . route('products.index', ['gyarto' => 'CFA']) . '"');
 
     Livewire::withQueryParams(['gyarto' => 'CFA'])
         ->test(ProductsIndex::class)

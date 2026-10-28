@@ -103,7 +103,7 @@ it('drops an in-store payment when the customer switches away from personal pick
 
 it('requires a payment method', function (): void {
     paymentCheckout(User::factory()->create(), ShippingMethod::factory()->create())
-        ->set('selectedPaymentMethod', null)
+        ->set('selectedPaymentMethod')
         ->call('create')
         ->assertHasErrors('selectedPaymentMethod');
 });

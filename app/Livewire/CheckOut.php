@@ -98,7 +98,7 @@ final class CheckOut extends Component implements HasActions, HasSchemas
      */
     public function updatedSelectedShippingMethod(): void
     {
-        if ($this->selectedPaymentMethod === null || ! $this->canPayWith($this->selectedPaymentMethod)) {
+        if (! $this->selectedPaymentMethod instanceof PaymentMethod || ! $this->canPayWith($this->selectedPaymentMethod)) {
             $this->selectFirstAvailablePaymentMethod();
         }
     }

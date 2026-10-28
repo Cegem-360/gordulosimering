@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Product;
 use App\Services\ProductImageImporter;
+use Illuminate\Support\Facades\File;
 
 /**
  * @param  array<int, array<int, string>>  $rows  each: [code, name, kep1, kep2, kep3]
@@ -23,7 +24,7 @@ function writeImageFixture(array $rows): string
 
 afterEach(function (): void {
     foreach (glob(sys_get_temp_dir() . '/kep_*.tsv') ?: [] as $file) {
-        @unlink($file);
+        File::delete($file);
     }
 });
 

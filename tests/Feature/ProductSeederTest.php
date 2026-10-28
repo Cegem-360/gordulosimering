@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Product;
 use Database\Seeders\ProductSeeder;
+use Illuminate\Support\Facades\File;
 use Tests\TestCase;
 
 /**
@@ -45,7 +46,7 @@ function productRow(array $overrides = []): array
 
 afterEach(function (): void {
     if (ProductSeeder::$dataFile !== null && file_exists(ProductSeeder::$dataFile)) {
-        unlink(ProductSeeder::$dataFile);
+        File::delete(ProductSeeder::$dataFile);
     }
 
     ProductSeeder::$dataFile = null;
