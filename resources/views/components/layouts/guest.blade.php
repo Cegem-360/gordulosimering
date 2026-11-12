@@ -28,6 +28,7 @@
     </head>
 
     <body class="antialiased">
+        <x-promotion.announcement-bar />
         <x-layouts.navbar />
 
         <main class="min-h-screen bg-gray-50">

@@ -1,4 +1,5 @@
 <x-layouts.app>
+    <x-promotion.home-banner />
     <div class="container mx-auto grid md:grid-cols-[1fr_3fr] gap-3 px-4 py-4 lg:py-0">
         <!-- Left: Search and Category Selector -->
         <div class="flex flex-col gap-3">

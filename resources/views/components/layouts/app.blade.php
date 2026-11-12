@@ -29,6 +29,7 @@
     </head>
 
     <body class="antialiased">
+        <x-promotion.announcement-bar />
         <x-layouts.navbar />
 
         <main>
