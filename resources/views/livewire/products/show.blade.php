@@ -208,6 +208,13 @@
                                     ({{ $minimum }}, {{ $minimum + $step }}, {{ $minimum + 2 * $step }} …).
                                 </p>
                             @endif
+                            {{-- Over the stock: the cart takes no more, a quote does (client, 2026-11-12). --}}
+                            @if ($product->isInStock() && $quantity > $product->maximumCartQuantity())
+                                <p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 mt-2">
+                                    <i class="fas fa-triangle-exclamation mr-1"></i>
+                                    {{ $product->stockLimitMessage() }}
+                                </p>
+                            @endif
                         </div>
 
                         @if ($product->isInStock())

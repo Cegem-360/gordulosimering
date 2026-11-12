@@ -31,6 +31,18 @@ final class Show extends Component
             return;
         }
 
+        $inCart = $cartService->getItem($this->product->id)->quantity ?? 0;
+
+        if ($inCart + $this->quantity > $this->product->maximumCartQuantity()) {
+            Notification::make()
+                ->title($inCart > 0 ? 'A kosárban már van ebből a termékből.' : 'Nincs ennyi raktáron.')
+                ->body($this->product->stockLimitMessage())
+                ->warning()
+                ->send();
+
+            return;
+        }
+
         $cartService->addItem($this->product->id, $this->quantity);
 
         $this->dispatch('cartUpdated');

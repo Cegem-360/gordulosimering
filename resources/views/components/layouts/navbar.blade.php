@@ -13,12 +13,13 @@
             <div class="flex items-center space-x-8">
                 <!-- Logo -->
                 {{-- Two images, so the SKF Szerződött Partner badge can come from the client's sharp
-                     artwork (2026-10-13); the text part is cut from the old 280x59 GS-logo.webp.
-                     The heights keep the old logo's widths (230/270/300 px). --}}
-                <a href="/" class="shrink-0 flex items-center gap-[2px] h-12 lg:h-[49px] xl:h-[57px] 2xl:h-[63px]">
-                    <img src="{{ Vite::asset('resources/images/GS-logo-text.webp') }}"
-                        alt="GÖRDÜLŐ-Simmering Kft. - Csapágyak és kapcsolódó termékek kereskedelme"
-                        width="222" height="59" class="h-full w-auto">
+                     artwork (2026-10-13). The company name is a vector redrawing of the invoice
+                     header (2026-11-12), so it stays sharp at every size. On phones the logo is
+                     lower, so the quote and cart icons fit beside it. --}}
+                <a href="/" class="shrink-0 flex items-center gap-1 h-10 sm:h-12 lg:h-[49px] xl:h-[57px] 2xl:h-[63px]">
+                    <img src="{{ Vite::asset('resources/images/GS-logo-text.svg') }}"
+                        alt="GÖRDÜLŐ-Simmering Kft. - Csapágyak, tömítések és kapcsolódó termékek kereskedelme"
+                        width="919" height="162" class="h-[72%] w-auto">
                     <img src="{{ Vite::asset('resources/images/skf-szerzodott-partner.webp') }}"
                         alt="SKF Szerződött Partner" width="189" height="189" class="h-[95%] w-auto">
                 </a>
@@ -152,7 +153,7 @@
             @endunless
 
             <!-- Right Side Menu -->
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center gap-1 sm:gap-4">
                 <!-- Auth Links -->
                 @auth
                     <div class="relative hidden lg:block" x-data="{ open: false }">

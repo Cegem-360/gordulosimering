@@ -26,7 +26,15 @@ final class ProductCard extends Component
             return;
         }
 
-        $cartService->addItem($this->product->id, $this->product->minimumOrderQuantity());
+        if (! $cartService->addItem($this->product->id, $this->product->minimumOrderQuantity())) {
+            Notification::make()
+                ->title('Nincs több raktáron.')
+                ->body($this->product->stockLimitMessage())
+                ->warning()
+                ->send();
+
+            return;
+        }
 
         $this->dispatch('cartUpdated');
 

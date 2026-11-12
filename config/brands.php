@@ -5,7 +5,8 @@ declare(strict_types=1);
 /*
  * The brands on the Márkáink page, as the client listed them on 2026-10-13
  * (logó.docx), LOCTITE, which they asked back the same day, and their last
- * additions of 2026-10-14 (logok.docx): SKF first, the rest alphabetically. The logo files in
+ * additions of 2026-10-14 (logok.docx) and 2026-10-26 (Gates, Continental,
+ * WSW from logó legújabb.docx): SKF first, the rest alphabetically. The logo files in
  * resources/images/brands/ are built by __client/brand-logos-sources/build.py
  * (official files where the brand's site has a good one, otherwise the
  * client's own image; see SOURCES.md there).
@@ -29,6 +30,7 @@ return [
     ['name' => 'Beta', 'logo' => 'beta.webp', 'filter' => 'BETA'],
     ['name' => 'CERVA', 'logo' => 'cerva.svg', 'name_word' => 'CERVA', 'size' => 'box'],
     ['name' => 'CFA', 'logo' => 'cfa.webp', 'name_word' => 'CFA', 'size' => 'box'],
+    ['name' => 'Continental', 'logo' => 'continental.webp', 'name_word' => 'CONTINENTAL'],
     ['name' => 'CORTECO', 'logo' => 'corteco.svg', 'filter' => 'CORTECO'],
     ['name' => 'CX80', 'logo' => 'cx80.webp', 'name_word' => 'CX80', 'size' => 'box'],
     ['name' => 'EURO ELZETT', 'logo' => 'euro-elzett.webp', 'name_word' => 'ELZETT'],
@@ -37,6 +39,7 @@ return [
     ['name' => 'F.BS', 'logo' => 'f-bs.webp', 'name_word' => 'F.BS'],
     ['name' => 'FABORY', 'logo' => 'fabory.webp', 'tile' => false],
     ['name' => 'FAG', 'logo' => 'fag.webp', 'filter' => 'FAG'],
+    ['name' => 'Gates', 'logo' => 'gates.webp', 'name_word' => 'GATES', 'size' => 'box'],
     ['name' => 'IKO', 'logo' => 'iko.svg', 'filter' => 'IKO'],
     ['name' => 'INA', 'logo' => 'ina.svg', 'filter' => 'INA', 'size' => 'box'],
     ['name' => 'JWIS', 'logo' => 'jwis.webp', 'name_word' => 'IWIS'],
@@ -66,6 +69,7 @@ return [
     ['name' => 'THK', 'logo' => 'thk.svg', 'name_word' => 'THK'],
     ['name' => 'WD-40', 'logo' => 'wd-40.webp', 'name_word' => 'WD-40', 'size' => 'box'],
     ['name' => 'WIPPERMANN', 'logo' => 'wippermann.svg', 'name_word' => 'WIPPERMANN'],
+    ['name' => 'WSW', 'logo' => 'wsw.webp', 'filter' => 'WSW'],
     ['name' => 'YATO', 'logo' => 'yato.svg', 'name_word' => 'YATO'],
     ['name' => 'ZVL SLOVAKIA', 'logo' => 'zvl.webp', 'name_word' => 'ZVL'],
 ];

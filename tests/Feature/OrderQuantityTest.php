@@ -40,7 +40,7 @@ it('steps the product page quantity in order units and rounds typed amounts up',
 });
 
 it('adds the smallest orderable quantity from a product card', function (): void {
-    $product = Product::factory()->create(['min_order_quantity' => 0, 'order_unit' => 10]);
+    $product = Product::factory()->create(['min_order_quantity' => 0, 'order_unit' => 10, 'stock_quantity' => 100]);
 
     Livewire::test(ProductCard::class, ['product' => $product])->call('addToCart');
 
@@ -48,7 +48,7 @@ it('adds the smallest orderable quantity from a product card', function (): void
 });
 
 it('keeps the cart quantity to whole order units', function (): void {
-    $product = Product::factory()->create(['min_order_quantity' => 0, 'order_unit' => 10, 'maximum_stock' => null]);
+    $product = Product::factory()->create(['min_order_quantity' => 0, 'order_unit' => 10, 'stock_quantity' => 100]);
     resolve(CartService::class)->addItem($product->id, 9);
 
     expect(resolve(CartService::class)->getItem($product->id)?->quantity)->toBe(10);

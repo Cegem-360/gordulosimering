@@ -31,9 +31,9 @@ it('links each brand with products to its products, by brand filter or the brand
 it('shows the brands the client listed, LOCTITE and their last additions, SKF first', function (): void {
     $names = collect(config('brands'))->pluck('name');
 
-    expect($names)->toHaveCount(45)
+    expect($names)->toHaveCount(48)
         ->and($names->first())->toBe('SKF')
-        ->and($names)->toContain('LOCTITE', 'KS TOOLS', 'FABORY', 'Rexroth', 'Robur')
+        ->and($names)->toContain('LOCTITE', 'KS TOOLS', 'FABORY', 'Rexroth', 'Robur', 'Gates', 'Continental', 'WSW')
         ->and($names)->not->toContain('TIMKEN', 'DURACELL');
 
     foreach (config('brands') as $brand) {

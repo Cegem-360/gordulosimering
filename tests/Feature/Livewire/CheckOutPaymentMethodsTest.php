@@ -120,3 +120,16 @@ it('lets the admin tick the transfer contract on the partner form', function ():
 
     expect($partner->refresh()->has_transfer_contract)->toBeTrue();
 });
+
+it('refuses cash on delivery with personal pickup and preselects paying in the store', function (): void {
+    $user = User::factory()->create();
+
+    paymentCheckout($user, personalPickup())
+        ->assertSet('selectedPaymentMethod', PaymentMethod::CardInStore)
+        ->assertSee('Csak futáros kiszállítás esetén.')
+        ->set('selectedPaymentMethod', PaymentMethod::CashOnDelivery->value)
+        ->call('create')
+        ->assertHasErrors('selectedPaymentMethod');
+
+    expect(Order::query()->count())->toBe(0);
+});

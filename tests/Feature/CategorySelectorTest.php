@@ -64,6 +64,17 @@ it('opens a fly-out submenu only from its own parent item', function (): void {
         ->assertDontSeeHtml('group-hover/item:visible');
 });
 
+it('does not open the fly-out on phones, where a tap would show it off the screen', function (): void {
+    /** @var TestCase $this */
+    $root = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    Category::query()->create(['name' => 'GOLYÓS CSAPÁGY', 'slug' => 'golyos-csapagy', 'category_id' => $root->id])
+        ->products()->attach(Product::factory()->create());
+
+    $this->get('/')->assertOk()
+        ->assertSeeHtml('group/item relative md:[&:hover>ul]:block')
+        ->assertDontSeeHtml('group/item relative [&:hover>ul]:block');
+});
+
 it('shows the real categories in the top menu and no brands link', function (): void {
     /** @var TestCase $this */
     $category = Category::query()->create(['name' => 'TÖMÍTÉSEK', 'slug' => 'tomitesek']);

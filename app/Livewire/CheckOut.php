@@ -105,13 +105,15 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
     /**
      * Bank transfer is for partners with a transfer contract (ticked in the
-     * admin), the in-store payments for personal pickup.
+     * admin), the in-store payments for personal pickup, and cash on
+     * delivery for parcels only: there is no courier at a pickup.
      */
     public function canPayWith(PaymentMethod $method): bool
     {
         return match (true) {
             $method === PaymentMethod::BankTransfer => (bool) Auth::user()?->has_transfer_contract,
             $method->isPaidInStore() => (bool) $this->selectedShipping?->isPersonalPickup(),
+            $method === PaymentMethod::CashOnDelivery => ! $this->selectedShipping?->isPersonalPickup(),
             default => true,
         };
     }
@@ -272,6 +274,19 @@ final class CheckOut extends Component implements HasActions, HasSchemas
 
         if ($this->selectedShipping->requires_parcel_point && $this->parcelPoint === null) {
             $this->addError('parcelPoint', 'Kérjük, válasszon GLS csomagpontot vagy csomagautomatát.');
+
+            return;
+        }
+
+        $overStock = $cartService->getCartItems()->first(fn ($item): bool => $item->quantity > $item->product->maximumCartQuantity());
+
+        if ($overStock !== null) {
+            Notification::make()
+                ->title($overStock->product->name . ': a készlet időközben csökkent.')
+                ->body($overStock->product->stockLimitMessage() . ' Kérjük, módosítsa a mennyiséget a kosárban.')
+                ->warning()
+                ->persistent()
+                ->send();
 
             return;
         }

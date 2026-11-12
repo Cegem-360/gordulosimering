@@ -6,6 +6,7 @@ namespace App\Livewire;
 
 use App\Models\Product;
 use App\Services\CartService;
+use Filament\Notifications\Notification;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
@@ -33,17 +34,13 @@ final class CartItem extends Component
 
     public function increaseQuantity(CartService $cartService): void
     {
-        $maxQuantity = $this->product->maximum_stock ?: 9999;
-        $higher = $this->quantity + $this->product->orderQuantityStep();
-
-        if ($higher <= $maxQuantity) {
-            $this->saveQuantity($cartService, $higher);
-        }
+        $this->saveQuantity($cartService, $this->quantity + $this->product->orderQuantityStep());
     }
 
     /**
      * A quantity typed into the cart is rounded up to the next orderable one
-     * (a whole number of order units, at least the minimum).
+     * (a whole number of order units, at least the minimum), and cut to the
+     * stock on hand.
      */
     public function updatedQuantity(CartService $cartService): void
     {
@@ -63,8 +60,15 @@ final class CartItem extends Component
 
     private function saveQuantity(CartService $cartService, int $quantity): void
     {
-        $this->quantity = $this->product->orderableQuantity($quantity);
-        $cartService->updateItem($this->product->id, $this->quantity);
+        if (! $cartService->updateItem($this->product->id, $quantity)) {
+            Notification::make()
+                ->title('Nincs ennyi raktáron.')
+                ->body($this->product->stockLimitMessage())
+                ->warning()
+                ->send();
+        }
+
+        $this->quantity = $cartService->getItem($this->product->id)->quantity ?? $this->product->orderableQuantity($quantity);
         $this->dispatch('cartUpdated');
     }
 }

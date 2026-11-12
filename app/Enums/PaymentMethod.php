@@ -56,6 +56,7 @@ enum PaymentMethod: string implements HasLabel
     {
         return match ($this) {
             self::BankTransfer => 'Kizárólag átutalásos szerződéssel rendelkező partnereink részére.',
+            self::CashOnDelivery => 'Csak futáros kiszállítás esetén.',
             self::CardInStore, self::CashInStore => 'Csak személyes átvétel esetén.',
             default => null,
         };

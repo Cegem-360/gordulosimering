@@ -164,7 +164,7 @@
                     <i class="fas fa-certificate text-3xl"></i>
                 </div>
                 <div>
-                    <h2 class="text-2xl md:text-3xl font-bold mb-3">Nálunk ha SKF minőségért fizet, akkor SKF minőséget
+                    <h2 class="text-2xl md:text-3xl font-bold mb-3">Nálunk, ha SKF minőségért fizet, akkor SKF minőséget
                         kap.</h2>
                     <p class="text-blue-100">Kérésre minden SKF csapágyunk mellé minőségi tanúsítványt adunk. Stop a
                         hamis csapágyaknak!</p>

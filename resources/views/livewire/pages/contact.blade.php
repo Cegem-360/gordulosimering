@@ -55,8 +55,8 @@
 
             <!-- XVII. kerület -->
             <div class="bg-white border border-gray-300 rounded-lg shadow-sm">
-                <img src="{{ Vite::asset('resources/images/stores/ff1.jpg') }}" alt="XVII. kerületi üzlet"
-                    class="rounded-t-lg object-cover w-full aspect-video">
+                <img src="{{ Vite::asset('resources/images/stores/pesti-ut.webp') }}" alt="A Pesti úti SKF csapágyszaküzletünk"
+                    class="rounded-t-lg object-cover object-[center_60%] w-full aspect-video">
                 <div class="p-5">
                     <h3 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">XVII. kerület</h3>
                     <p class="text-gray-700 mb-3">1173 Budapest, Pesti út 203.</p>

@@ -44,3 +44,10 @@ it('leaves the GLS table out without GLS rates', function (): void {
     /** @var TestCase $this */
     $this->get(route('services'))->assertOk()->assertDontSee('GLS futárszolgálat országosan');
 });
+
+it('puts a comma before "ha" in the SKF quality banner', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('services'))->assertOk()
+        ->assertSee('Nálunk, ha SKF minőségért fizet')
+        ->assertDontSee('Nálunk ha SKF');
+});

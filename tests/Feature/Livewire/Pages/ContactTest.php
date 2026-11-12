@@ -121,3 +121,11 @@ it('shows the client\'s new photo of the Kőrösi Csoma store', function (): voi
         ->assertSeeHtml('alt="A Kőrösi Csoma S. úti SKF csapágyszaküzletünk"')
         ->assertDontSeeHtml('stores/korosi.jpg');
 });
+
+it('shows the client\'s new photo of the Pesti út store', function (): void {
+    /** @var TestCase $this */
+    $this->get(route('contact'))->assertOk()
+        ->assertSeeHtml(Vite::asset('resources/images/stores/pesti-ut.webp'))
+        ->assertSeeHtml('alt="A Pesti úti SKF csapágyszaküzletünk"')
+        ->assertDontSeeHtml('stores/ff1.jpg');
+});

@@ -21,37 +21,59 @@ final readonly class CartService
 
     /**
      * Quantities are rounded up to an orderable amount here too, so the
-     * minimum and the order unit hold whatever the page sent.
+     * minimum and the order unit hold whatever the page sent, and never go
+     * above the stock (the rest can only be asked for in a quote).
+     *
+     * @return bool whether the whole quantity fit; false when it was cut to the stock
      */
-    public function addItem($productId, $quantity): void
+    public function addItem($productId, $quantity): bool
     {
         $cartItem = $this->cart->cartItems()->where('product_id', $productId)->first();
 
         if ($cartItem) {
-            $this->updateItem($productId, $cartItem->quantity + $quantity);
-        } else {
-            $product = Product::query()->find($productId);
-
-            $this->cart->cartItems()->create([
-                'product_id' => $productId,
-                'quantity' => $product?->orderableQuantity((int) $quantity) ?? $quantity,
-            ]);
+            return $this->updateItem($productId, $cartItem->quantity + $quantity);
         }
+
+        $product = Product::query()->find($productId);
+
+        if (! $product) {
+            return false;
+        }
+
+        $requested = $product->orderableQuantity((int) $quantity);
+        $quantity = min($requested, $product->maximumCartQuantity());
+
+        if ($quantity < $product->minimumOrderQuantity()) {
+            return false;
+        }
+
+        $this->cart->cartItems()->create(['product_id' => $productId, 'quantity' => $quantity]);
+
+        return $quantity === $requested;
     }
 
-    public function updateItem($productId, $quantity): void
+    /**
+     * @return bool whether the whole quantity fit; false when it was cut to the stock
+     */
+    public function updateItem($productId, $quantity): bool
     {
         $cartItem = $this->cart->cartItems()->where('product_id', $productId)->first();
 
-        if ($cartItem) {
-            $quantity = $cartItem->product->orderableQuantity((int) $quantity);
-            $maxStock = $cartItem->product->maximum_stock ?: 9999;
-
-            if ($quantity <= $maxStock) {
-                $cartItem->quantity = $quantity;
-                $cartItem->save();
-            }
+        if (! $cartItem) {
+            return false;
         }
+
+        $requested = $cartItem->product->orderableQuantity((int) $quantity);
+        $maximum = $cartItem->product->maximumCartQuantity();
+
+        if ($maximum < $cartItem->product->minimumOrderQuantity()) {
+            return false;
+        }
+
+        $cartItem->quantity = min($requested, $maximum);
+        $cartItem->save();
+
+        return $cartItem->quantity === $requested;
     }
 
     public function removeItem($productId): void

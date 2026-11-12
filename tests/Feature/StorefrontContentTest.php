@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\ShippingMethod;
 use App\Services\CategoryImporter;
+use Illuminate\Support\Facades\Vite;
 use Tests\TestCase;
 
 it('does not list American Express among the accepted cards', function (): void {
@@ -183,11 +184,13 @@ it('serves the GÖRDÜLŐ-Simmering favicon set on the storefront and in the adm
         ->and(file_get_contents(public_path('favicon.svg')))->toContain('fill="#0F50A9"')->not->toContain('stroke=');
 });
 
-it('shows the navbar logo as the text part and the sharp SKF partner badge, larger on desktop', function (): void {
+it('shows the navbar logo as the vector company name and the sharp SKF partner badge, lower on phones', function (): void {
     /** @var TestCase $this */
     $this->get(route('contact'))->assertOk()
-        ->assertSeeHtml('class="shrink-0 flex items-center gap-[2px] h-12 lg:h-[49px] xl:h-[57px] 2xl:h-[63px]"')
-        ->assertSeeHtml('alt="GÖRDÜLŐ-Simmering Kft. - Csapágyak és kapcsolódó termékek kereskedelme"')
+        ->assertSeeHtml('class="shrink-0 flex items-center gap-1 h-10 sm:h-12 lg:h-[49px] xl:h-[57px] 2xl:h-[63px]"')
+        ->assertSeeHtml(Vite::asset('resources/images/GS-logo-text.svg'))
+        ->assertSeeHtml('alt="GÖRDÜLŐ-Simmering Kft. - Csapágyak, tömítések és kapcsolódó termékek kereskedelme"')
+        ->assertSeeHtml('<div class="flex items-center gap-1 sm:gap-4">')
         ->assertSeeHtml('alt="SKF Szerződött Partner" width="189" height="189"')
         ->assertSeeHtml('class="scroll-pt-20 lg:scroll-pt-24"');
 });

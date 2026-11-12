@@ -157,6 +157,33 @@ final class Product extends Model
     }
 
     /**
+     * The most the cart takes: the stock on hand, rounded down to whole order
+     * units. More can only be asked for in a quote (client, 2026-11-12).
+     */
+    public function maximumCartQuantity(): int
+    {
+        $step = $this->orderQuantityStep();
+
+        return intdiv((int) floor(max(0.0, (float) $this->stock_quantity)), $step) * $step;
+    }
+
+    /**
+     * Shown when a customer wants more than the stock: they get the most the
+     * cart takes and are pointed to a quote for the rest.
+     */
+    public function stockLimitMessage(): string
+    {
+        $maximum = $this->maximumCartQuantity();
+        $unit = mb_trim((string) $this->quantity_unit) ?: 'db';
+
+        if ($maximum < $this->minimumOrderQuantity()) {
+            return 'Ebből a termékből nincs elég raktáron a rendeléshez. Kérjen árajánlatot!';
+        }
+
+        return sprintf('Raktáron csak %s %s van, legfeljebb ennyit rendelhet. Nagyobb mennyiségre kérjen árajánlatot!', $maximum, $unit);
+    }
+
+    /**
      * Whether the product page shows this field ("Egyéb adatok és kódok" in
      * the admin). Every field shows unless the admin switched it off for
      * this product.
