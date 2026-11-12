@@ -1,10 +1,3 @@
-@use('App\Models\Category')
-@inject('categoryTree', 'App\Services\CategoryTree')
-
-@php
-    $menuCategories = $categoryTree->stocked(Category::query()->menuRoots()->get(['id', 'name', 'slug']));
-@endphp
-
 <!-- Main Navigation -->
 <div x-data="{ mobileMenuOpen: false, categoryMenuOpen: false }" class="sticky top-0 z-40 bg-white border-b">
     <div class="container mx-auto px-4">
@@ -16,7 +9,8 @@
                      artwork (2026-10-13). The company name is a vector redrawing of the invoice
                      header (2026-11-12), so it stays sharp at every size. On phones the logo is
                      lower, so the quote and cart icons fit beside it. --}}
-                <a href="/" class="shrink-0 flex items-center gap-1 h-10 sm:h-12 lg:h-[49px] xl:h-[57px] 2xl:h-[63px]">
+                <a href="/"
+                    class="shrink-0 flex items-center gap-1 h-10 sm:h-12 lg:h-[49px] xl:h-[57px] 2xl:h-[63px]">
                     <img src="{{ Vite::asset('resources/images/GS-logo-text.svg') }}"
                         alt="GÖRDÜLŐ-Simmering Kft. - Csapágyak, tömítések és kapcsolódó termékek kereskedelme"
                         width="919" height="162" class="h-[72%] w-auto">
@@ -45,12 +39,13 @@
                             x-transition:leave-end="opacity-0 translate-y-1"
                             class="absolute left-0 z-10 mt-2 w-80 bg-white border rounded-lg shadow-lg">
                             <ul class="py-2">
-                                @foreach ($menuCategories as $category)
+                                @foreach ($menuCategories() as $category)
                                     <li wire:key="nav-category-{{ $category->id }}">
                                         <a href="{{ route('categories.show', $category) }}"
                                             class="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 group">
                                             <span>{{ $category->name }}</span>
-                                            <i class="fas fa-chevron-right text-xs text-gray-400 group-hover:text-blue-600"></i>
+                                            <i
+                                                class="fas fa-chevron-right text-xs text-gray-400 group-hover:text-blue-600"></i>
                                         </a>
                                     </li>
                                 @endforeach
@@ -227,21 +222,24 @@
             <!-- Mobile Category Menu -->
             <div x-data="{ open: false }">
                 <div class="flex items-center justify-between w-full py-2 text-gray-700">
-                    <a href="{{ route('categories.index') }}" class="font-medium hover:text-blue-600">{{ __('Termékkategóriák') }}</a>
+                    <a href="{{ route('categories.index') }}"
+                        class="font-medium hover:text-blue-600">{{ __('Termékkategóriák') }}</a>
                     <button @click="open = !open" class="p-2 -mr-2">
                         <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
                     </button>
                 </div>
 
                 <div x-show="open" class="mt-2 space-y-2 pl-4">
-                    @foreach ($menuCategories as $category)
-                        <a href="{{ route('categories.show', $category) }}" wire:key="mobile-category-{{ $category->id }}"
+                    @foreach ($menuCategories() as $category)
+                        <a href="{{ route('categories.show', $category) }}"
+                            wire:key="mobile-category-{{ $category->id }}"
                             class="block py-2 text-gray-600 hover:text-blue-600">{{ $category->name }}</a>
                     @endforeach
                 </div>
             </div>
 
-            <a href="{{ route('sale') }}" class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
+            <a href="{{ route('sale') }}"
+                class="block py-2 text-gray-700 hover:text-blue-600">{{ __('Akciók') }}</a>
 
             <!-- Mobile Cégünkről Menu -->
             <div x-data="{ open: false }">
@@ -293,32 +291,27 @@
                         <i class="fas fa-user-circle text-xl mr-2"></i>
                         <span class="font-medium">{{ Auth::user()->name }}</span>
                     </div>
-                    <a href="{{ route('profile') }}"
-                        class="block py-2 text-gray-600 hover:text-blue-600 pl-7">
+                    <a href="{{ route('profile') }}" class="block py-2 text-gray-600 hover:text-blue-600 pl-7">
                         <i class="fas fa-user mr-2"></i>
                         {{ __('Profilom') }}
                     </a>
-                    <a href="{{ route('orders.history') }}"
-                        class="block py-2 text-gray-600 hover:text-blue-600 pl-7">
+                    <a href="{{ route('orders.history') }}" class="block py-2 text-gray-600 hover:text-blue-600 pl-7">
                         <i class="fas fa-shopping-bag mr-2"></i>
                         {{ __('Rendeléseim') }}
                     </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit"
-                            class="w-full text-left py-2 text-gray-600 hover:text-blue-600 pl-7">
+                        <button type="submit" class="w-full text-left py-2 text-gray-600 hover:text-blue-600 pl-7">
                             <i class="fas fa-sign-out-alt mr-2"></i>
                             {{ __('Kijelentkezés') }}
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}"
-                        class="block py-2 text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('login') }}" class="block py-2 text-gray-700 hover:text-blue-600">
                         <i class="fas fa-sign-in-alt mr-2"></i>
                         {{ __('Bejelentkezés') }}
                     </a>
-                    <a href="{{ route('register') }}"
-                        class="block py-2 text-gray-700 hover:text-blue-600">
+                    <a href="{{ route('register') }}" class="block py-2 text-gray-700 hover:text-blue-600">
                         <i class="fas fa-user-plus mr-2"></i>
                         {{ __('Regisztráció') }}
                     </a>

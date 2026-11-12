@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Models\Category;
 use App\Models\Product;
+use App\View\Components\Layouts\Navbar;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 it('lists the root categories and nested subcategories on the homepage', function (): void {
@@ -116,4 +118,19 @@ it('shows the submenu arrow only on categories that have subcategories', functio
 
     expect(mb_substr_count($html, 'd="M9 5l7 7-7 7"'))->toBe(1)
         ->and($html)->toContain('LINEÁRTECHNIKA', 'BILINCSEK', 'GOLYÓS CSAPÁGY');
+});
+
+it('lists the stocked main categories in the navbar and queries them once for both menus', function (): void {
+    $stocked = Category::query()->create(['name' => 'TÖMÍTÉSEK', 'slug' => 'tomitesek']);
+    $stocked->products()->attach(Product::factory()->create());
+    Category::query()->create(['name' => 'ÜRES', 'slug' => 'ures']);
+
+    $navbar = resolve(Navbar::class);
+
+    expect($navbar->menuCategories()->pluck('name')->all())->toBe(['TÖMÍTÉSEK']);
+
+    DB::enableQueryLog();
+    $navbar->menuCategories();
+
+    expect(DB::getQueryLog())->toBeEmpty();
 });
