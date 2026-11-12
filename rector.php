@@ -9,8 +9,9 @@ use Rector\Privatization\Rector\ClassMethod\PrivatizeFinalClassMethodRector;
 return RectorConfig::configure()
     ->withImportNames()
     ->withParallel()
-    ->withComposerBased(laravel: true)
-    ->withPhpSets(php84: true)
+    ->withComposerBased()
+    ->withPhpSets()
+    ->withEditorUrl('vscode://file/%file%:%line%')
     ->withSets([
         FilamentSetList::LARAVEL_APP,
     ])
@@ -29,7 +30,7 @@ return RectorConfig::configure()
         privatization: true,
     )
     ->withSkip([
-        // Filament calls lifecycle hooks (afterCreate, afterSave, …) from its base classes,
-        // so they must stay protected even on final pages and resources.
-        PrivatizeFinalClassMethodRector::class => [__DIR__ . '/app/Filament'],
+        // Filament calls lifecycle hooks (afterCreate, afterSave, beforeSave, …) from its base classes
+        // by name, so they must stay protected even on final pages, resources and importers.
+        PrivatizeFinalClassMethodRector::class => ['*/app/Filament/*'],
     ]);
