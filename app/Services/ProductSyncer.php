@@ -81,7 +81,7 @@ final class ProductSyncer
     /**
      * @return array{created: int, updated: int, unchanged: int, deactivated: int, skipped: int}
      */
-    public function sync(string $path, bool $onlyWebVisible = false, bool $dryRun = false): array
+    public function sync(string $path, bool $onlyWebVisible = false, bool $dryRun = false, bool $partial = false): array
     {
         $handle = fopen($path, 'r');
         throw_if($handle === false, RuntimeException::class, 'Could not open TSV file: ' . $path);
@@ -121,7 +121,9 @@ final class ProductSyncer
             $this->flush($batch, $stats, $dryRun);
         }
 
-        $stats['deactivated'] = $this->deactivateMissing($seen, $dryRun);
+        if (! $partial) {
+            $stats['deactivated'] = $this->deactivateMissing($seen, $dryRun);
+        }
 
         return $stats;
     }

@@ -1260,6 +1260,7 @@ CSAPÁGYTARTOZÉKOK, ALKATRÉSZEK	GOLYÓ, TŰGÖRGŐ	Golyó, csapágygolyó
 			Zsírzógomb tölcséres egyenes M6x0,75mm
 			Zsírzógomb tölcséres egyenes M6x1mm
 			Zsírzógomb tölcséres egyenes M8x1mm
+		Zsírzógomb kúpos UNF 1/2-180° horg.acél DIN71412
 	HÉZAGOLÓ ALÁTÉT	Hézagológyűrű / hézagoló alátét DIN988
 		REXROTH tolerancia gyűrű
 	KOMPENZÁCIÓS LEMEZ	Kompenzációs lemez
@@ -1881,36 +1882,179 @@ ZSÍRZÁSTECHNIKA	Gyorscsatlakozós 4 pofás zsírzófej M10x1
 	Zsírzótömlő, flexibilis
 
 KÖTŐELEMEK, GÉPÉPÍTŐ ELEMEK	HATLAPFEJŰ CSAVAR
+		Hatlapfejű részm.cs. finom menet DIN960 Ac 10.9
+		Hatlapfejű részm.csavar DIN931 Acél Natúr 10.9
+		Hatlapfejű részm.csavar DIN931 Acél, Natúr 8.8
+		Hatlapfejű részm.csavar ISO4014 Acél, Horg. 8.8
+		Hatlapfejű tövigm.cs. ISO4017/DIN933 Acél Horg 8.8
+		Hatlapfejű tövigm.cs. finom menet DIN961 Ac. 10.9
+		Hatlapfejű tövigm.cs. finom menet DIN961 Ac. 8.8
+		Hatlapfejű tövigm.csav. finom men. DIN961 Ac. 10.9
+		Hatlapfejű tövigm.csav. finom menet DIN961 Ac. 8.8
+		Hatlapfejű tövigm.csavar DIN933 Acél Natúr 10.9
+		Hatlapfejű tövigm.csavar DIN933 Acél Natúr 12.9
+		Hatlapfejű tövigm.csavar DIN933 Acél, Natúr 8.8
+		Hatlapfejű tövigm.csavar DIN933 Rozsdmentes Ac. A2
 	BELSŐ KULCSNYÍLÁSÚ CSAVAR	HENGERES FEJŰ
+			Hatlapú bkny. zárócsavar, kúpos DIN906 Acél Natúr
+			Hatlapú bkny.alacsonyf.cs. DIN7984 Acél Horg. 8.8
+			Hatlapú bkny.alacsonyf.cs. DIN7984 Acél Natúr 10.9
+			Hatlapú bkny.alacsonyf.cs. DIN7984 Acél Natúr 8.8
+			Hatlapú bkny.alacsonyf.cs. DIN7984 Rozsdam.Acél A2
+			Hatlapú bkny.alacsonyf.cs. vezető hor. DIN6912 8.8
+			Hatlapú bkny.cs. extrafinom menet DIN912 Ac. 12.9
+			Hatlapú bkny.cs. finom menet DIN912 Ac. Natúr 12.9
+			Hatlapú bkny.cs. tövig menetes DIN~912 Ac. 8.8
+			Hatlapú bkny.csavar DIN912 Acél Horg. 10.9
+			Hatlapú bkny.csavar DIN912 Acél Horg. 8.8
+			Hatlapú bkny.csavar DIN912 Acél Natúr 10.9
+			Hatlapú bkny.csavar DIN912 Acél Natúr 12.9
+			Hatlapú bkny.csavar DIN912 Acél Natúr 8.8
+			Hatlapú bkny.csavar DIN912 Rozsdamentes Acél A4
+			Hatlapú bkny.csavar DIN912 Rozsdamentes acél A2
+			UNC hatlapú bkny.cs. ASME B18.3 Alloy steel Natúr
 		SÜLLYESZTETT FEJŰ
+			Hatlapú bkny.sülly.fejű cs. ISO10642 Ac. Horg. 8.8
+			Hatlapú bkny.sülly.fejű csav. ISO10642 Acél 10.9
+			Hatlapú bkny.sülly.fejű csav. ISO10642 Acél 8.8
+			Hatlapú bkny.sülly.fejű csavar ISO10642 Rm.Acél A2
 		FÉLGÖMBFEJŰ
+			Hatlapú bkny.félgömb.cs.peremmel ISO7380-2 Ac 10.9
+			Hatlapú bkny.félgömbf.cs. ISO7380-1 Ac. Horg. 10.9
+			Hatlapú bkny.félgömbf.cs. ISO7380-1 Ac. Natúr 10.9
+			Hatlapú bkny.félgömbf.csav. peremmel ISO7380-2 A2
+			Hatlapú bkny.félgömbf.csavar ISO7380-1 Rm.acél A2
 	HERNYÓ CSAVAR	TÖLCSÉRES VÉGŰ
+			Hatlapú bkny. hernyócs. tölcséres vég DIN916 Rm.Ac
+			Hatlapú bkny.hernyócs. tölcséres v. DIN916 Ac.Horg
+			Hatlapú bkny.hernyócs. tölcséres véggel DIN916 Ac.
 		LAPOS VÉGŰ
+			Hatlapú bkny.hernyócs. lapos vég DIN913 Ac. Horg.
+			Hatlapú bkny.hernyócs. lapos véggel DIN913 A2 Acél
+			Hatlapú bkny.hernyócs.lapos vég.finom m DIN~913 Ac
+			Hatlapú bkny.hernyócsavar lapos véggel DIN913 Acél
+			Hornyos beállító csavar, lapos véggel DIN551 Acél
 		KÚPOS VÉGŰ
+			Hatlapú bkny.hernyócsavar kúpos véggel DIN914 Acél
+			Hornyos beállító csavar, kúpos véggel DIN553 Acél
 		GOLYÓS VÉGŰ
+		Hatlapú bkny.hernyócsavar csappal DIN915 Ac. Natúr
+		Állítógyűrű bkny.csészés végű hernyócs. DIN~705-A
 	ANYA	NORMÁL
+			Csavaranya T-horonyhoz DIN508 Acél Natúr 10
+			Hatlapú alacsony cs.anya finom m. DIN439-2 Ac.Horg
+			Hatlapú alacsony cs.anya finom m. DIN439-2 Ac.Nat.
+			Hatlapú alacsony csavaranya DIN439-2 Acél Horg.
+			Hatlapú csavaranya BALMENET DIN934 Acél Natúr |8|
+			Hatlapú csavaranya DIN934 Acél Horganyzott |10|
+			Hatlapú csavaranya DIN934 Acél Horganyzott |8|
+			Hatlapú csavaranya DIN934 Acél Natúr |10|
+			Hatlapú csavaranya DIN934 Acél Natúr|12|
+			Hatlapú csavaranya DIN934 Acél, Natúr |8|
+			Hatlapú csavaranya DIN934 Rozsdamentes Acél A4
+			Hatlapú csavaranya DIN934 Rozsdamentes acél A2
+			Hatlapú csavaranya H=3xD (összekötő) Ac.Horg. |10|
+			Hatlapú csavaranya H=3xD (összekötő) Eszt.Ac. Horg
+			Hatlapú csavaranya, MF DIN934 Acél Natúr |10|
+			Hatlapú csavaranya, MF/MEF DIN934 Acél Natúr |8|
+			Kúpos zárt anya DIN1587 Acél Horganyzott
+			Műanyag Nejlon (poliamid) dübel, tipli
+			Szárnyas anya, amerikai típus DIN~315 Ac. Horg.
+			Szárnyas anya, kerek szárnyakkal DIN315 Öntöttvas
+			Zárt anya, alacsony DIN917 Acél Horganyzott
 		ÖNZÁRÓ
+			Önzáró anya műa.betét finom m. DIN985 Ac.Horg.|5|
+			Önzáró anya műanyag betéttel DIN985 Acél Horg.|10|
+			Önzáró anya műanyag betéttel DIN985 Acél Horg.|5|
 		TENGELYANYA
+			Hornyolt hengeres cs.anya MF DIN1804W Ac. Nat.|5|
 	ALÁTÉT	LAPOS	Alumínium tömítőgyűrű, alátét
 			Kompenzációs lemez
 			Réz tömítőgyűrű, alátét
+			Alátét nagy szilárds.rugós csapszeggel ell.cs-hoz
+			Alátét szorítókészülékhez DIN6340 Ac. 350+80 HV30
+			Alátét szorítókészülékhez DIN6340 Acél 350+80 HV30
+			Bizosító alátét dupla füllel DIN463 Acél Natúr
+			Biztosító alátét, belső orros DIN462 Acél Horg.
+			Lapos alátét DIN125-1A Acél Horganyzott 140 HV
+			Lapos alátét DIN125-1A Acél Horganyzott 200 HV
+			Lapos alátét DIN125-1A Acél Natúr 140 HV
+			Lapos alátét DIN125-1A Rozsdamentes Acél A2 140 HV
+			Lapos alátét heng.fejű csavarhoz DIN433-1 Ac.Horg.
+			Lapos alátét ~ 3 x d1 DIN9021 Acél Horganyzott
+			Lapos alátét, LL típus NF E25-513 Ac. Horg. 100 HV
+			Laposalátét alumínium
+			Lencsés alátét, C típus DIN6319C Ac. Natúr Típus C
+			Lencsés alátét, D típus DIN6319D Ac. 550+100 HV10
+			Rögzítő alátét tengelyekhez (sapka nélkül) Rugóac.
+			Sárvédő javító alátét Acél Horganyzott
 		FAKÖTÉSŰ
+			Alátétek faszerkezetekhez DIN440R Ac.Horg. 100 HV
+			Alátétek faszerkezetekhez DIN440R Acél
 		RUGÓS
+			D1024 rugós biztosító tű (horg. rugóacél) 2,5=2mm
+			D1024 rugós biztosító tű (horg. rugóacél) 3,5=3mm
+			D1024 rugós biztosító tű (horg. rugóacél) 4,5=4mm
+			D1024 rugós biztosító tű (horg. rugóacél) 5,5=5mm
+			D1024 rugós biztosító tű (horg. rugóacél) 6,5=6mm
+			Hajlított rugós alátét DIN137A Rugóacél
+			Hajlított rugós biztosító alátét DIN128A Rugóacél
+			Hullámosított rugós alátét DIN137B Rugóacél
+			Rugós alátét DIN 127 B Rugóacél
+			Rugós alátét DIN 127 B Rugóacél Horganyzott
+			Rugós alátét DIN127B Stainless spring steel 1.4310
+			Rugós alátét, imb.csavarhoz DIN7980 Rugóacél Horg.
 		FOGAZOTT
+			Fűrészfogú bizt.alátét külső fogak DIN6798A Rugóac
+			Fűrészfogú bizt.alátét, külső fogakkal DIN6798 Ac.
+			Recézett bizt.alátét DIN~128A Rugóacél DIN267-26
 		HÉZAGOLÓ GYŰRŰ
 		KOMPENZÁCIÓS LEMEZ	Kompenzációs lemez
 		TÁNYÉRRUGÓ
+			Biztosító tányérrugó Rugóacél ISO10683 flZnnc
+			Golyóscsapágy helyzetbeállító tányérrugó, Rugóacél
+			Tányérrugó DIN 2093 Rugóacél Foszfátozott
+			Tányérrugó kritikus alk.(nagy igényb.) EN16983 Ac.
+			Tányérrugó kritikus alkalmazáshoz B típus Foszfát.
 		SCHNORR
+			SCHNORR Biztosító alátét, típus s
+			SCHNORR Biztosító alátét, típus s, Horg. cr3+
 		NORD-LOCK
+			NORD-LOCK rezgésálló alátét, rag.Ac. Delta Protekt
+			NORD-LOCK rezgésálló alátét, ragasztott Rm.acél A4
 		GUMÍROZOTT ALÁTÉT	Gumírozott alátét / USIT-ring / csavartömítés, NBR
 			SIMRIT Usitring EPDM70, 291 fekete 1.4404
 			SIMRIT Usitring EPDM70, fekete, kívül gumírozott
+			Gumírozott alátét / USIT-ring / csavartömítés, NBR
 	MENETES SZÁL
+		Menetes rúd, 1m hosszú DIN976-1A Acél Horg. 4.8
+		Menetes rúd, 1m hosszú DIN976-1A Acél Horg. 8.8
+		Menetes rúd, 1m hosszú DIN976-1A Acél Natúr 10.9
+		Menetes rúd, 1m hosszú DIN976-1A Acél Natúr 12.9
+		Menetes rúd, 1m hosszú DIN976-1A Acél Natúr 8.8
+		Menetes rúd, 1méter BALMENET DIN976-1A Ac.Horg 4.8
 	SZEMES CSAVAR
+		Gyűrűscsavar CE jelöléssel DIN580 Acél C15E Horg.
+		Gyűrűscsavar CE jelöléssel DIN580 Acél C15E Natúr
+		Szemescsavar, tövig menet DIN444LB Acél Horg. 4.6
 	SZEGECSEK, CSAPOK, SZEGEK	ILLESZTŐSZEG
+			Hasított illesztőszeg, nagy terh. ISO8752 Rugóacél
+			Hasított illsztőszeg,kis terhelés ISO13337 Rugóac.
+			Kúpos csapszeg, belső menet,köszörült DIN7978 Acél
+			Kúpos csapszeg, esztergált DIN1B Esztergált acél
+			Párh.csapszeg (illesztő) edzett, h6 tűrés.DIN=6325
+			Párh.csapszeg (illesztő),edzett, m6 tűrésm.DIN6325
+			Párh.csapszeg, belső menet, edzett DIN7979 D Acél
+			Párhuzamos csapszeg (illesztő) m6 DIN7 Esztergált
 		SASSZEG
+			Sasszeg DIN94 Acél Horganyzott
 		RUGÓS BIZTOSÍTÓTŰ
 		RETESZ, ÉK
+			Fényesre húzott reteszacél, 1m. DIN6880 Acél Natúr
+			Fészkes retesz DIN6885A Acél C45+C Natúr
+			Fészkes retesz DIN6885A Rozsdam. Acél A5 (1.4571)
+			Íves retesz DIN6888 Acél C45+C Felületkezeletlen
+		OMNI domború f. húzószegecs Alu. AlMg 2,5-3,5 Acél
 	GOLYÓS BETÉT	ALWAYSE golyós betét
 	GUMIBAK	1-ES TÍPUS
 		2-ES TÍPUS
@@ -1921,8 +2065,27 @@ KÖTŐELEMEK, GÉPÉPÍTŐ ELEMEK	HATLAPFEJŰ CSAVAR
 		NORMA CSUKLÓS-CSAPOS SZORÍTÓBILINCS	NORMA csuklós-csapos szorítóbilincs
 		NORMA SZORÍTÓBILINCS	NORMA szorítóbilincs
 		NORMA SZORÍTÓBILINCS (ROZSDAMENTES)	NORMA szorítóbilincs (rozsdamentes)
+		Sodronykötél bilincs DIN741/555 Acél Horganyzott
+		U-bilincs Horganyzott Acél
 	ZÁRTSZELVÉNY- ÉS CSŐVÉG DUGÓ
 	MAROKCSAVAR ÉS MAROKANYA
+		Recézett műszercsavar magas típ. DIN464 Esztergált
+		Szárnyas csavar DIN 316 Öntöttvas Horganyzott
+	AMECOIL menetjavító betét DIN8140-1 A2 DIN8140-1
+	D-fejű, TORX kulcsnyílású csavar DIN=798 Acél 4.8
+	D-fejű, kereszth.lemezcs. Phillips DIN7981C-H Acél
+	D-fejű, kereszthorny.cs.Phillips DIN7985-H Ac. 4.8
+	Hornyos hengeres fejű csavar DIN84 Acél Horg. 4.8
+	Hornyos sülly.fejű csavar DIN963A Acél Horg. 4.8
+	Hornyos trapézfejű csavar DIN85 Acél Horg. 4.8
+	Kapupánt cs négyszög nyak +anya DIN603/555 Ac.Horg
+	Kapupánt csav. négyszög nyak DIN603 Acél Horg. 8.8
+	Kereszth.sülly.fejű cs.Phillips DIN965A-H Acél 4.8
+	Kereszth.sülly.fejű cs.faforgácslemezhez, Pozidriv
+	Kereszth.sülly.fejű cs.faforgácsllemezhez,Pozidriv
+	Nyomó tekercsrugó DIN2095 Rugóacél Horganyzott
+	OPEL csavar, önfúrós, PH
+	Tengelycsap Rugóacél Horganyzott
 
 KEREKEK ÉS GÖRGŐK	BÚTORGÖRGŐ	TENTE befeszítőcsap zártszelvénybe
 		TENTE csap bútorgörgőhöz

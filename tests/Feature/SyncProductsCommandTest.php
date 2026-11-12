@@ -80,3 +80,28 @@ it('skips products that are not web visible when --only-web-visible is passed', 
     expect(Product::query()->where('product_code', 'LATHATO')->exists())->toBeTrue()
         ->and(Product::query()->where('product_code', 'REJTETT')->exists())->toBeFalse();
 });
+
+it('leaves the products missing from a partial file alone when --partial is passed', function (): void {
+    Product::query()->create(['product_code' => 'MARAD', 'slug' => 'marad', 'name' => 'Meglévő', 'is_web_visible' => true, 'is_inactive' => false]);
+
+    $path = writeCommandFixture([commandRow('FA UJ', 'Új FA termék')]);
+
+    artisan('app:sync-products', ['--path' => $path, '--only-web-visible' => true, '--partial' => true])
+        ->assertSuccessful();
+
+    expect(Product::query()->where('product_code', 'MARAD')->first())
+        ->is_web_visible->toBeTrue()
+        ->is_inactive->toBeFalse()
+        ->and(Product::query()->where('product_code', 'FA UJ')->value('is_web_visible'))->toBeTrue();
+});
+
+it('hides the products missing from a full export', function (): void {
+    Product::query()->create(['product_code' => 'ELTUNT', 'slug' => 'eltunt', 'name' => 'Kikerült', 'is_web_visible' => true, 'is_inactive' => false]);
+
+    artisan('app:sync-products', ['--path' => writeCommandFixture([commandRow('A', 'Más')])])
+        ->assertSuccessful();
+
+    expect(Product::query()->where('product_code', 'ELTUNT')->first())
+        ->is_web_visible->toBeFalse()
+        ->is_inactive->toBeTrue();
+});

@@ -13,7 +13,8 @@ use Illuminate\Console\Command;
 #[Signature('app:sync-products
     {--path= : Egyedi TSV útvonal (alapértelmezés: database/data/termekek.tsv)}
     {--only-web-visible : Csak a webáruházban szereplő termékek szinkronizálása}
-    {--dry-run : Riport készítése írás nélkül}')]
+    {--dry-run : Riport készítése írás nélkül}
+    {--partial : Részleges fájl (pl. egy csoport új termékei): a fájlból hiányzó termékeket nem rejti el}')]
 final class SyncProductsCommand extends Command
 {
     public function handle(ProductSyncer $syncer): int
@@ -34,7 +35,7 @@ final class SyncProductsCommand extends Command
 
         $this->info('Termékek szinkronizálása: ' . $path);
 
-        $stats = $syncer->sync($path, (bool) $this->option('only-web-visible'), $dryRun);
+        $stats = $syncer->sync($path, (bool) $this->option('only-web-visible'), $dryRun, (bool) $this->option('partial'));
 
         $this->table(['', 'Darab'], [
             ['Létrehozva', $stats['created']],
