@@ -20,14 +20,15 @@ final class Navbar extends Component
 
     /**
      * The main categories that have web-visible products, for both the
-     * desktop dropdown and the mobile menu (queried once per render).
+     * desktop dropdown and the mobile menu (queried once per render), with
+     * the subcategory tree the mobile accordion opens level by level.
      *
      * @return Collection<int, Category>
      */
     public function menuCategories(): Collection
     {
         return once(fn (): Collection => $this->categoryTree->stocked(
-            Category::query()->menuRoots()->get(['id', 'name', 'slug']),
+            Category::query()->menuRoots()->with('children.children.children.children')->get(),
         ));
     }
 

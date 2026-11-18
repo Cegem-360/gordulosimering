@@ -224,17 +224,13 @@
                 <div class="flex items-center justify-between w-full py-2 text-gray-700">
                     <a href="{{ route('categories.index') }}"
                         class="font-medium hover:text-blue-600">{{ __('Termékkategóriák') }}</a>
-                    <button @click="open = !open" class="p-2 -mr-2">
+                    <button type="button" @click="open = !open" :aria-expanded="open" aria-label="{{ __('Termékkategóriák') }}" class="p-2 -mr-2">
                         <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
                     </button>
                 </div>
 
-                <div x-show="open" class="mt-2 space-y-2 pl-4">
-                    @foreach ($menuCategories() as $category)
-                        <a href="{{ route('categories.show', $category) }}"
-                            wire:key="mobile-category-{{ $category->id }}"
-                            class="block py-2 text-gray-600 hover:text-blue-600">{{ $category->name }}</a>
-                    @endforeach
+                <div x-show="open" x-collapse x-cloak class="mt-2 pl-4">
+                    <x-mobile-category-list :categories="$menuCategories()" />
                 </div>
             </div>
 

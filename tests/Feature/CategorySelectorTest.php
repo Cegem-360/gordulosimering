@@ -134,3 +134,24 @@ it('lists the stocked main categories in the navbar and queries them once for bo
 
     expect(DB::getQueryLog())->toBeEmpty();
 });
+
+it('opens every stocked category level as its own dropdown in the mobile menu', function (): void {
+    /** @var TestCase $this */
+    $root = Category::query()->create(['name' => 'CSAPÁGYAK', 'slug' => 'csapagyak']);
+    $child = Category::query()->create(['name' => 'GOLYÓS CSAPÁGY', 'slug' => 'golyos-csapagy', 'category_id' => $root->id]);
+    $grandchild = Category::query()->create(['name' => 'MÉLYHORNYÚ', 'slug' => 'melyhornyu', 'category_id' => $child->id]);
+    $grandchild->products()->attach(Product::factory()->create());
+    Category::query()->create(['name' => 'ÜRES ALKATEGÓRIA', 'slug' => 'ures', 'category_id' => $child->id]);
+    $leaf = Category::query()->create(['name' => 'LINEÁRTECHNIKA', 'slug' => 'linear']);
+    $leaf->products()->attach(Product::factory()->create());
+
+    $html = (string) $this->blade('<x-mobile-category-list :categories="$categories" />', [
+        'categories' => resolve(Navbar::class)->menuCategories(),
+    ]);
+
+    expect($html)
+        ->toContain(route('categories.show', $root), route('categories.show', $child), route('categories.show', $grandchild), route('categories.show', $leaf))
+        ->not->toContain('ÜRES ALKATEGÓRIA')
+        ->and(mb_substr_count($html, 'x-data="{ open: false }"'))->toBe(2)
+        ->and(mb_substr_count($html, 'x-collapse'))->toBe(2);
+});
