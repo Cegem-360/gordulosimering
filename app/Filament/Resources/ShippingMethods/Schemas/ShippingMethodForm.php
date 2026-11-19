@@ -32,6 +32,8 @@ final class ShippingMethodForm
                     ->helperText('Bruttó díj. Ha vannak súlysávok, azok érvényesek helyette.'),
                 Toggle::make('requires_parcel_point')
                     ->helperText('A pénztárban a vevő a GLS térképen választ csomagpontot vagy csomagautomatát.'),
+                Toggle::make('is_personal_pickup')
+                    ->helperText('Átvétel az üzletben: ehhez választható a bankkártyás és a készpénzes fizetés az üzletben, utánvét nem.'),
                 Repeater::make('rates')
                     ->helperText('Nettó díjak; a pénztár hozzáadja a 27% ÁFA-t. A legnagyobb súlyhatár feletti kosárnál a mód nem választható. Súly nélküli termék 0 kg-nak számít.')
                     ->columnSpanFull()

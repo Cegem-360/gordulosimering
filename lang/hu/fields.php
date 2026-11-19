@@ -137,6 +137,7 @@ return [
 
     'cost' => 'Szállítási költség',
     'requires_parcel_point' => 'GLS csomagpont választás',
+    'is_personal_pickup' => 'Személyes átvétel az üzletben',
     'rates' => 'Súlysávos díjak',
     'max_weight' => 'Súlyhatár (-ig)',
     'bank_transfer' => 'Átutalással',

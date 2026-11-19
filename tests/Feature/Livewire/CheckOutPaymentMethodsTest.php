@@ -40,7 +40,7 @@ function paymentCheckout(User $user, ShippingMethod $shippingMethod): Testable
 
 function personalPickup(): ShippingMethod
 {
-    return ShippingMethod::query()->where('name', 'pickup')->sole();
+    return ShippingMethod::query()->where('is_personal_pickup', true)->sole();
 }
 
 it('offers every payment method and marks who may use bank transfer', function (): void {
@@ -132,4 +132,21 @@ it('refuses cash on delivery with personal pickup and preselects paying in the s
         ->assertHasErrors('selectedPaymentMethod');
 
     expect(Order::query()->count())->toBe(0);
+});
+
+it('keeps the in-store payments after the admin renames personal pickup', function (): void {
+    personalPickup()->update(['name' => 'Személyes átvétel']);
+
+    paymentCheckout(User::factory()->create(), personalPickup())
+        ->assertSet('selectedPaymentMethod', PaymentMethod::CardInStore)
+        ->set('selectedPaymentMethod', PaymentMethod::CashInStore->value)
+        ->call('create')
+        ->assertHasNoErrors();
+
+    expect(Order::query()->sole()->payment_method)->toBe(PaymentMethod::CashInStore);
+});
+
+it('does not treat a shipping method as personal pickup unless it is flagged', function (): void {
+    expect(ShippingMethod::factory()->create(['title' => 'Személyes átvétel'])->isPersonalPickup())->toBeFalse()
+        ->and(ShippingMethod::factory()->personalPickup()->create()->isPersonalPickup())->toBeTrue();
 });

@@ -51,4 +51,15 @@ final class ShippingMethodFactory extends Factory
             'requires_parcel_point' => true,
         ]);
     }
+
+    /**
+     * Personal pickup in the shop, paid there by card or cash.
+     */
+    public function personalPickup(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'cost' => 0,
+            'is_personal_pickup' => true,
+        ]);
+    }
 }

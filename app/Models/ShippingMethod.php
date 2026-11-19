@@ -19,6 +19,7 @@ use Override;
     'cost',
     'rates',
     'requires_parcel_point',
+    'is_personal_pickup',
 ])]
 final class ShippingMethod extends Model
 {
@@ -50,11 +51,11 @@ final class ShippingMethod extends Model
 
     /**
      * Personal pickup in the X. district shop, the only method the in-store
-     * payments go with.
+     * payments go with. Flagged in the admin, so renaming it is harmless.
      */
     public function isPersonalPickup(): bool
     {
-        return $this->name === 'pickup';
+        return (bool) $this->is_personal_pickup;
     }
 
     /**
@@ -76,6 +77,7 @@ final class ShippingMethod extends Model
             'cost' => 'int',
             'rates' => 'array',
             'requires_parcel_point' => 'bool',
+            'is_personal_pickup' => 'bool',
         ];
     }
 }

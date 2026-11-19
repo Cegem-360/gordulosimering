@@ -21,7 +21,8 @@ it('offers personal pickup as a free shipping method', function (): void {
 
     expect($pickup)->not->toBeNull()
         ->and($pickup->title)->toBe('Személyes átvétel')
-        ->and($pickup->cost)->toBe(0);
+        ->and($pickup->cost)->toBe(0)
+        ->and($pickup->isPersonalPickup())->toBeTrue();
 });
 
 it('renames the bearing housings root category and leaves other categories alone', function (): void {
