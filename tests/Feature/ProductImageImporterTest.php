@@ -177,3 +177,82 @@ it('splits an image cell holding several URLs joined by "||"', function (): void
     expect($product->fresh()->featured_image)->toBe('https://cdn.test/a.png')
         ->and($product->fresh()->images)->toBe(['https://cdn.test/b.svg', 'https://cdn.test/c.svg']);
 });
+
+it('gives every SKF product of the listed series the family image', function (): void {
+    $covered = collect(['6205-2Z_S', '6000_S', '6299/C3_S', '16004_S', 'BB1-3055_S', 'NU 2207 ECJ_S'])
+        ->map(fn (string $code): Product => Product::factory()->create(['product_code' => $code, 'featured_image' => null]));
+    $notCovered = collect(['62205-2RS1_S', '6205-2Z', '6205 KOYO', 'NUP 306 ECP_S', '7205 BECBP_S'])
+        ->map(fn (string $code): Product => Product::factory()->create(['product_code' => $code, 'featured_image' => null]));
+
+    $path = writeImageFixture([
+        ['6000, 6200, 16000, BB1-', 'SKF egysorú mélyhornyú golyóscsapágy', 'https://cdn.test/deep-groove.png'],
+        ['NU', 'SKF egysorú hengergörgős csapágy (NU)', 'https://cdn.test/nu.png'],
+        ['NJ, NU', 'SKF egysorú hengergörgős csapágy', 'https://cdn.test/nj-nu.png'],
+    ]);
+
+    $stats = (new ProductImageImporter())->import($path);
+
+    foreach ($covered->take(5) as $product) {
+        expect($product->fresh()->featured_image)->toBe('https://cdn.test/deep-groove.png');
+    }
+
+    expect($covered->last()->fresh()->featured_image)->toBe('https://cdn.test/nu.png')
+        ->and($notCovered->every(fn (Product $product): bool => $product->fresh()->featured_image === null))->toBeTrue()
+        ->and($stats['products'])->toBe(7);
+});
+
+it('applies the wildcard suffix of the last listed code to every code of the list', function (): void {
+    $tapered = Product::factory()->create(['product_code' => '22217 EK/C3_S', 'featured_image' => null]);
+    $alsoTapered = Product::factory()->create(['product_code' => '23120 CCK/W33_S', 'featured_image' => null]);
+    $cylindrical = Product::factory()->create(['product_code' => '22217 E/C3_S', 'featured_image' => null]);
+
+    $path = writeImageFixture([
+        ['22200, 23100 ... K', 'SKF beálló görgőscsapágy kúpos furattal', 'https://cdn.test/tapered.png'],
+    ]);
+
+    (new ProductImageImporter())->import($path);
+
+    expect($tapered->fresh()->featured_image)->toBe('https://cdn.test/tapered.png')
+        ->and($alsoTapered->fresh()->featured_image)->toBe('https://cdn.test/tapered.png')
+        ->and($cylindrical->fresh()->featured_image)->toBeNull();
+});
+
+it('lets a narrower code overwrite the series image wherever the sheet puts it', function (): void {
+    $plain = Product::factory()->create(['product_code' => '6205_S', 'featured_image' => null]);
+    $heatResistant = Product::factory()->create(['product_code' => '6205-2Z/VA201_S', 'featured_image' => null]);
+
+    $path = writeImageFixture([
+        ['6205-2Z/VA201_S', 'SKF egysorú mélyhornyú hőálló golyóscsapágy', 'https://cdn.test/hot.png'],
+        ['6000, 6200', 'SKF egysorú mélyhornyú golyóscsapágy', 'https://cdn.test/deep-groove.png'],
+    ]);
+
+    (new ProductImageImporter())->import($path);
+
+    expect($plain->fresh()->featured_image)->toBe('https://cdn.test/deep-groove.png')
+        ->and($heatResistant->fresh()->featured_image)->toBe('https://cdn.test/hot.png');
+});
+
+it('keeps the per-code cap for code lists that are not SKF rows', function (): void {
+    Product::factory()->count(3)->sequence(fn ($sequence): array => ['product_code' => 'AB ' . $sequence->index])->create();
+
+    $path = writeImageFixture([
+        ['AB, XY', 'Valami más', 'https://cdn.test/ab.png'],
+    ]);
+
+    $stats = (new ProductImageImporter())->import($path, maxVariantsPerCode: 1);
+
+    expect($stats['skipped'])->toBe(1)
+        ->and(Product::query()->whereNotNull('featured_image')->where('featured_image', 'https://cdn.test/ab.png')->count())->toBe(0);
+});
+
+it('treats a comma after a wildcard as part of a single code, not a list', function (): void {
+    $product = Product::factory()->create(['product_code' => 'W2 csavar', 'featured_image' => null]);
+
+    $path = writeImageFixture([
+        ['TORRO ... W1, W2', 'TORRO bilincs', 'https://cdn.test/torro.png'],
+    ]);
+
+    (new ProductImageImporter())->import($path);
+
+    expect($product->fresh()->featured_image)->toBeNull();
+});

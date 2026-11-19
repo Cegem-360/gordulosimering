@@ -39,8 +39,35 @@ final class ProductImageImporter
         $stats['cleared'] = $fresh ? $this->clearImportedImages() : 0;
         $skippedCodes = [];
 
-        foreach ($map as $code => $images) {
+        foreach ($this->listRowsFirst($map) as $code => $row) {
             $code = (string) $code;
+            $images = $row['images'];
+
+            $items = $this->splitCodeList($code);
+
+            if ($items !== null) {
+                $ids = $this->idsForCodeList($items, $this->isSkfRow($row['name']));
+                $listCap = $this->isSkfRow($row['name']) ? PHP_INT_MAX : $maxVariantsPerCode * count($items);
+
+                if ($ids === []) {
+                    $stats['zero']++;
+
+                    continue;
+                }
+
+                if (count($ids) > $listCap) {
+                    $stats['skipped']++;
+                    $skippedCodes[$code] = count($ids);
+
+                    continue;
+                }
+
+                $stats['wildcard']++;
+                $this->assignImages($ids, $images);
+                $stats['products'] += count($ids);
+
+                continue;
+            }
 
             $ids = Product::query()->where('product_code', $code)->pluck('id')->all();
             $isExact = $ids !== [];
@@ -69,10 +96,7 @@ final class ProductImageImporter
 
             $isExact ? $stats['exact']++ : $stats['wildcard']++;
 
-            Product::query()->whereIn('id', $ids)->update([
-                'featured_image' => $images[0],
-                'images' => json_encode(array_slice($images, 1), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-            ]);
+            $this->assignImages($ids, $images);
 
             $stats['products'] += count($ids);
         }
@@ -81,6 +105,117 @@ final class ProductImageImporter
         $stats['skipped_codes'] = $skippedCodes;
 
         return $stats;
+    }
+
+    /**
+     * @param  array<int, int>  $ids
+     * @param  array<int, string>  $images
+     */
+    private function assignImages(array $ids, array $images): void
+    {
+        foreach (array_chunk($ids, 1000) as $chunk) {
+            Product::query()->whereIn('id', $chunk)->update([
+                'featured_image' => $images[0],
+                'images' => json_encode(array_slice($images, 1), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+            ]);
+        }
+    }
+
+    /**
+     * Rows whose code cell is a list of series ("6000, 6200, 6300") go first:
+     * they are the broad family images, so the narrower codes later in the
+     * sheet ("6000 ... VA201") overwrite them on the products they cover.
+     *
+     * @param  array<string, array{name: string, images: array<int, string>}>  $map
+     * @return array<string, array{name: string, images: array<int, string>}>
+     */
+    private function listRowsFirst(array $map): array
+    {
+        $lists = array_filter($map, fn (string $code): bool => $this->splitCodeList($code) !== null, ARRAY_FILTER_USE_KEY);
+
+        return $lists + array_diff_key($map, $lists);
+    }
+
+    /**
+     * Splits a code cell listing several codes ("51100, 51200, BA") into its
+     * items, or returns null when the cell is a single code. A "... suffix"
+     * on the last item belongs to every item ("22200, 22300 ... K"). Cells
+     * where an earlier item already has a wildcard ("TORRO ... W1, W2") are
+     * descriptions, not lists, and stay a single code.
+     *
+     * @return array<int, string>|null
+     */
+    private function splitCodeList(string $code): ?array
+    {
+        if (! str_contains($code, ',')) {
+            return null;
+        }
+
+        $items = array_values(array_filter(array_map(mb_trim(...), explode(',', $code)), fn (string $item): bool => $item !== ''));
+        $last = array_pop($items);
+
+        if ($last === null || $items === []) {
+            return null;
+        }
+
+        foreach ($items as $item) {
+            if (str_contains($item, '...')) {
+                return null;
+            }
+        }
+
+        $suffix = '';
+        if (preg_match('/^(.+?)\s*(\.\.\..*)$/u', $last, $matches) === 1) {
+            [, $last, $suffix] = $matches;
+            $suffix = ' ' . $suffix;
+        }
+
+        return array_map(fn (string $item): string => $item . $suffix, [...$items, $last]);
+    }
+
+    /**
+     * The SKF rows of the sheet ("SKF beálló golyóscsapágy") only paint SKF
+     * products, whose codes end in "_S"; a bare series like "6200" would
+     * otherwise land on every other brand's bearing of that size too.
+     */
+    private function isSkfRow(string $name): bool
+    {
+        return str_starts_with(mb_strtoupper($name), 'SKF ');
+    }
+
+    /**
+     * Products covered by any item of a code list. An item ending in a number
+     * of three or more digits ending in "00" is a catalogue series: "6200"
+     * covers 6200-6299 (but not 62200), "SY 500" covers SY 5xx. Any other
+     * item is a prefix ending at a token boundary, so "NU" never covers "NUP".
+     *
+     * @param  array<int, string>  $items
+     * @return array<int, int>
+     */
+    private function idsForCodeList(array $items, bool $skfOnly): array
+    {
+        $ids = [];
+
+        foreach ($items as $item) {
+            $parts = preg_split('/\s*\.\.\.\s*/', $item) ?: [$item];
+            $head = array_shift($parts);
+            $isSeries = preg_match('/^(.*?)(\d+)00$/u', $head, $matches) === 1 && mb_strlen($matches[2]) >= 1;
+            $prefix = $isSeries ? mb_substr($head, 0, -2) : $head;
+
+            $like = implode('%', array_map(fn (string $part): string => addcslashes($part, '%_\\'), [$prefix, ...$parts])) . '%';
+
+            $pattern = '/^' . preg_quote($prefix, '/') . '\d{2}(?!\d)/u';
+
+            $matched = Product::query()->where('product_code', 'LIKE', $like)->pluck('product_code', 'id')
+                ->filter(fn (string $productCode): bool => ! $skfOnly || str_ends_with($productCode, '_S'))
+                ->filter(fn (string $productCode): bool => $isSeries ? preg_match($pattern, $productCode) === 1 : $this->continuesAtBoundary($head, $productCode))
+                ->keys()
+                ->all();
+
+            $ids = [...$ids, ...$matched];
+        }
+
+        return array_values(array_unique($ids));
     }
 
     /**
@@ -122,11 +257,11 @@ final class ProductImageImporter
     }
 
     /**
-     * Reads the TSV into a product-code => image-URL list map (first row per
-     * code wins). A cell may hold several URLs joined by "||". Rows without
+     * Reads the TSV into a product-code => name and image-URL list map (first
+     * row per code wins). A cell may hold several URLs joined by "||". Rows without
      * any image URL are ignored.
      *
-     * @return array<string, array<int, string>>
+     * @return array<string, array{name: string, images: array<int, string>}>
      */
     private function readImageMap(string $path): array
     {
@@ -154,7 +289,7 @@ final class ProductImageImporter
                 continue;
             }
 
-            $map[$code] = $images;
+            $map[$code] = ['name' => mb_trim($row[1] ?? ''), 'images' => $images];
         }
 
         fclose($handle);
