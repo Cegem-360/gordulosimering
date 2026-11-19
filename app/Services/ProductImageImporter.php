@@ -39,35 +39,47 @@ final class ProductImageImporter
         $stats['cleared'] = $fresh ? $this->clearImportedImages() : 0;
         $skippedCodes = [];
 
-        foreach ($this->listRowsFirst($map) as $code => $row) {
-            $code = (string) $code;
-            $images = $row['images'];
+        $families = [];
 
+        foreach ($map as $code => $row) {
+            $code = (string) $code;
+            $isSkf = $this->isSkfRow($row['name']);
             $items = $this->splitCodeList($code);
 
-            if ($items !== null) {
-                $ids = $this->idsForCodeList($items, $this->isSkfRow($row['name']));
-                $listCap = $this->isSkfRow($row['name']) ? PHP_INT_MAX : $maxVariantsPerCode * count($items);
+            if ($items === null && (! $isSkf || Product::query()->where('product_code', $code)->exists())) {
+                continue;
+            }
 
-                if ($ids === []) {
-                    $stats['zero']++;
+            $ids = $this->idsForCodeList($items ?? [$code], $isSkf);
+            unset($map[$code]);
 
-                    continue;
-                }
-
-                if (count($ids) > $listCap) {
-                    $stats['skipped']++;
-                    $skippedCodes[$code] = count($ids);
-
-                    continue;
-                }
-
-                $stats['wildcard']++;
-                $this->assignImages($ids, $images);
-                $stats['products'] += count($ids);
+            if ($ids === []) {
+                $stats['zero']++;
 
                 continue;
             }
+
+            if (count($ids) > ($isSkf ? PHP_INT_MAX : $maxVariantsPerCode * count($items ?? [$code]))) {
+                $stats['skipped']++;
+                $skippedCodes[$code] = count($ids);
+
+                continue;
+            }
+
+            $families[] = ['ids' => $ids, 'images' => $row['images']];
+        }
+
+        usort($families, fn (array $a, array $b): int => count($b['ids']) <=> count($a['ids']));
+
+        foreach ($families as $family) {
+            $stats['wildcard']++;
+            $this->assignImages($family['ids'], $family['images']);
+            $stats['products'] += count($family['ids']);
+        }
+
+        foreach ($map as $code => $row) {
+            $code = (string) $code;
+            $images = $row['images'];
 
             $ids = Product::query()->where('product_code', $code)->pluck('id')->all();
             $isExact = $ids !== [];
@@ -122,21 +134,6 @@ final class ProductImageImporter
     }
 
     /**
-     * Rows whose code cell is a list of series ("6000, 6200, 6300") go first:
-     * they are the broad family images, so the narrower codes later in the
-     * sheet ("6000 ... VA201") overwrite them on the products they cover.
-     *
-     * @param  array<string, array{name: string, images: array<int, string>}>  $map
-     * @return array<string, array{name: string, images: array<int, string>}>
-     */
-    private function listRowsFirst(array $map): array
-    {
-        $lists = array_filter($map, fn (string $code): bool => $this->splitCodeList($code) !== null, ARRAY_FILTER_USE_KEY);
-
-        return $lists + array_diff_key($map, $lists);
-    }
-
-    /**
      * Splits a code cell listing several codes ("51100, 51200, BA") into its
      * items, or returns null when the cell is a single code. A "... suffix"
      * on the last item belongs to every item ("22200, 22300 ... K"). Cells
@@ -174,9 +171,10 @@ final class ProductImageImporter
     }
 
     /**
-     * The SKF rows of the sheet ("SKF beálló golyóscsapágy") only paint SKF
-     * products, whose codes end in "_S"; a bare series like "6200" would
-     * otherwise land on every other brand's bearing of that size too.
+     * The SKF rows of the sheet ("SKF beálló golyóscsapágy") name catalogue
+     * families ("NU", "6200", "W 6"), so they skip the per-code cap, but only
+     * paint SKF products, whose codes end in "_S"; a bare series like "6200"
+     * would otherwise land on every other brand's bearing of that size too.
      */
     private function isSkfRow(string $name): bool
     {
@@ -199,6 +197,11 @@ final class ProductImageImporter
 
         foreach ($items as $item) {
             $parts = preg_split('/\s*\.\.\.\s*/', $item) ?: [$item];
+
+            if (count($parts) > 1 && end($parts) === '') {
+                array_pop($parts);
+            }
+
             $head = array_shift($parts);
             $isSeries = preg_match('/^(.*?)(\d+)00$/u', $head, $matches) === 1 && mb_strlen($matches[2]) >= 1;
             $prefix = $isSeries ? mb_substr($head, 0, -2) : $head;
@@ -210,7 +213,11 @@ final class ProductImageImporter
             $matched = Product::query()->where('product_code', 'LIKE', $like)->get(['id', 'product_code', 'featured_image'])
                 ->filter(fn (Product $product): bool => ! is_string($product->featured_image) || $this->isImported($product->featured_image))
                 ->filter(fn (Product $product): bool => ! $skfOnly || str_ends_with((string) $product->product_code, '_S'))
-                ->filter(fn (Product $product): bool => $isSeries ? preg_match($pattern, (string) $product->product_code) === 1 : $this->continuesAtBoundary($head, (string) $product->product_code))
+                ->filter(fn (Product $product): bool => match (true) {
+                    $isSeries => preg_match($pattern, (string) $product->product_code) === 1,
+                    str_contains($item, '...') => true,
+                    default => $this->continuesAtBoundary($head, (string) $product->product_code),
+                })
                 ->pluck('id')
                 ->all();
 

@@ -184,21 +184,23 @@ it('gives every SKF product of the listed series the family image', function ():
     $notCovered = collect(['62205-2RS1_S', '6205-2Z', '6205 KOYO', 'NUP 306 ECP_S', '7205 BECBP_S'])
         ->map(fn (string $code): Product => Product::factory()->create(['product_code' => $code, 'featured_image' => null]));
 
+    $nj = Product::factory()->create(['product_code' => 'NJ 210 ECP_S', 'featured_image' => null]);
+
     $path = writeImageFixture([
         ['6000, 6200, 16000, BB1-', 'SKF egysorú mélyhornyú golyóscsapágy', 'https://cdn.test/deep-groove.png'],
         ['NU', 'SKF egysorú hengergörgős csapágy (NU)', 'https://cdn.test/nu.png'],
         ['NJ, NU', 'SKF egysorú hengergörgős csapágy', 'https://cdn.test/nj-nu.png'],
     ]);
 
-    $stats = (new ProductImageImporter())->import($path);
+    (new ProductImageImporter())->import($path);
 
     foreach ($covered->take(5) as $product) {
         expect($product->fresh()->featured_image)->toBe('https://cdn.test/deep-groove.png');
     }
 
     expect($covered->last()->fresh()->featured_image)->toBe('https://cdn.test/nu.png')
-        ->and($notCovered->every(fn (Product $product): bool => $product->fresh()->featured_image === null))->toBeTrue()
-        ->and($stats['products'])->toBe(7);
+        ->and($nj->fresh()->featured_image)->toBe('https://cdn.test/nj-nu.png')
+        ->and($notCovered->every(fn (Product $product): bool => $product->fresh()->featured_image === null))->toBeTrue();
 });
 
 it('applies the wildcard suffix of the last listed code to every code of the list', function (): void {
@@ -269,4 +271,37 @@ it('never lets a series image replace a picture uploaded in the admin', function
 
     expect($uploaded->fresh()->featured_image)->toBe('products/featured/6205.jpg')
         ->and($imported->fresh()->featured_image)->toBe('https://cdn.test/deep-groove.png');
+});
+
+it('paints a whole SKF family from a bare code past the cap, narrower rows winning', function (): void {
+    $plain = Product::factory()->count(3)->sequence(fn ($sequence): array => ['product_code' => 'NU ' . (205 + $sequence->index) . ' ECP_S'])->create();
+    $insulated = Product::factory()->create(['product_code' => 'NU 210 ECM/C3VL0241_S']);
+    $otherBrand = Product::factory()->create(['product_code' => 'NU 205 ECP', 'featured_image' => null]);
+    $nup = Product::factory()->create(['product_code' => 'NUP 205 ECP_S', 'featured_image' => null]);
+
+    $path = writeImageFixture([
+        ['NU ... VL0241', 'SKF egysorú hengergörgős csapágy (NU) szigetelt', 'https://cdn.test/nu-insulated.png'],
+        ['NU', 'SKF egysorú hengergörgős csapágy (NU)', 'https://cdn.test/nu.png'],
+    ]);
+
+    (new ProductImageImporter())->import($path, maxVariantsPerCode: 2);
+
+    expect($plain->every(fn (Product $product): bool => $product->fresh()->featured_image === 'https://cdn.test/nu.png'))->toBeTrue()
+        ->and($insulated->fresh()->featured_image)->toBe('https://cdn.test/nu-insulated.png')
+        ->and($otherBrand->fresh()->featured_image)->toBeNull()
+        ->and($nup->fresh()->featured_image)->toBeNull();
+});
+
+it('lets an SKF code starting with "..." match the suffix anywhere in the code', function (): void {
+    $energyEfficient = Product::factory()->create(['product_code' => '6205-2Z/C3E2_S', 'featured_image' => null]);
+    $plain = Product::factory()->create(['product_code' => '6205-2Z_S', 'featured_image' => null]);
+
+    $path = writeImageFixture([
+        ['... E2', 'SKF (E2) energiatakarékos mélyhornyú golyóscsapágy', 'https://cdn.test/e2.png'],
+    ]);
+
+    (new ProductImageImporter())->import($path);
+
+    expect($energyEfficient->fresh()->featured_image)->toBe('https://cdn.test/e2.png')
+        ->and($plain->fresh()->featured_image)->toBeNull();
 });
