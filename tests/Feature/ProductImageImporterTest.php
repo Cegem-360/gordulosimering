@@ -256,3 +256,17 @@ it('treats a comma after a wildcard as part of a single code, not a list', funct
 
     expect($product->fresh()->featured_image)->toBeNull();
 });
+
+it('never lets a series image replace a picture uploaded in the admin', function (): void {
+    $uploaded = Product::factory()->create(['product_code' => '6205_S', 'featured_image' => 'products/featured/6205.jpg']);
+    $imported = Product::factory()->create(['product_code' => '6206_S', 'featured_image' => 'https://cdn.test/old.png']);
+
+    $path = writeImageFixture([
+        ['6000, 6200', 'SKF egysorú mélyhornyú golyóscsapágy', 'https://cdn.test/deep-groove.png'],
+    ]);
+
+    (new ProductImageImporter())->import($path);
+
+    expect($uploaded->fresh()->featured_image)->toBe('products/featured/6205.jpg')
+        ->and($imported->fresh()->featured_image)->toBe('https://cdn.test/deep-groove.png');
+});

@@ -188,6 +188,7 @@ final class ProductImageImporter
      * of three or more digits ending in "00" is a catalogue series: "6200"
      * covers 6200-6299 (but not 62200), "SY 500" covers SY 5xx. Any other
      * item is a prefix ending at a token boundary, so "NU" never covers "NUP".
+     * A family image never replaces a picture uploaded in the admin.
      *
      * @param  array<int, string>  $items
      * @return array<int, int>
@@ -206,10 +207,11 @@ final class ProductImageImporter
 
             $pattern = '/^' . preg_quote($prefix, '/') . '\d{2}(?!\d)/u';
 
-            $matched = Product::query()->where('product_code', 'LIKE', $like)->pluck('product_code', 'id')
-                ->filter(fn (string $productCode): bool => ! $skfOnly || str_ends_with($productCode, '_S'))
-                ->filter(fn (string $productCode): bool => $isSeries ? preg_match($pattern, $productCode) === 1 : $this->continuesAtBoundary($head, $productCode))
-                ->keys()
+            $matched = Product::query()->where('product_code', 'LIKE', $like)->get(['id', 'product_code', 'featured_image'])
+                ->filter(fn (Product $product): bool => ! is_string($product->featured_image) || $this->isImported($product->featured_image))
+                ->filter(fn (Product $product): bool => ! $skfOnly || str_ends_with((string) $product->product_code, '_S'))
+                ->filter(fn (Product $product): bool => $isSeries ? preg_match($pattern, (string) $product->product_code) === 1 : $this->continuesAtBoundary($head, (string) $product->product_code))
+                ->pluck('id')
                 ->all();
 
             $ids = [...$ids, ...$matched];
