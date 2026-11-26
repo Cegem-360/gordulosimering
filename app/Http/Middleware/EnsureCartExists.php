@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Models\Cart;
+use App\Services\CartService;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 final class EnsureCartExists
@@ -20,19 +19,7 @@ final class EnsureCartExists
      */
     public function handle($request, Closure $next)
     {
-        $cart = null;
-        $userId = Auth::id();
-        if (Auth::check()) {
-            $cart = Cart::query()->firstOrCreate(['user_id' => $userId]);
-            Session::put('cart', $cart);
-
-            return $next($request);
-        }
-
-        $sessionId = Session::id();
-        $cart = Cart::query()->firstOrCreate(['session_id' => $sessionId]);
-
-        Session::put('cart', $cart);
+        Session::put('cart', CartService::currentCart());
 
         return $next($request);
     }

@@ -9,6 +9,7 @@ use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 final readonly class CartService
 {
@@ -16,7 +17,20 @@ final readonly class CartService
 
     public function __construct()
     {
-        $this->cart = Cart::query()->firstOrCreate(['user_id' => Auth::id()]);
+        $this->cart = self::currentCart();
+    }
+
+    /**
+     * A signed-in customer's cart is theirs; a visitor's is tied to their own
+     * session, so two visitors never share one.
+     */
+    public static function currentCart(): Cart
+    {
+        if (Auth::check()) {
+            return Cart::query()->firstOrCreate(['user_id' => Auth::id()]);
+        }
+
+        return Cart::query()->firstOrCreate(['user_id' => null, 'session_id' => Session::id()]);
     }
 
     /**
